@@ -13,4 +13,12 @@ public class MemberReserve extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_reserve_index")
     private Long index;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reserve_id")
+    private Reserve reserve;
 }
