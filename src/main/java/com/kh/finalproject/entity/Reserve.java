@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -42,4 +44,7 @@ public class Reserve extends BaseTimeEntity {
     @Column(name = "cancel_time")
     @Timestamp
     private LocalDateTime cancel;
+
+    @OneToMany(mappedBy = "reserve")
+    private List<MemberReserve> memberReserveList = new ArrayList<>();
 }
