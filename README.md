@@ -23,6 +23,7 @@
 1. [스프링 부트 스타터 홈페이지 이동](https://start.spring.io/)
 2. 아래와 같이 설정
 <img width="1251" alt="khfinal_springbootstarter_option" src="https://user-images.githubusercontent.com/49019419/204407730-9b6126f9-320b-4aa2-a43c-616410b674e4.png">
+
 ```html
 Project: Gradle-Groovy
 
@@ -48,6 +49,7 @@ Dependencies:
     MySQL Driver
     H2 Database
 ```
+
 3. 다운받아 압축파일 해제한 후 `IntelliJ`로 해당 프로젝트 열기
 
 ### 프로젝트 설정
