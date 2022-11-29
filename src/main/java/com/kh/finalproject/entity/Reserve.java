@@ -45,6 +45,10 @@ public class Reserve extends BaseTimeEntity {
     @Timestamp
     private LocalDateTime cancel;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reserve_time_index")
+    private ReserveTime reserveTime;
+
     @OneToMany(mappedBy = "reserve")
     private List<MemberReserve> memberReserveList = new ArrayList<>();
 }
