@@ -23,4 +23,12 @@ public class Accuse extends BaseTimeEntity {
     @Column(name = "accuse_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private AccuseStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index_suspect")
+    private Member memberSuspect;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index_victim")
+    private Member memberVictim;
 }
