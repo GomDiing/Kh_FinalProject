@@ -15,10 +15,10 @@ public class MemberReserve extends BaseTimeEntity {
     private Long index;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index")
+    @JoinColumn(name = "member_index", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reserve_id")
+    @JoinColumn(name = "reserve_id", nullable = false)
     private Reserve reserve;
 }

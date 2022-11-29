@@ -18,6 +18,10 @@ public class Reserve extends BaseTimeEntity {
     @Column(name = "reserve_id")
     private String id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reserve_time_index", nullable = false)
+    private ReserveTime reserveTime;
+
     @Column(name = "reserve_seat", nullable = false)
     private String seat;
 
@@ -44,10 +48,6 @@ public class Reserve extends BaseTimeEntity {
     @Column(name = "cancel_time")
     @Timestamp
     private LocalDateTime cancel;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reserve_time_index")
-    private ReserveTime reserveTime;
 
     @OneToMany(mappedBy = "reserve")
     private List<MemberReserve> memberReserveList = new ArrayList<>();
