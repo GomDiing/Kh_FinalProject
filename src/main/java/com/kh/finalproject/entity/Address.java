@@ -15,7 +15,7 @@ public class Address extends BaseTimeEntity {
     private Long index;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index")
+    @JoinColumn(name = "member_index", nullable = false)
     private Member member;
 
     @Column(name = "address_road", nullable = false)

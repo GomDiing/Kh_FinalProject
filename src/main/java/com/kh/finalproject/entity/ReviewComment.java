@@ -16,6 +16,10 @@ public class ReviewComment extends BaseTimeEntity {
     @Column(name = "review_comment_index")
     private Long index;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Column(name = "review_title")
     private String title;
 
@@ -43,10 +47,6 @@ public class ReviewComment extends BaseTimeEntity {
 
     @Column(name = "review_comment_accuse_count", nullable = false)
     private Integer accuseCount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     @OneToMany(mappedBy = "reviewComment")
     private List<ReviewLike> reviewLikeList = new ArrayList<>();

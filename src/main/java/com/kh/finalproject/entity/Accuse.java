@@ -14,6 +14,14 @@ public class Accuse extends BaseTimeEntity {
     @Column(name = "accuse_index")
     private Long index;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index_suspect", nullable = false)
+    private Member memberSuspect;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index_victim", nullable = false)
+    private Member memberVictim;
+
     @Column(name = "accuse_reason", nullable = false)
     private String reason;
 
@@ -27,12 +35,4 @@ public class Accuse extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_component_index")
     private ReviewComment reviewComment;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index_suspect")
-    private Member memberSuspect;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index_victim")
-    private Member memberVictim;
 }

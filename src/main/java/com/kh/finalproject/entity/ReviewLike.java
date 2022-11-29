@@ -15,10 +15,10 @@ public class ReviewLike extends BaseTimeEntity {
     private Long index;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_comment_index")
+    @JoinColumn(name = "review_comment_index", nullable = false)
     private ReviewComment reviewComment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index")
+    @JoinColumn(name = "member_index", nullable = false)
     private Member member;
 }
