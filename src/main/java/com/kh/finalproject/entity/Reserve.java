@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "reserve")
 public class Reserve extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserve_id")
     private String id;
 
