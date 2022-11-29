@@ -13,4 +13,8 @@ public class ReviewLike extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_like_index")
     private Long index;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_comment_index")
+    private ReviewComment reviewComment;
 }
