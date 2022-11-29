@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class BaseTimeEntity {
     @CreatedDate
-    protected LocalDateTime createdAt;
+    protected LocalDateTime create_time;
 
     @LastModifiedDate
-    protected  LocalDateTime updatedAt;
+    protected  LocalDateTime update_time;
 }
