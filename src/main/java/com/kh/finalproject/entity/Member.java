@@ -45,4 +45,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "unregister_time")
     @Timestamp
     private LocalDateTime unregister;
+
+    @OneToOne(mappedBy = "member")
+    private Address address;
 }
