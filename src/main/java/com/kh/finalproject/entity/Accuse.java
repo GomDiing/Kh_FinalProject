@@ -25,6 +25,10 @@ public class Accuse extends BaseTimeEntity {
     private AccuseStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_component_index")
+    private ReviewComment reviewComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_index_suspect")
     private Member memberSuspect;
 

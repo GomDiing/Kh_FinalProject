@@ -45,5 +45,8 @@ public class ReviewComment extends BaseTimeEntity {
     private Integer accuseCount;
 
     @OneToMany(mappedBy = "reviewComment")
-    private List<ReviewLike> reviewLike = new ArrayList<>();
+    private List<ReviewLike> reviewLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewComment")
+    private List<Accuse> accuseList = new ArrayList<>();
 }
