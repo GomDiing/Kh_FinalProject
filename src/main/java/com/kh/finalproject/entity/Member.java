@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -48,4 +50,7 @@ public class Member extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "member")
     private Address address;
+
+    @OneToMany(mappedBy = "member")
+    private List<Inquiry> inquiryList = new ArrayList<>();
 }
