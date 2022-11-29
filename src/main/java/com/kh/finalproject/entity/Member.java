@@ -13,8 +13,11 @@ import java.time.LocalDateTime;
 public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_index")
-    private Long id;
+    @Column(name = "member_index", nullable = false)
+    private Long index;
+
+    @Column(name = "member_id", nullable = false)
+    private String id;
 
     @Column(name = "member_name", nullable = false)
     private String name;
