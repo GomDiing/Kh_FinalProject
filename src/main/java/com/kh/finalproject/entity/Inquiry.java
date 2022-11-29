@@ -35,4 +35,8 @@ public class Inquiry extends BaseTimeEntity {
 
     @Column(name = "inquiry_order", nullable = false)
     private Integer order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index")
+    private Member member;
 }
