@@ -4,6 +4,8 @@ import com.kh.finalproject.common.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,4 +43,7 @@ public class ReviewComment extends BaseTimeEntity {
 
     @Column(name = "review_comment_accuse_count", nullable = false)
     private Integer accuseCount;
+
+    @OneToMany(mappedBy = "reviewComment")
+    private List<ReviewLike> reviewLike = new ArrayList<>();
 }
