@@ -75,5 +75,6 @@ Dependencies:
 
 2. `gitignore` 설정
    1. 아래 문구 추가 (설정 파일 제외 (*.properties, *.yml))
+   
       `**/src/main/resources/*.properties`<br>
       `**/src/main/resources/*.yml`
