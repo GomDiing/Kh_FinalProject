@@ -54,4 +54,8 @@ public class ReviewComment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "reviewComment")
     private List<Accuse> accuseList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

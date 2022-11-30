@@ -11,4 +11,8 @@ public class RankingWeek {
     @Id
     @Column(name = "ranking_order")
     private Long order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

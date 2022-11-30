@@ -24,4 +24,8 @@ public class SeatPrice {
 
     @Column(name = "total_quantity", nullable = false)
     private Integer totalQuantity;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

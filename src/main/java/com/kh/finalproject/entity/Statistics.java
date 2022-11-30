@@ -33,4 +33,8 @@ public class Statistics {
 
     @Column(name = "statistics_fifties")
     private Float fifties;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

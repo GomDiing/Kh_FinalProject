@@ -32,4 +32,8 @@ public class ReserveTime {
 
     @OneToMany(mappedBy = "reserveTime")
     private List<ReserveTimeCasting> reserveTimeCastingList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }
