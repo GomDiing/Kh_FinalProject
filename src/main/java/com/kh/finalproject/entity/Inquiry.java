@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.entity.status.InquiryStatus;
 import lombok.Getter;
 
 import javax.persistence.*;

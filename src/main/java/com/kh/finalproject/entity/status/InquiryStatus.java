@@ -1,4 +1,4 @@
-package com.kh.finalproject.entity;
+package com.kh.finalproject.entity.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

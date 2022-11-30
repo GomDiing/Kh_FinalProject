@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.entity.status.MemberStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 
