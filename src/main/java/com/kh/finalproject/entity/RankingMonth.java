@@ -2,10 +2,7 @@ package com.kh.finalproject.entity;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -14,4 +11,8 @@ public class RankingMonth {
     @Id
     @Column(name = "ranking_order")
     private Long order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

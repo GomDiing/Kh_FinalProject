@@ -14,6 +14,10 @@ public class WishProduct {
     private Long index;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_index")
+    @JoinColumn(name = "member_index", nullable = false)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 }

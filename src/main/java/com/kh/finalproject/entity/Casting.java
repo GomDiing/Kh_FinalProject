@@ -30,4 +30,8 @@ public class Casting {
 
     @OneToMany(mappedBy = "casting")
     private List<ReserveTimeCasting> reserveTimeCastingList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code")
+    private Product product;
 }
