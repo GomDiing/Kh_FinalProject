@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 예매시간 캐스팅 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "reserve_time_casting")

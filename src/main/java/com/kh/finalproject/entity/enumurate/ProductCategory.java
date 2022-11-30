@@ -1,8 +1,11 @@
-package com.kh.finalproject.entity.status;
+package com.kh.finalproject.entity.enumurate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 상품 엔티티의 카테고리 클래스
+ */
 @Getter
 @AllArgsConstructor
 public enum ProductCategory {

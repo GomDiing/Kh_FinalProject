@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 예매시간 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "reserve_time")

@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 월간 순위 상품 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "ranking_month")

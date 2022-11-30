@@ -1,12 +1,15 @@
 package com.kh.finalproject.entity;
 
-import com.kh.finalproject.entity.status.ProductCategory;
+import com.kh.finalproject.entity.enumurate.ProductCategory;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 상품 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "product")

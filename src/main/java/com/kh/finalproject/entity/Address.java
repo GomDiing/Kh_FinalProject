@@ -5,6 +5,10 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 주소 테이블과 연결된 엔티티
+ * 생성/수정 시간 갱신 엔티티 클래스를 상속
+ */
 @Getter
 @Entity
 @Table(name = "address")
