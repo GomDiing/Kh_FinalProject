@@ -10,7 +10,6 @@ import java.util.List;
 @Table(name = "casting")
 public class Casting {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "casting_id")
     private Long id;
 
