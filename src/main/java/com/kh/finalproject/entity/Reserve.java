@@ -1,7 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.entity.status.ReserveStatus;
+import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 
@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 예매 테이블과 연결된 엔티티
+ * 생성/수정 시간 갱신 엔티티 클래스를 상속
+ */
 @Getter
 @Entity
 @Table(name = "reserve")

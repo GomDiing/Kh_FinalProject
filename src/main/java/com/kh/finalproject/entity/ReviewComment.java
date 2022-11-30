@@ -1,13 +1,17 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.entity.status.ReviewCommentStatus;
+import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 후기/댓글 테이블과 연결된 엔티티
+ * 생성/수정 시간 갱신 엔티티 클래스를 상속
+ */
 @Getter
 @Entity
 @Table(name = "review_comment")

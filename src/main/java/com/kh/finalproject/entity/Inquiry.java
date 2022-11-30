@@ -1,11 +1,15 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.entity.status.InquiryStatus;
+import com.kh.finalproject.entity.enumurate.InquiryStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 1대1 문의 테이블과 연결된 엔티티
+ * 생성/수정 시간 갱신 엔티티 클래스를 상속
+ */
 @Getter
 @Entity
 @Table(name = "inquiry")

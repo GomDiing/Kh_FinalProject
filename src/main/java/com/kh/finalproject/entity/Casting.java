@@ -5,6 +5,9 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * 캐스팅 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "casting")

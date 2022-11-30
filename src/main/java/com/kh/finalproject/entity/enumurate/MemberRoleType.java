@@ -1,8 +1,11 @@
-package com.kh.finalproject.entity;
+package com.kh.finalproject.entity.enumurate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 회원 엔티티의 권한 클래스
+ */
 @Getter
 @AllArgsConstructor
 public enum MemberRoleType {

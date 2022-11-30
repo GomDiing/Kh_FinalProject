@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 찜하기 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "wish_product")

@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/**
+ * 예매자 통계 테이블과 연결된 엔티티
+ */
 @Getter
 @Entity
 @Table(name = "statistics")
