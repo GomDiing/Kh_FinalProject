@@ -68,4 +68,7 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<MemberReserve> memberReserveList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<WishProduct> wishProductList = new ArrayList<>();
 }
