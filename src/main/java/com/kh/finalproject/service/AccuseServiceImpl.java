@@ -7,6 +7,8 @@ import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 
 import java.util.List;
 
+
+//하린 테스트
 public class AccuseServiceImpl implements AccuseService {
     @Override
     public void create(CreateAccuseDTO createAccuseDTO) {
