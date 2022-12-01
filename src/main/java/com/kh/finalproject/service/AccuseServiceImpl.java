@@ -9,6 +9,7 @@ import java.util.List;
 
 
 //하린 테스트
+//테스트 입니다
 public class AccuseServiceImpl implements AccuseService {
     @Override
     public void create(CreateAccuseDTO createAccuseDTO) {
