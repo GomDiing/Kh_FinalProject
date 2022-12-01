@@ -39,4 +39,7 @@ public class ReserveTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
+
+    @OneToMany(mappedBy = "reserveTime")
+    private List<ReserveTimeSeatPrice> reserveTimeSeatPriceList = new ArrayList<>();
 }

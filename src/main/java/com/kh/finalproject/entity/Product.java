@@ -67,8 +67,8 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Casting> castingList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product")
-    private SeatPrice seatPrice;
+    @OneToMany(mappedBy = "product")
+    private List<SeatPrice> seatPrice;
 
     @OneToMany(mappedBy = "product")
     private List<ReserveTime> reserveTimeList = new ArrayList<>();
