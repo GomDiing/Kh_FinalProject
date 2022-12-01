@@ -58,7 +58,7 @@ public class Member extends BaseTimeEntity {
     private Address address;
 
     @OneToMany(mappedBy = "member")
-    private List<Inquiry> inquiryList = new ArrayList<>();
+    private List<QnA> qnAList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<ReviewLike> reviewLikeList = new ArrayList<>();

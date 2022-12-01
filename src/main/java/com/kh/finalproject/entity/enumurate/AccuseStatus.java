@@ -10,6 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AccuseStatus {
     WAIT("Wait", "응답 대기"),
+    CANCEL("Cancel", "신고 취소"),
     COMPLETE("Complete", "처리 완료");
 
     private final String status;

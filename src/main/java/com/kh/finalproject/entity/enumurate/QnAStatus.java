@@ -8,8 +8,10 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum InquiryStatus {
+public enum QnAStatus {
     WAIT("Wait", "질문 대기"),
+    CANCEL("Cancel", "문의 취소"),
+    ADDITIONAL("Additional", "부가 문의"),
     COMPLETE("Complete", "응답 완료");
 
     private final String status;
