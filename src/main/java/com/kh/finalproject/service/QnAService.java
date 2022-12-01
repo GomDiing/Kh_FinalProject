@@ -1,5 +1,7 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.qna.*;
+
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package com.kh.finalproject.service;
 
-import com.kh.finalproject.entity.Member;
-import com.kh.finalproject.entity.enumurate.MemberStatus;
+import com.kh.finalproject.dto.member.*;
 
 import java.util.List;
 
