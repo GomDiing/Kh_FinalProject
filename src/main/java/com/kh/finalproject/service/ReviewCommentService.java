@@ -1,5 +1,10 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.reviewComment.*;
+import com.kh.finalproject.entity.ReviewComment;
+
+import java.util.List;
+
 /**
  * 후기/댓글 서비스 인터페이스
  */
@@ -38,5 +43,10 @@ public interface ReviewCommentService {
      * 상품별 후기/댓글 조회 메서드
      * 단, 후기/댓글 상태가 '활성'이 아닌경우 적절한 내용으로 대체
      */
-    void searchByProduct(Long index);
+    ReviewCommentDTO searchByProduct(Long index);
+
+    /**
+     * 후기/댓글 전체 조회 메서드
+     */
+    List<ReviewCommentDTO> searchAll();
 }

@@ -71,7 +71,7 @@ public class Product {
     private List<SeatPrice> seatPrice;
 
     @OneToMany(mappedBy = "product")
-    private List<ReserveTime> reserveTimeList = new ArrayList<>();
+    private List<ReserveTimeSeatPrice> reserveTimeSeatPriceList = new ArrayList<>();
 
     @OneToOne(mappedBy = "product")
     private Statistics statistics;

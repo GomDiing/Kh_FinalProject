@@ -1,11 +1,15 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.reserve.*;
+
+import java.util.List;
+
 /**
  * 예매 서비스 인터페이스
  */
 public interface ReserveService {
     /**
-     * 예매 결제 메서드, 예매 레코드 생성
+     * 예매 결제 메서드
      */
     void payment(PaymentReserveDTO paymentReserveDTO);
 

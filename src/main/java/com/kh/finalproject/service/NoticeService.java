@@ -1,5 +1,12 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.notice.CreateNoticeDTO;
+import com.kh.finalproject.dto.notice.EditNoticeDTO;
+import com.kh.finalproject.dto.notice.NoticeDTO;
+import com.kh.finalproject.dto.notice.RemoveNoticeDTO;
+
+import java.util.List;
+
 /**
  * 공지사항 서비스 인터페이스
  */
@@ -19,4 +26,14 @@ public interface NoticeService {
      * 실제로 삭제되지 않고 상태 변환
      */
     void removeNotice(RemoveNoticeDTO removeNoticeDTO);
+
+    /**
+     * 공지사항 전체 조회 메서드
+     */
+    List<NoticeDTO> selectAll();
+
+    /**
+     * 공지사항 조회 메서드
+     */
+    NoticeDTO selectByIndex(Long index);
 }

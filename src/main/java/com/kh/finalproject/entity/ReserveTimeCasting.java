@@ -22,5 +22,5 @@ public class ReserveTimeCasting {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_time_index", nullable = false)
-    private ReserveTime reserveTime;
+    private ReserveTimeSeatPrice reserveTimeSeatPrice;
 }

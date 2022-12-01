@@ -32,6 +32,7 @@ public class SeatPrice {
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
 
-    @OneToOne(mappedBy = "seatPrice")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reserve_time_index", nullable = false)
     private ReserveTimeSeatPrice reserveTimeSeatPrice;
 }
