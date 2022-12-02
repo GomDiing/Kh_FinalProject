@@ -32,6 +32,8 @@ out/
 # yml, properties 파일
 **/src/main/resources/*.properties
 **/src/main/resources/*.yml
+**/src/test/resources/*.properties
+**/src/test/resources/*.yml
 
 ### NetBeans ###
 /nbproject/private/
