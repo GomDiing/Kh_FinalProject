@@ -1,6 +1,10 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+<<<<<<< HEAD
+=======
+import com.kh.finalproject.dto.member.SignupDTO;
+>>>>>>> develop
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
@@ -77,4 +81,27 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
+
+    /**
+     * Address 갱신 메서드
+     */
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
+    /**
+     * 회원가입 DTO를 회원 Entity 변환
+     * SignupDTO DTO -> Member Entity
+     */
+    public Member toEntity(SignupDTO signupDTO) {
+        this.id = signupDTO.getId();
+        this.name = signupDTO.getName();
+        this.password = signupDTO.getPassword();
+        this.email = signupDTO.getEmail();
+        this.role = MemberRoleType.ROLE_USER;
+        this.point = 0;
+        this.status = MemberStatus.ACTIVE;
+
+        return this;
+    }
 }

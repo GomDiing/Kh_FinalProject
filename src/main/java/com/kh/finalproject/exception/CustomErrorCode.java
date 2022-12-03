@@ -22,7 +22,9 @@ public enum CustomErrorCode {
     INVALID_INPUT_VALUE(StatusCode.BAD_REQUEST, "C002", "입력 값이 올바르지 않습니다"),
     METHOD_NOT_ALLOWED(StatusCode.METHOD_NOT_ALLOWED, "C003", "지원하지않은 Http Method입니다"),
     HANDLE_ACCESS_DENIED(StatusCode.FORBIDDEN, "C004", "접근이 거부되었습니다"),
-    INTERNAL_SERVER_ERROR(StatusCode.INTERNAL_SERVER_ERROR, "S001", "내부 서버 오류입니다");
+    INTERNAL_SERVER_ERROR(StatusCode.INTERNAL_SERVER_ERROR, "S001", "내부 서버 오류입니다"),
+    HTTP_MESSAGE_NOT_READABLE(StatusCode.BAD_REQUEST, "S002", "HTTP 메시지 변환(역직렬화)이 실패하였습니다"),
+    INVALID_FORMAT(StatusCode.BAD_REQUEST, "S003", "역직렬화 할 수 없는 포맷입니다");
 
     private int status;
     private final String code;

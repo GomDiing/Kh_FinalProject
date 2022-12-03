@@ -4,7 +4,7 @@ package com.kh.finalproject.response;
  * 응답 페이지 공통 상태 메세지
  */
 public class DefaultResponseMessage {
-    public static final String SUCCESS_JOIN_MEMBER = "회원가입 성공";
+    public static final String SUCCESS_SIGNUP_MEMBER = "회원가입 성공";
     public static final String SUCCESS_LOGIN= "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";

@@ -26,6 +26,8 @@ public class DefaultErrorResponse {
 
     private String code;
 
+    private String reason;
+
     /**
      * 오류 코드와 검증(Valid) 오류 포함한 오류 페이지 생성자
      */
@@ -46,6 +48,19 @@ public class DefaultErrorResponse {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * 오류 코드와 상세 오류 메시지 포함한 오류 페이지 생성자
+     */
+    private DefaultErrorResponse(final CustomErrorCode code, final String reason) {
+        this.message = code.getMessage();
+        this.statusCode = code.getStatus();
+        this.code = code.getCode();
+        this.reason = reason;
+    }
+
+    /**
+>>>>>>> develop
      * Binding 오류가 발생시 오류 페이지 생성 메서드
      */
     public static DefaultErrorResponse of(final CustomErrorCode errorCode, final BindingResult bindingResult) {
@@ -60,6 +75,16 @@ public class DefaultErrorResponse {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * 에러 코드 및 상세 오류 내용 메시지 포함된 오류 페이지 생성 메서드
+     */
+    public static DefaultErrorResponse of(final CustomErrorCode errorCode, String cause) {
+        return new DefaultErrorResponse(errorCode, cause);
+    }
+
+    /**
+>>>>>>> develop
      * 에러 코드와 필드 오류를 포함한 오류 페이지 생성 메서드
      */
     public static DefaultErrorResponse of(final CustomErrorCode errorCode, final List<FieldError> errors) {
