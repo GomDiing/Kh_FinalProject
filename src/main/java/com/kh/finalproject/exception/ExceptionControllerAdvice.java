@@ -1,9 +1,11 @@
 package com.kh.finalproject.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.kh.finalproject.response.DefaultErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -77,6 +79,29 @@ public class ExceptionControllerAdvice {
         DefaultErrorResponse defaultErrorResponse = DefaultErrorResponse.of(CustomErrorCode.HANDLE_ACCESS_DENIED);
 
         return new ResponseEntity<>(defaultErrorResponse, HttpStatus.valueOf(CustomErrorCode.HANDLE_ACCESS_DENIED.getStatus()));
+//        return new ResponseEntity<>(DefaultErrorResponse, HttpStatus.OK);
+    }
+
+    /**
+     * HTTP 메시지를 읽을 수 없을 경우
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<DefaultErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        Throwable throwable = e.getMostSpecificCause();
+
+        if (throwable instanceof InvalidFormatException) {
+            log.error("[handleInvalidFormatException] ex", e);
+            DefaultErrorResponse defaultErrorResponse = DefaultErrorResponse.of(CustomErrorCode.INVALID_FORMAT, e.getMessage());
+            return new ResponseEntity<>(defaultErrorResponse, HttpStatus.valueOf(CustomErrorCode.INVALID_FORMAT.getStatus()));
+        }
+
+        else {
+            log.error("[handleHttpMessageNotReadableException] ex", e);
+            DefaultErrorResponse defaultErrorResponse = DefaultErrorResponse.of(CustomErrorCode.HTTP_MESSAGE_NOT_READABLE);
+            return new ResponseEntity<>(defaultErrorResponse, HttpStatus.valueOf(CustomErrorCode.HTTP_MESSAGE_NOT_READABLE.getStatus()));
+        }
+
+//        return new ResponseEntity<>(defaultErrorResponse, HttpStatus.valueOf(CustomErrorCode.HTTP_MESSAGE_NOT_READABLE.getStatus()));
 //        return new ResponseEntity<>(DefaultErrorResponse, HttpStatus.OK);
     }
 
