@@ -31,6 +31,7 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> signUp(@Validated @RequestBody SignupDTO signupDTO) {
 
         memberService.signup(signupDTO);
+        //Test Comment
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SIGNUP_MEMBER), HttpStatus.OK);
     }
