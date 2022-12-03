@@ -34,6 +34,7 @@ out/
 **/src/main/resources/*.yml
 **/src/test/resources/*.properties
 **/src/test/resources/*.yml
+crawling/config.ini
 
 ### NetBeans ###
 /nbproject/private/
