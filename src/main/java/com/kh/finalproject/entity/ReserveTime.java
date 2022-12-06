@@ -1,8 +1,10 @@
 package com.kh.finalproject.entity;
 
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,10 @@ public class ReserveTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserve_time_index")
     private Long index;
+
+    @Column(name = "reserve_time")
+    @Timestamp
+    private LocalDateTime time;
 
     @Column(name = "reserve_time_date")
     private String date;
