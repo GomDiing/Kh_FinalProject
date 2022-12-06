@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "reserve_time")
-public class ReserveTimeSeatPrice {
+public class ReserveTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserve_time_index")
@@ -36,16 +36,16 @@ public class ReserveTimeSeatPrice {
     @Column(name = "total_quantity", nullable = false)
     private Integer totalQuantity;
 
-    @OneToMany(mappedBy = "reserveTimeSeatPrice")
+    @OneToMany(mappedBy = "reserveTime")
     private List<Reserve> reserveList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reserveTimeSeatPrice")
+    @OneToMany(mappedBy = "reserveTime")
     private List<ReserveTimeCasting> reserveTimeCastingList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "reserveTimeSeatPrice")
+    @OneToMany(mappedBy = "reserveTime")
     private List<SeatPrice> seatPriceList = new ArrayList<>();
 }
