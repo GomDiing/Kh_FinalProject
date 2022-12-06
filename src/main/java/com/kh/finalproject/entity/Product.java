@@ -16,7 +16,7 @@ import java.util.List;
 public class Product {
     @Id
     @Column(name = "product_code")
-    private Long code;
+    private String code;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "product_category", nullable = false)
@@ -49,16 +49,19 @@ public class Product {
     @Column(name = "product_age", nullable = false)
     private Integer age;
 
-    @Column(name = "product_age_isKorean", nullable = false)
+    @Column(name = "product_age_is_korean", nullable = false)
     private Boolean ageIsKorean;
 
     @Column(name = "product_time_min", nullable = false)
     private Integer timeMin;
 
-    @Column(name = "product_time_break")
+    @Column(name = "product_time_break", nullable = false)
     private Integer timeBreak;
 
-    @Column(name = "product_isInfoTimeCasting", nullable = false)
+    @Column(name = "product_is_info_casting", nullable = false)
+    private Boolean isInfoCasting;
+
+    @Column(name = "product_is_info_time_casting", nullable = false)
     private Boolean isInfoTimeCasting;
 
     @Column(name = "product_rate_average", nullable = false)
@@ -76,14 +79,14 @@ public class Product {
     @OneToOne(mappedBy = "product")
     private Statistics statistics;
 
-    @OneToMany(mappedBy = "product")
-    private List<RankingWeek> rankingWeekList = new ArrayList<>();
+//    @OneToMany(mappedBy = "product")
+//    private List<RankingWeek> rankingWeekList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<RankingMonth> rankingMonthList = new ArrayList<>();
+//    @OneToMany(mappedBy = "product")
+//    private List<RankingMonth> rankingMonthList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<RankingCloseSoon> rankingCloseSoonList = new ArrayList<>();
+//    @OneToMany(mappedBy = "product")
+//    private List<RankingCloseSoon> rankingCloseSoonList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<WishProduct> wishProductList = new ArrayList<>();

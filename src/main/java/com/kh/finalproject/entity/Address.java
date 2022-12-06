@@ -1,12 +1,9 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-<<<<<<< HEAD
-=======
 import com.kh.finalproject.dto.member.SignupDTO;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
->>>>>>> develop
 import lombok.Getter;
 
 import javax.persistence.*;
