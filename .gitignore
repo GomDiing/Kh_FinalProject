@@ -35,6 +35,8 @@ out/
 **/src/test/resources/*.properties
 **/src/test/resources/*.yml
 crawling/config.ini
+crawling/.idea/
+crawling/__pycache__/
 
 ### NetBeans ###
 /nbproject/private/
