@@ -18,6 +18,9 @@ public class Product {
     @Column(name = "product_code")
     private String code;
 
+    @Column(name = "product_url")
+    private String url;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "product_category", nullable = false)
     private ProductCategory category;
