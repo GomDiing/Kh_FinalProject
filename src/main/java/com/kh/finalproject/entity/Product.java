@@ -18,7 +18,7 @@ public class Product {
     @Column(name = "product_code")
     private String code;
 
-    @Column(name = "product_url")
+    @Column(name = "product_url", nullable = false)
     private String url;
 
     @Enumerated(EnumType.STRING)
