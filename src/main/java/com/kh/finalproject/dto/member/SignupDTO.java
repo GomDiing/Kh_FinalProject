@@ -1,9 +1,5 @@
 package com.kh.finalproject.dto.member;
 
-<<<<<<< HEAD
-import lombok.Getter;
-
-=======
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
@@ -16,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
->>>>>>> develop
 /**
  * 회원가입 DTO
  */

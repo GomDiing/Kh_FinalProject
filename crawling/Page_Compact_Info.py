@@ -5,9 +5,16 @@ from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def extractCompactInfo(browser):
+
+# 간단 정보 추출 메서드
+# 타이틀, 한정 / 상시 상품, 썸네일 포스터 주소 추출
+def extractCompactInfo(browser, productDataList):
     # 상품 타이틀 추출
     title = extractTitle(browser)
+
+    # $$$ 상품 타이틀 데이터 리스트 추가
+    productDataList['product_title'] = title
+
     print("\n<<<&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==--->>>")
     print("=========================================================================================================")
     print('타이틀: ' + title)
@@ -21,6 +28,9 @@ def extractCompactInfo(browser):
 
     # 포스터 주소 추출
     posterUrl = extractPosterUrl(browser)
+
+    # $$$ 썸네일 포스터 url 데이터 리스트 추가
+    productDataList['product_thumb_poster_url'] = posterUrl
     print('포스터 주소 URL: ' + posterUrl)
 
     return limitedOrAlways

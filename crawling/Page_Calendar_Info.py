@@ -6,7 +6,18 @@ from selenium.common import TimeoutException, NoSuchElementException
 
 
 # 캘린더 정보 탐색 메서드
-def extractCalendarInfo(browser):
+def extractCalendarInfo(browser, productDataList):
+    # 시간별 배우 정보 존재 확인
+    try:
+        print('배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
+
+        productDataList['product_isInfoTimeCasting'] = True
+        isExistTimeCastingInfo = True
+    except NoSuchElementException:
+        print('$$$$$$$$$$ :: 캘린더 > 시간별 배우 정보 없음 $$$$$$$$$$')
+        productDataList['product_isInfoTimeCasting'] = False
+        isExistTimeCastingInfo = False
+
     # 다음 달 이동이 불가능 할 때 까지 계속 조회
     while True:
         # 예약 가능 날짜 조회
@@ -22,8 +33,8 @@ def extractCalendarInfo(browser):
         print('====================')
         print("예약 가능한 날짜 리스트 : " + str(possibleDaysList))
 
-        # 예약 가능한 날짜에서 캐스팅 정보 탐색
-        extractCalendarOfCasting(possibleDaysList, mutedCount, browser)
+        # 예약 가능한 날짜에서 회차 / 캐스팅 정보 탐색
+        extractCalendarOfCasting(possibleDaysList, mutedCount, browser, isExistTimeCastingInfo)
 
         # 캘린더 다음 달로 이동 하는 메서드 #
         # 다음 달 이동 버튼의 class 값이 disabled 이면 종료, 그렇지 않으면 이동
@@ -78,7 +89,7 @@ def extractCalendarOfPossibleDays(browser):
 
 
 # 캘린더 정보 탐색 > 예약 가능한 날짜에서 캐스팅 정보 탐색
-def extractCalendarOfCasting(possibleDaysList, mutedCount, browser):
+def extractCalendarOfCasting(possibleDaysList, mutedCount, browser, isExistTimeCastingInfo):
     # 예약 가능한 날짜 에서 캐스트 정보 조회 #
     for possibleDays in possibleDaysList:
 
@@ -95,6 +106,7 @@ def extractCalendarOfCasting(possibleDaysList, mutedCount, browser):
         browser.find_element(By.CSS_SELECTOR, possibleDaysCssPath).click()
 
         time.sleep(0.5)
+
 
         # 주연 정보 접근
         # 메인화면 > 캘린더 > 예약 가능 날짜(클릭) > 공연 회차 : 총 공연가능 회차 조회
@@ -117,14 +129,16 @@ def extractCalendarOfCasting(possibleDaysList, mutedCount, browser):
                 try:
                     openTime = findTurn.find_element(By.CSS_SELECTOR, 'a > span').text.split(':')
                     print('현 회차: ' + str(count) + ', 시간(시): ' + openTime[0] + ', (분): ' + openTime[1])
-                    print('배우 정보 :' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
                     print('------------------------------------------------------------')
                 except NoSuchElementException:
                     pass
 
+                if isExistTimeCastingInfo:
+                    print('배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
+
                 time.sleep(0.2)
         except NoSuchElementException:
-            pass
+            print('$$$$$$$$$$ :: 캘린더 > 공연 회차 정보 없음$$$$$$$$$$')
 
 
 # 캘린더 정보 탐색 > 다음 달로 이동이 가능한지 판단하는 메서드

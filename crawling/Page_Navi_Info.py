@@ -10,30 +10,42 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 # 네비게이션 메뉴 탐색 메서드
-def extractNaviInfo(browser):
+def extractNaviInfo(browser, productDataList):
+    isExistTimeCasting = False
+
     # 네비게이션 메뉴 선택
     naviItemList = browser.find_element(By.CLASS_NAME, 'navList').find_elements(By.CSS_SELECTOR, 'li')
 
-    # 정보 탭
-    navLinkOfDetailList = ['공연정보', '이용정보']
 
     # 네비게이션 메뉴 순회
     for naviItem in naviItemList:
+        # 정보 탭
+        naviLinkOfDetailList = ['공연정보', '이용정보']
 
         # 현 네비 탭 이름이 정보 탭 리스트에 존재할 경우
-        if navLinkOfDetailList.count(naviItem.text) != 0:
-            extractNaviTabOfDetail(naviItem, browser)
+        if naviItem.text in naviLinkOfDetailList:
+            extractNaviTabOfDetail(naviItem, browser, productDataList)
 
         # 현 네비 탭 이름이 캐스팅 정보인 경우
         if naviItem.text == '캐스팅정보':
+            isExistTimeCasting = True
+            # 시간별 캐스팅 정보 유무 데이터 리스트 추가
+            productDataList['product_isInfoTimeCasting'] = True
             # 캐스팅 테이블 정보 탐색 메서드
             extractNaviTabOfCasting(naviItem, browser)
 
-            time.sleep(1)
+    time.sleep(1)
+
+    return isExistTimeCasting
+
 
 
 # 공연정보 / 이용정보 탭 > 공연 상세 이미지 탐색 메서드
-def extractNaviTabOfDetailAboutPoster(browser):
+def extractNaviTabOfDetailAboutPoster(browser, productDataList):
+    # $$$ 상세 정보 포스터 및 캐스팅 정보 포스터 URL 데이터 리스트 초기화
+    productDataList['product_detail_poster_url'] = None
+    productDataList['product_casting_poster_url'] = None
+
     # 이미지 상세 정보가 표시될 때 까지 대기
     WebDriverWait(browser, 5).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, Constants.contentImgDescCss)))
@@ -50,17 +62,25 @@ def extractNaviTabOfDetailAboutPoster(browser):
         # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
         for contentImagePath in contentImagePathList[:2]:
             index = index + 1
+            # $$$ 상세 정보 포스터 및 캐스팅 정보 포스터 URL 데이터 리스트 추가
+            if index == 1:
+                productDataList['product_detail_poster_url'] = contentImagePath.get_attribute('src')
+            if index == 2:
+                productDataList['product_casting_poster_url'] = contentImagePath.get_attribute('src')
             print(str(index) + '번째 상세 정보 이미지 링크: ' + contentImagePath.get_attribute('src'))
     else:
         # 구조가 첫번째와 다를 경우 (이미지가 1 이상 존재하지 않은 경우)
         # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
         contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
             By.CSS_SELECTOR, Constants.detailImgStrucV2Css)
+        # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
+        productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
+        productDataList['product_casting_poster_url'] = None
         print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
 
 
 # 네비게이션 메뉴 탐색 > 정보 탭 일 경우 탐색 메서드
-def extractNaviTabOfDetail(naviItem, browser):
+def extractNaviTabOfDetail(naviItem, browser, productDataList):
     # 정보 탭 클릭
     naviItem.find_element(By.CSS_SELECTOR, 'a').click()
 
@@ -69,6 +89,8 @@ def extractNaviTabOfDetail(naviItem, browser):
 
     # 정보 탭 내 캐스팅 정보가 있을 경우
     if castingInfoTotalList is not False:
+        # $$$ 캐스팅 정보 유무 데이터 리스트 추가
+        productDataList['product_isInfoCasting'] = True
         for castingInfoList in castingInfoTotalList:
             index = 0
             print('*=&*=&*=&*=&*=&*=&*=&*=&*')
@@ -82,13 +104,16 @@ def extractNaviTabOfDetail(naviItem, browser):
                 if index == 3:
                     print('캐스팅 이미지 링크: ' + castingInfo)
                 index = index + 1
+    else:
+        # $$$ 캐스팅 정보 유무 / 시간별 캐스팅 정보 유무 데이터 리스트 추가
+        productDataList['product_isInfoCasting'] = False
+        # productDataList['product_isInfoTimeCasting'] = False
 
     # 정보 탭 내 공연 상세 이미지 탐색 메서드
-    extractNaviTabOfDetailAboutPoster(browser)
+    extractNaviTabOfDetailAboutPoster(browser, productDataList)
 
     # 정보 탭 내 예매자 통계
     extractNaviTabOfDetailAboutStatics(browser)
-
 
     time.sleep(1)
 

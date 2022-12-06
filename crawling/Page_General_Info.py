@@ -11,7 +11,7 @@ from crawling.Common import waitUntilElementLocated
 
 
 # 일반 정보 추출
-def extractGeneralInfo(browser):
+def extractGeneralInfo(browser, productDataList):
     # 아래 요소 추출
     # ******************** #
     # 장소
@@ -20,63 +20,98 @@ def extractGeneralInfo(browser):
     # 가격
 
     # 일반 정보들이 위치한 요소 추출
-    informList = browser.find_element(By.CSS_SELECTOR, Constants.generalInfoCss).find_elements(By.CLASS_NAME,
-                                                                                               'infoItem')
+    informList = browser.find_element(By.CSS_SELECTOR, Constants.generalInfoCss).find_elements(By.CLASS_NAME, 'infoItem')
 
     for inform in informList:
         attribute = inform.get_attribute('class')
 
         # 장소, 공연기간/기간, 공연시간, 관람연령 출력
         if attribute == 'infoItem':
+            elementName = inform.find_element(By.CLASS_NAME, 'infoLabel').text
 
-            # 장소와 상제 장소 판단/추출, (자세히)는 제외
-            placeInfo = isPlaceInfo(inform)
-            if placeInfo is not False:
+            if elementName == '장소':
+                # 장소와 상제 장소 판단/추출, (자세히)는 제외
+                placeInfo = extractPlaceInfo(inform)
                 print('==========')
+                # $$$ 장소 데이터 리스트 추가
+                productDataList['product_location'] = placeInfo
                 print('장소: ' + placeInfo)
+                # 상세 장소 추출 메서드
                 detailPlaceInfo = extractDetailPlace(inform, browser)
                 if detailPlaceInfo is not False:
+                    # $$$ 상세 장소 데이터 추가
+                    productDataList['product_detail_location'] = detailPlaceInfo
                     print('상세 장소: ' + detailPlaceInfo)
+                else:
+                    # $$$ 상세 장소 데이터 추가
+                    productDataList['product_detail_location'] = None
 
             # 공연기간/기간 판단/추출
-            periodName = inform.find_element(By.CLASS_NAME, 'infoLabel').text
-            perfPeriodInfo = isPerfPeriodInfo(periodName, inform)
-            if perfPeriodInfo is not False:
+            perfPeriodList = ['공연기간', '기간']
+            if elementName in perfPeriodList:
                 print('==========')
+                # 공연기간/기간 판단/추출 메서드
+                perfPeriodInfo = extractPeriodInfo(inform)
                 if isinstance(perfPeriodInfo, str):
                     # print('공연기간: ' + perfPeriodInfo)
-                    print(periodName + ": " + perfPeriodInfo)
+                    # $$$ 기간 데이터 리스트 추가
+                    productDataList['product_period_start'] = perfPeriodInfo
+                    productDataList['product_period_end'] = None
+                    print(elementName + ": " + perfPeriodInfo)
                 else:
-                    # print('(시작) 공연기간: ' + perfPeriodInfo['start'])
-                    print('(시작) ' + periodName + ': ' + perfPeriodInfo['start'])
-                    # print('(끝) 공연기간: ' + perfPeriodInfo['end'])
-                    print('(종료) ' + periodName + ': ' + perfPeriodInfo['end'])
+                    # $$$ 시작 기간 데이터 리스트 추가
+                    productDataList['product_period_start'] = perfPeriodInfo['start']
+                    print('(시작) ' + elementName + ': ' + perfPeriodInfo['start'])
+                    # $$$ 종료 기간 데이터 리스트 추가
+                    productDataList['product_period_end'] = perfPeriodInfo['end']
+                    print('(종료) ' + elementName + ': ' + perfPeriodInfo['end'])
 
             # 공연시간 판단/추출
-            perfTimeInfo = isPerfTimeInfo(inform)
-            if perfTimeInfo is not False:
+            if elementName == '공연시간':
+                perfTimeInfo = extractPerfTimeInfo(inform)
                 print('==========')
                 if isinstance(perfTimeInfo, str):
+                    # $$$ 공연시간 데이터 리스트 추가
+                    productDataList['product_time_min'] = int(perfTimeInfo)
                     print('공연시간: ' + perfTimeInfo)
                 else:
+                    # $$$ 공연시간 데이터 리스트 추가
+                    productDataList['product_time_min'] = int(perfTimeInfo['perform'])
                     print('공연시간: ' + perfTimeInfo['perform'])
+                    # $$$ 인터미션 데이터 리스트 추가
+                    productDataList['product_time_break'] = int(perfTimeInfo['break'])
                     print('인터미션: ' + perfTimeInfo['break'])
 
             # 관람연령 출력
-            ageInfo = isAgeInfo(inform)
-            if ageInfo is not False:
+            if elementName == '관람연령':
+                ageInfo = extractAgeInfo(inform)
                 print('==========')
                 # 나이 분류
-                if ageInfo == '한국':
-                    print('한국식 나이: ' + ageInfo)
-                elif ageInfo == '만':
-                    print('만 나이: ' + ageInfo)
-                elif ageInfo == '성인':
-                    print('성인: ' + ageInfo)
-                elif ageInfo == '전체':
-                    print('전체: ' + ageInfo)
+                # str 타입이면 전체 관람가
+                # 그 외엔 dict 타입
+                if isinstance(ageInfo, str):
+                    # $$$ 연령 데이터 리스트 추가
+                    productDataList['product_age'] = 0
+                    productDataList['product_age_isKorean'] = False
+                    print('전체: ' + str(productDataList['product_age']))
                 else:
-                    raise Exception('관람연령 에러 발생')
+                    if ageInfo['type'] == '한국':
+                        # $$$ 연령 데이터 리스트 추가
+                        productDataList['product_age'] = ageInfo['age']
+                        productDataList['product_age_isKorean'] = True
+                        print('한국식 나이: ' + str(ageInfo['age']))
+                    elif ageInfo['type'] == '만':
+                        productDataList['product_age'] = ageInfo['age']
+                        productDataList['product_age_isKorean'] = False
+                        print('만 나이: ' + str(ageInfo['age']))
+                    elif ageInfo['type'] == '미취학아동입장불가':
+                        productDataList['product_age'] = ageInfo['age']
+                        productDataList['product_age_isKorean'] = True
+                        print('미취학아동입장불가: ' + str(ageInfo['age']))
+                    elif ageInfo['type'] == '전체':
+                        productDataList['product_age'] = ageInfo['age']
+                        productDataList['product_age_isKorean'] = False
+                        print('전체: ' + str(ageInfo['age']))
 
         # 가격 요소 출력
         if attribute == 'infoItem infoPrice':
@@ -85,13 +120,8 @@ def extractGeneralInfo(browser):
 
 # 일반 정보 추출 > 장소 판단 / 추출 메서드
 # 장소가 아니면 False, 맞다면 장소 정보를 반환 (단, (자세히)는 제외
-def isPlaceInfo(inform):
-    isPlace = inform.find_element(By.CLASS_NAME, 'infoLabel').text
-
-    if isPlace == '장소':
-        return re.sub('\(자세히\)', '', inform.find_element(By.CLASS_NAME, 'infoDesc').text)
-    else:
-        return False
+def extractPlaceInfo(inform):
+    return re.sub('\(자세히\)', '', inform.find_element(By.CLASS_NAME, 'infoDesc').text)
 
 
 # 일반 정보 추출 > 상세 장소 탐색 메서드
@@ -128,22 +158,17 @@ def extractDetailPlace(inform, browser):
 
 # 일반 정보 추출 > 공연 기간/기간 판단 / 추출 메서드
 # 공연 기간이 아니면 False, 맞다면 공연 기간 정보를 반환
-def isPerfPeriodInfo(isPeriod, inform):
-    isPeriodList = ["공연기간", "기간"]
-
-    # isPeriod = inform.find_element(By.CLASS_NAME, 'infoLabel').text
-    if isPeriodList.count(isPeriod) != 0:
-        periodInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
-        # 공연 기간이 나뉘어 있는지 판단 / 추출
-        isPeriodSplit = isPeriodInfoSplit(periodInfo)
-        # 나뉘어 있지 않다면 str 타입 출력
-        if isPeriodSplit is False:
-            return periodInfo
-        # 공연 정보가 나뉘어 있다면 dict 타입 {'start': *, 'end': *} 로 출력
-        else:
-            return isPeriodSplit
+def extractPeriodInfo(inform):
+    periodInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
+    # 공연 기간이 나뉘어 있는지 판단 / 추출
+    isPeriodSplit = isPeriodInfoSplit(periodInfo)
+    # 나뉘어 있지 않다면 str 타입 출력
+    if isPeriodSplit is False:
+        return periodInfo
+    # 공연 정보가 나뉘어 있다면
+    # str 혹은 dict 타입 {'start': *, 'end': *} 로 출력
     else:
-        return False
+        return isPeriodSplit
 
 
 # 일반 정보 추출 > 공연 기간 판단/추출 > 공연 기간 시작/끝 판단 메서드
@@ -153,26 +178,29 @@ def isPeriodInfoSplit(periodInfo):
     isTerm = periodInfo.find(' ~')
     if isTerm == -1:
         return False
+    # 오픈런 유무 판단, 오픈런이면 이전 부분만 포함
     else:
-        return {'start': periodInfo.split(' ~')[0], 'end': periodInfo.split(' ~')[1]}
+        # return {'start': periodInfo.split(' ~')[0], 'end': periodInfo.split(' ~')[1]}
+        startPeriod = periodInfo.split(' ~')[0]
+        endPeriod = periodInfo.split(' ~')[1]
+        if endPeriod == '오픈런':
+            return {'start': startPeriod, 'end': 'OPENRUN'}
+        else:
+            return {'start': startPeriod, 'end': endPeriod}
 
 
 # 일반 정보 추출 > 공연 시간 판단/추출 메서드
 # 공연 시간이 아니면 False, 맞다면 공연 시간 정보를 반환
-def isPerfTimeInfo(inform):
-    isTime = inform.find_element(By.CLASS_NAME, 'infoLabel').text
-    if isTime == '공연시간':
-        timeInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
-        # 휴식 시간 포함되어 있는지 판단 / 추출
-        isIncludeBreak = isPerfTimeInfoIncludeBreak(timeInfo)
-        # 포함되어 있지 않다면 str 타입 출력
-        if isIncludeBreak is False:
-            return timeInfo
-        # 휴식 시간이 포함되어 있다면 dict 타입 {'perform': *, 'break': *} 로 출력
-        else:
-            return isIncludeBreak
+def extractPerfTimeInfo(inform):
+    timeInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
+    # 휴식 시간 포함되어 있는지 판단 / 추출
+    isIncludeBreak = isPerfTimeInfoIncludeBreak(timeInfo)
+    # 포함되어 있지 않다면 str 타입 출력
+    if isIncludeBreak is False:
+        return re.findall(r'[0-9]+', timeInfo)[0]
+    # 휴식 시간이 포함되어 있다면 dict 타입 {'perform': *, 'break': *} 로 출력
     else:
-        return False
+        return isIncludeBreak
 
 
 # 일반 정보 추출 > 공연 시간 판단/추출 > 휴식 정보 판단/추출 메서드
@@ -183,22 +211,18 @@ def isPerfTimeInfoIncludeBreak(timeInfo):
     if isBreak == -1:
         return False
     else:
-        timeInfoSplit = re.findall(r'[0-9]+분', timeInfo)
+        timeInfoSplit = re.findall(r'[0-9]+', timeInfo)
         return {'perform': timeInfoSplit[0], 'break': timeInfoSplit[1]}
 
 
 # 일반 정보 추출 > 관람 연령 판단/추출 메서드
 # 관람 연령이 아니면 False, 맞다면 관람 연령 정보를 반환
-def isAgeInfo(inform):
+def extractAgeInfo(inform):
     # 관람연령 출력
-    isAge = inform.find_element(By.CLASS_NAME, 'infoLabel').text
-    if isAge == '관람연령':
-        isAgeDetail = isAgeDetailInfo(inform.find_element(By.CLASS_NAME, 'infoDesc').text)
-        # 상세 관람 연령 판단/추출 메서드
-        # 전체 관람가 이면 str 타입 전체 / 만 or 한국 나이면 dict 타입 {'type': *, 'age': '*'} 반환
-        return isAgeDetail
-    else:
-        return False
+    isAgeDetail = isAgeDetailInfo(inform.find_element(By.CLASS_NAME, 'infoDesc').text)
+    # 상세 관람 연령 판단/추출 메서드
+    # 전체 관람가 이면 str 타입 전체 / 만 or 한국 나이면 dict 타입 {'type': *, 'age': '*'} 반환
+    return isAgeDetail
 
 
 # 일반 정보 추출 > 관람 연령 판단/추출 > 상세 관람 연령 판단/추출 메서드
@@ -207,17 +231,17 @@ def isAgeDetailInfo(ageInfo):
     # 전체 관람가 아니면
     if ageInfo.find('전체') == -1:
         # 만 / 한국식 나이일 경우 dict 타입 {'type': *, 'age': *} 로 출력
-        ageInfoSearch = re.search(r'\d+세|미취학아동입장불가', ageInfo).group(0)
+        ageInfoSearch = re.search(r'\d+|미취학아동입장불가', ageInfo).group(0)
         # 한국식 나이면 type = 한국학
         if ageInfoSearch == '미취학아동입장불가':
-            return {'type': '성인', 'age': ageInfoSearch}
-        if ageInfoSearch == '전체관람가':
-            return {'type': '전체', 'age': ageInfoSearch}
+            return {'type': '미취학아동입장불가', 'age': 6}
+        # if ageInfoSearch == '전체관람가':
+        #     return {'type': '전체', 'age': 0}
         if re.match(r'만', ageInfo) is None:
-            return {'type': '한국', 'age': ageInfoSearch}
+            return {'type': '한국', 'age': int(ageInfoSearch)}
         # 만 나이면 type = 만
         else:
-            return {'type': '만', 'age': ageInfoSearch}
+            return {'type': '만', 'age': int(ageInfoSearch)}
     # 전체 관람가 이면 '전체' 반환
     else:
         return '전체'

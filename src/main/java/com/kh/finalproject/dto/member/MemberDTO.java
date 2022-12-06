@@ -1,9 +1,5 @@
 package com.kh.finalproject.dto.member;
 
-<<<<<<< HEAD
-import lombok.Getter;
-
-=======
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
@@ -11,8 +7,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
->>>>>>> develop
 /**
  * 회원 DTO
  */
