@@ -1,5 +1,6 @@
 package com.kh.finalproject.entity;
 
+import com.kh.finalproject.entity.enumurate.ProductCategory;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 
@@ -35,6 +36,10 @@ public class ReserveTime {
 
     @Column(name = "reserve_time_min")
     private Integer minute;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "product_category", nullable = false)
+    private ProductCategory category;
 
     @OneToMany(mappedBy = "reserveTime")
     private List<Reserve> reserveList = new ArrayList<>();
