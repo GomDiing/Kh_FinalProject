@@ -24,12 +24,6 @@ public class SeatPrice {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "remain_quantity", nullable = false)
-    private Integer remainQuantity;
-
-    @Column(name = "total_quantity", nullable = false)
-    private Integer totalQuantity;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
