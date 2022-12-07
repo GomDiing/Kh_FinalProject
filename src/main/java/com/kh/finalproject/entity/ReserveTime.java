@@ -36,12 +36,6 @@ public class ReserveTime {
     @Column(name = "reserve_time_min")
     private Integer minute;
 
-    @Column(name = "remain_quantity", nullable = false)
-    private Integer remainQuantity;
-
-    @Column(name = "total_quantity", nullable = false)
-    private Integer totalQuantity;
-
     @OneToMany(mappedBy = "reserveTime")
     private List<Reserve> reserveList = new ArrayList<>();
 
@@ -52,7 +46,6 @@ public class ReserveTime {
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_price_index", nullable = false)
-    private SeatPrice seatPrice;
+    @OneToMany(mappedBy = "reserveTime")
+    private List<ReserveTimeSeatPrice> reserveTimeList = new ArrayList<>();
 }
