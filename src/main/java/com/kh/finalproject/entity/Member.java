@@ -1,7 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.dto.member.MemberDTO;
+import com.kh.finalproject.dto.member.UnregisterDTO;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
@@ -9,7 +9,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,27 +79,15 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
 
-//    public Member toEntity (MemberDTO memberDTO){
-//        this.id = memberDTO.getId();
-//        this.email = memberDTO.getEmail();
-//        this.name = memberDTO.getName();
-//        this.status = MemberStatus.ACTIVE;
-//        this.role = MemberRoleType.ROLE_USER;
-//
-//        return this;
-//    }
-//    블랙리스트 회원
-    public Member toEntity (MemberDTO memberDTO){
-        this.id = memberDTO.getId();
-        this.email = memberDTO.getEmail();
-        this.name = memberDTO.getName();
-        this.address=memberDTO.getAddress();
-        this.status = memberDTO.getMemberStatus();
-        this.role = MemberRoleType.ROLE_USER;
-        this.create_time = getCreate_time();
-
+    public Member toEntity(UnregisterDTO unregisterDTO){
+        this.id = unregisterDTO.getId();
+        this.password = unregisterDTO.getPassword();
+        this.name = unregisterDTO.getName();
+        this.address = unregisterDTO.getAddress();
+        this.unregister = unregisterDTO.getUnregister();
+        this.status = unregisterDTO.getMemberStatus();
         return this;
-    }
+    };
 
 }
 

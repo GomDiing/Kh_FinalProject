@@ -1,6 +1,8 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.member.UnregisterDTO;
+import com.kh.finalproject.dto.qna.ResponseQnADTO;
 import com.kh.finalproject.entity.enumurate.QnAStatus;
 import lombok.Getter;
 
@@ -44,4 +46,15 @@ public class QnA extends BaseTimeEntity {
 
     @Column(name = "qna_order", nullable = false)
     private Integer order;
+
+    @Column(name = "qna_reply")
+    private String reply;
+
+    public QnA toEntity(ResponseQnADTO responseQnADTO){
+        this.title = responseQnADTO.getTitle();
+        this.content = responseQnADTO.getContent();
+        this.reply =responseQnADTO.getReply();
+
+        return this;
+    }
 }

@@ -17,10 +17,10 @@ public interface MemberService {
     void signup(SignupDTO signupDto);
 
     /**
-     * 회원 탈퇴 메서드
+     * 회원 탈퇴 메서드(관리자 강제탈퇴)
      * 실제로 삭제되지 않고 상태 변환 후 탈퇴 시간 기록
      */
-    void unregister(UnregisterDTO unregisterDTO);
+    Boolean unregister(UnregisterDTO unregisterDTO);
 
     /**
      * 중복 이메일 검증 메서드
@@ -42,11 +42,16 @@ public interface MemberService {
      * 비밀번호 변경 메서드
      */
     void updatePassword(UpdatePasswordDTO updatePasswordDTO);
+//    관리자권한 회원탈퇴
+    void deleteMember(String id);
 
     /**
      * 전체 회원 조회 메서드
      */
     List<MemberDTO> searchAllMember();
+
+//    블랙리스트 전체조회
+    List<MemberDTO> searchAllBlackMember();
 
     /**
      * [관리자 차트] 테이블 총 회원수 갱신 메서드

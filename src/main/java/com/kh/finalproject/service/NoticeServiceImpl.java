@@ -3,16 +3,10 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.dto.notice.NoticeDTO;
-import com.kh.finalproject.dto.notice.RemoveNoticeDTO;
 import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.type.NTextType;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
@@ -36,18 +30,12 @@ public class NoticeServiceImpl implements NoticeService {
         Notice checkNotice = noticeRepository.findById(notice.getIndex()).orElseThrow(EmptyStackException::new);
         Notice rst = noticeRepository.save(notice);
         return true;
-
     }
 
-    //    @Override
-//    public String removeNotice(RemoveNoticeDTO removeNoticeDTO) {
-//
-//    }
-   @Override
-    public void removeNotice(Long index){
+    @Override
+    public void removeNotice(Long index) {
         noticeRepository.deleteById(index);
     }
-
     @Override
     public List<NoticeDTO> selectAll() {
         List<NoticeDTO> noticeDTOSList = new ArrayList<>();
@@ -77,4 +65,5 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeDTOSList;
 
     }
+
 }

@@ -3,8 +3,6 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.dto.notice.NoticeDTO;
-import com.kh.finalproject.dto.notice.RemoveNoticeDTO;
-
 import java.util.List;
 
 /**
@@ -27,7 +25,6 @@ public interface NoticeService {
      */
     void removeNotice(Long index);
 
-
     /**
      * 공지사항 전체 조회 메서드
      */
@@ -39,5 +36,6 @@ public interface NoticeService {
 //    NoticeDTO selectByIndex(Long index);
 
     List<NoticeDTO> selectByIndex(Long index);
+
 }
 
