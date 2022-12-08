@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 인터파크 카테고리 랭크 추출 메서드
 def crawlingRankingMain():
-    for count in range(0, 1):
+    for count in range(0, 4):
         crawlingRankingMainDetail(count)
 
 

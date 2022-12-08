@@ -11,7 +11,7 @@ from crawling.Common import waitUntilElementLocated
 
 
 # 일반 정보 추출
-def extractGeneralInfo(browser, productDataList):
+def extractGeneralInfo(browser, productDataList, seatPriceDataList):
     # 아래 요소 추출
     # ******************** #
     # 장소
@@ -115,7 +115,7 @@ def extractGeneralInfo(browser, productDataList):
 
         # 가격 요소 출력
         if attribute == 'infoItem infoPrice':
-            extractPriceInfo(inform, browser)
+            extractPriceInfo(inform, browser, seatPriceDataList)
 
 
 # 일반 정보 추출 > 장소 판단 / 추출 메서드
@@ -248,7 +248,7 @@ def isAgeDetailInfo(ageInfo):
 
 
 # 가격 정보 출력 메서드
-def extractPriceInfo(inform, browser):
+def extractPriceInfo(inform, browser, seatPriceDataList):
     infoPriceItemList = inform.find_elements(By.CSS_SELECTOR, Constants.priceItemListCss)
     # 가격 요소 인덱스 확인용
     # index = 0
@@ -269,22 +269,35 @@ def extractPriceInfo(inform, browser):
         # pass
         print('==========')
         for count in range(0, len(seatInfoList)):
+            seatPriceDataRecord = {}
             print(str(count + 1) + '번 좌석 정보 ' + seatInfoList[count])
             print(str(count + 1) + '번 가격 정보 ' + priceInfoList[count])
+            seatPriceDataRecord['seat'] = seatInfoList[count]
+            seatPriceDataRecord['price'] = priceInfoList[count].replace(',', '')
+
+            seatPriceDataList.append(seatPriceDataRecord)
+
     else:
         # 상세 좌석/가격 정보 출력 메서드
         addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser)
         print('==========')
         for count in range(0, len(seatInfoList)):
+            seatPriceDataRecord = {}
             print('*** 상세: ' + str(count + 1) + '번 좌석 정보 ' + seatInfoList[count])
-            print('*** 상세: ' + str(count + 1) + '번 가격 정보 ' + priceInfoList[count])
+            print('*** 상세: ' + str(count + 1) + '번 가격 정보 ' + priceInfoList[count].replace(',', ''))
+            seatPriceDataRecord['seat'] = seatInfoList[count]
+            seatPriceDataRecord['price'] = priceInfoList[count]
+
+            seatPriceDataList.append(seatPriceDataRecord)
+
+    return seatPriceDataList
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V1
 # 좌석, 가격 정보를 순서에 맞게 리스트에 저장하는 메서드 호출, 다른 구조로 정렬 되었다면 False 반환
 def addListOfPriceInfoV1(seatInfoList, priceInfoList, infoPriceItemList):
-    seatInfoList.clear()
     priceInfoList.clear()
+    seatInfoList.clear()
     try:
         index = 0
         for infoPriceItem in infoPriceItemList[1:]:
@@ -348,6 +361,8 @@ def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
 
     # 해당 팝업 창 나올 때 까지 대기, 없다면 에러
     waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPriceTableCss)
+
+    time.sleep(0.5)
 
     # 상세 좌석/가격 정보 선택
     detailInfoList = browser.find_element(By.CSS_SELECTOR, Constants.detailPriceTableCss).find_elements(By.CSS_SELECTOR, 'tr')

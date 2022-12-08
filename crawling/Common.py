@@ -7,7 +7,7 @@ from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from sqlalchemy import MetaData, Table, insert, select
+from sqlalchemy import MetaData, Table, insert, select, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
 from sqlalchemy.orm import sessionmaker
@@ -163,10 +163,11 @@ def commitRankingDataList(rankingDataList):
     currentUrlKeyList = rankingDataList['product_url_list']
 
     # url 리스트 전체 개수 추출
+    print('keyList: ' + str(len(currentUrlKeyList)))
     totalCount = len(currentUrlKeyList)
 
     # 카테고리 추출
-    category = rankingDataList['product_ranking_category']
+    category = rankingDataList['product_category']
 
     # for 문 인덱스 선언
     currentOrder = 0
@@ -197,7 +198,7 @@ def commitRankingDataList(rankingDataList):
             # print(str(row))
             print('tableOrder = ' + str(tableOrder))
 
-        if tableOrder != currentOrder or tableOrder != 0:
+        if tableOrder != currentOrder and tableOrder != 0:
             # isTrue = True
             print('Update Query!!!' + urlKey)
             updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == currentOrder) \
@@ -206,12 +207,12 @@ def commitRankingDataList(rankingDataList):
             # Commit
             commit_db(updateQuery)
 
-        # 조회되지 않는다면 응답 영화 데이터 추가
+        # 조회되지 않는다면 응답 순위 데이터 추가
         # if isTrue is False:
         if tableOrder == 0:
             print("Insert Query!!!" + urlKey)
 
-            insertQuery = insert(t_ranking).values(ranking_order=currentOrder,
+            insertQuery = insert(t_ranking).values(ranking_order=currentOrder + 1,
                                                    ranking_category=category,
                                                    product_code=str(urlKey))
 
@@ -227,46 +228,84 @@ def commitRankingDataList(rankingDataList):
 
         # 카운트 수 증가
         currentOrder += 1
+
         print('currentOrder = ' + str(currentOrder))
         print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+
+    deleteQuery = delete(t_ranking).where(t_ranking.c.ranking_category == category) \
+        .where(t_ranking.c.ranking_order > totalCount)
+    print('DELETE!!! : ' + str(deleteQuery))
+    commit_db(deleteQuery)
+
+
+def browseRankingUrlList():
+    rankingUrlList = []
+    t_ranking = None
+    for count in range(0, 4):
+        if count == 0:
+            t_ranking = Table('ranking_week', metadata_obj, autoload_with=engine, autoload=True)
+
+        if count == 1:
+            t_ranking = Table('ranking_month', metadata_obj, autoload_with=engine, autoload=True)
+
+        if count == 2:
+            t_ranking = Table('ranking_close_soon', metadata_obj, autoload_with=engine, autoload=True)
+
+        if t_ranking is None:
+            raise Exception('No Ranking Full Url!!!')
+
+        selectRankingQuery = select(t_ranking)
+
+        resultRankingList = db.execute(selectRankingQuery)
+
+        for resultRankingRecord in resultRankingList:
+            rankingUrlList.append(resultRankingRecord['product_code'])
+
+    return rankingUrlList
 
 
 def commitProductDataList(productDataList):
     t_product = Table('product', metadata_obj, autoload_with=engine, autoload=True)
 
-    print('product_isInfoCasting: ' + str(productDataList['product_isInfoCasting']))
-    print('product_age_isKorean: ' + str(productDataList['product_age_isKorean']))
-    print('product_isInfoTimeCasting: ' + str(productDataList['product_isInfoTimeCasting']))
+    isExist = isExistTable(t_product, productDataList['product_code'])
 
-    insertQuery = insert(t_product).values(product_code=productDataList['product_code'],
-                                           product_url=productDataList['product_url'],
-                                           product_title=productDataList['product_title'],
-                                           product_category=productDataList['product_category'],
-                                           product_thumb_poster_url=productDataList['product_thumb_poster_url'],
-                                           product_detail_poster_url=productDataList['product_detail_poster_url'],
-                                           product_casting_poster_url=productDataList['product_casting_poster_url'],
-                                           product_location=productDataList['product_location'],
-                                           product_detail_location=productDataList['product_detail_location'],
-                                           product_period_start=productDataList['product_period_start'],
-                                           product_period_end=productDataList['product_period_end'],
-                                           product_age=productDataList['product_age'],
-                                           product_age_is_korean=productDataList['product_age_isKorean'],
-                                           product_time_min=productDataList['product_time_min'],
-                                           product_time_break=productDataList['product_time_break'],
-                                           product_is_info_casting=productDataList['product_isInfoCasting'],
-                                           product_is_info_time_casting=productDataList['product_isInfoTimeCasting'],
-                                           product_rate_average=0.0)
+    if isExist:
+        print('Already exist !!! \nproduct_code in product table ==>' + productDataList['product_code'])
+    # print('product_isInfoCasting: ' + str(productDataList['product_isInfoCasting']))
+    # print('product_age_isKorean: ' + str(productDataList['product_age_isKorean']))
+    # print('product_isInfoTimeCasting: ' + str(productDataList['product_isInfoTimeCasting']))
 
-    commit_db(insertQuery)
+    else:
+        insertQuery = insert(t_product).values(product_code=productDataList['product_code'],
+                                               product_url=productDataList['product_url'],
+                                               product_title=productDataList['product_title'],
+                                               product_category=productDataList['product_category'],
+                                               product_thumb_poster_url=productDataList['product_thumb_poster_url'],
+                                               product_detail_poster_url=productDataList['product_detail_poster_url'],
+                                               product_casting_poster_url=productDataList['product_casting_poster_url'],
+                                               product_location=productDataList['product_location'],
+                                               product_detail_location=productDataList['product_detail_location'],
+                                               product_period_start=productDataList['product_period_start'],
+                                               product_period_end=productDataList['product_period_end'],
+                                               product_age=productDataList['product_age'],
+                                               product_age_is_korean=productDataList['product_age_isKorean'],
+                                               product_time_min=productDataList['product_time_min'],
+                                               product_time_break=productDataList['product_time_break'],
+                                               product_is_info_casting=productDataList['product_isInfoCasting'],
+                                               product_is_info_time_casting=productDataList[
+                                                   'product_isInfoTimeCasting'],
+                                               product_rate_average=0.0)
+
+        commit_db(insertQuery)
 
 
 # 중복 순위 데이터 처리하는 메서드
 # 중복 데이터가 있다면 True, 그렇지 않으면 False 반환
-def isExistProduct(urlKey):
+def isExistTable(table_name, urlKey):
     # 테이블 연결
-    t_product = Table("product", metadata_obj, autoload_with=engine)
+    # t_product = Table("product", metadata_obj, autoload_with=engine)
     # 중복된 데이터를 조회하는 구문 실행
-    selectQuery = select(t_product).where(t_product.c.product_code == urlKey)
+    selectQuery = select(table_name).where(table_name.c.product_code == urlKey)
     resetSelectQuery = db.execute(selectQuery)
 
     # 중복 데이터가 있다면 True, 없다면 False
@@ -274,3 +313,221 @@ def isExistProduct(urlKey):
         if row:
             return True
     return False
+
+
+def isExistTableForReserveTimeCasting(table_name, reserve_time_index):
+    isExistQuery = select(table_name).where(table_name.c.reserve_time_index == reserve_time_index)
+    resultExistQuery = db.execute(isExistQuery)
+
+    # 중복 데이터가 있다면 True, 없다면 False
+    for row in resultExistQuery:
+        if row:
+            return True
+    return False
+
+
+def isExistTableForReserveTimeSeatPrice(table_name, reserve_time_index):
+    isExistQuery = select(table_name).where(table_name.c.reserve_time_index == reserve_time_index)
+    resultExistQuery = db.execute(isExistQuery)
+
+    # 중복 데이터가 있다면 True, 없다면 False
+    for row in resultExistQuery:
+        if row:
+            return True
+    return False
+
+
+def commitReserveTimeDataList(reserveTimeDataList, product_code, product_category):
+    t_reserve_time = Table('reserve_time', metadata_obj, autoload_with=engine, autoload=True)
+    t_seat_price = Table('seat_price', metadata_obj, autoload_with=engine, autoload=True)
+
+    isExist = isExistTable(t_reserve_time, product_code)
+
+    if isExist:
+        print('Already exist !!! \nproduct_code in reserve_time table ==>' + product_code)
+    else:
+        for reserveTimeDataRecord in reserveTimeDataList:
+            # print(str(reserveTimeDataRecord))
+
+            # selectSeatPrice = select(t_seat_price).where(
+            #     t_seat_price.c.product_code == product_code)
+
+            # resultSeatPrice = db.execute(selectSeatPrice)
+            insertQuery = insert(t_reserve_time).values(
+                reserve_time_date=reserveTimeDataRecord['reserve_time_date'],
+                reserve_time=reserveTimeDataRecord['reserve_time'],
+                reserve_time_hour=reserveTimeDataRecord['reserve_time_hour'],
+                reserve_time_min=reserveTimeDataRecord['reserve_time_min'],
+                # remain_quantity=reserveTimeDataRecord['remain_quantity'],
+                # total_quantity=reserveTimeDataRecord['total_quantity'],
+                reserve_time_turn=reserveTimeDataRecord['reserve_time_turn'],
+                product_code=product_code,
+                product_category=product_category)
+
+            commit_db(insertQuery)
+
+
+def commitReserveTimeCasting(reserveTimeDataList, product_code):
+    t_reserve_time_casting = Table('reserve_time_casting', metadata_obj, autoload_with=engine, autoload=True)
+    t_reserve_time = Table('reserve_time', metadata_obj, autoload_with=engine, autoload=True)
+    t_casting = Table('casting', metadata_obj, autoload_with=engine, autoload=True)
+
+    # casting_id = product_code + '1'
+
+    # isExist = isExistTableForReserveTimeCasting(t_reserve_time_casting, casting_id)
+
+    # if isExist:
+    #     print('Already exist !!! \ncasting_id in reserve_time_casting table ==>' + casting_id)
+    # else:
+    for reserveTimeDataRecord in reserveTimeDataList:
+        # print(str(reserveTimeDataRecord))
+
+        selectReserveTimeQuery = select(t_reserve_time).where(t_reserve_time.c.product_code == product_code) \
+            .where(t_reserve_time.c.reserve_time == reserveTimeDataRecord['reserve_time']) \
+            .where(t_reserve_time.c.reserve_time_turn == reserveTimeDataRecord['reserve_time_turn'])
+
+        resultReserveTime = db.execute(selectReserveTimeQuery)
+        for resultReserveTimeRecord in resultReserveTime:
+            # print(str(resultReserveTimeRecord))
+            reserve_time_index = resultReserveTimeRecord['reserve_time_index']
+
+            isExist = isExistTableForReserveTimeCasting(t_reserve_time_casting, reserve_time_index)
+
+            if isExist:
+                print('Already exist !!! \nreserve_time_index in reserve_time_casting table ==>' + str(reserve_time_index))
+
+            else:
+                for reserveTimeActorRecord in reserveTimeDataRecord['reserveTimeActorList']:
+                    character = reserveTimeActorRecord['Character']
+                    actor = reserveTimeActorRecord['Actor']
+
+                    selectCastingQuery = select(t_casting).where(t_casting.c.product_code == product_code) \
+                        .where(t_casting.c.casting_character == character).where(t_casting.c.casting_actor == actor)
+
+                    resultCasting = db.execute(selectCastingQuery)
+                    for resultCastingRecord in resultCasting:
+                        casting_id = resultCastingRecord['casting_id']
+                        print('casting_id: ' + casting_id)
+
+                        insertQuery = insert(t_reserve_time_casting).values(casting_id=casting_id,
+                                                                            reserve_time_index=reserve_time_index)
+
+                        commit_db(insertQuery)
+
+
+def commitReserveTimeSeatPrice(product_code):
+    t_reserve_time_seat_price = Table('reserve_time_seat_price', metadata_obj, autoload_with=engine, autoload=True)
+    t_seat_price = Table('seat_price', metadata_obj, autoload_with=engine, autoload=True)
+    t_reserve_time = Table('reserve_time', metadata_obj, autoload_with=engine, autoload=True)
+
+    remain_quantity = 100
+    total_quantity = 100
+
+    selectReserveTimeQuery = select(t_reserve_time).where(t_reserve_time.c.product_code == product_code)
+
+    resultReserveTime = db.execute(selectReserveTimeQuery)
+
+    for resultReserveTimeRecord in resultReserveTime:
+        reserve_time_index = resultReserveTimeRecord['reserve_time_index']
+
+        isExist = isExistTableForReserveTimeSeatPrice(t_reserve_time_seat_price, reserve_time_index)
+
+        if isExist:
+            print('Already exist !!! \nreserve_time_index in reserve_time_seat_price table ==>' + str(reserve_time_index))
+
+        else:
+            selectSeatPriceQuery = select(t_seat_price).where(t_seat_price.c.product_code == product_code)
+
+            resultSeatPrice = db.execute(selectSeatPriceQuery)
+
+            # 예매 시간 정보가 상시 상품일 경우
+            if resultReserveTimeRecord['reserve_time_turn'] == 0:
+                remain_quantity = 0
+                total_quantity = 0
+
+            for resultSeatPriceRecord in resultSeatPrice:
+                seat_price_index = resultSeatPriceRecord['seat_price_index']
+
+                insertQuery = insert(t_reserve_time_seat_price).values(reserve_time_index=reserve_time_index,
+                                                                       seat_price_index=seat_price_index,
+                                                                       remain_quantity=remain_quantity,
+                                                                       total_quantity=total_quantity)
+
+                commit_db(insertQuery)
+
+
+def commitCasting(castingInfoTotalList, product_code):
+    t_casting = Table('casting', metadata_obj, autoload_with=engine, autoload=True)
+
+    isExist = isExistTable(t_casting, product_code)
+
+    if isExist:
+        print('Already exist !!! \nproduct_code in casting table ==>' + product_code)
+
+    else:
+        countOrder = 0
+        for castingInfoList in castingInfoTotalList:
+            countOrder = countOrder + 1
+            casting_id = product_code + str(countOrder)
+            insertQuery = insert(t_casting).values(casting_id=casting_id,
+                                                   casting_character=castingInfoList[0],
+                                                   casting_actor=castingInfoList[1],
+                                                   casting_info_url=castingInfoList[2],
+                                                   casting_img_url=castingInfoList[3],
+                                                   casting_order=countOrder,
+                                                   product_code=product_code)
+
+            commit_db(insertQuery)
+
+
+def commitSeatPriceDataList(seatPriceDataList, product_code):
+    t_seat_price = Table('seat_price', metadata_obj, autoload_with=engine, autoload=True)
+
+    isExist = isExistTable(t_seat_price, product_code)
+
+    if isExist:
+        print('Already exist !!! \nproduct_code in seat_price table ==>' + product_code)
+
+    else:
+        for seatPriceDataRecord in seatPriceDataList:
+            insertQuery = insert(t_seat_price).values(price=int(seatPriceDataRecord['price']),
+                                                      seat=seatPriceDataRecord['seat'],
+                                                      product_code=product_code)
+            commit_db(insertQuery)
+
+
+def commitStatisticsRecord(statisticsRecord):
+    t_statistics = Table('statistics', metadata_obj, autoload_with=engine, autoload=True)
+
+    product_code = statisticsRecord['product_code']
+
+    isExist = isExistTable(t_statistics, product_code)
+
+    if isExist:
+        print('Already exist !!! \nproduct_code in statistics table ==>' + product_code)
+
+    else:
+        insertQuery = insert(t_statistics).values(statistics_female=statisticsRecord['statistics_female'],
+                                                  statistics_male=statisticsRecord['statistics_male'],
+                                                  statistics_teen=statisticsRecord['statistics_teen'],
+                                                  statistics_twenties=statisticsRecord['statistics_twenties'],
+                                                  statistics_thirties=statisticsRecord['statistics_thirties'],
+                                                  statistics_forties=statisticsRecord['statistics_forties'],
+                                                  statistics_fifties=statisticsRecord['statistics_fifties'],
+                                                  product_code=product_code)
+        commit_db(insertQuery)
+
+
+def isExistInTable(product_code):
+    t_seat_price = Table('seat_price', metadata_obj, autoload_with=engine, autoload=True)
+    t_product = Table('product', metadata_obj, autoload_with=engine, autoload=True)
+    t_reserve_time = Table('reserve_time', metadata_obj, autoload_with=engine, autoload=True)
+
+    existSeatPrice = isExistTable(t_seat_price, product_code)
+    existProduct = isExistTable(t_product, product_code)
+    existReserveTime = isExistTable(t_reserve_time, product_code)
+
+    if existSeatPrice and existProduct and existReserveTime:
+        return True
+    else:
+        return False

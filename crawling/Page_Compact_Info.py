@@ -46,6 +46,9 @@ def isLimitedOrAlways(browser):
     # 상시 판매일 경우 sideContent, 그렇지 않으면 sideHeader
     isRegularSale = browser.find_element(By.CSS_SELECTOR, Constants.limitedOrAlwaysCss).get_attribute('class')
     if isRegularSale == 'sideContent':
+        isCloseProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > strong').text
+        if isCloseProduct == '판매종료':
+            return 'close'
         return 'always'
     else:
         return 'limited'
