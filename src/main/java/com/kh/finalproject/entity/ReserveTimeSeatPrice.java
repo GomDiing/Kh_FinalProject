@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class ReserveTimeSeatPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reserve_time_seat_index")
+    @Column(name = "reserve_time_seat_price_index")
     private Long index;
 
     @Column(name = "remain_quantity", nullable = false)
