@@ -3,11 +3,11 @@ package com.kh.finalproject.entity;
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
-import com.kh.finalproject.dto.notice.NoticeDTO;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 공지사항 테이블과 연결된 엔티티
@@ -41,17 +41,13 @@ public class Notice extends BaseTimeEntity {
         this.status = NoticeStatus.ACTIVE;
         return this;
     };
-    public Notice toEntity(NoticeDTO noticeDTO){
-        this.title = noticeDTO.getTitle();
-        this.content = noticeDTO.getContent();
-        return this;
-    };
 
-    public Notice toEntity(EditNoticeDTO editNoticeDTO){
+    public Notice toEntity(EditNoticeDTO editNoticeDTO, LocalDateTime createTime){
         this.index = editNoticeDTO.getIndex(); // 자동생성 index 가져오지 말라는데 보여지려면 어떻게../.
         this.title = editNoticeDTO.getTitle();
         this.content = editNoticeDTO.getContent();
         this.status = NoticeStatus.ACTIVE;
+        this.create_time = createTime;
         return this;
     }
 }

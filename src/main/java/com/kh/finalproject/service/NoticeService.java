@@ -17,7 +17,7 @@ public interface NoticeService {
     /**
      * 공지사항 수정 메서드
      */
-    Boolean editNotice(EditNoticeDTO editNoticeDTO);
+    Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index);
 
     /**
      * 공지사항 삭제 메서드

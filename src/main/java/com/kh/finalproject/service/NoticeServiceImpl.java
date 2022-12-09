@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +24,19 @@ public class NoticeServiceImpl implements NoticeService {
         Notice rst = noticeRepository.save(notice);
         return true;
     }
-
+//수정
     @Override
-    public Boolean editNotice(EditNoticeDTO editNoticeDTO) {
-        Notice notice = new Notice().toEntity(editNoticeDTO);
-        Notice checkNotice = noticeRepository.findById(notice.getIndex()).orElseThrow(EmptyStackException::new);
-        Notice rst = noticeRepository.save(notice);
+    public Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index) {
+//        Notice checkNotice = noticeRepository.findByIndex(notice.getIndex()).orElseThrow(EmptyStackException::new);
+        Notice findNotice = noticeRepository.findByIndex(index).get(0);
+        if (Objects.isNull(findNotice)) {
+            throw new EmptyStackException();
+        }
+
+        Notice newNotice = new Notice().toEntity(editNoticeDTO, findNotice.getCreate_time());
+
+        Notice rst = noticeRepository.save(newNotice);
+
         return true;
     }
 
@@ -36,15 +44,13 @@ public class NoticeServiceImpl implements NoticeService {
     public void removeNotice(Long index) {
         noticeRepository.deleteById(index);
     }
+//    공지 목록 조회 service
     @Override
     public List<NoticeDTO> selectAll() {
         List<NoticeDTO> noticeDTOSList = new ArrayList<>();
         List<Notice> noticeList = noticeRepository.findAll();
         for(Notice e : noticeList){
-            NoticeDTO noticeDTO = new NoticeDTO();
-            noticeDTO.setIndex(e.getIndex());
-            noticeDTO.setTitle(e.getTitle());
-            noticeDTO.setContent(e.getContent());
+            NoticeDTO noticeDTO = new NoticeDTO().toDTO(e);
             noticeDTOSList.add(noticeDTO);
         }
         return noticeDTOSList;
