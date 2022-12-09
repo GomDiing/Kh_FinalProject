@@ -1,18 +1,21 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.notice.CreateNoticeDTO;
-import com.kh.finalproject.dto.notice.EditNoticeDTO;
-import com.kh.finalproject.dto.notice.NoticeDTO;
+import com.kh.finalproject.dto.notice.*;
+import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@Slf4j
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -55,4 +58,17 @@ public class NoticeController {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
+//    공지사항 체크박스로 삭제
+    @PostMapping("/notice/delete/check")
+    public ResponseEntity deleteCheckNotice(@RequestBody NoticeListDTO noticeListAAA){
+        List<CheckDTO> noticeList = noticeListAAA.getCheckDTOList();
+        log.info("noticeList = {}", noticeList.toString());
+        boolean isTrue = noticeService.deleteCheckNotice(noticeList);
+        if (isTrue) {
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

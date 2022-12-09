@@ -1,8 +1,11 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.notice.CheckDTO;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.dto.notice.NoticeDTO;
+import com.kh.finalproject.entity.Notice;
+
 import java.util.List;
 
 /**
@@ -36,6 +39,9 @@ public interface NoticeService {
 //    NoticeDTO selectByIndex(Long index);
 
     List<NoticeDTO> selectByIndex(Long index);
+
+//    체크박스 삭제
+    Boolean deleteCheckNotice(List<CheckDTO> noticeList);
 
 }
 

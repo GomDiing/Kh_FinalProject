@@ -42,6 +42,21 @@ public class Notice extends BaseTimeEntity {
         return this;
     };
 
+//    public Notice toEntity(EditNoticeDTO createNoticeDTO){
+//        this.title = createNoticeDTO.getTitle();
+//        this.content= createNoticeDTO.getContent();
+//        this.status = NoticeStatus.ACTIVE;
+//        return this;
+//    };
+
+    public Notice toEntity(EditNoticeDTO createNoticeDTO, Long index){
+        this.index = index;
+        this.title = createNoticeDTO.getTitle();
+        this.content= createNoticeDTO.getContent();
+        this.status = NoticeStatus.ACTIVE;
+        return this;
+    };
+
     public Notice toEntity(EditNoticeDTO editNoticeDTO, LocalDateTime createTime){
         this.index = editNoticeDTO.getIndex(); // 자동생성 index 가져오지 말라는데 보여지려면 어떻게../.
         this.title = editNoticeDTO.getTitle();
