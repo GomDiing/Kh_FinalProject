@@ -126,33 +126,36 @@ def extractPlaceInfo(inform):
 
 # 일반 정보 추출 > 상세 장소 탐색 메서드
 def extractDetailPlace(inform, browser):
-    # 상세 장소 팝업 창 열기
-    inform.find_element(By.CSS_SELECTOR, 'div > a').click()
+    try:
+        # 상세 장소 팝업 창 열기
+        inform.find_element(By.CSS_SELECTOR, 'div > a').click()
 
-    # 해당 팝업창 나올 때 까지 대기, 없다면 에러
-    waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPlacePopupOpenCss)
+        # 해당 팝업창 나올 때 까지 대기, 없다면 에러
+        waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPlacePopupOpenCss)
 
-    # 팝업 창에서 p 태그 리스트 추출
-    detailPlaceList = browser.find_elements(By.CSS_SELECTOR, Constants.detailPlaceListCss)
+        # 팝업 창에서 p 태그 리스트 추출
+        detailPlaceList = browser.find_elements(By.CSS_SELECTOR, Constants.detailPlaceListCss)
 
-    findDetailPlace = ''
+        findDetailPlace = ''
 
-    # p 태그 리스트에서 주소 값을 찾아 반환
-    for detailPlace in detailPlaceList:
-        if detailPlace.text[0:2] == '주소':
-            findDetailPlace = detailPlace.find_element(By.TAG_NAME, 'span').text
+        # p 태그 리스트에서 주소 값을 찾아 반환
+        for detailPlace in detailPlaceList:
+            if detailPlace.text[0:2] == '주소':
+                findDetailPlace = detailPlace.find_element(By.TAG_NAME, 'span').text
 
-    time.sleep(1.0)
+        time.sleep(1.0)
 
-    # 상세 정보 위치 팝업창 닫기
-    browser.find_element(By.CSS_SELECTOR, Constants.detailPlacePopupCloseCss).click()
+        # 상세 정보 위치 팝업창 닫기
+        browser.find_element(By.CSS_SELECTOR, Constants.detailPlacePopupCloseCss).click()
 
-    time.sleep(0.5)
+        time.sleep(0.5)
 
-    # 상세 장소 값이 비어 있으면 False, 그렇지 않으면 추출한 상세 장소 추출
-    if findDetailPlace != '':
-        return findDetailPlace
-    else:
+        # 상세 장소 값이 비어 있으면 False, 그렇지 않으면 추출한 상세 장소 추출
+        if findDetailPlace != '':
+            return findDetailPlace
+        else:
+            return False
+    except NoSuchElementException:
         return False
 
 
@@ -228,13 +231,20 @@ def extractAgeInfo(inform):
 # 일반 정보 추출 > 관람 연령 판단/추출 > 상세 관람 연령 판단/추출 메서드
 # 전체 관람가 / 만 or 한국 나이 판단/추출 메서드
 def isAgeDetailInfo(ageInfo):
+    print('ageInfo: ' + ageInfo)
     # 전체 관람가 아니면
     if ageInfo.find('전체') == -1:
         # 만 / 한국식 나이일 경우 dict 타입 {'type': *, 'age': *} 로 출력
-        ageInfoSearch = re.search(r'\d+|미취학아동입장불가', ageInfo).group(0)
+        ageInfoSearch = re.search(r'\d+|미취학아동입장불가|초등학생이상|중학생이상|고등학생이상', ageInfo).group(0)
         # 한국식 나이면 type = 한국학
         if ageInfoSearch == '미취학아동입장불가':
             return {'type': '미취학아동입장불가', 'age': 6}
+        if ageInfoSearch == '초등학생이상':
+            return {'type': '한국', 'age': 8}
+        if ageInfoSearch == '중학생이상':
+            return {'type': '한국', 'age': 14}
+        if ageInfoSearch == '고등학생이상':
+            return {'type': '한국', 'age': 17}
         # if ageInfoSearch == '전체관람가':
         #     return {'type': '전체', 'age': 0}
         if re.match(r'만', ageInfo) is None:
@@ -259,13 +269,16 @@ def extractPriceInfo(inform, browser, seatPriceDataList):
     # 가격 요소 리스트에 담기, 전체 가격 보기 요소 제외
     # for infoPriceItem in infoPriceItemList[1:]:
     isPriceInfoValidFirst = addListOfPriceInfoV1(seatInfoList, priceInfoList, infoPriceItemList)
+    print('isPriceInfoValidFirst: ' + str(isPriceInfoValidFirst))
     if isPriceInfoValidFirst is False:
         addListOfPriceInfoV2(seatInfoList, priceInfoList, infoPriceItemList)
         # index = index + 1
 
+    print('seatInfoList: ' + str(seatInfoList))
+    print('len(seatInfoList); ' + str(len(seatInfoList)))
     # 좌석 정보에 중복이 있는지 확인
     # 없다면 생략, 있다면 상세 정보 표기
-    if len(seatInfoList) == len(set(seatInfoList)):
+    if len(seatInfoList) == len(set(seatInfoList)) and len(seatInfoList) != 0:
         # pass
         print('==========')
         for count in range(0, len(seatInfoList)):
@@ -316,7 +329,8 @@ def savePriceInfoToListV1(index, seatInfoList, priceInfoList, infoPriceItem):
     seatInfo = infoPriceItem.find_element(By.CSS_SELECTOR, 'span.name').text
     priceInfo = infoPriceItem.find_element(By.CSS_SELECTOR, 'span.price').text
     # 예) VIP석, OP석 등 일때 마지막 '석' 제외하고 좌석 정보 리스트에 저장
-    seatInfoList.insert(index, re.sub(r'석$', '', seatInfo))
+    # seatInfoList.insert(index, re.sub(r'석$', '', seatInfo))
+    seatInfoList.insert(index, seatInfo)
     # 예) 10,000원, 8,000원 일때 원, 쉼표(,) 제외하고 가격 정보 리스트에 저장
     priceInfoList.insert(index, re.sub('[원,]', '', priceInfo))
 
@@ -340,15 +354,29 @@ def addListOfPriceInfoV2(seatInfoList, priceInfoList, infoPriceItemList):
     return True
 
 
-# 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V1 > 좌석/가격 정보 리스트 저장 메서드 V1
+# 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V2 > 좌석/가격 정보 리스트 저장 메서드 V2
 # li 태그로 정렬 되었을 때 좌석, 가격 요소 추출 후 리스트에 저장
 def savePriceInfoToListV2(index, seatInfoList, priceInfoList, prdPriceDetail):
     # 예) VIP석, OP석 등 일때 마지막 '석' 제외하고 좌석 정보 리스트에 저장
-    seatInfo = re.search(r'(.*?)석', prdPriceDetail.text).group(1)
-    seatInfoList.insert(index, seatInfo)
-    priceInfoSpace = re.sub(seatInfo, '', prdPriceDetail.text)
     # 예) 10,000원, 8,000원 일때 원, 쉼표(,) 제외하고 가격 정보 리스트에 저장
-    priceInfoList.insert(index, re.sub(r'석|\s+|원', '', priceInfoSpace))
+    priceInfoSplit = prdPriceDetail.text.split(' ')[-1]
+    priceInfo = re.sub(r'석|\s+|원|,', '', priceInfoSplit)
+    priceInfoList.insert(index, priceInfo)
+
+    seatInfo = prdPriceDetail.text.replace(priceInfoSplit, '')
+    seatInfoList.insert(index, seatInfo)
+
+
+    print('prdPriceDetail: ' + prdPriceDetail.text)
+    # seatInfo = prdPriceDetail.text.split(' ')[0]
+    # print('joinstr: ' + ' '.join(seatInfo))
+    # seatInfo = re.search(r'(.*?)', splitPrdPriceDetail).group(0).replace('석', '')
+    print('seatInfo: ' + seatInfo)
+    # priceInfoSpace = re.sub(seatInfo, '', prdPriceDetail.text)
+    # priceInfoSpace = prdPriceDetail.text.replace(seatInfo, '')
+    # priceInfoSpace = prdPriceDetail.text.split(' ')[1]
+    print('priceInfoSpace: ' + priceInfoSplit)
+    print('priceInfo: ' + priceInfo)
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 상세 좌석/가격 정보 출력 메서드
@@ -377,12 +405,21 @@ def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
         except NoSuchElementException:
             pass
 
-        # 좌석/가격 정보 추출, 이때 좌석은 석, 가격은 원, ',' 제거
-        detailSeatInfo = detailInfoText.split(' ')[0]
-        detailPriceInfo = detailInfoText.split(' ')[1]
-        # 추출한 정보는 리스트에 저장
-        seatInfoList.insert(count, re.sub(r'석$', '', detailSeatInfo))
-        priceInfoList.insert(count, re.sub(r'[원,]', '', detailPriceInfo))
+        try:
+            # 좌석/가격 정보 추출, 이때 좌석은 석, 가격은 원, ',' 제거
+            print('detailInfoText: ' + detailInfoText)
+            detailPriceInfo = detailInfoText.split(' ')[-1]
+            detailSeatInfo = detailInfoText.replace(detailPriceInfo, '')
+            if detailSeatInfo == '':
+                continue
+            print('detailSeatInfo: ' + str(detailSeatInfo))
+            print('detailPriceInfo: ' + str(detailPriceInfo))
+            # 추출한 정보는 리스트에 저장
+            # seatInfoList.insert(count, re.sub(r'석$', '', detailSeatInfo))
+            seatInfoList.insert(count, detailSeatInfo)
+            priceInfoList.insert(count, re.sub(r'[원,]', '', detailPriceInfo))
+        except IndexError:
+            pass
 
         count = count + 1
 

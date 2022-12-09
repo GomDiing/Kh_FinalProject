@@ -26,12 +26,14 @@ def removeAlert(browser):
 
 
 # 인터파크 페이지 크롤링 메서드
-def crawlingInterparkPage(urlCode):
+def crawlingInterparkPage(urlCode, product_category):
 
     # 이미 상품 / 예매 시간 / 좌석 테이블에 정보가 존재한다면 생략
     # #############################################
-    # if isExistInTable(urlCode):
-    #     return
+    if isExistInTable(urlCode):
+        print('================>>> Passing exist in Product & ReserveTime & SeatPrice  : Product Code is \"'
+              + str(urlCode) + '\"')
+        return
 
     # 상품 테이블에 삽입될 데이터 리스트 선언 및 초기화
     productDataList = {}
@@ -61,10 +63,17 @@ def crawlingInterparkPage(urlCode):
     browser = initChromBrowser()
 
     # url 접근
+    print('\n')
+    print('다음 url 접근 중 : ' + str(url))
     browser.get(url)
 
     # 가격 테이블 요쇼가 표시될 때 까지 대기
-    waitUntilElementLocated(browser, 10, By.CLASS_NAME, Constants.initBrowserWaitClass)
+    isExist = waitUntilElementLocated(browser, 10, By.CLASS_NAME, Constants.initBrowserWaitClass)
+
+    if isExist is False:
+        print('에러 발생!!!')
+        return
+
 
     # 경고 창 제거, 없다면 무시
     removeAlert(browser)
@@ -76,6 +85,9 @@ def crawlingInterparkPage(urlCode):
 
     if limitedOrAlways == 'close':
         print('판매종료')
+        return
+    if limitedOrAlways == 'not_open':
+        print('티켓오픈예정')
         return
 
     # 일반 정보 추출
@@ -102,7 +114,7 @@ def crawlingInterparkPage(urlCode):
         productDataList['product_isInfoTimeCasting'] = False
 
     # $$$ (디버그) 카테고리 데이터 리스트 추가
-    productDataList['product_category'] = 'Test'
+    productDataList['product_category'] = product_category
 
     # Product 테이블 데이터 Commit
     commitProductDataList(productDataList)

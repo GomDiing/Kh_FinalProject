@@ -1,7 +1,7 @@
 import re
 import Constants
 
-from Common import initChromBrowser, waitUntilElementLocated, commitRankingDataList
+from Common import initChromBrowser, waitUntilElementLocated, commitRankingDataList, crawlingRankingFromDBMain
 from selenium.webdriver.common.by import By
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,16 +11,18 @@ from selenium.webdriver.support import expected_conditions as EC
 # 인터파크 카테고리 랭크 추출 메서드
 def crawlingRankingMain():
     for count in range(0, 4):
-        crawlingRankingMainDetail(count)
+        # 반환할 데이터 딕셔너리 선언, Url 리스트 / 카테고리 / 순위 유형 를 담을 예정
+        rankingDataList = {}
+
+        crawlingRankingMainDetail(count, rankingDataList)
+
+        return rankingDataList
 
 
 # 인터파크 순위 유형 별 랭크 추출 메서드
-def crawlingRankingMainDetail(count):
+def crawlingRankingMainDetail(count, rankingDataList):
     # 공통 Url 경로
     allBaseListUrl = 'http://ticket.interpark.com/TPGoodsList.asp'
-
-    # 반환할 데이터 딕셔너리 선언, Url 리스트 / 카테고리 / 순위 유형 를 담을 예정
-    rankingDataList = {}
 
     # 뮤지컬
     if count == 0:
@@ -113,3 +115,13 @@ def crawlingRankingUrlList(index, rankingDataList):
     rankingDataList['product_url_list'] = currentUrlKeyList
 
     commitRankingDataList(rankingDataList)
+
+
+def browseRankingFromDB():
+    for count in range(0, 3):
+
+        rankingDataList = []
+
+        crawlingRankingFromDBMain(count, rankingDataList)
+
+        return rankingDataList

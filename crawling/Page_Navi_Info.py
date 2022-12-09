@@ -36,6 +36,9 @@ def extractNaviInfo(browser, productDataList):
             productDataList['product_isInfoTimeCasting'] = True
             # 캐스팅 테이블 정보 탐색 메서드
             reserveTimeDataList = extractNaviTabOfCasting(naviItem, browser, productDataList)
+            if reserveTimeDataList is False:
+                print('debug!!!')
+                resultNaviInfo['isExistTimeCasting'] = False
             resultNaviInfo['reserveTimeDataList'] = reserveTimeDataList
 
     time.sleep(1)
@@ -73,14 +76,27 @@ def extractNaviTabOfDetailAboutPoster(browser, productDataList):
                 productDataList['product_casting_poster_url'] = contentImagePath.get_attribute('src')
             print(str(index) + '번째 상세 정보 이미지 링크: ' + contentImagePath.get_attribute('src'))
     else:
-        # 구조가 첫번째와 다를 경우 (이미지가 1 이상 존재하지 않은 경우)
-        # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
-        contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
-            By.CSS_SELECTOR, Constants.detailImgStrucV2Css)
-        # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
-        productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
-        productDataList['product_casting_poster_url'] = None
-        print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+        try:
+            # 구조가 첫번째와 다를 경우 (이미지가 1 이상 존재하지 않은 경우)
+            # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
+            contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
+                By.CSS_SELECTOR, Constants.detailImgStrucV2Css)
+            # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
+            productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
+            productDataList['product_casting_poster_url'] = None
+            print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+        except NoSuchElementException:
+            try:
+                contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
+                    By.CSS_SELECTOR, Constants.detailImgStrucV3Css)
+                # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
+                productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
+                productDataList['product_casting_poster_url'] = None
+                print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+            except NoSuchElementException:
+                productDataList['product_detail_poster_url'] = 'null'
+                productDataList['product_casting_poster_url'] = None
+                print('$$$$$ 단독 상세 정보 이미지 링크가 존재하지 않습니다 $$$$$')
 
 
 # 네비게이션 메뉴 탐색 > 정보 탭 일 경우 탐색 메서드
@@ -193,10 +209,12 @@ def extractNaviTabOfCasting(naviItem, browser, productDataList):
     naviItem.find_element(By.CSS_SELECTOR, 'a').click()
 
     time.sleep(0.5)
-
-    # 캐스팅 상세 테이블 정보가 표시될 때 까지 대기
-    WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Constants.castingDetailTableCss)))
+    try:
+        # 캐스팅 상세 테이블 정보가 표시될 때 까지 대기
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, Constants.castingDetailTableCss)))
+    except TimeoutException:
+        return False
 
     # 캐스팅 테이블 경로
     castingDetailTable = browser.find_element(By.CSS_SELECTOR, Constants.castingDetailTableCss)
@@ -346,38 +364,50 @@ def extractNaviTabOfDetailAboutStatics(browser, productDataList):
     # 예매 정보 담을 dict 객체 생성
     statisticsRecord = {}
     statisticsRecord['product_code'] = productDataList['product_code']
-    # 예매자 공통 경로
-    statusInfo = browser.find_element(By.CSS_SELECTOR, Constants.commonStatisticsCss)
-    # 예매자 > 성별 경로
-    statOfGenderList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.genderStatisticsCss)
-    # 예매자 > 나이 경로
-    statOfAgeList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.ageStatisticsCss)
+    try:
+        # 예매자 공통 경로
+        statusInfo = browser.find_element(By.CSS_SELECTOR, Constants.commonStatisticsCss)
 
-    # 예매자 > 성별 > 남성/여성 통계 조회
-    for statOfGender in statOfGenderList:
-        isGender = statOfGender.find_element(By.CLASS_NAME, 'statGenderName').text
-        isValue = statOfGender.find_element(By.CLASS_NAME, 'statGenderValue').text
-        if isGender == '남자':
-            statisticsRecord['statistics_male'] = copy.deepcopy(float(isValue.replace('%', '')))
-            print('예매자 통계 > 남자 : ' + isValue)
-        else:
-            statisticsRecord['statistics_female'] = copy.deepcopy(float(isValue.replace('%', '')))
-            print('예매자 통계 > 여자 : ' + isValue)
+        # 예매자 > 성별 경로
+        statOfGenderList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.genderStatisticsCss)
+        # 예매자 > 나이 경로
+        statOfAgeList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.ageStatisticsCss)
 
-    # 예매자 > 성별 > 나이대 별 통계 조회
-    for statOfAge in statOfAgeList:
-        ageName = re.sub('대', '', statOfAge.find_element(By.CLASS_NAME, 'statAgeName').text)
-        agePercent = re.sub('%', '', statOfAge.find_element(By.CLASS_NAME, 'statAgePercent').text)
-        if ageName == '10':
-            statisticsRecord['statistics_teen'] = copy.deepcopy(float(agePercent))
-        if ageName == '20':
-            statisticsRecord['statistics_twenties'] = copy.deepcopy(float(agePercent))
-        if ageName == '30':
-            statisticsRecord['statistics_thirties'] = copy.deepcopy(float(agePercent))
-        if ageName == '40':
-            statisticsRecord['statistics_forties'] = copy.deepcopy(float(agePercent))
-        if ageName == '50':
-            statisticsRecord['statistics_fifties'] = copy.deepcopy(float(agePercent))
-        print(ageName + '(대) 예약율 : ' + agePercent + '(% 단위)')
+        # 예매자 > 성별 > 남성/여성 통계 조회
+        for statOfGender in statOfGenderList:
+            isGender = statOfGender.find_element(By.CLASS_NAME, 'statGenderName').text
+            isValue = statOfGender.find_element(By.CLASS_NAME, 'statGenderValue').text
+            if isGender == '남자':
+                statisticsRecord['statistics_male'] = copy.deepcopy(float(isValue.replace('%', '')))
+                print('예매자 통계 > 남자 : ' + isValue)
+            else:
+                statisticsRecord['statistics_female'] = copy.deepcopy(float(isValue.replace('%', '')))
+                print('예매자 통계 > 여자 : ' + isValue)
+
+        # 예매자 > 성별 > 나이대 별 통계 조회
+        for statOfAge in statOfAgeList:
+            ageName = re.sub('대', '', statOfAge.find_element(By.CLASS_NAME, 'statAgeName').text)
+            agePercent = re.sub('%', '', statOfAge.find_element(By.CLASS_NAME, 'statAgePercent').text)
+            if ageName == '10':
+                statisticsRecord['statistics_teen'] = copy.deepcopy(float(agePercent))
+            if ageName == '20':
+                statisticsRecord['statistics_twenties'] = copy.deepcopy(float(agePercent))
+            if ageName == '30':
+                statisticsRecord['statistics_thirties'] = copy.deepcopy(float(agePercent))
+            if ageName == '40':
+                statisticsRecord['statistics_forties'] = copy.deepcopy(float(agePercent))
+            if ageName == '50':
+                statisticsRecord['statistics_fifties'] = copy.deepcopy(float(agePercent))
+            print(ageName + '(대) 예약율 : ' + agePercent + '(% 단위)')
+    except NoSuchElementException:
+        statisticsRecord['statistics_male'] = 0
+        statisticsRecord['statistics_female'] = 0
+        statisticsRecord['statistics_teen'] = 0
+        statisticsRecord['statistics_twenties'] = 0
+        statisticsRecord['statistics_thirties'] = 0
+        statisticsRecord['statistics_forties'] = 0
+        statisticsRecord['statistics_fifties'] = 0
+
+        # productDataList['statisticsRecord'] = statisticsRecord
 
     productDataList['statisticsRecord'] = statisticsRecord

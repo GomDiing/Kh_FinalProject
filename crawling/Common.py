@@ -1,3 +1,4 @@
+import copy
 import time
 import traceback
 
@@ -42,7 +43,7 @@ Base = declarative_base()
 def initChromBrowser():
     # <<< 크롬 옵션 설정 >>> #
     chromeOptions = webdriver.ChromeOptions()
-    # chromeOptions.add_argument('--headless')
+    chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--window-size=1280,720')
     chromeOptions.add_argument('--no-sandbox')
 
@@ -59,10 +60,10 @@ def waitUntilElementLocated(browser, waitTime, byKey, byPath):
         print('time이 올바른 값이 아닙니다')
     if not isinstance(byKey, str):
         print('byKey가 올바른 값이 아닙니다')
-        return
+        return False
     if not isinstance(byPath, str):
         print('byPath가 올바른 값이 아닙니다')
-        return
+        return False
     else:
         # 해당 태그가 나타날 때 까지 대기
         try:
@@ -73,7 +74,7 @@ def waitUntilElementLocated(browser, waitTime, byKey, byPath):
             print('byPath: ' + byPath)
             browser.quit()
             # break
-            return
+            return False
         except Exception as e:
             print('Error!!! Exception!!!')
             print('byKey: ' + byKey)
@@ -81,8 +82,8 @@ def waitUntilElementLocated(browser, waitTime, byKey, byPath):
             traceback.print_exc()
             browser.quit()
             # break
-            return
-    return
+            return False
+    return True
 
 
 # 엔진 생성 메서드, 테이블 생성 확인
@@ -531,3 +532,31 @@ def isExistInTable(product_code):
         return True
     else:
         return False
+
+
+def crawlingRankingFromDBMain(count, rankingDataList):
+    t_table = ''
+
+    if count == 0:
+        # rankingDataList['product_ranking_category'] = 'Week'
+        t_table = Table('ranking_week', metadata_obj, autoload_with=engine, autoload=True)
+
+    # 월간 랭킹
+    if count == 1:
+        # rankingDataList['product_ranking_category'] = 'Month'
+        t_table = Table('ranking_month', metadata_obj, autoload_with=engine, autoload=True)
+
+    # 곧 종료 예정 랭킹
+    if count == 2:
+        # rankingDataList['product_ranking_category'] = 'CloseSoon'
+        t_table = Table('ranking_close_soon', metadata_obj, autoload_with=engine, autoload=True)
+
+    selectQuery = select(t_table)
+
+    resultSelectQuery = db.execute(selectQuery)
+
+    for resultSelectDataRecord in resultSelectQuery:
+        rankingDataRecord = {}
+        rankingDataRecord['product_code'] = copy.deepcopy(resultSelectDataRecord['product_code'])
+        rankingDataRecord['product_category'] = copy.deepcopy(resultSelectDataRecord['ranking_category'])
+        rankingDataList.append(rankingDataRecord)

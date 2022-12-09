@@ -17,6 +17,7 @@ def extractCompactInfo(browser, productDataList):
 
     print("\n<<<&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==--->>>")
     print("=========================================================================================================")
+    print('product_code: ' + productDataList['product_code'])
     print('타이틀: ' + title)
 
     # 한정 혹은 상시 상품 판단
@@ -46,10 +47,16 @@ def isLimitedOrAlways(browser):
     # 상시 판매일 경우 sideContent, 그렇지 않으면 sideHeader
     isRegularSale = browser.find_element(By.CSS_SELECTOR, Constants.limitedOrAlwaysCss).get_attribute('class')
     if isRegularSale == 'sideContent':
-        isCloseProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > strong').text
-        if isCloseProduct == '판매종료':
-            return 'close'
-        return 'always'
+        try:
+            isCloseProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > strong').text
+            if isCloseProduct == '판매종료':
+                return 'close'
+            if isCloseProduct == '상시상품':
+                return 'always'
+        except NoSuchElementException:
+            isNotOpenProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > p').text
+            if isNotOpenProduct == '티켓오픈안내':
+                return 'not_open'
     else:
         return 'limited'
 
