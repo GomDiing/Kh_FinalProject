@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.entity.enumurate.ProductCategory;
+import com.kh.finalproject.entity.enumurate.RankStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -30,4 +31,8 @@ public class RankingCloseSoon {
 
     @Column(name = "ranking_order", nullable = false)
     private Integer order;
+
+    @Column(name = "ranking_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RankStatus rankStatus;
 }
