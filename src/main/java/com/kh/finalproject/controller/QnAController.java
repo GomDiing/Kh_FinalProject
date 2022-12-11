@@ -22,8 +22,8 @@ public class QnAController {
     }
 //    qna 답장하기(관리자)
     @PostMapping("/qna/reply")
-    public ResponseEntity qnaReply (@RequestBody ResponseQnADTO responseQnADTO, Long index){
-        Boolean isTrue = qnAService.response(responseQnADTO, index);
+    public ResponseEntity qnaReply (@RequestBody ResponseQnADTO responseQnADTO){
+        Boolean isTrue = qnAService.response(responseQnADTO);
         if(isTrue){
             return new ResponseEntity<>(true,HttpStatus.OK);
         } else{
