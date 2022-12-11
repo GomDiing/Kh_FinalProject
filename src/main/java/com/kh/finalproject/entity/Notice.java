@@ -35,6 +35,7 @@ public class Notice extends BaseTimeEntity {
 //    @Column(name = "notice_views", nullable = false)
 //    private Integer views;
 
+//    공지 작성
     public Notice toEntity(CreateNoticeDTO createNoticeDTO){
         this.title = createNoticeDTO.getTitle();
         this.content= createNoticeDTO.getContent();

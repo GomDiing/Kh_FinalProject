@@ -40,7 +40,7 @@ public interface QnAService {
      * 문의 응답 메서드
      * 적절한 응답 처리 후 문의 상태를 '응답 완료'로 변경
      */
-    Boolean response(ResponseQnADTO responseQnADTO);
+    Boolean response(ResponseQnADTO responseQnADTO,Long index);
 
     /**
      * 추가 문의 메서드

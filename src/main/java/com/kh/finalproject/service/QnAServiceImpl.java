@@ -5,6 +5,9 @@ import com.kh.finalproject.entity.QnA;
 import com.kh.finalproject.repository.QnARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +48,12 @@ public class QnAServiceImpl implements QnAService{
         return qnaDTOList;
     }
 
+//    qna 답장 보내기
     @Override
-    public Boolean response(ResponseQnADTO responseQnADTO) {
-        return null;
+    @Transactional
+    public Boolean response(ResponseQnADTO responseQnADTO, Long index) {
+        Integer reply = qnARepository.updateReply(responseQnADTO.getReply(), responseQnADTO.getIndex());
+        return true;
     }
 
     @Override

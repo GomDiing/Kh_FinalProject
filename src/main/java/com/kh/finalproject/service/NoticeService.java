@@ -36,6 +36,7 @@ public interface NoticeService {
      */
 //    NoticeDTO selectByIndex(Long index);
 
+//    공지사항 상세페이지 이동 메서드
     List<NoticeDTO> selectByIndex(Long index);
 
 //    체크박스 삭제

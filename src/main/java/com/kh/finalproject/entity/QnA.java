@@ -7,6 +7,7 @@ import com.kh.finalproject.entity.enumurate.QnAStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 1대1 문의 테이블과 연결된 엔티티
@@ -50,10 +51,12 @@ public class QnA extends BaseTimeEntity {
     @Column(name = "qna_reply")
     private String reply;
 
+    @Column(name = "qna_reply_time")
+    private LocalDateTime replyTime;
+
     public QnA toEntity(ResponseQnADTO responseQnADTO){
-        this.title = responseQnADTO.getTitle();
-        this.content = responseQnADTO.getContent();
         this.reply =responseQnADTO.getReply();
+        this.replyTime = LocalDateTime.now();
 
         return this;
     }

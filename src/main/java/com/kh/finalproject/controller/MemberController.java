@@ -45,7 +45,4 @@ public class MemberController {
             return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
 }

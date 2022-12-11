@@ -36,10 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index) {
-//        Notice checkNotice = noticeRepository.findByIndex(notice.getIndex()).orElseThrow(EmptyStackException::new);
-//        Notice findNotice = noticeRepository.findByIndex(index).get(0);
         Integer updateCount = noticeRepository.updateNotice(new Notice().toEntity(editNoticeDTO, index));
-//        if (Objects.isNull(findNotice)) {
         if (updateCount == 0) {
             throw new EmptyStackException();
         }
