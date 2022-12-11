@@ -1,6 +1,5 @@
 package com.kh.finalproject.service;
 
-import com.kh.finalproject.controller.NoticeController;
 import com.kh.finalproject.dto.notice.CheckDTO;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
@@ -20,7 +19,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 @Slf4j
 public class NoticeServiceImpl implements NoticeService {
 
