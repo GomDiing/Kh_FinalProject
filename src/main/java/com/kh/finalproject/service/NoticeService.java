@@ -4,8 +4,6 @@ import com.kh.finalproject.dto.notice.CheckDTO;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.dto.notice.NoticeDTO;
-import com.kh.finalproject.entity.Notice;
-
 import java.util.List;
 
 /**

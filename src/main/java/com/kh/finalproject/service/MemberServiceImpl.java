@@ -7,13 +7,18 @@ import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Check;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
@@ -26,14 +31,6 @@ public class MemberServiceImpl implements MemberService{
     public Boolean unregister(UnregisterDTO unregisterDTO) {
         return null;
     }
-
-//    @Override
-//    public String unregister(UnregisterDTO unregisterDTO) {
-//        Member findBlack = memberRepository.findByStatus(MemberStatus.BLACKLIST);
-//        Member member = new Member().toEntity(unregisterDTO);
-//        Member rst = memberRepository.deleteAll(member);
-//        return true;
-//    }
 
     @Override
     public void validateDuplicateByEmail(String email) {
@@ -52,12 +49,6 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
-
-    }
-
-    @Override
-    public void deleteMember(String id) {
-        Member member = memberRepository.findById(Long.valueOf(id)).get();
 
     }
 
@@ -98,4 +89,16 @@ public class MemberServiceImpl implements MemberService{
     public void editMemberInfo(EditMemberInfoDTO editMemberInfoDTO) {
 
     }
+//    체크박스로 회원 탈퇴시키기
+    @Transactional
+    public Boolean deleteCheckMember(List<CheckMemberDTO> memberIndexList){
+        List<Member> deleteCheckList = new ArrayList<>();
+        for(CheckMemberDTO memberIndex : memberIndexList){
+            log.info("memberIndex = {}", memberIndex.getIndex());
+            memberRepository.changeStatusMember(memberIndex.getIndex(),MemberStatus.UNREGISTER);
+        }
+        return true;
+    }
+
+
 }

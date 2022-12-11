@@ -1,6 +1,8 @@
 package com.kh.finalproject.repository;
 
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.Notice;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,5 +25,8 @@ public interface NoticeRepository extends JpaRepository <Notice,Long> {
     @Modifying
     @Query("UPDATE Notice n SET n.status = :status where n.index = :index")
     Integer changeStatusNotice(@Param("index") Long index, @Param("status") NoticeStatus status);
+
+//  상태값 ACTIVE 인것만 조회하도록
+    List<Notice> findByStatus(NoticeStatus status);
 }
 

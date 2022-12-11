@@ -13,7 +13,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class QnAController {
     private final QnAService qnAService;
-
 //    qna 조회
     @GetMapping("/qna/list")
     public ResponseEntity qnaList() {

@@ -42,8 +42,6 @@ public interface MemberService {
      * 비밀번호 변경 메서드
      */
     void updatePassword(UpdatePasswordDTO updatePasswordDTO);
-//    관리자권한 회원탈퇴
-    void deleteMember(String id);
 
     /**
      * 전체 회원 조회 메서드
@@ -69,4 +67,7 @@ public interface MemberService {
      * 회원 정보 수정 메서드
      */
     void editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
+
+//    체크박스로 회원 탈퇴
+    Boolean deleteCheckMember(List<CheckMemberDTO> memberIndexList);
 }
