@@ -55,8 +55,9 @@ public class QnA extends BaseTimeEntity {
     private LocalDateTime replyTime;
 
     public QnA toEntity(ResponseQnADTO responseQnADTO){
+        this.index=responseQnADTO.getIndex();
         this.reply =responseQnADTO.getReply();
-        this.replyTime = LocalDateTime.now();
+//        this.replyTime = LocalDateTime.now();
 
         return this;
     }

@@ -19,11 +19,14 @@ public class QnADTO {
     private String category;
     private String content;
     private QnAStatus status;
+    private Long index;
+
 //    public void updateMember(Member member) {
 //        this.member = member;
 //    }
 
     public QnADTO toDTO (QnA qna){
+        this.index = qna.getIndex();
         this.memberId = qna.getMember().getId();
         this.title = qna.getTitle();
         this.category=qna.getCategory();
