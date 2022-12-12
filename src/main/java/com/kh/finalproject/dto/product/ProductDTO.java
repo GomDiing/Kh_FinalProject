@@ -52,6 +52,4 @@ public class ProductDTO {
         this.rateAverage = product.getRateAverage();
         return this;
     }
-
-
 }
