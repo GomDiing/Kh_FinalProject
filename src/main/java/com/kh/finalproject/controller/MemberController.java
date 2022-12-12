@@ -3,8 +3,6 @@ package com.kh.finalproject.controller;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.MemberDTO;
-import com.kh.finalproject.dto.notice.CheckDTO;
-import com.kh.finalproject.dto.notice.NoticeListDTO;
 import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

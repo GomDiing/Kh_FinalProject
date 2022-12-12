@@ -9,13 +9,15 @@ import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import com.kh.finalproject.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,30 +42,29 @@ public class NoticeServiceImpl implements NoticeService {
         if (updateCount == 0) {
             throw new EmptyStackException();
         }
-//        Notice newNotice = new Notice().toEntity(editNoticeDTO, findNotice.getCreate_time());
-//        Notice rst = noticeRepository.save(newNotice);
         return true;
     }
 
 //    공지사항 디테일페이지 삭제버튼 기능
     @Override
     public void removeNotice(Long index) {
-        noticeRepository.deleteById(index);
+        noticeRepository.changeStatusNotice(index, NoticeStatus.DELETE);
     }
 
-//    공지 목록 조회 service
+
+    //    공지 목록 조회 service
     @Override
-    public List<NoticeDTO> selectAll() {
+    public List<NoticeDTO> selectAll(){
+//        PageRequest pageRequest = PageRequest.of(page,size,Sort.by("index").descending());
         List<NoticeDTO> noticeDTOSList = new ArrayList<>();
-        List<Notice> noticeList = noticeRepository.findByStatus(NoticeStatus.ACTIVE);
-//        List<Notice> noticeList = noticeRepository.findAll();
+        Page<Notice> noticeList = noticeRepository.findByStatus(NoticeStatus.ACTIVE, PageRequest.of(0,4,Sort.by("index").descending()));
         for(Notice e : noticeList){
             NoticeDTO noticeDTO = new NoticeDTO().toDTO(e);
             noticeDTOSList.add(noticeDTO);
         }
         return noticeDTOSList;
     }
-
+//공지사항 상세페이지별 데이터 조회
     @Override
     public List<NoticeDTO> selectByIndex(Long index) {
         List<NoticeDTO> noticeDTOSList = new ArrayList<>();
@@ -84,7 +85,6 @@ public class NoticeServiceImpl implements NoticeService {
         List<Notice> deleteList = new ArrayList<>();
         for (CheckDTO noticeIndex : noticeIndexList) {
             log.info("noticeIndex = {}", noticeIndex.getIndex());
-//            List<Notice> checkNotice = noticeRepository.findByIndex(noticeIndex);
             noticeRepository.changeStatusNotice(noticeIndex.getIndex(), NoticeStatus.DELETE);
         }
         return true;

@@ -4,6 +4,8 @@ import com.kh.finalproject.dto.notice.CheckDTO;
 import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.dto.notice.NoticeDTO;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 /**
@@ -32,11 +34,8 @@ public interface NoticeService {
     List<NoticeDTO> selectAll();
 
     /**
-     * 공지사항 조회 메서드
+     * 공지사항 상세페이지 조회 메서드
      */
-//    NoticeDTO selectByIndex(Long index);
-
-//    공지사항 상세페이지 이동 메서드
     List<NoticeDTO> selectByIndex(Long index);
 
 //    체크박스 삭제

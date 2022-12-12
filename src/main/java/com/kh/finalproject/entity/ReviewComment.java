@@ -62,4 +62,10 @@ public class ReviewComment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
+
+    /*연관 메서드*/
+    public void createAccuse(Accuse accuse){
+        accuseList.add(accuse);
+
+    }
 }

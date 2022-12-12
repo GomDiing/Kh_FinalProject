@@ -37,4 +37,8 @@ public class Casting {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code")
     private Product product;
+
+    public void code(Product product){
+        this.product = product;
+    }
 }

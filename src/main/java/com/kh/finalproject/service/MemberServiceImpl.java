@@ -1,14 +1,13 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
-import com.kh.finalproject.dto.notice.NoticeDTO;
 import com.kh.finalproject.entity.Member;
-import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Check;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

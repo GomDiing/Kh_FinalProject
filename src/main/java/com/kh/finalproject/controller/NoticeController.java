@@ -1,15 +1,12 @@
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.notice.*;
-import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor

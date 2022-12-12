@@ -88,6 +88,11 @@ public class Member extends BaseTimeEntity {
         this.status = unregisterDTO.getMemberStatus();
         return this;
     };
+    /*연관 메서드*/
+    public void createAccuse(Accuse accuse){
+        accuseListSuspectList.add(accuse);
+        accuseListVictimList.add(accuse);
+    }
 
 }
 

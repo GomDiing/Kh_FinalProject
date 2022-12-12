@@ -90,4 +90,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ReviewComment> reviewCommentList = new ArrayList<>();
+
+    public void code(Statistics statistics){
+        this.statistics = statistics;
+    }
+
 }

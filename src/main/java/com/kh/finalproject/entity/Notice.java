@@ -5,7 +5,6 @@ import com.kh.finalproject.dto.notice.CreateNoticeDTO;
 import com.kh.finalproject.dto.notice.EditNoticeDTO;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import lombok.Getter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -32,10 +31,8 @@ public class Notice extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private NoticeStatus status;
 
-//    @Column(name = "notice_views", nullable = false)
-//    private Integer views;
 
-//    공지 작성
+//    공지사항 작성하기
     public Notice toEntity(CreateNoticeDTO createNoticeDTO){
         this.title = createNoticeDTO.getTitle();
         this.content= createNoticeDTO.getContent();
@@ -43,13 +40,7 @@ public class Notice extends BaseTimeEntity {
         return this;
     };
 
-//    public Notice toEntity(EditNoticeDTO createNoticeDTO){
-//        this.title = createNoticeDTO.getTitle();
-//        this.content= createNoticeDTO.getContent();
-//        this.status = NoticeStatus.ACTIVE;
-//        return this;
-//    };
-
+// 공지사항 수정하기
     public Notice toEntity(EditNoticeDTO createNoticeDTO, Long index){
         this.index = index;
         this.title = createNoticeDTO.getTitle();
@@ -57,15 +48,6 @@ public class Notice extends BaseTimeEntity {
         this.status = NoticeStatus.ACTIVE;
         return this;
     };
-
-    public Notice toEntity(EditNoticeDTO editNoticeDTO, LocalDateTime createTime){
-        this.index = editNoticeDTO.getIndex(); // 자동생성 index 가져오지 말라는데 보여지려면 어떻게../.
-        this.title = editNoticeDTO.getTitle();
-        this.content = editNoticeDTO.getContent();
-        this.status = NoticeStatus.ACTIVE;
-        this.create_time = createTime;
-        return this;
-    }
 }
 
 

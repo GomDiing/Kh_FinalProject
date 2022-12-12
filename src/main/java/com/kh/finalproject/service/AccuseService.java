@@ -5,6 +5,8 @@ import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
 import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.entity.Accuse;
+import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.ReviewComment;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface AccuseService {
      * 신고 생성 메서드
      * 단, 회원은 한 후기에 단 한번만 신고 가능
      */
-    void create(CreateAccuseDTO createAccuseDTO);
+    Boolean create(Member member, Long index);
 
     /**
      * 신고 처리 메서드
@@ -41,4 +43,6 @@ public interface AccuseService {
      * 단, 신고 상태가 대기 일 경우에만 가능
      */
     void cancel(CancelAccuseDTO cancelAccuseDTO);
+
+    Boolean isNotAccuse(Member member, ReviewComment reviewComment);
 }

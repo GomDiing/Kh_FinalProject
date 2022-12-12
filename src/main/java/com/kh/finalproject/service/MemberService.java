@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -54,8 +55,10 @@ public interface MemberService {
     /**
      * [관리자 차트] 테이블 총 회원수 갱신 메서드
      * 회원이 가입 / 삭제 될 경우 [관리자 차트] 테이블의 컬럼 값 갱신
+     * (누적회원 차트라 삭제시 갱신할 지 고려)
      */
     void updateTotalMemberInChart(Integer count);
+
 
     /**
      * [후기/상태] 테이블 상태 갱신 메서드
