@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
     List<Member> findByStatus(MemberStatus status);
 
 //    체크박스 삭제시 회원 상태 탈퇴회원으로 변환

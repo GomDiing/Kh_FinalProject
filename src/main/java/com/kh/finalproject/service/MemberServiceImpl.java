@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService{
                 member.getEmail(), address.getRoad(), address.getJibun(), address.getDetail(), address.getZipcode());
 
         if(updateMember == 2) return true;
-        else throw new CustomException(CustomErrorCode.INTERNAL_SERVER_ERROR);
+        else throw new IllegalArgumentException("회원정보 업데이트 실패 ! ! !");
     }
 
     @Override

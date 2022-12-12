@@ -4,8 +4,6 @@ import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 /**
  * 회원 정보 수정 DTO
  */
