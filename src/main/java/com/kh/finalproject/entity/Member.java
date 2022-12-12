@@ -1,6 +1,8 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.member.EditMemberInfoDTO;
+import com.kh.finalproject.dto.member.SignupDTO;
 import com.kh.finalproject.dto.member.UnregisterDTO;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
@@ -79,6 +81,14 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
 
+
+    /**
+     * Address 갱신 메서드
+     */
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
     public Member toEntity(UnregisterDTO unregisterDTO){
         this.id = unregisterDTO.getId();
         this.password = unregisterDTO.getPassword();
@@ -89,5 +99,31 @@ public class Member extends BaseTimeEntity {
         return this;
     };
 
-}
+    /**
+     * @param signupDTO
+     */
+    public Member toEntity(SignupDTO signupDTO) {
+        this.id = signupDTO.getId();
+        this.password = signupDTO.getPassword();
+        this.name = signupDTO.getName();
+        this.email = signupDTO.getEmail();
+        this.role = MemberRoleType.ROLE_USER;
+        this.point = 0;
+        this.status = MemberStatus.ACTIVE;
 
+        return this;
+    }
+
+    /**
+     * @param editMemberInfoDTO
+     */
+    public Member toEntity(EditMemberInfoDTO editMemberInfoDTO) {
+        this.index = editMemberInfoDTO.getIndex();
+        this.id = editMemberInfoDTO.getId();
+        this.password = editMemberInfoDTO.getPassword();
+        this.name = editMemberInfoDTO.getName();
+        this.email = editMemberInfoDTO.getEmail();
+
+        return this;
+    }
+}

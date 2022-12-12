@@ -3,6 +3,7 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.member.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 회원 서비스 인터페이스
@@ -16,6 +17,20 @@ public interface MemberService {
      */
     void signup(SignupDTO signupDto);
 
+    /**
+     * 이메일로 회원 조회
+     */
+    SignupDTO searchByEmail(String email);
+
+    /**
+     * 회원 이름과 이메일로 아이디 찾기
+     */
+    Map<String, String> findMemberId(String name, String email);
+
+    /**
+     * 회원 아이디 이름 이메일로 비밀번호 찾기
+     */
+    Map<String, String> findPassword(String id, String name, String email);
     /**
      * 회원 탈퇴 메서드(관리자 강제탈퇴)
      * 실제로 삭제되지 않고 상태 변환 후 탈퇴 시간 기록
@@ -66,7 +81,7 @@ public interface MemberService {
     /**
      * 회원 정보 수정 메서드
      */
-    void editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
+    Boolean editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
 
 //    체크박스로 회원 탈퇴
     Boolean deleteCheckMember(List<CheckMemberDTO> memberIndexList);
