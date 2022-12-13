@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductDTO {
-    private Long code;
+    private String code;
     private ProductCategory productCategory;
     private String title;
     private String thumbPosterUrl;

@@ -14,7 +14,7 @@ import java.util.List;
 public class Casting {
     @Id
     @Column(name = "casting_id")
-    private Long id;
+    private String id;
 
     @Column(name = "casting_info_url")
     private String infoUrl;
@@ -37,8 +37,4 @@ public class Casting {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code")
     private Product product;
-
-    public void code(Product product){
-        this.product = product;
-    }
 }
