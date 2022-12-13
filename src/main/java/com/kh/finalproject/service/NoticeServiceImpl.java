@@ -1,21 +1,15 @@
 package com.kh.finalproject.service;
 
-import com.kh.finalproject.dto.notice.CheckDTO;
-import com.kh.finalproject.dto.notice.CreateNoticeDTO;
-import com.kh.finalproject.dto.notice.EditNoticeDTO;
-import com.kh.finalproject.dto.notice.NoticeDTO;
+import com.kh.finalproject.dto.notice.*;
 import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import com.kh.finalproject.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -54,15 +48,22 @@ public class NoticeServiceImpl implements NoticeService {
 
     //    공지 목록 조회 service
     @Override
-    public List<NoticeDTO> selectAll(){
-//        PageRequest pageRequest = PageRequest.of(page,size,Sort.by("index").descending());
-        List<NoticeDTO> noticeDTOSList = new ArrayList<>();
-        Page<Notice> noticeList = noticeRepository.findByStatus(NoticeStatus.ACTIVE, PageRequest.of(0,4,Sort.by("index").descending()));
-        for(Notice e : noticeList){
-            NoticeDTO noticeDTO = new NoticeDTO().toDTO(e);
-            noticeDTOSList.add(noticeDTO);
+    public PagingNoticeDTO selectAll(Pageable pageable){
+        List<NoticeDTO> noticeDTOList = new ArrayList<>();
+        Page<Notice> pageNoticeList = noticeRepository.findByStatus(NoticeStatus.ACTIVE, pageable);
+
+        List<Notice> noticeList = pageNoticeList.getContent();
+        Integer totalPages = pageNoticeList.getTotalPages();
+        Integer page = pageNoticeList.getNumber()+1;
+        Long totalResults = pageNoticeList.getTotalElements();
+
+        for (Notice notice : noticeList) {
+            NoticeDTO noticeDTO = new NoticeDTO().toDTO(notice);
+            noticeDTOList.add(noticeDTO);
         }
-        return noticeDTOSList;
+        PagingNoticeDTO pagingNoticeDTO = new PagingNoticeDTO().toPageDTO(page, totalPages, totalResults, noticeDTOList);
+
+        return pagingNoticeDTO;
     }
 //공지사항 상세페이지별 데이터 조회
     @Override

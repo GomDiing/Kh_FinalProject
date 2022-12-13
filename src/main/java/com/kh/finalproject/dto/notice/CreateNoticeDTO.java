@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CreateNoticeDTO {
-//    private Long index;
+    private Long index;
     private String title;
     private String content;
 //    리액트 작성할때 보여지는건 제목 컨텐츠니까 dto 2개만..?

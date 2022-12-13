@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kh.finalproject.entity.Notice;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
