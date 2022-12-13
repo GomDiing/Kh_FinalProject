@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,4 +52,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("index")Long index, @Param("id") String id, @Param("pwd") String password,
             @Param("name")String name, @Param("email") String email, @Param("road") String road,
             @Param("jibun") String jibun, @Param("detail") String detail, @Param("zipcode") String zipcode);
+
+
+//    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);
+
+
+
 }
