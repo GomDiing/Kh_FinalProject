@@ -2,6 +2,7 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
+import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 
 import com.kh.finalproject.entity.Accuse;
@@ -38,7 +39,7 @@ public class AccuseServiceImpl implements AccuseService {
      * 신고 생성 메서드
      */
     @Override
-    public Boolean create(CreateAccuseDTO createAccuseDTO, Long reviewCommentIndex) {
+    public void create(CreateAccuseDTO createAccuseDTO, Long reviewCommentIndex) {
         // 회원 Email 추출 후 회원, 후기 DB 조회
         String vitimEmail = createAccuseDTO.getMemberEmailVictim();
         String suspectEmail = createAccuseDTO.getMemberEmailSuspect();
@@ -51,16 +52,15 @@ public class AccuseServiceImpl implements AccuseService {
         Member findSuspectMember = memberRepository.findByEmail(suspectEmail)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        // 중복 신고 방지
+        //중복 신고 방지
         if (isNotAccuse(findVictimMember, reviewComment)) {
             reviewComment.addAccuseCount();
             Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
             accuseRepository.save(saveAccuse);
-
-            return true;
         }
 
-        return false;
+        //중복 신고가 된 경우
+        else throw new CustomException(CustomErrorCode.OVERLAP_REVIEW_COMMENT);
     }
 
     /**

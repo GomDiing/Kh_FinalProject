@@ -87,6 +87,8 @@ public interface MemberService {
      */
     Boolean editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
 
-//    체크박스로 회원 탈퇴
-    Boolean deleteCheckMember(List<CheckMemberDTO> memberIndexList);
+    /**
+     * 회원 상태 탈퇴 변환 메서드
+     */
+    void changeMemberStatusToUnregister(List<CheckMemberDTO> memberIndexList);
 }
