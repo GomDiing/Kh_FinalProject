@@ -43,6 +43,4 @@ public interface AccuseService {
      * 단, 신고 상태가 대기 일 경우에만 가능
      */
     void cancel(CancelAccuseDTO cancelAccuseDTO);
-
-    Boolean isNotAccuse(CreateAccuseDTO createAccuseDTO, Member findVictimMember, ReviewComment reviewComment);
 }

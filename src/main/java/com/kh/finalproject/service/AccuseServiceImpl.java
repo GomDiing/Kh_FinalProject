@@ -8,9 +8,12 @@ import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.entity.Accuse;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AccuseRepository;
 import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.repository.ReviewCommentRepository;
+import com.kh.finalproject.response.DefaultErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,31 +35,43 @@ public class AccuseServiceImpl implements AccuseService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 신고 생성 메서드
+     */
     @Override
     public Boolean create(CreateAccuseDTO createAccuseDTO, Long reviewCommentIndex) {
+        // 회원 Email 추출 후 회원, 후기 DB 조회
         String vitimEmail = createAccuseDTO.getMemberEmailVictim();
         String suspectEmail = createAccuseDTO.getMemberEmailSuspect();
-        ReviewComment reviewComment = reviewCommentRepository.findById(reviewCommentIndex).orElseThrow();
-        Member findVictimMember = memberRepository.findByEmail(vitimEmail).orElseThrow(RuntimeException::new);
-        Member findSuspectMember = memberRepository.findByEmail(suspectEmail).orElseThrow(RuntimeException::new);
+
+        //조회한 회원, 후기가 없다면 예외 처리
+        ReviewComment reviewComment = reviewCommentRepository.findById(reviewCommentIndex)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_REVIEW_COMMENT));
+        Member findVictimMember = memberRepository.findByEmail(vitimEmail)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+        Member findSuspectMember = memberRepository.findByEmail(suspectEmail)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+
         // 중복 신고 방지
-        if (isNotAccuse(createAccuseDTO, findVictimMember, reviewComment)) {
+        if (isNotAccuse(findVictimMember, reviewComment)) {
             reviewComment.addAccuseCount();
-            Accuse accuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
-            accuseRepository.save(accuse);
+            Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
+            accuseRepository.save(saveAccuse);
+
             return true;
         }
+
         return false;
     }
 
-    //        이미 신고한 게시물인지 체크
-    @Override
-    public Boolean isNotAccuse(CreateAccuseDTO createAccuseDTO,
-                               Member findVictimMember,
+    /**
+     * 신고한 회원이 동일 리뷰 중복 신고 여부 확인
+     */
+    public Boolean isNotAccuse(Member findVictimMember,
                                ReviewComment reviewComment) {
-        Optional<Accuse> findDupliReviewComment = accuseRepository.findByMemberSuspectAndReviewComment(findVictimMember, reviewComment);
 
-        return findDupliReviewComment.isEmpty();
+        return accuseRepository.findByMemberSuspectAndReviewComment(findVictimMember, reviewComment)
+                .isEmpty();
     }
 //        좋아요 개수
 //        @Override

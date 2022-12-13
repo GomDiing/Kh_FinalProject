@@ -1,7 +1,6 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -60,11 +59,13 @@ public interface MemberService {
     void updatePassword(UpdatePasswordDTO updatePasswordDTO);
 
     /**
-     * 전체 회원 조회 메서드
+     * 전체 일반 회원 조회 메서드
      */
-    List<MemberDTO> searchAllMember();
+    List<MemberDTO> searchAllActiveMember();
 
-//    블랙리스트 전체조회
+    /**
+     * 전체 블랙리스트 회원 조회 메서드
+     */
     List<MemberDTO> searchAllBlackMember();
 
     /**

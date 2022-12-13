@@ -20,21 +20,27 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/member")
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
 
-//    일반회원조회(블랙리스트회원 제외)
+    /**
+     * 전체 일반 회원 조회
+     */
     @GetMapping("/memberlist")
-    public ResponseEntity memberList(){
-        List<MemberDTO> memberList = memberService.searchAllMember();
-        return new ResponseEntity(memberList, HttpStatus.OK);
+    public ResponseEntity<Object> searchActiveMemberList(){
+        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
     }
-//    블랙리스트조회
-    @GetMapping("/blacklist")
-    public ResponseEntity blackList(){
-        List<MemberDTO> memberList = memberService.searchAllBlackMember();
-        return new ResponseEntity(memberList, HttpStatus.OK);
+
+    /**
+     * 전체 블랙리스트 회원 조회
+     */
+    @GetMapping("/memberblacklist")
+    public ResponseEntity<Object> blackList(){
+        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
 
 //    회원탈퇴시키기(블랙리스트)

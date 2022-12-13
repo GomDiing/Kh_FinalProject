@@ -160,27 +160,38 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
-    //    일반회원조회
+    /**
+     * 전체 일반 회원 조회 서비스
+     */
     @Override
-    public List<MemberDTO> searchAllMember() {
+    public List<MemberDTO> searchAllActiveMember() {
         List<MemberDTO> memberDTOSList = new ArrayList<>();
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE);
+        //활성 상태 회원 조회
+        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST));
+
         for(Member e : memberList){
             MemberDTO memberDTO = new MemberDTO().toDTO(e);
             memberDTOSList.add(memberDTO);
         }
         return memberDTOSList;
     }
-// 블랙리스트조회
+
+    /**
+     * 전체 블랙리스트 회원 조회
+     */
     @Override
     public List<MemberDTO> searchAllBlackMember() {
-        List<MemberDTO> memberDTOSList = new ArrayList<>();
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST);
+        //회원 목록
+        List<MemberDTO> memberBlackDTOList = new ArrayList<>();
+        //블랙 상태 회원 조회
+        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST));
         for(Member e : memberList){
             MemberDTO memberDTO = new MemberDTO().toDTO(e);
-            memberDTOSList.add(memberDTO);
+            memberBlackDTOList.add(memberDTO);
         }
-        return memberDTOSList;
+        return memberBlackDTOList;
     }
 
     @Override
