@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -32,8 +33,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index) {
-        Integer updateCount = noticeRepository.updateNotice(new Notice().toEntity(editNoticeDTO, index));
-        if (updateCount == 0) {
+        Integer updateCount = noticeRepository.updateNotice(new Notice().toEntity(editNoticeDTO, index), LocalDateTime.now());
+                if (updateCount == 0) {
             throw new EmptyStackException();
         }
         return true;

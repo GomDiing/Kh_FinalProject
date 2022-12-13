@@ -12,7 +12,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,4 +55,25 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                     " AND a.member_index = b.member_index")
     Integer updateInfo(
             @Param("paramMember") Member member, @Param("now") LocalDateTime now, @Param("paramAddress") Address address);
+    @Query(nativeQuery = true, value = "UPDATE member as a, address as b" +
+            " SET " +
+            "a.member_id=:id" +
+            " ,a.member_pwd=:pwd" +
+            " ,a.member_name=:name" +
+            " ,a.member_email=:email" +
+            " ,a.update_time=NOW()" +
+            " ,b.address_road=:road" +
+            " ,b.address_jibun=:jibun" +
+            " ,b.address_detail=:detail" +
+            " ,b.address_zipcode=:zipcode" +
+            " ,b.update_time=NOW()" +
+            " WHERE a.member_index=:index" +
+            " AND a.member_index = b.member_index")
+    int updateInfoBefore(
+            @Param("index")Long index, @Param("id") String id, @Param("pwd") String password,
+            @Param("name")String name, @Param("email") String email, @Param("road") String road,
+            @Param("jibun") String jibun, @Param("detail") String detail, @Param("zipcode") String zipcode);
+
+
+//    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);
 }

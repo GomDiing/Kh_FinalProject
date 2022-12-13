@@ -72,11 +72,6 @@ public class AccuseServiceImpl implements AccuseService {
         return accuseRepository.findByMemberSuspectAndReviewComment(findVictimMember, reviewComment)
                 .isEmpty();
     }
-//        좋아요 개수
-//        @Override
-//        @Transactional(readOnly = true)
-//        public accuse
-
 
     @Override
     public void process(ProcessAccuseDTO processAccuseDTO) {
