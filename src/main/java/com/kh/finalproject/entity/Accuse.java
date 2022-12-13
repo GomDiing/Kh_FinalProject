@@ -49,19 +49,19 @@ public class Accuse extends BaseTimeEntity {
         this.memberVictim = memberVictim;
         memberVictim.getAccuseListVictimList().add(this);
         this.reviewComment = reviewComment;
-        this.create_time = LocalDateTime.now();
+        this.status = AccuseStatus.WAIT;
         return this;
     }
 
 //    신고하기
-    public Accuse toEntity(CreateAccuseDTO createAccuseDTO){
-        this.index = createAccuseDTO.getIndex();
-        this.memberSuspect = createAccuseDTO.getMemberSuspect();
-        this.memberVictim = createAccuseDTO.getMemberVictim();
-        this.reason = createAccuseDTO.getReason();
-        this.process = createAccuseDTO.getProcess();
-        this.status = createAccuseDTO.getStatus();
-        this.reviewComment = createAccuseDTO.getReviewComment();
-        return this;
-    }
+//    public Accuse toEntity(CreateAccuseDTO createAccuseDTO){
+//        this.index = createAccuseDTO.getIndex();
+//        this.memberSuspect = createAccuseDTO.getMemberSuspect();
+//        this.memberVictim = createAccuseDTO.getMemberVictim();
+//        this.reason = createAccuseDTO.getReason();
+//        this.process = createAccuseDTO.getProcess();
+//        this.status = createAccuseDTO.getStatus();
+//        this.reviewComment = createAccuseDTO.getReviewComment();
+//        return this;
+//    }
 }

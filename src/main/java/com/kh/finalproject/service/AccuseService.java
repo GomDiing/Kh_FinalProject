@@ -18,7 +18,7 @@ public interface AccuseService {
      * 신고 생성 메서드
      * 단, 회원은 한 후기에 단 한번만 신고 가능
      */
-    Boolean create(Member member, Long index);
+    Boolean create(CreateAccuseDTO createAccuseDTO, Long index);
 
     /**
      * 신고 처리 메서드
@@ -44,5 +44,5 @@ public interface AccuseService {
      */
     void cancel(CancelAccuseDTO cancelAccuseDTO);
 
-    Boolean isNotAccuse(Member member, ReviewComment reviewComment);
+    Boolean isNotAccuse(CreateAccuseDTO createAccuseDTO, Member findVictimMember, ReviewComment reviewComment);
 }

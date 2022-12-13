@@ -68,4 +68,8 @@ public class ReviewComment extends BaseTimeEntity {
         accuseList.add(accuse);
 
     }
+
+    public void addAccuseCount() {
+        this.accuseCount++;
+    }
 }

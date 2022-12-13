@@ -12,11 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateAccuseDTO {
-    private Long index;
-    private Member memberSuspect;
-    private Member memberVictim;
-    private String reason;
-    private String process;
-    private AccuseStatus status;
-    private ReviewComment reviewComment;
+    private String memberEmailSuspect;
+    private String memberEmailVictim;
 }
