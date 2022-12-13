@@ -22,7 +22,7 @@ public class NoticeController {
     @GetMapping("/notice/list")
     public ResponseEntity <List<NoticeDTO>> noticeList(Pageable pageable){
 //       공지 서비스 호출해서 list로 반환
-        List<NoticeDTO> list = noticeService.selectAll(pageable);
+        PagingNoticeDTO list = noticeService.selectAll(pageable);
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
