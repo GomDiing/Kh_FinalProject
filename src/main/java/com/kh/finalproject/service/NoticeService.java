@@ -31,7 +31,7 @@ public interface NoticeService {
     /**
      * 공지사항 전체 조회 메서드
      */
-    List<NoticeDTO> selectAll();
+    List<NoticeDTO> selectAll(Pageable pageable);
 
     /**
      * 공지사항 상세페이지 조회 메서드

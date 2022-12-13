@@ -2,14 +2,13 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
-import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 
 import com.kh.finalproject.entity.Accuse;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
-import com.kh.finalproject.repository.AccuseRepository;
-import com.kh.finalproject.repository.ReviewCommentRepository;
+import com.kh.finalproject.exception.repository.AccuseRepository;
+import com.kh.finalproject.exception.repository.ReviewCommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

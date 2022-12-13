@@ -4,7 +4,7 @@ import com.kh.finalproject.dto.product.BrowseKeywordDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.product.ProductDTO;
 import com.kh.finalproject.entity.Product;
-import com.kh.finalproject.repository.ProductRepository;
+import com.kh.finalproject.exception.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

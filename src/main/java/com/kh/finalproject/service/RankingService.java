@@ -1,6 +1,6 @@
 package com.kh.finalproject.service;
 
-import com.kh.finalproject.dto.ranking.RankingDTO;
+import com.kh.finalproject.dto.reserve.ranking.RankingDTO;
 
 /**
  * 순위 상품 서비스 인터페이스

@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.notice.*;
 import com.kh.finalproject.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,12 @@ public class NoticeController {
 
 //   공지사항 조회(확인)
     @GetMapping("/notice/list")
-    public ResponseEntity <List<NoticeDTO>> noticeList(){
+    public ResponseEntity <List<NoticeDTO>> noticeList(Pageable pageable){
 //       공지 서비스 호출해서 list로 반환
-        List<NoticeDTO> list = noticeService.selectAll();
+        List<NoticeDTO> list = noticeService.selectAll(pageable);
         return new ResponseEntity(list, HttpStatus.OK);
     }
+
 //    공지사항 작성
     @PostMapping("/notice/write")
     public ResponseEntity<Boolean> writeNotice(@RequestBody CreateNoticeDTO createNoticeDTO){
@@ -45,6 +47,7 @@ public class NoticeController {
     public void deleteNotice(@PathVariable Long index){
         noticeService.removeNotice(index);
     }
+
 //  공지사항 수정
     @PutMapping("/notice/edit/{index}")
     public ResponseEntity<Boolean> editNotice(@RequestBody EditNoticeDTO editNoticeDTO, @PathVariable Long index){

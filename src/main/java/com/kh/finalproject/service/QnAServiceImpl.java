@@ -2,12 +2,11 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.qna.*;
 import com.kh.finalproject.entity.QnA;
-import com.kh.finalproject.repository.QnARepository;
+import com.kh.finalproject.exception.repository.QnARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
