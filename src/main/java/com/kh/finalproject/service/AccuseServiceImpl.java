@@ -2,7 +2,6 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
-import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 
 import com.kh.finalproject.entity.Accuse;

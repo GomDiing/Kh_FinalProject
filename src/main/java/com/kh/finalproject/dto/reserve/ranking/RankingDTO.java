@@ -1,4 +1,4 @@
-package com.kh.finalproject.dto.ranking;
+package com.kh.finalproject.dto.reserve.ranking;
 
 import lombok.Getter;
 

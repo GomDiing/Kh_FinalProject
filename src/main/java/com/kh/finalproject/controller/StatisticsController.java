@@ -5,6 +5,9 @@ package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.notice.NoticeDTO;
 import com.kh.finalproject.dto.statistics.StatisticsDTO;
+import com.kh.finalproject.response.DefaultResponse;
+import com.kh.finalproject.response.DefaultResponseMessage;
+import com.kh.finalproject.response.StatusCode;
 import com.kh.finalproject.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +24,14 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
-// 잘못 만든것 같습니다...
 public class StatisticsController {
     public final StatisticsService statisticsService;
 
     @GetMapping("/product/detail/{code}")
-    public ResponseEntity getStat(@PathVariable String code){
-        List<StatisticsDTO> statisticsDTOList = statisticsService.selectByIndex(code);
-        return new ResponseEntity<>(statisticsDTOList, HttpStatus.OK);
+    public ResponseEntity<DefaultResponse<Object>> getStat(@PathVariable String code){
+
+        StatisticsDTO statisticsDTO = statisticsService.selectByIndex(code);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MOVIE_INQUIRE, statisticsDTO), HttpStatus.OK);
     }
 }

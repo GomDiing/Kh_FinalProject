@@ -43,7 +43,6 @@ public class Statistics {
     private Product product;
 
     public Statistics toEntity(StatisticsDTO statisticsDTO, Product product) {
-        this.index = statisticsDTO.getIndex();
         this.male = statisticsDTO.getMale();
         this.female = statisticsDTO.getFemale();
         this.teen = statisticsDTO.getTeen();
