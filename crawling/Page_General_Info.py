@@ -1,3 +1,4 @@
+import copy
 import re
 import time
 
@@ -7,7 +8,7 @@ from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from crawling.Common import waitUntilElementLocated
+from crawling.Common import waitUntilElementLocated, initChromBrowser
 
 
 # 일반 정보 추출
@@ -23,6 +24,7 @@ def extractGeneralInfo(browser, productDataList, seatPriceDataList):
     informList = browser.find_element(By.CSS_SELECTOR, Constants.generalInfoCss).find_elements(By.CLASS_NAME, 'infoItem')
 
     for inform in informList:
+        print(str(inform))
         attribute = inform.get_attribute('class')
 
         # 장소, 공연기간/기간, 공연시간, 관람연령 출력
@@ -37,7 +39,10 @@ def extractGeneralInfo(browser, productDataList, seatPriceDataList):
                 productDataList['product_location'] = placeInfo
                 print('장소: ' + placeInfo)
                 # 상세 장소 추출 메서드
-                detailPlaceInfo = extractDetailPlace(inform, browser)
+                detailPlaceInfo = extractDetailPlace(inform, browser, productDataList)
+                if detailPlaceInfo == 'NOT PAGE':
+                    productDataList['product_detail_location'] = 'NOT PAGE'
+                    return
                 if detailPlaceInfo is not False:
                     # $$$ 상세 장소 데이터 추가
                     productDataList['product_detail_location'] = detailPlaceInfo
@@ -125,13 +130,26 @@ def extractPlaceInfo(inform):
 
 
 # 일반 정보 추출 > 상세 장소 탐색 메서드
-def extractDetailPlace(inform, browser):
+def extractDetailPlace(inform, browser, productDataList):
     try:
         # 상세 장소 팝업 창 열기
         inform.find_element(By.CSS_SELECTOR, 'div > a').click()
 
+        if browser.current_url != productDataList['product_url']:
+            return 'NOT PAGE'
         # 해당 팝업창 나올 때 까지 대기, 없다면 에러
         waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPlacePopupOpenCss)
+            # browser = initChromBrowser()
+            # browser.get(productDataList['product_url'])
+            # waitUntilElementLocated(browser, 10, By.CLASS_NAME, Constants.initBrowserWaitClass)
+            # print(ex)
+        # print(browser.current_url)
+        # print(productDataList['product_url'])
+        # print(type(browser.current_url))
+            # browser.get(productDataList['product_url'])
+            # waitUntilElementLocated(browser, 10, By.CLASS_NAME, Constants.initBrowserWaitClass)
+            # browser.back()
+            # time.sleep(5)
 
         # 팝업 창에서 p 태그 리스트 추출
         detailPlaceList = browser.find_elements(By.CSS_SELECTOR, Constants.detailPlaceListCss)
@@ -247,6 +265,8 @@ def isAgeDetailInfo(ageInfo):
             return {'type': '한국', 'age': 17}
         # if ageInfoSearch == '전체관람가':
         #     return {'type': '전체', 'age': 0}
+        if re.search(r'개월', ageInfo):
+            return {'type': '한국', 'age': int(ageInfoSearch)/12}
         if re.match(r'만', ageInfo) is None:
             return {'type': '한국', 'age': int(ageInfoSearch)}
         # 만 나이면 type = 만
@@ -395,33 +415,110 @@ def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
     # 상세 좌석/가격 정보 선택
     detailInfoList = browser.find_element(By.CSS_SELECTOR, Constants.detailPriceTableCss).find_elements(By.CSS_SELECTOR, 'tr')
 
-    count = 0
+    totalTdCount = 0
     for detailInfo in detailInfoList:
-        detailInfoText = detailInfo.text
+        tdCount = 0
         try:
-            # 카테고리 영역이 있다면 제외
-            categoryInfo = detailInfo.find_element(By.CLASS_NAME, 'category').text
-            detailInfoText = re.sub(categoryInfo + ' ', '', detailInfoText)
+            detailInfo.find_element(By.CLASS_NAME, 'category').text
+            tdList = detailInfo.find_elements(By.CSS_SELECTOR, 'td')
+            for tdRecord in tdList:
+                tdCount = tdCount + 1
+                print(str(tdCount))
+            totalTdCount = copy.deepcopy(tdCount)
+        except NoSuchElementException:
+            pass
+    if totalTdCount > 1:
+        print('V1 tdCount is ' + str(totalTdCount))
+        # detailInfoText = detailInfo.text
+        v1Count = 0
+        try:
+            for detailInfo in detailInfoList:
+                detailInfoText = detailInfo.text
+                print('detailInfoText: ' + detailInfoText)
+                categoryInfoText = detailInfo.find_element(By.CLASS_NAME, 'category').text
+
+                infoText = re.sub(categoryInfoText + ' ', '', detailInfoText)
+                categoryInfoPrice = infoText.split(' ')[-1]
+
+                categoryInfoPriceText = re.sub(r'[원,]', '', categoryInfoPrice)
+
+                seatInfoList.insert(v1Count, categoryInfoText)
+                priceInfoList.insert(v1Count, categoryInfoPriceText)
+
+                print('categoryInfoText: ' + categoryInfoText)
+                print('categoryInfoPriceText: ' + categoryInfoPriceText)
+
+                v1Count = v1Count + 1
         except NoSuchElementException:
             pass
 
-        try:
-            # 좌석/가격 정보 추출, 이때 좌석은 석, 가격은 원, ',' 제거
-            print('detailInfoText: ' + detailInfoText)
-            detailPriceInfo = detailInfoText.split(' ')[-1]
-            detailSeatInfo = detailInfoText.replace(detailPriceInfo, '')
-            if detailSeatInfo == '':
-                continue
-            print('detailSeatInfo: ' + str(detailSeatInfo))
-            print('detailPriceInfo: ' + str(detailPriceInfo))
-            # 추출한 정보는 리스트에 저장
-            # seatInfoList.insert(count, re.sub(r'석$', '', detailSeatInfo))
-            seatInfoList.insert(count, detailSeatInfo)
-            priceInfoList.insert(count, re.sub(r'[원,]', '', detailPriceInfo))
-        except IndexError:
-            pass
+    elif totalTdCount == 1:
+        print('V2 tdCount is ' + str(totalTdCount))
+        v2Count = 0
+        categoryDataList = []
+        categoryIndex = []
+        for detailInfo in detailInfoList:
+            try:
+                detailInfoText = detailInfo.text
+                categoryInfoText = detailInfo.find_element(By.CLASS_NAME, 'category').text
+                # categoryRecord = {'category': categoryInfoText, 'count': v2Count}
+                categoryDataList.append(categoryInfoText)
+                categoryIndex.append(v2Count + 1)
+            except NoSuchElementException:
+                pass
+            v2Count = v2Count + 1
+        # categoryIndex.sort(reverse=True)
+        v2CountRetry = 0
+        categoryIndexCount = 0
+        print('categoryIndex: ' + str(categoryIndex))
+        for detailInfo in detailInfoList:
+            detailInfoText = detailInfo.text
+            try:
+                if v2CountRetry == categoryIndex[0]:
+                    categoryInfoPrice = detailInfoText.split(' ')[-1]
+                    categoryInfoPriceText = re.sub(r'[원,]', '', categoryInfoPrice)
+                    seatInfoList.append(categoryDataList[0])
+                    priceInfoList.append(categoryInfoPriceText)
+                    del(categoryIndex[0])
+                    del(categoryDataList[0])
 
-        count = count + 1
+                v2CountRetry = v2CountRetry + 1
+                print(str(v2CountRetry))
+            except IndexError:
+                continue
+
+
+
+
+    # for categoryInfoRecord in categoryInfoList:
+    #     categoryInfoTr = detailInfoList[categoryInfoRecord['index']]
+    #     categoryInfoTr.get
+
+
+        # try:
+        #     # 카테고리 영역이 있다면 제외
+        #     categoryInfo = detailInfo.find_element(By.CLASS_NAME, 'category').text
+        #     detailInfoText = re.sub(categoryInfo + ' ', '', detailInfoText)
+        # except NoSuchElementException:
+        #     pass
+        #
+        # try:
+        #     # 좌석/가격 정보 추출, 이때 좌석은 석, 가격은 원, ',' 제거
+        #     print('detailInfoText: ' + detailInfoText)
+        #     detailPriceInfo = detailInfoText.split(' ')[-1]
+        #     detailSeatInfo = detailInfoText.replace(detailPriceInfo, '')
+        #     if detailSeatInfo == '':
+        #         continue
+        #     print('detailSeatInfo: ' + str(detailSeatInfo))
+        #     print('detailPriceInfo: ' + str(detailPriceInfo))
+        #     # 추출한 정보는 리스트에 저장
+        #     # seatInfoList.insert(count, re.sub(r'석$', '', detailSeatInfo))
+        #     seatInfoList.insert(count, detailSeatInfo)
+        #     priceInfoList.insert(count, re.sub(r'[원,]', '', detailPriceInfo))
+        # except IndexError:
+        #     pass
+        #
+        # count = count + 1
 
     # 상세 좌석/가격 정보 창 닫기
     browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss).click()

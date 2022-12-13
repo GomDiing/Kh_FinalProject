@@ -53,9 +53,14 @@ def extractNaviTabOfDetailAboutPoster(browser, productDataList):
     productDataList['product_detail_poster_url'] = None
     productDataList['product_casting_poster_url'] = None
 
-    # 이미지 상세 정보가 표시될 때 까지 대기
-    WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Constants.contentImgDescCss)))
+    try:
+        # 이미지 상세 정보가 표시될 때 까지 대기
+        WebDriverWait(browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, Constants.contentImgDescCss)))
+    except TimeoutException:
+        productDataList['product_detail_poster_url'] = 'null'
+        productDataList['product_casting_poster_url'] = None
+        return
 
     # 상세 정보 이미지 링크
     contentImagePathList = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_elements(

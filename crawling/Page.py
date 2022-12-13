@@ -9,7 +9,7 @@ from selenium.common import TimeoutException, NoSuchElementException
 from sqlalchemy import MetaData, Table, insert, select
 from Common import initChromBrowser, waitUntilElementLocated, metadata_obj, engine, createEngine, commitProductDataList, \
     commitReserveTimeDataList, commitSeatPriceDataList, isExistInTable, commitStatisticsRecord, commitCasting, \
-    commitReserveTimeCasting, commitReserveTimeSeatPrice
+    commitReserveTimeCasting, commitReserveTimeSeatPrice, commitRankingChangeStatus
 from Debug import debugCreateUrlOfInterpark
 from crawling.Page_Calendar_Info import extractCalendarInfo
 from crawling.Page_Compact_Info import extractCompactInfo
@@ -30,10 +30,11 @@ def crawlingInterparkPage(urlCode, product_category):
 
     # 이미 상품 / 예매 시간 / 좌석 테이블에 정보가 존재한다면 생략
     # #############################################
-    if isExistInTable(urlCode):
-        print('================>>> Passing exist in Product & ReserveTime & SeatPrice  : Product Code is \"'
-              + str(urlCode) + '\"')
-        return
+    # if isExistInTable(urlCode):
+    #     print('================>>> Passing exist in Product & ReserveTime & SeatPrice  : Product Code is \"'
+    #           + str(urlCode) + '\"')
+    #     commitRankingChangeStatus(str(urlCode), product_category, 'COMPLETE')
+    #     return
 
     # 상품 테이블에 삽입될 데이터 리스트 선언 및 초기화
     productDataList = {}
@@ -74,7 +75,6 @@ def crawlingInterparkPage(urlCode, product_category):
         print('에러 발생!!!')
         return
 
-
     # 경고 창 제거, 없다면 무시
     removeAlert(browser)
 
@@ -85,13 +85,26 @@ def crawlingInterparkPage(urlCode, product_category):
 
     if limitedOrAlways == 'close':
         print('판매종료')
+        commitRankingChangeStatus(productDataList['product_code'], product_category, 'END')
         return
     if limitedOrAlways == 'not_open':
         print('티켓오픈예정')
+        commitRankingChangeStatus(productDataList['product_code'], product_category, 'SCHEDULED')
         return
 
     # 일반 정보 추출
     extractGeneralInfo(browser, productDataList, seatPriceDataList)
+
+    # 상세 가격 페이지가 다른 페이지로 이동하는 경우
+    if productDataList['product_detail_location'] == 'NOT PAGE':
+        return
+
+    try:
+        productDataList['product_age']
+        productDataList['product_age_isKorean']
+    except KeyError:
+        productDataList['product_age'] = -1
+        productDataList['product_age_isKorean'] = 0
 
     # 네비게이션 메뉴 탐색
     # resultNaviInfo['isExistTimeCasting] : 네비 탭 > 캐스팅 정보 존재할 경우 True, 그렇지 않으면 False
@@ -146,6 +159,14 @@ def crawlingInterparkPage(urlCode, product_category):
 
     # 예매시간 좌석 가격 테이블 갱신
     commitReserveTimeSeatPrice(productDataList['product_code'])
+
+    # 이미 상품 / 예매 시간 / 좌석 테이블에 정보가 존재한다면 생략
+    # #############################################
+    if isExistInTable(urlCode):
+        print('================>>> Update column in Product & ReserveTime & SeatPrice  : Product Code is \"'
+              + str(urlCode) + '\"')
+        commitRankingChangeStatus(str(urlCode), product_category, 'COMPLETE')
+        return
 
 
 # 인터파크 메인 페이지의 메인 배너 주소 추출 메서드

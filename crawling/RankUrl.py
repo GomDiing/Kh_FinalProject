@@ -14,13 +14,16 @@ def crawlingRankingMain():
         # 반환할 데이터 딕셔너리 선언, Url 리스트 / 카테고리 / 순위 유형 를 담을 예정
         rankingDataList = {}
 
-        crawlingRankingMainDetail(count, rankingDataList)
+        # 크롬 브라우저 옵션 설정 및 실행 메서드
+        browser = initChromBrowser()
 
-        return rankingDataList
+        crawlingRankingMainDetail(count, rankingDataList, browser)
+
+        # return rankingDataList
 
 
 # 인터파크 순위 유형 별 랭크 추출 메서드
-def crawlingRankingMainDetail(count, rankingDataList):
+def crawlingRankingMainDetail(count, rankingDataList, browser):
     # 공통 Url 경로
     allBaseListUrl = 'http://ticket.interpark.com/TPGoodsList.asp'
 
@@ -45,10 +48,10 @@ def crawlingRankingMainDetail(count, rankingDataList):
         raise Exception('No Ranking Data List!!!')
 
     for index in range(0, 3):
-        crawlingRankingUrlList(index, rankingDataList)
+        crawlingRankingUrlList(index, rankingDataList, browser)
 
 # 인터파크 순위 페이지 접근해 순위 url 리스트 획득하는 메서드
-def crawlingRankingUrlList(index, rankingDataList):
+def crawlingRankingUrlList(index, rankingDataList, browser):
 
     rankingFullUrl = None
 
@@ -77,7 +80,7 @@ def crawlingRankingUrlList(index, rankingDataList):
     print('========================================')
 
     # 크롬 브라우저 옵션 설정 및 실행 메서드
-    browser = initChromBrowser()
+    # browser = initChromBrowser()
 
     browser.get(rankingFullUrl)
 

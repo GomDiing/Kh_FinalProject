@@ -134,6 +134,26 @@ def extract_error_code(e):
     return errorDict
 
 
+def commitRankingChangeStatus(product_code, product_category, rank_status):
+    t_rank_name_list = ['ranking_week', 'ranking_month', 'ranking_close_soon']
+    print('123: ' + product_code)
+    print('123: ' + product_category)
+    print('123: ' + rank_status)
+
+    for t_rank_name in t_rank_name_list:
+        print('Change Rank Status Query!!! : rank_table = ' + t_rank_name +
+              'product_code = ' + product_code +
+              ',and rank_status = ' + rank_status)
+        t_rank = Table(t_rank_name, metadata_obj, autoload_with=engine, autoload=True)
+        updateQuery = t_rank.update().where(t_rank.c.product_code == product_code)\
+            .where(t_rank.c.ranking_category == product_category)\
+            .values(ranking_status=rank_status)
+        print(updateQuery)
+
+        # Commit
+        commit_db(updateQuery)
+
+
 # 순위 테이블에 차트 차트 올리기
 # rankingDataList 구조
 # rankingDataList['product_category'] = '{카테고리 이름 (MUSICAL / DRAMA / CLASSIC / EXHIBITION)}'
@@ -173,52 +193,79 @@ def commitRankingDataList(rankingDataList):
     # for 문 인덱스 선언
     currentOrder = 0
 
-    print(table_name)
+    print('table_name: ' + table_name)
     # url 리스트 순회
     for urlKey in currentUrlKeyList:
         print('===============================')
+        print('')
         print('urlKey ' + urlKey)
         # 해당 데이터 DB 테이블의 존재 여부 확인 변수
         # isTrue = False
 
         # 해당 카테고리와 해당 url이 있는 레코드의 순서(order) 컬럼 추출 쿼리문
-        selectQuery = select(t_ranking.c.ranking_order).where(t_ranking.c.ranking_category == category) \
-            .where(t_ranking.c.product_code == urlKey)
+        # 반환 컬렉션은 List 이지만 1개만 조회된다
+        print('category ' + category)
 
-        print(selectQuery)
+
+        # 카운트 수 증가
+        currentOrder = currentOrder + 1
+        print('currentOrder: ' + str(currentOrder))
+
+        selectQuery = select(t_ranking).where(t_ranking.c.ranking_category == category) \
+            .where(t_ranking.c.product_code == str(urlKey))
+
+        # print(selectQuery)
         # 쿼리문 실행
         resultSelectQuery = db.execute(selectQuery)
 
-        tableOrder = 0
+        searchOrder = 0
+        searchRankingStatus = 'READY'
 
         # 동일하지 않으면 기존 영화 정보를 갱신
         # print(resultSelectQuery)
-        time.sleep(0.1)
-        for row in resultSelectQuery:
-            tableOrder = row['ranking_order']
-            # print(str(row))
-            print('tableOrder = ' + str(tableOrder))
+        # time.sleep(0.1)
+        for resultDataRecord in resultSelectQuery:
+            searchOrder = int(resultDataRecord['ranking_order'])
+            searchRankingStatus = resultDataRecord['ranking_status']
+            # print(str(resultDataRecord))
+            print('searchOrder = ' + str(searchOrder))
 
-        if tableOrder != currentOrder and tableOrder != 0:
+        if searchOrder != currentOrder and searchOrder != 0:
             # isTrue = True
+
             print('Update Query!!!' + urlKey)
-            updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == currentOrder) \
-                .values(ranking_order=currentOrder, ranking_category=category, product_code=str(urlKey))
+            updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == searchOrder)\
+                .where(t_ranking.c.ranking_category == category)\
+                .values(ranking_order=currentOrder,
+                        ranking_category=category,
+                        product_code=str(urlKey),
+                        ranking_status=searchRankingStatus)
+
+            print('update Query : ' + str(updateQuery))
 
             # Commit
             commit_db(updateQuery)
 
         # 조회되지 않는다면 응답 순위 데이터 추가
         # if isTrue is False:
-        if tableOrder == 0:
-            print("Insert Query!!!" + urlKey)
+        elif searchOrder == 0:
+            print('Insert currentOrder: ' + str(currentOrder))
+            print('Insert category: ' + str(category))
+            print('Insert product_code: ' + str(urlKey))
+            # print('Insert ranking_status: ' + str(currentOrder))
+            print("Insert Query!!!" + str(urlKey))
 
-            insertQuery = insert(t_ranking).values(ranking_order=currentOrder + 1,
+            insertQuery = insert(t_ranking).values(ranking_order=currentOrder,
                                                    ranking_category=category,
-                                                   product_code=str(urlKey))
+                                                   product_code=str(urlKey),
+                                                   ranking_status='READY')
+            print('Insert Query : ' + str(insertQuery))
 
             commit_db(insertQuery)
-            isTrue = True
+
+        else:
+            print("####### NOTHING QUERY!!!")
+            # isTrue = True
 
         # 응답 url 제품 정보가 테이블에 있는지 확인
         # 없다면 제품 정보를 요청해서 테이블에 추가
@@ -227,10 +274,6 @@ def commitRankingDataList(rankingDataList):
         # else:
         #     crawlingInterparkPage(urlKey)
 
-        # 카운트 수 증가
-        currentOrder += 1
-
-        print('currentOrder = ' + str(currentOrder))
         print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
     deleteQuery = delete(t_ranking).where(t_ranking.c.ranking_category == category) \
@@ -395,7 +438,8 @@ def commitReserveTimeCasting(reserveTimeDataList, product_code):
             isExist = isExistTableForReserveTimeCasting(t_reserve_time_casting, reserve_time_index)
 
             if isExist:
-                print('Already exist !!! \nreserve_time_index in reserve_time_casting table ==>' + str(reserve_time_index))
+                print('Already exist !!! \nreserve_time_index in reserve_time_casting table ==>' + str(
+                    reserve_time_index))
 
             else:
                 for reserveTimeActorRecord in reserveTimeDataRecord['reserveTimeActorList']:
@@ -434,7 +478,8 @@ def commitReserveTimeSeatPrice(product_code):
         isExist = isExistTableForReserveTimeSeatPrice(t_reserve_time_seat_price, reserve_time_index)
 
         if isExist:
-            print('Already exist !!! \nreserve_time_index in reserve_time_seat_price table ==>' + str(reserve_time_index))
+            print(
+                'Already exist !!! \nreserve_time_index in reserve_time_seat_price table ==>' + str(reserve_time_index))
 
         else:
             selectSeatPriceQuery = select(t_seat_price).where(t_seat_price.c.product_code == product_code)
@@ -469,7 +514,7 @@ def commitCasting(castingInfoTotalList, product_code):
         countOrder = 0
         for castingInfoList in castingInfoTotalList:
             countOrder = countOrder + 1
-            casting_id = product_code + str(countOrder)
+            casting_id = product_code + '_' + str(countOrder)
             insertQuery = insert(t_casting).values(casting_id=casting_id,
                                                    casting_character=castingInfoList[0],
                                                    casting_actor=castingInfoList[1],
@@ -550,8 +595,11 @@ def crawlingRankingFromDBMain(count, rankingDataList):
     if count == 2:
         # rankingDataList['product_ranking_category'] = 'CloseSoon'
         t_table = Table('ranking_close_soon', metadata_obj, autoload_with=engine, autoload=True)
-
-    selectQuery = select(t_table)
+    isSearchableColumn = ['READY', 'SCHEDULED']
+    # selectQuery = select(t_table).where(t_table.c.ranking_status).exists(isSearchableColumn)
+    selectQuery = select(t_table).where((t_table.c.ranking_status == 'READY') | (t_table.c.ranking_status == 'SCHEDULED'))
+    print(selectQuery)
+        # .where(t_table.c.ranking_status == 'SCHEDULED')
 
     resultSelectQuery = db.execute(selectQuery)
 

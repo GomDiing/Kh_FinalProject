@@ -53,6 +53,8 @@ def isLimitedOrAlways(browser):
                 return 'close'
             if isCloseProduct == '상시상품':
                 return 'always'
+            if isCloseProduct == '판매예정':
+                return 'not_open'
         except NoSuchElementException:
             isNotOpenProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > p').text
             if isNotOpenProduct == '티켓오픈안내':
