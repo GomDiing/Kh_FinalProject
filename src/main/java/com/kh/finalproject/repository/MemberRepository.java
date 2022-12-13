@@ -55,6 +55,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                     " AND a.member_index = b.member_index")
     Integer updateInfo(
             @Param("paramMember") Member member, @Param("now") LocalDateTime now, @Param("paramAddress") Address address);
+
+    @Modifying
     @Query(nativeQuery = true, value = "UPDATE member as a, address as b" +
             " SET " +
             "a.member_id=:id" +
