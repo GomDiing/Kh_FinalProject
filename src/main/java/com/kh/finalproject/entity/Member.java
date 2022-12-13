@@ -131,4 +131,19 @@ public class Member extends BaseTimeEntity {
 
         return this;
     }
+
+    /**
+     * 디버깅용 Member 생성 메서드
+     */
+    public Member createMember(String id, String name, String password, String email) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.role = MemberRoleType.ROLE_USER;
+        this.point = 0;
+        this.status = MemberStatus.ACTIVE;
+
+        return this;
+    }
 }

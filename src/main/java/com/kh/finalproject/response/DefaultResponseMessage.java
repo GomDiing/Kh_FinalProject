@@ -12,7 +12,8 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_UPDATE_MEMBER = "회원정보 수정 성공";
     public static final String SUCCESS_DELETE = "회원탈퇴가 완료되었습니다";
     public static final String SUCCESS_MYPAGE = "회원 정보 조회가 완료되었습니다";
-    public static final String SUCCESS_VIEW_MEMBERS = "전체 회원 정보 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_MEMBERS_ACTIVE = "전체 일반 회원 정보 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_MEMBERS_BLACKLIST = "전체 블랙리스트 회원 정보 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_NOW_PLAYING = "현재 상영중인 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_POPULAR = "인기 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_TOP_RATED = "역대 최고 영화 목록 조회가 완료되었습니다";

@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StatisticsDTO {
-    private Long index;
     private Float male;
     private Float female;
     private Float teen;

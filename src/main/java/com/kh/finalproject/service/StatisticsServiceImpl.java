@@ -22,19 +22,26 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<StatisticsDTO> selectByIndex(String code) {
-        List<StatisticsDTO> statisticsDTOList = new ArrayList<>();
-        List<Statistics> statistics = statisticsRepository.findAll();
-        Optional<Product> findIndex = productRepository.findByCode(code);
+    public StatisticsDTO selectByIndex(String code) {
 
-        if(findIndex.isEmpty()) {
-            throw new IllegalArgumentException("상품정보에 해당하는 통계정보가 없습니다.");
+        // Product Entity -> code get.
+        Optional<Product> findCode = productRepository.findByCode(code);
+
+        // get code isNull Check!!
+        if(findCode.isEmpty()) {
+            throw new IllegalArgumentException("해당 상품코드를 찾을 수 없습니다.");
         }
-        for(Statistics e : statistics) {
-            StatisticsDTO statisticsDTO = new StatisticsDTO().toDTO(e, findIndex.get());
-            statisticsDTOList.add(statisticsDTO);
-            System.out.println(statisticsDTOList);
+
+        // 받아온 코드로 넣어줌 이제 이 엔티티는 해당 product code 에 해당하는 것만 보여준다.
+        Optional<Statistics> stProductCode = statisticsRepository.findByProduct(findCode.get());
+
+        if(stProductCode.isEmpty()) {
+            throw new IllegalArgumentException("상품코드의 통계를 찾을 수 없습니다.");
         }
-        return statisticsDTOList;
+
+        // Entity -> DTO 변환
+        StatisticsDTO statisticsDTO = new StatisticsDTO().toDTO(stProductCode.get(), findCode.get());
+
+        return statisticsDTO;
     }
 }
