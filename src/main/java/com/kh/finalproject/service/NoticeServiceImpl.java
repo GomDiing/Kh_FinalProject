@@ -3,12 +3,11 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.notice.*;
 import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
-import com.kh.finalproject.exception.repository.NoticeRepository;
+import com.kh.finalproject.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

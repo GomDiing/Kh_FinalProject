@@ -1,4 +1,4 @@
-package com.kh.finalproject.exception.repository;
+package com.kh.finalproject.repository;
 
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
