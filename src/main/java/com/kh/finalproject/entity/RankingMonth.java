@@ -1,5 +1,7 @@
 package com.kh.finalproject.entity;
 
+import com.kh.finalproject.entity.enumurate.ProductCategory;
+import com.kh.finalproject.entity.enumurate.RankStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,10 +14,25 @@ import javax.persistence.*;
 @Table(name = "ranking_month")
 public class RankingMonth {
     @Id
-    @Column(name = "ranking_order")
-    private Long order;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ranking_index")
+    private Long index;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_code", nullable = false)
-    private Product product;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_code", nullable = false)
+//    private Product product;
+
+    @Column(name = "product_code", nullable = false)
+    private String code;
+
+    @Column(name = "ranking_category", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProductCategory productCategory;
+
+    @Column(name = "ranking_order", nullable = false)
+    private Integer order;
+
+    @Column(name = "ranking_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RankStatus rankStatus;
 }

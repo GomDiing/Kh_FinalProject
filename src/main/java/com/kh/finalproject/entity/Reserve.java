@@ -24,7 +24,7 @@ public class Reserve extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_time_index", nullable = false)
-    private ReserveTimeSeatPrice reserveTimeSeatPrice;
+    private ReserveTime reserveTime;
 
     @Column(name = "reserve_seat", nullable = false)
     private String seat;

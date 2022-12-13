@@ -3,6 +3,8 @@ package com.kh.finalproject.entity;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 좌석/가격 테이블과 연결된 엔티티
@@ -22,17 +24,10 @@ public class SeatPrice {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "remain_quantity", nullable = false)
-    private Integer remainQuantity;
-
-    @Column(name = "total_quantity", nullable = false)
-    private Integer totalQuantity;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reserve_time_index", nullable = false)
-    private ReserveTimeSeatPrice reserveTimeSeatPrice;
+    @OneToMany(mappedBy = "seatPrice")
+    private List<ReserveTimeSeatPrice> reserveTimeList = new ArrayList<>();
 }
