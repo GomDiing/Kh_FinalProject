@@ -1,5 +1,6 @@
 package com.kh.finalproject.entity;
 
+import com.kh.finalproject.common.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "wish_product")
-public class WishProduct {
+public class WishProduct extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wish_product_index")
