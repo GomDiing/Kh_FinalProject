@@ -60,12 +60,22 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public Boolean editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
-        Member findMember = memberRepository.findByIndex(memberInfoDTO.getIndex())
+        // 아이디 잘 가져옴
+        Member findId = memberRepository.findById(memberInfoDTO.getId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        Address findAddress = new Address().toEntity(memberInfoDTO, findMember);
+        // 엔티티로 변환 OK
+        Member saveMember = new Member().toEntity(memberInfoDTO);
 
-        Integer updateMember = memberRepository.updateInfo(findMember, LocalDateTime.now(), findAddress);
+        // 엔티티로 변환 OK
+        Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
+
+        Integer updateMember = memberRepository.updateInfo(saveMember, findAddress);
+
+        System.out.println("saveMember" + saveMember.getId());
+        System.out.println("findId" + findId.getId());
+        System.out.println("find" + findAddress.getMember().getId() + findAddress.getRoad());
+        System.out.println("updateMember" +  updateMember);
 
         if(updateMember == 2) return true;
         else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);

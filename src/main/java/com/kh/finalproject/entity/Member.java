@@ -1,5 +1,6 @@
 package com.kh.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.EditMemberInfoDTO;
 import com.kh.finalproject.dto.member.SearchByIdDTO;
@@ -9,6 +10,8 @@ import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_index")
@@ -58,7 +62,7 @@ public class Member extends BaseTimeEntity {
     @Timestamp
     private LocalDateTime unregister;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Address address;
 
     @OneToMany(mappedBy = "member")
@@ -132,8 +136,8 @@ public class Member extends BaseTimeEntity {
     /**
      * @param editMemberInfoDTO
      */
+    @CreatedBy
     public Member toEntity(EditMemberInfoDTO editMemberInfoDTO) {
-        this.index = editMemberInfoDTO.getIndex();
         this.id = editMemberInfoDTO.getId();
         this.password = editMemberInfoDTO.getPassword();
         this.name = editMemberInfoDTO.getName();
