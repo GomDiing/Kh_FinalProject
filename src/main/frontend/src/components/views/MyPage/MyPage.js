@@ -85,10 +85,10 @@ function MyPage() {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
     el[0].style.position = 'relative';
     const el2 = document.getElementsByClassName('ant-layout-sider-children');
-    el2[0].style.height = '228px';
+    el2[0].style.height = '225px';
     const el3 = document.getElementsByClassName('ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger');
     el3[0].style.background = 'none';
-  })
+  });
   
   function getItem(label, key, icon, children) {
     return { key, icon, children,label };

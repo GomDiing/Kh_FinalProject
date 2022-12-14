@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Cast from './Cast';
 import Contents from './Contents';
-import Qna from './Qna';
 import Reviews from './Reviews';
 
 
@@ -22,7 +22,7 @@ function DBody() {
       <Contents/>
       </Tab>
       <Tab eventKey="cast" title="캐스팅 정보">
-      <Qna/>
+      <Cast/>
       </Tab>
       <Tab eventKey="profile" title="관람후기">
       <Reviews/>
