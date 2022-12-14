@@ -35,6 +35,7 @@ out/
 **/src/test/resources/*.properties
 **/src/test/resources/*.yml
 **/src/main/**/PostPreConstruct.java
+crawling
 
 ### NetBeans ###
 /nbproject/private/
