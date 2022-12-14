@@ -1,6 +1,8 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.notice.PagingNoticeDTO;
 import com.kh.finalproject.dto.qna.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public interface QnAService {
     /**
      * 회원 인덱스로 문의 조회 메서드
      */
-    QnADTO searchByMember(Long memberIndex);
+    PagingQnaDTO searchByMember(Long memberIndex, Pageable pageable);
 
     /**
      * 문의 전체 조회 메서드

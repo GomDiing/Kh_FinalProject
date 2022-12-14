@@ -26,24 +26,6 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
 
-//    /**
-//     * 전체 일반 회원 조회
-//     */
-//    @GetMapping("/memberlist")
-//    public ResponseEntity<DefaultResponse<Object>> searchActiveMemberList(){
-//        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
-//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
-//    }
-//
-//    /**
-//     * 전체 블랙리스트 회원 조회
-//     */
-//    @GetMapping("/memberblacklist")
-//    public ResponseEntity<DefaultResponse<Object>> blackList(){
-//        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
-//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
-//    }
-
     /**
      * 전체 일반 회원 조회
      */
@@ -62,8 +44,6 @@ public class MemberController {
         log.info("searchMemberList = {}", searchMemberList.getMemberDTOList().get(0).getName());
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
-
-
 
     /**
      * 블랙리스트 회원 탈퇴

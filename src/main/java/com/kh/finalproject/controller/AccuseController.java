@@ -28,4 +28,5 @@ public class AccuseController {
         accuseService.create(createAccuseDTO, index);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_ACCUSE), HttpStatus.OK);
     }
+    /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
 }

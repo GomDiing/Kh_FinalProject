@@ -11,7 +11,7 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.post("/notice/write", params, HEADER);
+        return await axios.post(TCAT_DOMAIN+"/notice/write", params, HEADER);
     },
     // 공지사항 전체 목록
     noticeInfo : async function(currentPage ,setPageSize){
@@ -46,7 +46,7 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.put("/notice/edit/" +index, editing, HEADER)
+        return await axios.put(TCAT_DOMAIN+"/notice/edit/" +index, editing, HEADER)
     },
 
     // 회원 전체 조회

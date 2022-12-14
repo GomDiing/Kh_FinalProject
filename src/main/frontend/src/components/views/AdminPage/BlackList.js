@@ -85,6 +85,7 @@ const BlackList=()=>{
     return(
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
+
         <div className="blackList-container">
           <table>
                 <thead>
