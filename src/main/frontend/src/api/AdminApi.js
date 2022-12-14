@@ -1,15 +1,8 @@
 import axios from "axios";
 import { createSearchParams } from "react-router-dom";
 const HEADER = 'application/json';
-<<<<<<< HEAD
-const contentType = 'application/json';
-//const TCAT_DOMAIN= "http://localhost:7700";//server path
-//const serverPAthTCAT_DOMAIN= "http://localhost:7700";//server path
-// "http://cokebear756.synology.me:33060";
-=======
 const TCAT_DOMAIN= "http://localhost:7777";//server path
 
->>>>>>> f1e25967bc94716bca8ad7f93e2eb76874c53cae
 
 const AdminApi={
     //공지사항 쓰기 api
@@ -31,11 +24,7 @@ const AdminApi={
 
     // 공지사항 삭제 
     noticeDelete : async function(index){
-<<<<<<< HEAD
-        return await axios.delete("/notice/delete/"+ index, HEADER)
-=======
         return await axios.delete( TCAT_DOMAIN + "/notice/delete/"+ index, HEADER)
->>>>>>> f1e25967bc94716bca8ad7f93e2eb76874c53cae
     },
 
     // (체크박스) 공지사항 삭제
@@ -48,11 +37,7 @@ const AdminApi={
             checkDTOList: arrKeys
         };
         // debugger;
-<<<<<<< HEAD
-        return await axios.post("/notice/delete/check",params, "application/json");
-=======
         return await axios.post(TCAT_DOMAIN +"/notice/delete/check",params, "application/json");
->>>>>>> f1e25967bc94716bca8ad7f93e2eb76874c53cae
     },
 
     // 공지사항 수정
@@ -65,21 +50,12 @@ const AdminApi={
     },
 
     // 회원 전체 조회
-<<<<<<< HEAD
-    totalMember : async function(){
-        return await axios.get("/memberlist", HEADER)
-    },
-    // 블랙리스트 회원 조회
-    totalBlackMember : async function(){
-        return await axios.get("/blacklist", HEADER)
-=======
     totalMember : async function(currentPage ,setPageSize){
         return await axios.get(TCAT_DOMAIN+`/api/member/memberlist?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
     },
     // 블랙리스트 회원 조회
     totalBlackMember : async function(currentPage ,setPageSize){
         return await axios.get(TCAT_DOMAIN+`/api/member/memberblacklist?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
->>>>>>> f1e25967bc94716bca8ad7f93e2eb76874c53cae
     },
 
     // 회원 탈퇴(관리자)
@@ -91,11 +67,7 @@ const AdminApi={
     const params = {
         memberDTOCheckList: arrKeys
     };
-<<<<<<< HEAD
-    return await axios.post("/notice/delete/member/check",params, "application/json");
-=======
     return await axios.post( "/notice/delete/member/check",params, "application/json");
->>>>>>> f1e25967bc94716bca8ad7f93e2eb76874c53cae
 },
     // 일대일문의(qna) 전체 조회
     qnaList : async function(){
