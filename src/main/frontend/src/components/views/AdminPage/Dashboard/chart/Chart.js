@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
+// import AdminApi from '../../../../../api/AdminApi';
 
 const ChartBlock=styled.div`
     .chart{
@@ -17,8 +18,29 @@ const ChartBlock=styled.div`
 
 `;
 const Chart=()=>{
+//   const [chartAmount, setChartAmount] = useState('');
+//   const [chartMember, setChartMember] = useState('');
+//   const [chartReserve, setChartReserve] = useState('');
+//   const [chartData, setChartData] = useState([]);
 
-const data = [
+//   useEffect(() => {
+//       const getChart = async()=> {
+//       try {
+//           const response = await AdminApi.getChart();
+//           setChartData(response.data);
+//           setChartAmount(response.data.cumuAmount);
+//           setChartMember(response.data.totalMember);
+//           setChartReserve(response.data.totalReserve);
+//           console.log(response.data);
+//       } catch (e) {
+//           console.log(e);
+//   }
+//   };
+//   getChart();
+// }, []);
+
+
+const datas = [
   {
     name: '9월',
     수익: 1000,
@@ -58,7 +80,7 @@ const data = [
       <BarChart
         //   width={500}
         //   height={300}
-          data={data}
+          data={datas}
           margin={{
             top: 10,
             // right: 30,
@@ -75,6 +97,7 @@ const data = [
           <Bar dataKey="회원" fill="olive" />
           <Bar dataKey="예매" fill="orange" />
         </BarChart>
+
       </ResponsiveContainer>
       </div>
       </ChartBlock>

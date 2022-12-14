@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createSearchParams } from "react-router-dom";
 const HEADER = 'application/json';
-const TCAT_DOMAIN= "http://localhost:7777";//server path
+const TCAT_DOMAIN= "http://localhost:7701";//server path
 
 
 const AdminApi={
@@ -11,11 +11,11 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.post("/notice/write", params, HEADER);
+        return await axios.post(TCAT_DOMAIN + "/notice/write", params, HEADER);
     },
     // 공지사항 전체 목록
     noticeInfo : async function(currentPage ,setPageSize){
-        return await axios.get(`/notice/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/notice/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
     },
     // 공지사항 상세페이지
     noticeDetail : async function(index){
