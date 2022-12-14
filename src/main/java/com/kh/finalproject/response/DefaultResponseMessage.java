@@ -12,6 +12,8 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_CREATE_NOTICE = "공지사항 작성 성공";
     public static final String SUCCESS_SEARCH_NOTICE = "공지사항 상세페이지 조회 성공";
     public static final String SUCCESS_DELETE_NOTICE = "공지사항 삭제 성공";
+    public static final String SUCCESS_UPDATE_NOTICE = "공지사항 수정 성공";
+    public static final String SUCCESS_DELETE_NOTICE_BY_CHECKBOX = "체크박스 공지사항 삭제 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";

@@ -33,12 +33,9 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 수정하기
     @Transactional
     @Override
-    public Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index) {
+    public void editNotice(EditNoticeDTO editNoticeDTO, Long index) {
         Integer updateCount = noticeRepository.updateNotice(new Notice().toEntity(editNoticeDTO, index), LocalDateTime.now());
-                if (updateCount == 0) {
-            throw new EmptyStackException();
-        }
-        return true;
+        if (updateCount == 0) throw new CustomException(CustomErrorCode.ERROR_UPDATE_NOTICE_INFO);
     }
 
 //    공지사항 디테일페이지 삭제버튼 기능
@@ -78,12 +75,10 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Transactional
 //    체크박스로 공지사항 삭제
-    public Boolean deleteCheckNotice(List<CheckDTO> noticeIndexList) {
-        List<Notice> deleteList = new ArrayList<>();
+    public void deleteCheckNotice(List<CheckDTO> noticeIndexList) {
         for (CheckDTO noticeIndex : noticeIndexList) {
             log.info("noticeIndex = {}", noticeIndex.getIndex());
             noticeRepository.changeStatusNotice(noticeIndex.getIndex(), NoticeStatus.DELETE);
         }
-        return true;
     }
 }
