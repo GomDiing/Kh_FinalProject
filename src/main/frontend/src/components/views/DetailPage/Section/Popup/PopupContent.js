@@ -259,6 +259,7 @@ function PopupContent (props) {
     PayReady(item_name, total, tax, value);
     const payUrl = window.localStorage.getItem('url');
     console.log(total, value, tax);
+
     
     return(
       <div>

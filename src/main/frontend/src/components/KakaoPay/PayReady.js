@@ -37,6 +37,7 @@ const PayReady = (item_name, total, tax, value) => {
     });
     
     useEffect(() => {
+        console.log("test");
         const { params } = data;
         axios({
             url: "/v1/payment/ready",
@@ -54,6 +55,7 @@ const PayReady = (item_name, total, tax, value) => {
             console.log(tid);
             window.localStorage.setItem("tid", tid);
             window.localStorage.setItem('url', next_redirect_pc_url);
+
             setData({ next_redirect_pc_url, tid });
         }).catch(error => {
             console.log(error);
