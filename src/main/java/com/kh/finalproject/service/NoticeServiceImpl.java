@@ -3,6 +3,8 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.notice.*;
 import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +26,9 @@ public class NoticeServiceImpl implements NoticeService {
 
 //    공지사항 작성하기
     @Override
-    public Boolean createNotice(CreateNoticeDTO createNoticeDTO) {
+    public void createNotice(CreateNoticeDTO createNoticeDTO) {
         Notice notice = new Notice().toEntity(createNoticeDTO);
-        Notice rst = noticeRepository.save(notice);
-        return true;
+        noticeRepository.save(notice);
     }
     // 공지사항 수정하기
     @Transactional
@@ -66,19 +67,13 @@ public class NoticeServiceImpl implements NoticeService {
 
         return pagingNoticeDTO;
     }
-//공지사항 상세페이지별 데이터 조회
+    //공지사항 상세페이지별 데이터 조회
     @Override
-    public List<NoticeDTO> selectByIndex(Long index) {
-        List<NoticeDTO> noticeDTOSList = new ArrayList<>();
-        List<Notice> noticeDetail = noticeRepository.findByIndex(index);
-        for(Notice e : noticeDetail){
-            NoticeDTO noticeDTO = new NoticeDTO();
-            noticeDTO.setIndex(e.getIndex());
-            noticeDTO.setTitle(e.getTitle());
-            noticeDTO.setContent(e.getContent());
-            noticeDTOSList.add(noticeDTO);
-        }
-        return noticeDTOSList;
+    public NoticeDTO selectByIndex(Long index) {
+        Notice noticeDetail = noticeRepository.findByIndex(index)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_NOTICE));
+
+        return new NoticeDTO().toDTO(noticeDetail);
     }
 
     @Transactional

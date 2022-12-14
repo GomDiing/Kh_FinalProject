@@ -28,11 +28,11 @@ const PayReady = (item_name, total, tax, value) => {
         // 상품 비과세
         tax_free_amount: tax,
         // 결제 성공 URL
-        approval_url: "http://localhost:3000/payresult",
+        approval_url: "http://localhost:7700/payresult",
         // 결제 실패 URL
-        fail_url: "http://localhost:3000/resultfalse",
+        fail_url: "http://localhost:7700/resultfalse",
         // 결제 취소 URL
-        cancel_url: "http://localhost:3000/resultfalse"
+        cancel_url: "http://localhost:7700/resultfalse"
 		}
     });
     
@@ -40,7 +40,7 @@ const PayReady = (item_name, total, tax, value) => {
         console.log("test");
         const { params } = data;
         axios({
-            url: "/v1/payment/ready",
+            url: "https://kapi.kakao.com/v1/payment/ready",
             method: "POST",
             headers: {
                 Authorization: `KakaoAK ${ADMIN_KEY}`,

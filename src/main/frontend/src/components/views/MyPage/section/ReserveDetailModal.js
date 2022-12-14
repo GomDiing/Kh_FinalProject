@@ -56,7 +56,7 @@ const ModalStyle2 = styled.div`
         padding: 12px 16px;
         text-align: right;
     }
-    .modal > section > footer button {
+    .close {
         padding: 6px 12px;
         color: #fff;
         background-color: #6c757d;
@@ -72,6 +72,11 @@ const ModalStyle2 = styled.div`
     .cancel-button {
         font-weight: bold;
         color: black;
+        padding: 6px 12px;
+        color: #fff;
+        background-color: #6c757d;
+        border-radius: 5px;
+        font-size: 13px;
     }
     @keyframes modal-show {
         from {

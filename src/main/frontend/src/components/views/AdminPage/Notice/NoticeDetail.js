@@ -9,7 +9,7 @@ const NoticeDetail=()=>{
   const params = useParams().index;
   const [noticeDetail, setNoticeDetail] = useState('');
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const noticeData = async()=> {
     //  setLoading(true);

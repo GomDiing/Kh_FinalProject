@@ -20,7 +20,9 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<List<Member>> findByStatus(MemberStatus status);
+//    Optional<List<Member>> findByStatus(MemberStatus status);
+
+    Page<Member> findByStatus(MemberStatus status,Pageable pageable);
 
     /**
      * 체크박스 삭제시 회원 상태 탈퇴회원으로 변환

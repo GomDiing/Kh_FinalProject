@@ -3,22 +3,20 @@ import TopBar from "./Tool/TopBar";
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AdminApi from "../../../api/AdminApi";
-import Pagination from "./Tool/Pagination/Paging";
 import { useNavigate} from "react-router-dom";
+import { Pagination } from "antd";
 
 const BlackList=()=>{
   const navigate = useNavigate();
   // 페이지네이션 변수
-  const [limit, setLimit] = useState(10); // 한페이지에 보여지는 게시물 갯수
-  const [page, setPage] = useState(1); // 현재 페이지 번호
-  const offset = (page - 1) * limit; // 각 페이지별 첫 게시물의 위치 계산
-  const [pageStart, setPageStart] = useState(0);
+  const [memberList, setMemberList] = useState([]);
+  const [pageSize, setPageSize] = useState(3); // 한페이지에 몇개씩 있을건지
+  const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
+  const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
 
   // 체크박스 변수
-  const [memberList, setMemberList] = useState('');
   const [checkItems, setCheckItems] = useState([]); 
-
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, obj) => {
     if (checked) {
@@ -48,15 +46,23 @@ const BlackList=()=>{
   useEffect(() => {
     const memberData = async()=> {
       try {
-        const res = await AdminApi.totalBlackMember();
-        setMemberList(res.data);
-        console.log(res.data);
+        const res = await AdminApi.totalBlackMember(currentPage, pageSize);
+        if(res.data.statusCode === 200){
+          setMemberList([...memberList, ...res.data.results.memberDTOList]);
+          console.log(setMemberList);
+          // 페이징 시작
+          setTotalCount(res.data.results.totalResults); 
+          // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
+          setCurrentPage(res.data.results.page);
+        } else{
+          alert("리스트 조회가 안됩니다.")
+        }
       } catch (e) {
         console.log(e);
       }
     };
     memberData();
-  }, []);
+  }, [currentPage]);
 
   const onClickDelete=async()=>{
     if(checkItems.length<1){
@@ -64,13 +70,11 @@ const BlackList=()=>{
     } else{
       console.log(checkItems);
       const res = await AdminApi.deleteMemberAdmin(checkItems);
-      console.log(res.data);
+      console.log(res.results);
       alert("선택하신 회원이 탈퇴되었습니다.");
       try{
-        console.log("통신넘어가나? :" + res.data);
-        if(res.data === true) {
-          navigate(0);
-        }
+        console.log("통신넘어가나? :" + res.results);
+        navigate(0);
       }catch(e){
         console.log(e);
       }
@@ -98,7 +102,8 @@ const BlackList=()=>{
                   </tr>
                 </thead>
                 <tbody>
-                {memberList && memberList.slice(offset, offset + limit).map(({index,id,name,email,createTime,memberStatus}) => (<tr>
+                {memberList.map(({index,id,name,email,createTime,memberStatus}) => (
+                <tr>
                   <td><input type='checkbox' name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked, index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />
@@ -114,12 +119,10 @@ const BlackList=()=>{
               </table>
             </div>
             <Pagination
-            total={memberList.length}
-            limit={limit}
-            page={page}
-            setPage={setPage}
-            pageStart={pageStart}
-            setPageStart={setPageStart}
+            total={totalCount}  //총 데이터 갯수
+            current={currentPage} 
+            pageSize={pageSize}
+            onChange={(page) => {setCurrentPage(page); setMemberList([]);}}
             />
             <div className="delete"><button onClick={onClickDelete}>탈퇴하기</button></div>
         </MemberBlock>

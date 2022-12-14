@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -61,12 +62,12 @@ public interface MemberService {
     /**
      * 전체 일반 회원 조회 메서드
      */
-    List<MemberDTO> searchAllActiveMember();
+    public PagingMemberDTO searchAllActiveMember(Pageable pageable);
 
     /**
      * 전체 블랙리스트 회원 조회 메서드
      */
-    List<MemberDTO> searchAllBlackMember();
+    public PagingMemberDTO searchAllBlackMember(Pageable pageable);
 
     /**
      * [관리자 차트] 테이블 총 회원수 갱신 메서드
