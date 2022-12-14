@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -23,40 +24,43 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
 
+    /**
+     * 회원 가입 메서드
+     */
     @Override
     @Transactional
     public void signup(SignupDTO signupDto) {
 
-        validateDuplicateByEmail(signupDto.getEmail());
-
         Member signMember = new Member().toEntity(signupDto);
 
+        //이메일 중복 확인
+        validateDuplicateByEmail(signupDto.getEmail());
+
+        //회원 가입
         Member saveMember = memberRepository.save(signMember);
 
         Address signAddress = new Address().toEntity(signupDto, saveMember);
 
+        //주소 정보 저장
         addressRepository.save(signAddress);
     }
 
     /**
-     * member info update
+     * 회원 정보 수정 메서드
      */
     @Override
     @Transactional
     public Boolean editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
-        Member member = new Member().toEntity(memberInfoDTO);
+        Member findMember = memberRepository.findByIndex(memberInfoDTO.getIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        Optional<Member> findIndex = memberRepository.findByIndex(member.getIndex());
+        Address findAddress = new Address().toEntity(memberInfoDTO, findMember);
 
-        if(findIndex.isEmpty()) {
-            throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
-        }
+//        int updateMember = memberRepository.updateInfo(findMember.getIndex(), findMember.getId(),
+//                findMember.getPassword(), findMember.getName(), findMember.getEmail(), address.getRoad(), address.getJibun(), address.getDetail(), address.getZipcode());
 
-        Address address = new Address().toEntity(memberInfoDTO, member);
-
-        int updateMember = memberRepository.updateInfo(member.getIndex(), member.getId(), member.getPassword(), member.getName(),
-                member.getEmail(), address.getRoad(), address.getJibun(), address.getDetail(), address.getZipcode());
+        Integer updateMember = memberRepository.updateInfo(findMember, LocalDateTime.now(), findAddress);
 
         if(updateMember == 2) return true;
         else throw new IllegalArgumentException("회원정보 업데이트 실패 ! ! !");
@@ -68,15 +72,15 @@ public class MemberServiceImpl implements MemberService{
     }
 
     /**
-     * email duplicate check
+     * 중복 이메일 확인 메서드
      */
     @Override
-    @Transactional
     public void validateDuplicateByEmail(String email) {
 
         Optional<Member> findEmail = memberRepository.findByEmail(email);
 
-        if(findEmail.isPresent()) {
+        //중복 이메일 존재 시 예외 처리
+        if (findEmail.isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLI_EMAIL);
         }
     }
@@ -160,27 +164,38 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
-    //    일반회원조회
+    /**
+     * 전체 일반 회원 조회 서비스
+     */
     @Override
-    public List<MemberDTO> searchAllMember() {
+    public List<MemberDTO> searchAllActiveMember() {
         List<MemberDTO> memberDTOSList = new ArrayList<>();
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE);
+        //활성 상태 회원 조회
+        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST));
+
         for(Member e : memberList){
             MemberDTO memberDTO = new MemberDTO().toDTO(e);
             memberDTOSList.add(memberDTO);
         }
         return memberDTOSList;
     }
-// 블랙리스트조회
+
+    /**
+     * 전체 블랙리스트 회원 조회
+     */
     @Override
     public List<MemberDTO> searchAllBlackMember() {
-        List<MemberDTO> memberDTOSList = new ArrayList<>();
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST);
+        //회원 목록
+        List<MemberDTO> memberBlackDTOList = new ArrayList<>();
+        //블랙 상태 회원 조회
+        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST));
         for(Member e : memberList){
             MemberDTO memberDTO = new MemberDTO().toDTO(e);
-            memberDTOSList.add(memberDTO);
+            memberBlackDTOList.add(memberDTO);
         }
-        return memberDTOSList;
+        return memberBlackDTOList;
     }
 
     @Override
@@ -193,16 +208,15 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
-//    체크박스로 회원 탈퇴시키기
+    /**
+     * 회원 상태 탈퇴 변환 메서드
+     */
     @Transactional
-    public Boolean deleteCheckMember(List<CheckMemberDTO> memberIndexList){
-        List<Member> deleteCheckList = new ArrayList<>();
-        for(CheckMemberDTO memberIndex : memberIndexList){
-            log.info("memberIndex = {}", memberIndex.getIndex());
-            memberRepository.changeStatusMember(memberIndex.getIndex(),MemberStatus.UNREGISTER);
+    public void changeMemberStatusToUnregister(List<CheckMemberDTO> checkMemberDTOList){
+        for(CheckMemberDTO checkMemberDTO : checkMemberDTOList){
+            log.info("memberIndex = {}", checkMemberDTO.getIndex());
+            memberRepository.changeStatusMember(checkMemberDTO.getIndex(), MemberStatus.UNREGISTER)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
         }
-        return true;
     }
-
-
 }

@@ -5,14 +5,18 @@ package com.kh.finalproject.response;
  */
 public class DefaultResponseMessage {
     public static final String SUCCESS_JOIN_MEMBER = "회원가입 성공";
-    public static final String SUCCESS_LOGIN= "로그인 성공";
+    public static final String SUCCESS_SEARCH_CHART = "관리자 차트 조회 성공";
+    public static final String SUCCESS_CREATE_ACCUSE = "리뷰 신고 성공";
+    public static final String SUCCESS_BLACKLIST_TO_UNREGISTER = "블랙리스트 회원 탈퇴 성공";
+    public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";
     public static final String SUCCESS_CHECK_PASSWORD = "비밀번호 확인 성공";
     public static final String SUCCESS_UPDATE_MEMBER = "회원정보 수정 성공";
     public static final String SUCCESS_DELETE = "회원탈퇴가 완료되었습니다";
     public static final String SUCCESS_MYPAGE = "회원 정보 조회가 완료되었습니다";
-    public static final String SUCCESS_VIEW_MEMBERS = "전체 회원 정보 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_MEMBERS_ACTIVE = "전체 일반 회원 정보 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_MEMBERS_BLACKLIST = "전체 블랙리스트 회원 정보 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_NOW_PLAYING = "현재 상영중인 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_POPULAR = "인기 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_TOP_RATED = "역대 최고 영화 목록 조회가 완료되었습니다";

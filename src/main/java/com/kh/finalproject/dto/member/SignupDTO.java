@@ -20,7 +20,7 @@ public class SignupDTO {
     private String name;
     @NotNull(message =  "이메일 필수 입력 값")
     private String email;
-    private int point;
+    private Integer point;
     @NotNull(message =  "도로명주소 필수 입력 값")
     private String road;
     @NotNull(message =  "지번주소 필수 입력 값")

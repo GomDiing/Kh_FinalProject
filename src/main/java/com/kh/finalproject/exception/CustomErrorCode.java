@@ -10,8 +10,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CustomErrorCode {
-    DUPLI_MEMBER_ID(StatusCode.BAD_REQUEST, "J001", "이미 가입된 ID가 있습니다"),
-    EMPTY_MEMBER(StatusCode.BAD_REQUEST, "J002", "일치한 회원이 없습니다"),
+    DUPLI_MEMBER_ID(StatusCode.BAD_REQUEST, "M001", "이미 가입된 ID가 있습니다"),
+    EMPTY_MEMBER(StatusCode.BAD_REQUEST, "M002", "조회한 회원이 없습니다"),
+    ERROR_UPDATE_UNREGISTER_MEMBER(StatusCode.BAD_REQUEST, "M003", "회원의 탈퇴 상태 변환이 실패했습니다"),
+    EMPTY_MEMBER_ACTIVE_LIST(StatusCode.BAD_REQUEST, "M003", "조회한 활성 상태 회원 목록이 없습니다"),
+    EMPTY_MEMBER_BLAK_LIST(StatusCode.BAD_REQUEST, "M004", "조회한 블랙 상태 회원 목록이 없습니다"),
+    EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
+    OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),
     NOT_MATCH_ID(StatusCode.BAD_REQUEST, "J004", "비밀번호가 일치하지 않습니다"),
     DUPLI_EMAIL(StatusCode.BAD_REQUEST, "J005", "이미 가입된 이메일이 있습니다"),

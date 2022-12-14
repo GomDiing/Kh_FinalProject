@@ -20,34 +20,39 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/member")
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
 
-//    일반회원조회(블랙리스트회원 제외)
+    /**
+     * 전체 일반 회원 조회
+     */
     @GetMapping("/memberlist")
-    public ResponseEntity memberList(){
-        List<MemberDTO> memberList = memberService.searchAllMember();
-        return new ResponseEntity(memberList, HttpStatus.OK);
-    }
-//    블랙리스트조회
-    @GetMapping("/blacklist")
-    public ResponseEntity blackList(){
-        List<MemberDTO> memberList = memberService.searchAllBlackMember();
-        return new ResponseEntity(memberList, HttpStatus.OK);
+    public ResponseEntity<DefaultResponse<Object>> searchActiveMemberList(){
+        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
     }
 
-//    회원탈퇴시키기(블랙리스트)
+    /**
+     * 전체 블랙리스트 회원 조회
+     */
+    @GetMapping("/memberblacklist")
+    public ResponseEntity<DefaultResponse<Object>> blackList(){
+        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
+    }
+
+    /**
+     * 블랙리스트 회원 탈퇴
+     */
     @PostMapping("/notice/delete/member/check")
-    public ResponseEntity deleteCheckMember(@RequestBody MemberCheckListDTO memberListAAA){
-        List<CheckMemberDTO> checkMemberList = memberListAAA.getMemberDTOCheckList();
+    public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@RequestBody MemberCheckListDTO memberCheckListDTO){
+        List<CheckMemberDTO> checkMemberList = memberCheckListDTO.getMemberDTOCheckList();
         log.info("checkMemberList = {}", checkMemberList.toString());
-        boolean isTrue = memberService.deleteCheckMember(checkMemberList);
-        if (isTrue) {
-            return new ResponseEntity<>(true,HttpStatus.OK);
-        } else{
-            return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
-        }
+        memberService.changeMemberStatusToUnregister(checkMemberList);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_BLACKLIST_TO_UNREGISTER), HttpStatus.OK);
     }
 
     /**
@@ -58,14 +63,14 @@ public class MemberController {
 
         memberService.signup(signupDTO);
 
-        return new ResponseEntity(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER), HttpStatus.OK);
     }
 
     /**
      * member select by email
      */
     @PostMapping("member/search-by-email")
-    public ResponseEntity<DefaultResponse<SignupDTO>> searchMemberByEmail(@RequestBody SignupDTO signupDTO) {
+    public ResponseEntity<DefaultResponse<Object>> searchMemberByEmail(@RequestBody SignupDTO signupDTO) {
 
         SignupDTO memberList =  memberService.searchByEmail(signupDTO.getEmail());
 
@@ -76,7 +81,7 @@ public class MemberController {
      * find memberId by name and email
      */
     @PostMapping("/member/find-id")
-    public ResponseEntity<DefaultResponse> findMemberId(@RequestBody FindMemberDTO findMemberDTO) {
+    public ResponseEntity<DefaultResponse<Object>> findMemberId(@RequestBody FindMemberDTO findMemberDTO) {
 
         Map<String, String> memberId = memberService.findMemberId(findMemberDTO.getName(), findMemberDTO.getEmail());
 
@@ -87,7 +92,7 @@ public class MemberController {
      * find password by id and name and email
      */
     @PostMapping("/member/find-password")
-    public ResponseEntity<DefaultResponse> findPassword(@Validated @RequestBody FindMemberDTO findMemberDTO) {
+    public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindMemberDTO findMemberDTO) {
 
         Map<String, String> password = memberService.findPassword(findMemberDTO.getId(), findMemberDTO.getName(), findMemberDTO.getEmail());
 
@@ -95,10 +100,10 @@ public class MemberController {
     }
 
     /**
-     * member info update
+     * 회원 정보 수정 메서드
      */
     @PostMapping("/member/info-update")
-    public ResponseEntity<DefaultResponse<EditMemberInfoDTO>> updateMember(@RequestBody EditMemberInfoDTO editMemberInfoDTO) {
+    public ResponseEntity<DefaultResponse<Object>> updateMember(@RequestBody EditMemberInfoDTO editMemberInfoDTO) {
 
         boolean result = memberService.editMemberInfo(editMemberInfoDTO);
 

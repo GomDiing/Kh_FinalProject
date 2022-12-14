@@ -26,9 +26,11 @@ public class MemberDTO {
     private LocalDateTime unregister;
     private String createTime;
 
-
-    // 조회 프론트에 뿌려주는거니까 toDTO로
-    public MemberDTO toDTO (Member member) {
+    /**
+     * 전체 일반 회원 조회 Entity -> DTO
+     * 조회 프론트에 뿌려주는거니까 toDTO로
+     */
+    public MemberDTO toDTO(Member member) {
         this.index = member.getIndex(); //dto에 인덱스 안쓰고 싶은데 화면에 보여주려면.. 어쩔수 없나?
         this.id = member.getId();
         this.name = member.getName();

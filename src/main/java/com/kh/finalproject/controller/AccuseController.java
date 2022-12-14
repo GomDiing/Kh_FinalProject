@@ -2,6 +2,9 @@ package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.response.DefaultResponse;
+import com.kh.finalproject.response.DefaultResponseMessage;
+import com.kh.finalproject.response.StatusCode;
 import com.kh.finalproject.service.AccuseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +23,10 @@ public class AccuseController {
      * 리뷰 신고하기
      */
     @PostMapping("/accuse/{index}")
-    public ResponseEntity<Boolean>createAccuse(@PathVariable Long index,
+    public ResponseEntity<DefaultResponse<Object>> createAccuse(@PathVariable Long index,
                                                @RequestBody CreateAccuseDTO createAccuseDTO) {
         //후기 index 랑 유저 정보 service 넘겨주기
-        Boolean isTrue = accuseService.create(createAccuseDTO, index);
-        if (isTrue) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-        }
+        accuseService.create(createAccuseDTO, index);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_ACCUSE), HttpStatus.OK);
     }
 }
