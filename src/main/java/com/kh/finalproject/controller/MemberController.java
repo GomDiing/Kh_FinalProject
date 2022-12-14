@@ -19,7 +19,6 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/member")
 @Slf4j
 public class MemberController {
