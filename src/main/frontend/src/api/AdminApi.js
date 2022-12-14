@@ -2,8 +2,8 @@ import axios from "axios";
 import { createSearchParams } from "react-router-dom";
 const HEADER = 'application/json';
 const contentType = 'application/json';
-const TCAT_DOMAIN= "http://localhost:8118";//server path
-const serverPAthTCAT_DOMAIN= "http://localhost:8118";//server path
+const TCAT_DOMAIN= "http://localhost:7700";//server path
+const serverPAthTCAT_DOMAIN= "http://localhost:7700";//server path
 // "http://cokebear756.synology.me:33060";
 
 const AdminApi={

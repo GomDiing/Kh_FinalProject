@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = 'application/json';
-const TCAT_DOMAIN= "http://localhost:8118";
+const TCAT_DOMAIN= "http://localhost:7700";
 
 const MemberApi = {
   signup : async function(id, password, name, email, road, jibun, detail, zipcode) {
