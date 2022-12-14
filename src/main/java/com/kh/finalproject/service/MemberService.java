@@ -21,7 +21,7 @@ public interface MemberService {
     /**
      * 이메일로 회원 조회
      */
-    SignupDTO searchByEmail(String email);
+    SignupDTO searchById(String id);
 
     /**
      * 회원 이름과 이메일로 아이디 찾기
@@ -43,6 +43,11 @@ public interface MemberService {
      * 단, 완전 탈퇴 상태 회원의 이메일은 중복 검증에서 제외
      */
     void validateDuplicateByEmail(String email);
+
+    /**
+     * 중복 아이디 검증 메서드
+     */
+    void validateDuplicateById(String id);
 
     /**
      * 회원 ID와 비밀번호로 회원 조회 메서드

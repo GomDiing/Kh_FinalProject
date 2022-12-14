@@ -19,7 +19,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_UPDATE_MEMBER = "회원정보 수정 성공";
     public static final String SUCCESS_DELETE = "회원탈퇴가 완료되었습니다";
     public static final String SUCCESS_MYPAGE = "회원 정보 조회가 완료되었습니다";
-    public static final String SUCCESS_SEARCH_MEMBER_BY_EMAIL = "이메일로 회원 정보 조회 완료";
+    public static final String SUCCESS_SEARCH_MEMBER_BY_ID = "아이디로 회원 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME = "이메일과 이름으로 회원 아이디 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME = "아이디와 이메일과 이름으로 회원 아이디 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBERS_ACTIVE = "전체 일반 회원 정보 조회 완료";

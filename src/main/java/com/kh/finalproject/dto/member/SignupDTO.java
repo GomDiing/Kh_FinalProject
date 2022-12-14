@@ -20,7 +20,6 @@ public class SignupDTO {
     private String name;
     @NotNull(message =  "이메일 필수 입력 값")
     private String email;
-    private Integer point;
     @NotNull(message =  "도로명주소 필수 입력 값")
     private String road;
     @NotNull(message =  "지번주소 필수 입력 값")
@@ -36,7 +35,6 @@ public class SignupDTO {
         this.password = member.getPassword();
         this.email = member.getEmail();
         this.name = member.getName();
-        this.point = member.getPoint();
         this.jibun = address.getJibun();
         this.detail = address.getDetail();
         this.road = address.getRoad();

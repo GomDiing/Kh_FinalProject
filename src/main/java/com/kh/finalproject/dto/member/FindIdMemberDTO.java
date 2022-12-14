@@ -6,21 +6,16 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class FindMemberDTO {
+public class FindIdMemberDTO {
 
     private String id;
-
-    private String password;
-
-    @NotNull(message = "이름을 필수 입력 값입니다.")
+    @NotNull(message = "이름은 필수 입력 값")
     private String name;
-
-    @NotNull(message = "이메일은 필수 입력 값입니다.")
+    @NotNull(message = "이메일은 필수 입력 값")
     private String email;
 
-    public FindMemberDTO toDTO(Member member) {
+    public FindIdMemberDTO toDTO(Member member) {
         this.id = member.getId();
-        this.password = member.getPassword();
         this.name = member.getName();
         this.email = member.getEmail();
 

@@ -31,6 +31,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member n SET n.status = :status where n.index = :index")
     Optional<Integer> changeStatusMember(@Param("index") Long index, @Param("status") MemberStatus status);
 
+    Optional<Member> findById(String id);
+
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findByNameAndEmail(String name, String email);
@@ -38,8 +40,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndNameAndEmail(String id, String name, String email);
 
     Optional<Member> findByIndex(Long index);
-
-    @Modifying
+   @Modifying
     @Query(nativeQuery = true,
             value = "UPDATE member as a, address as b " +
                     "SET " +
@@ -57,24 +58,24 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                     " AND a.member_index = b.member_index")
     Integer updateInfo(
             @Param("paramMember") Member member, @Param("now") LocalDateTime now, @Param("paramAddress") Address address);
-
-    @Modifying
-    @Query(nativeQuery = true, value = "UPDATE member as a, address as b" +
-            " SET " +
-            "a.member_id=:id" +
-            " ,a.member_pwd=:pwd" +
-            " ,a.member_name=:name" +
-            " ,a.member_email=:email" +
-            " ,b.address_road=:road" +
-            " ,b.address_jibun=:jibun" +
-            " ,b.address_detail=:detail" +
-            " ,b.address_zipcode=:zipcode" +
-            " WHERE a.member_index=:index" +
-            " AND a.member_index = b.member_index")
-    int updateInfoBefore(
-            @Param("index")Long index, @Param("id") String id, @Param("pwd") String password,
-            @Param("name")String name, @Param("email") String email, @Param("road") String road,
-            @Param("jibun") String jibun, @Param("detail") String detail, @Param("zipcode") String zipcode);
+//
+//    @Modifying
+//    @Query(nativeQuery = true, value = "UPDATE member as a, address as b" +
+//            " SET " +
+//            "a.member_id=:id" +
+//            " ,a.member_pwd=:pwd" +
+//            " ,a.member_name=:name" +
+//            " ,a.member_email=:email" +
+//            " ,b.address_road=:road" +
+//            " ,b.address_jibun=:jibun" +
+//            " ,b.address_detail=:detail" +
+//            " ,b.address_zipcode=:zipcode" +
+//            " WHERE a.member_index=:index" +
+//            " AND a.member_index = b.member_index")
+//    int updateInfoBefore(
+//            @Param("index")Long index, @Param("id") String id, @Param("pwd") String password,
+//            @Param("name")String name, @Param("email") String email, @Param("road") String road,
+//            @Param("jibun") String jibun, @Param("detail") String detail, @Param("zipcode") String zipcode);
 
 
 //    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);

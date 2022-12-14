@@ -2,6 +2,7 @@ package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.EditMemberInfoDTO;
+import com.kh.finalproject.dto.member.SearchByIdDTO;
 import com.kh.finalproject.dto.member.SignupDTO;
 import com.kh.finalproject.dto.member.UnregisterDTO;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
@@ -115,6 +116,15 @@ public class Member extends BaseTimeEntity {
         this.role = MemberRoleType.ROLE_USER;
         this.point = 0;
         this.status = MemberStatus.ACTIVE;
+
+        return this;
+    }
+
+    /**
+     * @param searchByIdDTO
+     */
+    public Member toEntity(SearchByIdDTO searchByIdDTO) {
+        this.id = searchByIdDTO.getId();
 
         return this;
     }
