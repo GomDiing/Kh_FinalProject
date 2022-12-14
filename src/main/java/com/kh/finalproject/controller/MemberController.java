@@ -73,7 +73,7 @@ public class MemberController {
 
         SignupDTO memberList =  memberService.searchByEmail(signupDTO.getEmail());
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MYPAGE, memberList), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_EMAIL, memberList), HttpStatus.OK);
     }
 
     /**
@@ -84,7 +84,7 @@ public class MemberController {
 
         Map<String, String> memberId = memberService.findMemberId(findMemberDTO.getName(), findMemberDTO.getEmail());
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MYPAGE, memberId), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME, memberId), HttpStatus.OK);
     }
 
     /**
@@ -95,7 +95,7 @@ public class MemberController {
 
         Map<String, String> password = memberService.findPassword(findMemberDTO.getId(), findMemberDTO.getName(), findMemberDTO.getEmail());
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MYPAGE, password), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
     }
 
     /**
@@ -104,9 +104,8 @@ public class MemberController {
     @PostMapping("/member/info-update")
     public ResponseEntity<DefaultResponse<Object>> updateMember(@RequestBody EditMemberInfoDTO editMemberInfoDTO) {
 
-        boolean result = memberService.editMemberInfo(editMemberInfoDTO);
+        memberService.editMemberInfo(editMemberInfoDTO);
 
-        if(result) return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER, editMemberInfoDTO), HttpStatus.OK);
-        else return new ResponseEntity<>(DefaultResponse.res(StatusCode.BAD_REQUEST, DefaultResponseMessage.INTERNAL_SERVER_ERROR, editMemberInfoDTO), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
     }
 }

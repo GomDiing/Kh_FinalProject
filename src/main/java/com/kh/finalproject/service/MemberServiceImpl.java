@@ -63,7 +63,7 @@ public class MemberServiceImpl implements MemberService{
         Integer updateMember = memberRepository.updateInfo(findMember, LocalDateTime.now(), findAddress);
 
         if(updateMember == 2) return true;
-        else throw new IllegalArgumentException("회원정보 업데이트 실패 ! ! !");
+        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
     }
 
     @Override
@@ -92,17 +92,12 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public SignupDTO searchByEmail(String email) {
 
-        Optional<Member> findEmail = memberRepository.findByEmail(email);
+        Member findEmail = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        if (findEmail.isEmpty()) {
-            throw new IllegalArgumentException("조회된 회원이 없습니다");
-        }
+        Address memberAddress = addressRepository.findByMember(findEmail);
 
-        Address memberAddress = addressRepository.findByMember(findEmail.get());
-
-        SignupDTO searchByEmail = new SignupDTO().toDTO(findEmail.get(), memberAddress);
-
-        return searchByEmail;
+        return new SignupDTO().toDTO(findEmail, memberAddress);
     }
 
     /**
@@ -112,15 +107,12 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public Map<String, String> findMemberId(String name, String email) {
 
-        Optional<Member> findNameAndEmail = memberRepository.findByNameAndEmail(name, email);
-
-        if(findNameAndEmail.isEmpty()) {
-            throw new CustomException(CustomErrorCode.DUPLI_EMAIL);
-        }
+        Member findNameAndEmail = memberRepository.findByNameAndEmail(name, email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.DUPLI_EMAIL_NAME));
 
         Map<String, String> memberId = new LinkedHashMap<>();
 
-        FindMemberDTO searchMemberId = new FindMemberDTO().toDTO(findNameAndEmail.get());
+        FindMemberDTO searchMemberId = new FindMemberDTO().toDTO(findNameAndEmail);
 
         memberId.put("member_id", searchMemberId.getId());
 
@@ -134,15 +126,12 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public Map<String, String> findPassword(String id, String name, String email) {
 
-        Optional<Member> findIdNameEmail = memberRepository.findByIdAndNameAndEmail(id, name, email);
-
-        if(findIdNameEmail.isEmpty()) {
-            throw new CustomException(CustomErrorCode.NOT_MATCH_EMAIL_NAME);
-        }
+        Member findIdNameEmail = memberRepository.findByIdAndNameAndEmail(id, name, email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_MATCH_ID_EMAIL_NAME));
 
         Map<String, String> memberPassword = new LinkedHashMap<>();
 
-        FindMemberDTO searchPassword = new FindMemberDTO().toDTO(findIdNameEmail.get());
+        FindMemberDTO searchPassword = new FindMemberDTO().toDTO(findIdNameEmail);
 
         memberPassword.put("password", searchPassword.getPassword());
 
