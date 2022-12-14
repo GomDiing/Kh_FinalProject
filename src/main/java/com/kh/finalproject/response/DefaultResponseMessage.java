@@ -8,6 +8,10 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_SEARCH_CHART = "관리자 차트 조회 성공";
     public static final String SUCCESS_CREATE_ACCUSE = "리뷰 신고 성공";
     public static final String SUCCESS_BLACKLIST_TO_UNREGISTER = "블랙리스트 회원 탈퇴 성공";
+    public static final String SUCCESS_SEARCH_NOTICELIST = "공지사항 목록 조회 성공";
+    public static final String SUCCESS_CREATE_NOTICE = "공지사항 작성 성공";
+    public static final String SUCCESS_SEARCH_NOTICE = "공지사항 상세페이지 조회 성공";
+    public static final String SUCCESS_DELETE_NOTICE = "공지사항 삭제 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";

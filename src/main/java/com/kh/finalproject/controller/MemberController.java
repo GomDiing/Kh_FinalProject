@@ -10,6 +10,7 @@ import com.kh.finalproject.response.StatusCode;
 import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,15 +22,34 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/member")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000")
 public class MemberController {
     private final MemberService memberService;
+
+//    /**
+//     * 전체 일반 회원 조회
+//     */
+//    @GetMapping("/memberlist")
+//    public ResponseEntity<DefaultResponse<Object>> searchActiveMemberList(){
+//        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
+//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
+//    }
+//
+//    /**
+//     * 전체 블랙리스트 회원 조회
+//     */
+//    @GetMapping("/memberblacklist")
+//    public ResponseEntity<DefaultResponse<Object>> blackList(){
+//        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
+//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
+//    }
 
     /**
      * 전체 일반 회원 조회
      */
     @GetMapping("/memberlist")
-    public ResponseEntity<DefaultResponse<Object>> searchActiveMemberList(){
-        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
+    public ResponseEntity<Object> searchActiveMemberList(Pageable pageable){
+        PagingMemberDTO searchMemberList = memberService.searchAllActiveMember(pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
     }
 
@@ -37,10 +57,13 @@ public class MemberController {
      * 전체 블랙리스트 회원 조회
      */
     @GetMapping("/memberblacklist")
-    public ResponseEntity<DefaultResponse<Object>> blackList(){
-        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
+    public ResponseEntity<Object> blackList(Pageable pageable){
+        PagingMemberDTO searchMemberList = memberService.searchAllBlackMember(pageable);
+        log.info("searchMemberList = {}", searchMemberList.getMemberDTOList().get(0).getName());
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
+
+
 
     /**
      * 블랙리스트 회원 탈퇴

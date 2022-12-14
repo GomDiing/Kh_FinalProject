@@ -4,10 +4,6 @@ import { useState, useEffect} from "react";
 import { Link, useNavigate,useParams} from "react-router-dom";
 import AdminApi from "../../../../api/AdminApi";
 import { Pagination } from "antd";
-// import { Pagination } from "react-bootstrap";
-// import Pagination from "../Tool/Pagination/Paging";
-// import $ from 'jquery';
-
 
 const NoticeList=(props)=>{
   const [loading, setLoading] = useState(false);
@@ -16,7 +12,7 @@ const NoticeList=(props)=>{
 
   //  리액트 페이지네이션 변수 
   const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(10); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(2); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -49,25 +45,11 @@ const NoticeList=(props)=>{
     }
   }
 
-  // useEffect(()=>{
-  //   noticeData()
-  // }, [setCurrentPage]);
-
-  // const noticeData = async()=> {
-  //   const res = await AdminApi.noticeInfo();
-  //   setNoticeList([...noticeList, ...res.data.noticeDTOList]);
-  //   setTotalCount(res.data.totalResults); // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
-  //   setCurrentPage(res.data.page);
-  // }
-
-
-
     /** 공지 목록을 가져오는 useEffect */
   useEffect(() => {
     const noticeData = async()=> {
       setLoading(true);
       try {
-        
         const res = await AdminApi.noticeInfo(currentPage, pageSize);
         console.log("위에 삭제 최종 호출", res.data.noticeDTOList);
         setNoticeList([...noticeList, ...res.data.noticeDTOList]);
@@ -107,9 +89,6 @@ const NoticeList=(props)=>{
     setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
   };
 
-  // const onChangeBtn=(page)
-
-
     return(
         <NoticeBlock>
         <TopBar name="공지사항 관리"/>
@@ -132,7 +111,6 @@ const NoticeList=(props)=>{
                   {noticeList.map(({index,title,createTime}) => (
                   <tr>
                   <td><input type='checkbox'  name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked,index)}
-                  // className='notiitem' id={`select-${index}`}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />
                   </td>
@@ -150,8 +128,6 @@ const NoticeList=(props)=>{
              current={currentPage} 
              pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
-            //  onChange={onChangeBtn} //숫자 누르면 해당 페이지로 이동
-
             />
             <div className="buttonWrap">
                 <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>작성하기</button>

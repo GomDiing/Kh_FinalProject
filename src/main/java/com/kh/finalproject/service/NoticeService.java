@@ -12,7 +12,7 @@ public interface NoticeService {
     /**
      * 공지사항 작성 메서드
      */
-    Boolean createNotice(CreateNoticeDTO createNoticeDTO);
+    void createNotice(CreateNoticeDTO createNoticeDTO);
 
     /**
      * 공지사항 수정 메서드
@@ -33,7 +33,7 @@ public interface NoticeService {
     /**
      * 공지사항 상세페이지 조회 메서드
      */
-    List<NoticeDTO> selectByIndex(Long index);
+    NoticeDTO selectByIndex(Long index);
 
 //    체크박스 삭제
     Boolean deleteCheckNotice(List<CheckDTO> noticeList);

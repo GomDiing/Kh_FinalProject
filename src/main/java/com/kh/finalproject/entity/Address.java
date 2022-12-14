@@ -6,6 +6,7 @@ import com.kh.finalproject.dto.member.SignupDTO;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * 주소 테이블과 연결된 엔티티
