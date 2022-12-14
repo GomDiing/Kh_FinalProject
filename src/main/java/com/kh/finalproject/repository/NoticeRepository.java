@@ -12,10 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NoticeRepository extends JpaRepository <Notice,Long> {
-    List<Notice> findByIndex(Long index);
+    Optional<Notice> findByIndex(Long index);
 
 //    공지사항 index로 제목 내용 수정
     @Modifying

@@ -21,6 +21,7 @@ public enum CustomErrorCode {
     ERROR_UPDATE_MEMBER_INFO(StatusCode.BAD_REQUEST, "M009", "회원 정보가 올바르게 업데이트되지 않았습니다"),
     EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
     OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),
+    EMPTY_NOTICE(StatusCode.BAD_REQUEST, "N001", "조회한 공지사항이 존재하지 않습니다"),
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),
     NOT_MATCH_ID(StatusCode.BAD_REQUEST, "J004", "비밀번호가 일치하지 않습니다"),
     NOT_MATCH_EMAIL_NAME(StatusCode.BAD_REQUEST, "J006", "이메일 혹은 이름이 올바르지 않습니다"),
