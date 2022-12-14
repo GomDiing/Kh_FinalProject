@@ -37,12 +37,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             " ,a.member_pwd=:pwd" +
             " ,a.member_name=:name" +
             " ,a.member_email=:email" +
-            " ,a.update_time=NOW()" +
             " ,b.address_road=:road" +
             " ,b.address_jibun=:jibun" +
             " ,b.address_detail=:detail" +
             " ,b.address_zipcode=:zipcode" +
-            " ,b.update_time=NOW()" +
             " WHERE a.member_index=:index" +
             " AND a.member_index = b.member_index")
     int updateInfo(
