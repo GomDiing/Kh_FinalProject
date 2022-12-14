@@ -10,6 +10,8 @@ import com.kh.finalproject.repository.AddressRepository;
 import com.kh.finalproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -152,40 +154,104 @@ public class MemberServiceImpl implements MemberService{
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
 
     }
-
     /**
      * 전체 일반 회원 조회 서비스
      */
     @Override
-    public List<MemberDTO> searchAllActiveMember() {
-        List<MemberDTO> memberDTOSList = new ArrayList<>();
-        //활성 상태 회원 조회
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST));
+    public PagingMemberDTO searchAllActiveMember(Pageable pageable) {
+        List<MemberDTO> memberDTOList = new ArrayList<>();
 
-        for(Member e : memberList){
-            MemberDTO memberDTO = new MemberDTO().toDTO(e);
-            memberDTOSList.add(memberDTO);
+        //활성 상태 회원 조회
+        Page<Member> pageMemberList = memberRepository.findByStatus(MemberStatus.ACTIVE, pageable);
+
+        if (Objects.isNull(pageMemberList)) {
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST);
         }
-        return memberDTOSList;
+
+        List<Member> memberList = pageMemberList.getContent();
+        Integer totalPages = pageMemberList.getTotalPages();
+        Integer page = pageMemberList.getNumber()+1;
+        Long totalResults = pageMemberList.getTotalElements();
+
+        for(Member member : memberList){
+            Address memberAddress = addressRepository.findByMember(member);
+            MemberDTO memberDTO = new MemberDTO().toDTO(member, memberAddress);
+            memberDTOList.add(memberDTO);
+        }
+        PagingMemberDTO pagingMemberDTO = new PagingMemberDTO().toPageDTO(page,totalPages,totalResults,memberDTOList);
+
+        return pagingMemberDTO;
     }
 
     /**
      * 전체 블랙리스트 회원 조회
      */
     @Override
-    public List<MemberDTO> searchAllBlackMember() {
+    public PagingMemberDTO searchAllBlackMember(Pageable pageable) {
         //회원 목록
-        List<MemberDTO> memberBlackDTOList = new ArrayList<>();
+        List<MemberDTO> memberDTOList = new ArrayList<>();
         //블랙 상태 회원 조회
-        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST));
-        for(Member e : memberList){
-            MemberDTO memberDTO = new MemberDTO().toDTO(e);
-            memberBlackDTOList.add(memberDTO);
+        Page<Member> pageMemberList = memberRepository.findByStatus(MemberStatus.BLACKLIST,pageable);
+
+        if (Objects.isNull(pageMemberList)) {
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST);
         }
-        return memberBlackDTOList;
+        List<Member> memberList = pageMemberList.getContent();
+        Integer totalPages = pageMemberList.getTotalPages();
+        Integer page = pageMemberList.getNumber()+1;
+        Long totalResults = pageMemberList.getTotalElements();
+        for(Member member : memberList){
+
+            Address memberAddress = addressRepository.findByMember(member);
+            MemberDTO memberDTO = new MemberDTO().toDTO(member, memberAddress);
+            memberDTOList.add(memberDTO);
+        }
+        PagingMemberDTO pagingMemberDTO = new PagingMemberDTO().toPageDTO(page,totalPages,totalResults,memberDTOList);
+
+        return pagingMemberDTO;
+
+//        for(Member e : memberList){
+//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
+//            memberBlackDTOList.add(memberDTO);
+//        }
+//        return memberBlackDTOList;
     }
+
+
+
+//    /**
+//     * 전체 일반 회원 조회 서비스
+//     */
+//    @Override
+//    public List<MemberDTO> searchAllActiveMember() {
+//        List<MemberDTO> memberDTOSList = new ArrayList<>();
+//        //활성 상태 회원 조회
+//        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE)
+//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST));
+//
+//        for(Member e : memberList){
+//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
+//            memberDTOSList.add(memberDTO);
+//        }
+//        return memberDTOSList;
+//    }
+//
+//    /**
+//     * 전체 블랙리스트 회원 조회
+//     */
+//    @Override
+//    public List<MemberDTO> searchAllBlackMember() {
+//        //회원 목록
+//        List<MemberDTO> memberBlackDTOList = new ArrayList<>();
+//        //블랙 상태 회원 조회
+//        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST)
+//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST));
+//        for(Member e : memberList){
+//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
+//            memberBlackDTOList.add(memberDTO);
+//        }
+//        return memberBlackDTOList;
+//    }
 
     @Override
     public void updateTotalMemberInChart(Integer count) {

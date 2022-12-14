@@ -1,45 +1,66 @@
 package com.kh.finalproject.dto.member;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
-import com.kh.finalproject.entity.enumurate.MemberStatus;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * 회원 DTO
  */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL) // 이거 쓰면 toDTO로 만든 컬럼명만 나옴
+//@JsonInclude(JsonInclude.Include.NON_NULL) // 이거 쓰면 toDTO로 만든 컬럼명만 나옴
 public class MemberDTO {
     private Long index;
     private String id;
     private String name;
+    private String pwd;
+    private Integer point;
     private String email;
-    private Address address;
+    private String road;
+    private String jibun;
+    private String detail;
     private String memberRoleType;
-    private MemberStatus memberStatus;
-    private LocalDateTime unregister;
+    private String memberStatus;
     private String createTime;
+    private String unregisterTime;
 
     /**
      * 전체 일반 회원 조회 Entity -> DTO
      * 조회 프론트에 뿌려주는거니까 toDTO로
      */
-    public MemberDTO toDTO(Member member) {
-        this.index = member.getIndex(); //dto에 인덱스 안쓰고 싶은데 화면에 보여주려면.. 어쩔수 없나?
+    public MemberDTO toDTO(Member member, Address address) {
+        this.index = member.getIndex();
         this.id = member.getId();
         this.name = member.getName();
+        this.pwd = member.getPassword();
+        this.point = member.getPoint();
         this.email=member.getEmail();
-        this.address=member.getAddress();
-        this.memberStatus=member.getStatus();
+        if (Objects.isNull(address.getRoad())) {
+            this.road = "null";
+        }
+        else this.road = address.getRoad();
+
+        if (Objects.isNull(address.getRoad())) {
+            this.jibun = "null";
+        }
+        else this.jibun = address.getJibun();
+
+        if (Objects.isNull(address.getDetail())){
+            this.detail = "null";
+        }
+        else this.detail = address.getDetail();
+        this.memberRoleType = member.getRole().getRole();
+        this.memberStatus = member.getStatus().getStatus();
         this.createTime=member.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        if (Objects.isNull(member.getUnregister())){
+            this.unregisterTime = "null";
+        }
+        else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+
         return this;
     }
 }
-
-

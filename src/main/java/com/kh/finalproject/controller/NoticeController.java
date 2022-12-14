@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000")
 public class NoticeController {
 
     private final NoticeService noticeService;
