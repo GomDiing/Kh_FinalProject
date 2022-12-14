@@ -3,6 +3,8 @@ package com.kh.finalproject.service;
 import com.kh.finalproject.dto.statistics.StatisticsDTO;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.Statistics;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.ProductRepository;
 import com.kh.finalproject.repository.StatisticsRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,23 +27,15 @@ public class StatisticsServiceImpl implements StatisticsService {
     public StatisticsDTO selectByIndex(String code) {
 
         // Product Entity -> code get.
-        Optional<Product> findCode = productRepository.findByCode(code);
-
         // get code isNull Check!!
-        if(findCode.isEmpty()) {
-            throw new IllegalArgumentException("해당 상품코드를 찾을 수 없습니다.");
-        }
+        Product findCode = productRepository.findByCode(code)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
 
         // 받아온 코드로 넣어줌 이제 이 엔티티는 해당 product code 에 해당하는 것만 보여준다.
-        Optional<Statistics> stProductCode = statisticsRepository.findByProduct(findCode.get());
-
-        if(stProductCode.isEmpty()) {
-            throw new IllegalArgumentException("상품코드의 통계를 찾을 수 없습니다.");
-        }
+        Statistics stProductCode = statisticsRepository.findByProduct(findCode)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_STATIC_BY_PRODUCT_CODE));
 
         // Entity -> DTO 변환
-        StatisticsDTO statisticsDTO = new StatisticsDTO().toDTO(stProductCode.get(), findCode.get());
-
-        return statisticsDTO;
+        return new StatisticsDTO().toDTO(stProductCode, findCode);
     }
 }

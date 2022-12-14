@@ -52,11 +52,10 @@ public class QnAServiceImpl implements QnAService{
 //    qna 답장 보내기
     @Override
     @Transactional
-    public Boolean response(ResponseQnADTO responseQnADTO) {
+    public void response(ResponseQnADTO responseQnADTO) {
         log.info("responseQnADTO = {}", responseQnADTO.getIndex());
         Long index = responseQnADTO.getIndex();
         Integer reply = qnARepository.updateReply(responseQnADTO.getReply(), index);
-        return true;
     }
 
     @Override

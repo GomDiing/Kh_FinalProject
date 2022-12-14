@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EditNoticeDTO {
-    private Long index;
     private String title;
     private String content;
 }

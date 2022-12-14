@@ -51,25 +51,16 @@ public class NoticeController {
 
 //  공지사항 수정
     @PutMapping("/notice/edit/{index}")
-    public ResponseEntity<Boolean> editNotice(@RequestBody EditNoticeDTO editNoticeDTO, @PathVariable Long index){
-        Boolean isEdit = noticeService.editNotice(editNoticeDTO, index);
-        if(isEdit) {
-            return new ResponseEntity <>(true, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<DefaultResponse<Object>> editNotice(@RequestBody EditNoticeDTO editNoticeDTO, @PathVariable Long index){
+        noticeService.editNotice(editNoticeDTO, index);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_NOTICE), HttpStatus.OK);
     }
 //    공지사항 체크박스로 삭제
     @PostMapping("/notice/delete/check")
-    public ResponseEntity deleteCheckNotice(@RequestBody NoticeListDTO noticeListAAA){
-        List<CheckDTO> noticeList = noticeListAAA.getCheckDTOList();
+    public ResponseEntity<DefaultResponse<Object>> deleteCheckNotice(@RequestBody NoticeListDTO noticeDTOList){
+        List<CheckDTO> noticeList = noticeDTOList.getCheckDTOList();
         log.info("noticeList = {}", noticeList.toString());
-        boolean isTrue = noticeService.deleteCheckNotice(noticeList);
-        if (isTrue) {
-            return new ResponseEntity<>(true,HttpStatus.OK);
-        } else{
-            return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
-        }
+        noticeService.deleteCheckNotice(noticeList);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_NOTICE_BY_CHECKBOX), HttpStatus.BAD_REQUEST);
     }
-
 }

@@ -17,7 +17,7 @@ public interface NoticeService {
     /**
      * 공지사항 수정 메서드
      */
-    Boolean editNotice(EditNoticeDTO editNoticeDTO, Long index);
+    void editNotice(EditNoticeDTO editNoticeDTO, Long index);
 
     /**
      * 공지사항 삭제 메서드
@@ -36,7 +36,7 @@ public interface NoticeService {
     NoticeDTO selectByIndex(Long index);
 
 //    체크박스 삭제
-    Boolean deleteCheckNotice(List<CheckDTO> noticeList);
+    void deleteCheckNotice(List<CheckDTO> noticeList);
 
 }
 

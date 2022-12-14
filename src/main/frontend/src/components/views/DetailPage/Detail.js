@@ -44,7 +44,7 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 650px;
+  height: 660px;
   position: fixed; 
   left: 70%;
   top: 6.5rem;
