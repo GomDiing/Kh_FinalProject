@@ -1,5 +1,6 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
@@ -53,15 +54,11 @@ public class MemberServiceImpl implements MemberService{
     /**
      * 회원 정보 수정 메서드
      */
-    /**
-     * 회원 정보 수정 메서드
-     */
     @Override
     @Transactional
     public Boolean editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
-        // 아이디 잘 가져옴
-        Member findId = memberRepository.findById(memberInfoDTO.getId())
+        memberRepository.findById(memberInfoDTO.getId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         // 엔티티로 변환 OK
@@ -70,12 +67,7 @@ public class MemberServiceImpl implements MemberService{
         // 엔티티로 변환 OK
         Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
 
-        Integer updateMember = memberRepository.updateInfo(saveMember, findAddress);
-
-        System.out.println("saveMember" + saveMember.getId());
-        System.out.println("findId" + findId.getId());
-        System.out.println("find" + findAddress.getMember().getId() + findAddress.getRoad());
-        System.out.println("updateMember" +  updateMember);
+        Integer updateMember = memberRepository.updateInfo(saveMember, LocalDateTime.now(), findAddress);
 
         if(updateMember == 2) return true;
         else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);

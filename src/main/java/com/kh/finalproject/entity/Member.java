@@ -24,6 +24,7 @@ import java.util.List;
  */
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
 
