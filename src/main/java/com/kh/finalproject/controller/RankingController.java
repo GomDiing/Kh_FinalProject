@@ -29,6 +29,5 @@ public class RankingController {
 
         return new ResponseEntity<>(rankingWeekDTOList, HttpStatus.OK);
     }
-
 }
 
