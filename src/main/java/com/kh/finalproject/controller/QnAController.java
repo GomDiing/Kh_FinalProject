@@ -25,8 +25,8 @@ public class QnAController {
 
     //    qna 조회
     @GetMapping("/qna/list")
-    public ResponseEntity<DefaultResponse<Object>> qnaList() {
-        List<QnADTO> qnADTOList = qnAService.searchAll();
+    public ResponseEntity<DefaultResponse<Object>> qnaList(Pageable pageable) {
+        PagingQnaDTO qnADTOList = qnAService.searchAll(pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_QNALIST, qnADTOList), HttpStatus.OK);
     }
 

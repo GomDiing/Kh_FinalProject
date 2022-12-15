@@ -7,7 +7,7 @@ import QnaModal from "./QnaModal";
 
 const Inquiry=()=>{
   const [inputReply, setInputReply] = useState("");
-  const [qnaList, setQnaList] = useState('');
+  const [qnaList, setQnaList] = useState([]);
   // const params = useParams().index;
 
 
@@ -51,7 +51,7 @@ const Inquiry=()=>{
                   </tr>
                 </thead>
                   
-              {qnaList && qnaList.map(data=>(
+              {qnaList.map(data=>(
                 <tbody key={data.member_id}>
                   <tr>
                     <td>{data.status}</td>

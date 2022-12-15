@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.notice.PagingNoticeDTO;
 import com.kh.finalproject.dto.qna.*;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.QnA;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public interface QnAService {
     /**
      * 문의 전체 조회 메서드
      */
-    List<QnADTO> searchAll();
+    PagingQnaDTO searchAll(Pageable pageable);
 
     /**
      * 문의 응답 메서드

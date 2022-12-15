@@ -60,14 +60,22 @@ public class QnAServiceImpl implements QnAService {
 
 //  qna 리스트 조회 service
     @Override
-    public List<QnADTO> searchAll() {
+    public PagingQnaDTO searchAll(Pageable pageable) {
         List<QnADTO> qnaDTOList = new ArrayList<>();
-        List<QnA> qnaList = qnARepository.findAll();
-        for(QnA e : qnaList) {
-            QnADTO qnADTO = new QnADTO().toDTO(e);
+        Page<QnA> pageMyQnaList = qnARepository.findAll(pageable);
+
+        List<QnA> qnaMypageList = pageMyQnaList.getContent();
+        Integer totalPages = pageMyQnaList.getTotalPages();
+        Integer page = pageMyQnaList.getNumber()+1;
+        Long totalResults = pageMyQnaList.getTotalElements();
+
+        for(QnA qnA : qnaMypageList){
+            QnADTO qnADTO = new QnADTO().toDTO(qnA);
             qnaDTOList.add(qnADTO);
         }
-        return qnaDTOList;
+        PagingQnaDTO pagingQnaDTO = new PagingQnaDTO().toPageDTO(page, totalPages, totalResults, qnaDTOList);
+
+        return pagingQnaDTO;
     }
 
 //    qna 답장 보내기
