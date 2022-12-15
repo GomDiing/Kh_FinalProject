@@ -9,13 +9,13 @@ const AgreeStyle = styled.div`
   padding: 0;
   background-color: #d2d2d2;
   img{
-    width: 200px;
+    width: 250px;
     height: 150px;
     margin: 20px 0;
   }
   .agree-container {
     margin: 0 auto;
-    width: 45%;
+    width: 50%;
     height: 100%;
     /* border: 1px solid black; */
     display: flex;
@@ -39,10 +39,20 @@ const AgreeStyle = styled.div`
   .small-font {
     color: lightgreen;
   }
+  button:hover{
+    color:black;
+    background-color : #86868b;
+  }
   .back-button, .ok-button {
-    margin: 0 10px;
-    width: 120px;
-    height: 60px;
+    margin: 0 20px;
+    width: 201px;
+    height: 52px;
+    padding: 12px;
+    font-size: 20px;
+    border: 0px solid #86868b;
+    border-radius: 20px;
+    background-color: #999999;
+    color: white;
   }
   .box2{
     width: 55%;
@@ -54,6 +64,9 @@ const AgreeStyle = styled.div`
   }
   h4{
     margin-bottom: 20px;
+  }
+  textarea{
+    opacity: 60%;
   }
 `
 
@@ -86,11 +99,11 @@ function Agree () {
     <AgreeStyle>
     <div className="agree-container">
       <div>
-        <img src="images/TCat.jpg" alt=""/>
+        <Link to = '/'><img src="images/TCat.jpg" alt=""/></Link>
       </div>
 
       <div>
-        <h4>약관 동의 필수 사항은 다 동의하셔야 회원가입 진행이 가능합니다.</h4>
+        <h5>약관 동의 필수 사항은 다 동의하셔야 회원가입 진행이 가능합니다.</h5>
       </div>
       <div>
         <h5 className="title" onClick={onCheckAll}><span><input type='radio' checked={check1} id="agree"/></span><u>TCat 이용약관, 개인정보 수집 및 이용, 프로모션 정보 수신(선택)에 모두 동의합니다.</u></h5>

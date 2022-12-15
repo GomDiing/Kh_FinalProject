@@ -44,7 +44,7 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 650px;
+  height: 660px;
   position: fixed; 
   left: 70%;
   top: 6.5rem;
@@ -111,7 +111,7 @@ function Detail() {
       <BsArrowUpCircle className='arrow'/>
         </button>
       <MainHeader/>
-      <Layout style={{width: '80%', height: '100%' ,margin:'0 auto'}}>
+      <Layout style={{width: '80%', height: '100%' ,margin:'0 auto' }}>
 
         <Content >
           <Layout className="site-layout-background" >
@@ -122,7 +122,7 @@ function Detail() {
             <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} />
 
 
-            <Content className='DetailInfoContainer' style={{width: '60%'}}>
+            <Content className='DetailInfoContainer' style={{width: '60%' }}>
               <Info/>
             </Content>
             </div>

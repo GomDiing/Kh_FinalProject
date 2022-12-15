@@ -23,6 +23,11 @@ const AskBodyContainer = styled.div`
     border-radius: 5px;
     font-size: 13px;
     }
+    @media (max-width:1024px){
+  *{
+    font-size: 200px;
+  }
+}
 `
 
 const AskModalBody = () =>{
