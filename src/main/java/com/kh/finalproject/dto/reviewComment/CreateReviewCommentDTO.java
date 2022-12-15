@@ -7,4 +7,12 @@ import lombok.Getter;
  */
 @Getter
 public class CreateReviewCommentDTO {
+    private Long index;
+    private String memberId;
+    private Integer like;
+    private Integer rate;
+    private String content;
+    private Integer accuseCount;
+    private String productName;
+
 }

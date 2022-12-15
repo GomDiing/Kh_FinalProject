@@ -1,6 +1,7 @@
 import PosterCategory from "./PosterCategory";
-import PosterImg from "./PosterImg";
+// import PosterImg from "./PosterImg.js";
 import styled from "styled-components";
+import PosterImg from './PosterImg';
 
 const PosterContainer = styled.div`
     width: 47%;

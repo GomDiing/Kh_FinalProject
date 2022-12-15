@@ -66,7 +66,6 @@ public class ReviewComment extends BaseTimeEntity {
     /*연관 메서드*/
     public void createAccuse(Accuse accuse){
         accuseList.add(accuse);
-
     }
 
     public void addAccuseCount() {
