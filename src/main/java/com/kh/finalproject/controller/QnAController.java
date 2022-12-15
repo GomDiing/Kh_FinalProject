@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,17 +23,19 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class QnAController {
     private final QnAService qnAService;
-//    qna 조회
+
+    //    qna 조회
     @GetMapping("/qna/list")
     public ResponseEntity<DefaultResponse<Object>> qnaList() {
         List<QnADTO> qnADTOList = qnAService.searchAll();
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_QNALIST, qnADTOList), HttpStatus.OK);
     }
-//    qna 답장하기(관리자)
+
+    //    qna 답장하기(관리자)
     @PostMapping("/qna/reply")
-    public ResponseEntity<DefaultResponse<Object>> qnaReply (@RequestBody ResponseQnADTO responseQnADTO){
+    public ResponseEntity<DefaultResponse<Object>> qnaReply(@RequestBody ResponseQnADTO responseQnADTO) {
         qnAService.response(responseQnADTO);
-       return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.BAD_REQUEST);
     }
 
     /*qna 조회(마이페이지)*/

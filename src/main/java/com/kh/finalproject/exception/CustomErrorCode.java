@@ -26,6 +26,7 @@ public enum CustomErrorCode {
 
     ERROR_EMPTY_PRODUCT_CODE(StatusCode.BAD_REQUEST, "P001", "해당 상품코드를 찾을 수 없습니다"),
     ERROR_EMPTY_STATIC_BY_PRODUCT_CODE(StatusCode.BAD_REQUEST, "ST001", "해당 상품코드의 통계를 찾을 수 없습니다"),
+    ERROR_EMPTY_QNA(StatusCode.BAD_REQUEST, "Q001", "조회한 문의가 없습니다"),
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),
     NOT_MATCH_ID(StatusCode.BAD_REQUEST, "J004", "비밀번호가 일치하지 않습니다"),
     NOT_MATCH_EMAIL_NAME(StatusCode.BAD_REQUEST, "J006", "이메일 혹은 이름이 올바르지 않습니다"),
@@ -37,7 +38,7 @@ public enum CustomErrorCode {
     HANDLE_ACCESS_DENIED(StatusCode.FORBIDDEN, "C004", "접근이 거부되었습니다"),
     INTERNAL_SERVER_ERROR(StatusCode.INTERNAL_SERVER_ERROR, "S001", "내부 서버 오류입니다");
 
-    private int status;
+    private final int status;
     private final String code;
     private final String message;
 }
