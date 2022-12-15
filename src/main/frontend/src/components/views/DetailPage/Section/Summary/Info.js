@@ -1,10 +1,13 @@
+import { CaretRightOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { BsArrowRight } from 'react-icons/bs';
 import styled from 'styled-components';
 import Modal from '../../../../../util/Modal/Modal';
 import MapModalBody from './MapModal';
 
 const InfoStyle = styled.div`
+    * {
+        font-size: 16px;
+    }
     div {
         margin-top: 4rem;
     }
@@ -15,23 +18,21 @@ const InfoStyle = styled.div`
     .price {
         color: #ED4037;
         margin-left: 1.5rem;
+        font-weight: bold;
     }
     .priceA {
         color: #ED4037;
         margin-left: 2.25rem;
-    }
-    .hr {
-        border-bottom: 1px solid black;
-        width: 20rem;
-        margin: 0;
-        margin-right: 15rem;
-        margin:1.5rem 0;
+        font-weight: bold;
     }
     .info {
         padding: 0 0 0 32px;
     }
     .infoBtn {
         margin-left: 1.7rem;
+    }
+    svg {
+        vertical-align: baseline;
     }
     .modal > section > header button {
     top: 8px;
@@ -40,9 +41,11 @@ const InfoStyle = styled.div`
     .modal > section {
         height: auto;
     }
-    .modal > section > main {
-
+    @media (max-width: 1225px) {
+    .infoPriceList {
+        margin-left: 2rem;
     }
+}
 `;
 
 // 상세페이지 상단 공연 정보
@@ -64,7 +67,7 @@ function Info() {
                     <strong className="infoLabel">장소</strong>
                 <span className="infoDesc">
                     <span className="infoBtn" data-popup="info-place" role="button" onClick={openModal}>
-                    대성 디큐브아트센터<BsArrowRight style={{marginBottom: '0.2rem'}}/>
+                    대성 디큐브아트센터<CaretRightOutlined/>
                     </span>
                 </span>
                 </li>
@@ -92,8 +95,8 @@ function Info() {
                     </span>
                 </li>
                 <br/>
-                <div className='hr'>
-                </div>
+                {/* <div className='hr'>
+                </div> */}
             
                 <li className="infoItem infoPrice">
                     <strong className="infoLabel">가격</strong>
