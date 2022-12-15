@@ -3,6 +3,7 @@ package com.kh.finalproject.repository;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.Notice;
+import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import org.springframework.data.domain.Page;
@@ -59,6 +60,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                     " WHERE a.member_id=:#{#paramMember.id}")
     Integer updateInfo(
             @Param("paramMember") Member member, @Param("nowDate") LocalDateTime now, @Param("paramAddress") Address address);
+
+    Optional<List<Member>> findAllByMemberAccuseCountGreaterThan(Integer count);
+
 
 //    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);
 }

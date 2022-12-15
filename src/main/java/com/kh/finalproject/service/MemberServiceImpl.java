@@ -263,4 +263,20 @@ public class MemberServiceImpl implements MemberService{
                     .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
         }
     }
+
+    @Override
+    @Transactional
+    public List<MemberDTO> updateStatusByCount() {
+        List<MemberDTO> memberDTOList = new ArrayList<>();
+
+        List<Member> findMemberList = memberRepository.findAllByMemberAccuseCountGreaterThan(4)
+                .orElseThrow(() -> new IllegalArgumentException("조회된 신고횟수가 5개 이상인 회원이 없습니다"));
+
+        for (Member member : findMemberList) {
+            member.updateBlackByCount();
+            memberDTOList.add(new MemberDTO().toDTOByCount(member));
+        }
+
+        return memberDTOList;
+    }
 }

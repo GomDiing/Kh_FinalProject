@@ -1,8 +1,10 @@
 package com.kh.finalproject.controller;
 
+import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -109,5 +111,12 @@ public class MemberController {
         memberService.editMemberInfo(editMemberInfoDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
+    }
+
+    /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
+    @PostMapping("/accuse/process")
+    public ResponseEntity changeBlacklistByCount(){
+        List<MemberDTO> members = memberService.updateStatusByCount();
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

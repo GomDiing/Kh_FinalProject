@@ -26,9 +26,9 @@ public class QnADTO {
     private String createTime;
 
     /*문의사항 조회*/
-    public QnADTO toDTO (QnA qna,Member member){
+    public QnADTO toDTO (QnA qna){
         this.index = qna.getIndex();
-        this.id = member.getId();
+        this.id = qna.getMember().getId();
         this.title = qna.getTitle();
         this.category=qna.getCategory();
         this.content=qna.getContent();

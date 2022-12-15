@@ -33,7 +33,7 @@ public interface QnAService {
     /**
      * 회원 인덱스로 문의 조회 메서드
      */
-    PagingQnaDTO searchByMember(QnA qna, Pageable pageable);
+    PagingQnaDTO searchByMember(Long index,Pageable pageable);
 
     /**
      * 문의 전체 조회 메서드

@@ -29,6 +29,7 @@ public interface AccuseRepository extends JpaRepository<Accuse, Long> {
 //                    "where r.accuse_Count>=5")
 //    Long changeAccuseStatus(
 //            @Param("paramMember") Member member);
-//
+
 //    Accuse changeAccuseStatus(Integer accuseCount);
+
 }

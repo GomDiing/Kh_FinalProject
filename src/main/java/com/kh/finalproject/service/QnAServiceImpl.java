@@ -40,10 +40,10 @@ public class QnAServiceImpl implements QnAService{
 
     /*qna 목록 조회 (마이페이지)*/
     @Override
-    public PagingQnaDTO searchByMember(QnA qna, Pageable pageable) {
+    public PagingQnaDTO searchByMember(Long index,Pageable pageable) {
         List<QnADTO> qnaDTOList = new ArrayList<>();
 
-        Page<QnA> pageMyQnaList = qnARepository.findById(qna.getMember(),pageable);
+        Page<QnA> pageMyQnaList = qnARepository.findByMemberIndex(index, pageable);
 
         List<QnA> qnaMypageList = pageMyQnaList.getContent();
         Integer totalPages = pageMyQnaList.getTotalPages();
@@ -51,7 +51,7 @@ public class QnAServiceImpl implements QnAService{
         Long totalResults = pageMyQnaList.getTotalElements();
 
         for(QnA qnA : qnaMypageList){
-            QnADTO qnADTO = new QnADTO().toDTO(qna, qna.getMember());
+            QnADTO qnADTO = new QnADTO().toDTO(qnA);
             qnaDTOList.add(qnADTO);
         }
         PagingQnaDTO pagingQnaDTO = new PagingQnaDTO().toPageDTO(page, totalPages, totalResults, qnaDTOList);
@@ -65,7 +65,7 @@ public class QnAServiceImpl implements QnAService{
         List<QnADTO> qnaDTOList = new ArrayList<>();
         List<QnA> qnaList = qnARepository.findAll();
         for(QnA e : qnaList) {
-            QnADTO qnADTO = new QnADTO().toDTO(e, e.getMember());
+            QnADTO qnADTO = new QnADTO().toDTO(e);
             qnaDTOList.add(qnADTO);
         }
         return qnaDTOList;
