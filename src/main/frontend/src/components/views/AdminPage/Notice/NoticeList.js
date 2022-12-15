@@ -12,13 +12,13 @@ const NoticeList=(props)=>{
 
   //  리액트 페이지네이션 변수 
   const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(2); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
 
-   // 체크박스 변수
-   const [checkItems, setCheckItems] = useState([]); 
+  // 체크박스 변수
+  const [checkItems, setCheckItems] = useState([]); 
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, obj) => {
     if (checked) {
