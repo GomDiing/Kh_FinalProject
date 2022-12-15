@@ -2,8 +2,6 @@ package com.kh.finalproject.dto.ranking;
 
 import com.kh.finalproject.entity.RankingWeek;
 import lombok.Getter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class RankingWeekDTO {

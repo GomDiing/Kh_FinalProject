@@ -35,7 +35,6 @@ public class RankingServiceImpl implements RankingService {
     @Override
     public List<RankingWeekDTO> searchAllAboutWeek() {
 
-        RankProductDTO productDTO = new RankProductDTO();
         List<RankingWeekDTO> weekDTOList = new ArrayList<>();
         // 크롤링이 완료된 랭킹 코드를 찾음
         List<RankingWeek> rankingCodeList = rankingRepository.findAllByRankStatus(RankStatus.COMPLETE);
@@ -43,8 +42,8 @@ public class RankingServiceImpl implements RankingService {
             // 랭킹 코드에서 가져온 코드에 맞는 상품 정보를 다 가져옴
             Optional<Product> productList = productRepository.findByCode(rankingCode.getCode());
             if(productList.isPresent()) {
-                productDTO.toDTO(productList.get());
-                weekDTOList.add(new RankingWeekDTO().toDTO(rankingCode, productDTO));
+                RankProductDTO rankProductDTO = new RankProductDTO().toDTO(productList.get());
+                weekDTOList.add(new RankingWeekDTO().toDTO(rankingCode, rankProductDTO));
             }
         }
         return weekDTOList;
