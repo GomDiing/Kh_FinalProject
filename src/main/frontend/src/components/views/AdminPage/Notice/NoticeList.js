@@ -52,6 +52,7 @@ const NoticeList=(props)=>{
         const res = await AdminApi.noticeInfo(currentPage, pageSize);
         if(res.data.statusCode === 200){
           setNoticeList([...noticeList, ...res.data.results.noticeDTOList]);
+          console.log(res.data.results);
           // 페이징 시작
           setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
