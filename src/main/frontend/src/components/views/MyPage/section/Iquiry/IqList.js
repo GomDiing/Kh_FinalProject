@@ -55,47 +55,48 @@ function IqList() {
 
   const columns = [
     {
-        title: '문의상태',
-        dataIndex: 'Rdate',
+        title: '사용자',
+        dataIndex: 'id',
     },
     {
       title: '문의유형',
-      dataIndex: 'count',
+      dataIndex: 'category',
     },
     {
-        title: '문의제목',
-        dataIndex: 'Rnum',
+        title: '문의내용',
+        dataIndex: 'content',
     },
     {
         title: '관람일',
-        dataIndex: 'date',
+        dataIndex: 'createTime',
     },
     {
-        title: '답장확인하기',
-        dataIndex: 'detail',
+        title: '상태',
+        dataIndex: 'qnaStatus',
     },
 ];
-const data = [
-    {
-        key: '1',
-        Rdate: '2022.11.28',
-        Rnum: 'T2200902901R1',
-        name: '태양의서커스〈뉴 알레그리아〉',
-        date: '2022.11.30',
-        count: '1매',
-        detail: <button onClick={open}>상세보기</button>
-    },                                  
-];
+// const data = [
+//     {
+//         key: '1',
+//         Rdate: '2022.11.28',
+//         Rnum: 'T2200902901R1',
+//         name: '태양의서커스〈뉴 알레그리아〉',
+//         date: '2022.11.30',
+//         count: '1매',
+//         detail: <button onClick={open}>상세보기</button>
+//     },                                  
+// ];
   /** 공지 목록을 가져오는 useEffect */
   useEffect(() => {
     const noticeData = async()=> {
       try {
-        const res = await MemberApi.noticeInfo(currentPage, pageSize);
-          setQnaList([...qnaList, ...res.data.qnaDTOList]);
+        const response = await MemberApi.myQnalist(currentPage, pageSize);
+          setQnaList([...qnaList, ...response.data.qnaDTOList]);
+          console.log(response.data);
           // 페이징 시작
-          setTotalCount(res.data.totalResults); 
+          setTotalCount(response.data.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
-          setCurrentPage(res.data.page);
+          setCurrentPage(response.data.page);
     }catch (e) {
         console.log(e);
       }
@@ -107,7 +108,7 @@ const data = [
     <>
     {modalOpen && <ReserveDetailModal open={open} cancel={cancelClick} close={close} body={<Body />}/>}
     <Divider>문의 내역</Divider>
-    <Table columns={columns} dataSource={data} size="middle" />
+    <Table columns={columns} dataSource={qnaList} size="middle" />
     </>
   );
 }

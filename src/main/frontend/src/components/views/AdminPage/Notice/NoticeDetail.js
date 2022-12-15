@@ -41,19 +41,15 @@ const NoticeDetail=()=>{
         <>
         <DetailBlock>
             <TopBar name="공지사항 상세보기"/>
-              {noticeDetail && noticeDetail.map(({index,title,content,createTime})=>(
-                <React.Fragment key={index}>
               <div className="notice-detail-container">
                 <div className="notice-detail-titlebox">
                   <div>
-                      <p className="notice-detail-date">{createTime}</p>
-                      <p className="notice-detail-title">{title}</p>
+                      <p className="notice-detail-date">{noticeDetail.createTime}</p>
+                      <p className="notice-detail-title">{noticeDetail.title}</p>
                   </div>
                 </div>
-                  <div className="notice-detail-content">{content}</div>
+                  <div className="notice-detail-content">{noticeDetail.content}</div>
               </div>
-              </React.Fragment>
-              ))}
                 <div className="buttonWrap">
                     <button className="noticeBtn" onClick={()=>{navigate('/admin/noticeList')}}>목록으로</button>
                     <button className="noticeBtn" onClick={()=>{navigate(`/admin/noticeUpdate/${params}`)}}>수정하기</button>

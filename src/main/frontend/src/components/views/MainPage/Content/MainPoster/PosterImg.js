@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import HorizontalScroll from 'react-horizontal-scrolling'
 
 const PosterImgContainer = styled.div`
         
@@ -19,12 +20,12 @@ const PosterImgContainer = styled.div`
         list-style: none;
         margin: 0px;
         padding: 0px;
-        overflow-x: auto;
-        /* overflow: hidden; */
+        /* overflow-x: auto; */
+        overflow: hidden;
     }
-    ul::-webkit-scrollbar {
+    /* ul::-webkit-scrollbar {
         display: none;
-    }
+    } */
     li{
         align-items: center;
         list-style: none;
@@ -45,6 +46,12 @@ const PosterImgContainer = styled.div`
             margin:0 10px;
         }
     }
+`
+
+const HWrap = styled.div`
+.HorizontalScrollTrack {
+    display: hidden;
+}
 `
 const posterInfo = [
         {
@@ -87,9 +94,10 @@ const posterInfo = [
 const PosterImg = () =>{
 
         return(
-        <PosterImgContainer>
+            <HWrap>
+            <HorizontalScroll>
+                <PosterImgContainer>
             <ul>
-
                 {posterInfo.map(c=>(
                     <li key={c.id} >
                         <img src={c.img} alt=""/>
@@ -97,7 +105,9 @@ const PosterImg = () =>{
                     </li>
                 ))}
             </ul>
-        </PosterImgContainer>
+            </PosterImgContainer>
+            </HorizontalScroll>
+            </HWrap>
     )
 }
 export default PosterImg;
