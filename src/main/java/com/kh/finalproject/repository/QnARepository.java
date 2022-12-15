@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QnARepository extends JpaRepository<QnA,Long> {
-    List<QnA> findByIndex(Long index);
+    Optional<QnA> findByIndex(Long index);
 
 //    qna 답장 보내기(선택한 문의사항의 index값 조회해서 답장, status update
     @Modifying

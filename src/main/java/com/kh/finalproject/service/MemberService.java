@@ -91,7 +91,7 @@ public interface MemberService {
     /**
      * 회원 정보 수정 메서드
      */
-    Boolean editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
+    void editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
 
     /**
      * 회원 상태 탈퇴 변환 메서드

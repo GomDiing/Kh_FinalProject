@@ -61,4 +61,27 @@ public class QnA extends BaseTimeEntity {
 
         return this;
     }
+
+    public void updateQna(ResponseQnADTO responseQnADTO) {
+        this.reply = responseQnADTO.getReply();
+        this.status = QnAStatus.COMPLETE;
+        this.replyTime = LocalDateTime.now();
+    }
+
+    //디버깅용 코드
+    public QnA createQnA(Member member, String title, String category, String content) {
+        this.title = title;
+        this.category = category;
+        this.content = content;
+        this.status = QnAStatus.WAIT;
+        this.group = 0L;
+        this.layer = 0;
+        this.order = 0;
+
+        //연관관계 편의 메서드
+        this.member = member;
+        member.getQnAList().add(this);
+
+        return this;
+    }
 }

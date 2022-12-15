@@ -2,10 +2,7 @@ package com.kh.finalproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.dto.member.EditMemberInfoDTO;
-import com.kh.finalproject.dto.member.SearchByIdDTO;
-import com.kh.finalproject.dto.member.SignupDTO;
-import com.kh.finalproject.dto.member.UnregisterDTO;
+import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
@@ -24,7 +21,6 @@ import java.util.List;
  */
 @Getter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
 
@@ -63,7 +59,7 @@ public class Member extends BaseTimeEntity {
     @Timestamp
     private LocalDateTime unregister;
 
-    @OneToOne(mappedBy = "member", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(mappedBy = "member")
     private Address address;
 
     @OneToMany(mappedBy = "member")
@@ -160,5 +156,17 @@ public class Member extends BaseTimeEntity {
         this.status = MemberStatus.ACTIVE;
 
         return this;
+    }
+
+    public void updateMember(Address findAddress, EditMemberInfoDTO editMemberInfoDTO) {
+        this.id = editMemberInfoDTO.getId();
+        this.name = editMemberInfoDTO.getName();
+        this.password = editMemberInfoDTO.getPassword();
+        this.email = editMemberInfoDTO.getEmail();
+        findAddress.updateAddress(editMemberInfoDTO);
+
+        //양방향 연관관계 편의 메서드
+        this.address = findAddress;
+        findAddress.updateMember(this);
     }
 }

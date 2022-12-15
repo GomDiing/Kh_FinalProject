@@ -56,21 +56,33 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     @Transactional
-    public Boolean editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
+    public void editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
-        memberRepository.findById(memberInfoDTO.getId())
+        //주어진 ID로 회원 조회
+        Member findMember = memberRepository.findById(memberInfoDTO.getId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        // 엔티티로 변환 OK
-        Member saveMember = new Member().toEntity(memberInfoDTO);
+        //주어진 회원과 연결된 주소 조회
+        Address findAddress = addressRepository.findByMember(findMember);
 
         // 엔티티로 변환 OK
-        Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
+//        Member saveMember = new Member().toEntity(memberInfoDTO);
 
-        Integer updateMember = memberRepository.updateInfo(saveMember, LocalDateTime.now(), findAddress);
+        //주소 정보 갱신 (단순 값 교체)
+//        findAddress.updateAddress(memberInfoDTO);
 
-        if(updateMember == 2) return true;
-        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
+        //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
+        findMember.updateMember(findAddress, memberInfoDTO);
+
+        // 엔티티로 변환 OK
+//        Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
+
+//        Integer updateMember = memberRepository.updateInfo(saveMember, LocalDateTime.now(), findAddress);
+
+//        addressRepository.save(findAddress);
+
+//        if(updateMember == 2) return true;
+//        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
     }
 
     @Override

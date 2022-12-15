@@ -2,6 +2,8 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.qna.*;
 import com.kh.finalproject.entity.QnA;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.QnARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +56,10 @@ public class QnAServiceImpl implements QnAService{
     @Transactional
     public void response(ResponseQnADTO responseQnADTO) {
         log.info("responseQnADTO = {}", responseQnADTO.getIndex());
-        Long index = responseQnADTO.getIndex();
-        Integer reply = qnARepository.updateReply(responseQnADTO.getReply(), index);
+        QnA findQnA = qnARepository.findByIndex(responseQnADTO.getIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_QNA));
+
+        findQnA.updateQna(responseQnADTO);
     }
 
     @Override
