@@ -38,16 +38,15 @@ const Profile=()=>{
     return(
         <>
         <div className="profile-container">
-            {data.map(c=>(
+            {data.map(p=>(
         <ul className='profile-list'>
             <li className='listItem'>
                 <div className='profile-user'>
-                    <img src={c.img} alt="" className='profile-img'/>
-                    <div className='profile-userName'>{c.name}</div>
-                    <div className='profile-userTitle'>{c.position}</div>
+                    <img src={p.img} alt="" className='profile-img'/>
+                    <div className='profile-userName'>{p.name}</div>
+                    <div className='profile-userTitle'>{p.position}</div>
                 </div>
             </li>
-
         </ul>
         ))}
         </div>
