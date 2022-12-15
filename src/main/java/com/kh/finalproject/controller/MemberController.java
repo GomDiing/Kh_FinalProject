@@ -1,8 +1,10 @@
 package com.kh.finalproject.controller;
 
+import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -25,24 +27,6 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
 
-//    /**
-//     * 전체 일반 회원 조회
-//     */
-//    @GetMapping("/memberlist")
-//    public ResponseEntity<DefaultResponse<Object>> searchActiveMemberList(){
-//        List<MemberDTO> searchMemberList = memberService.searchAllActiveMember();
-//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
-//    }
-//
-//    /**
-//     * 전체 블랙리스트 회원 조회
-//     */
-//    @GetMapping("/memberblacklist")
-//    public ResponseEntity<DefaultResponse<Object>> blackList(){
-//        List<MemberDTO> searchMemberList = memberService.searchAllBlackMember();
-//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
-//    }
-
     /**
      * 전체 일반 회원 조회
      */
@@ -61,8 +45,6 @@ public class MemberController {
         log.info("searchMemberList = {}", searchMemberList.getMemberDTOList().get(0).getName());
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
-
-
 
     /**
      * 블랙리스트 회원 탈퇴
@@ -129,5 +111,12 @@ public class MemberController {
         memberService.editMemberInfo(editMemberInfoDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
+    }
+
+    /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
+    @PostMapping("/accuse/process")
+    public ResponseEntity changeBlacklistByCount(){
+        List<MemberDTO> members = memberService.updateStatusByCount();
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

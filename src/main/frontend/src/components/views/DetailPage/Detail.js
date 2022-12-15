@@ -53,12 +53,16 @@ background-color: #f5f5f5;
 .ItemContainer2{
   width: 100%;
   display: flex;
+  background-color: white;
 }
 
-@media (max-width: 1024px){
-  
+@media (max-width: 1225px){
   .ItemContainer2{
     display: block;
+    min-width: 520px;
+  }
+  .posterCon {
+    min-width: 520px;
   }
   .site-layout-background{
   }
@@ -66,7 +70,13 @@ background-color: #f5f5f5;
     left: 500px;
     position: sticky;
   }
-
+.info {
+  margin-left: 4.8rem;
+  min-width: 480px;
+}
+.poster-box-bottom {
+  min-width: 520px;
+}
 }
 `
 
@@ -111,18 +121,18 @@ function Detail() {
       <BsArrowUpCircle className='arrow'/>
         </button>
       <MainHeader/>
-      <Layout style={{width: '80%', height: '100%' ,margin:'0 auto'}}>
+      <Layout style={{width: '80%', height: '100%' ,margin:'0 auto', backgroundColor: 'white'}}>
 
         <Content >
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
-            <Content className='posterCon' style={{border:'1px solid blakc'}}>
+            <Content className='posterCon' style={{border:'1px solid black'}}>
               <Poster/>
             </Content>
-            <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} />
+            {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
 
-            <Content className='DetailInfoContainer' style={{width: '60%'}}>
+            <Content className='DetailInfoContainer' style={{width: '60%' }}>
               <Info/>
             </Content>
             </div>

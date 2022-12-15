@@ -91,7 +91,7 @@ const WriteBlock=styled.div`
         border: none;
         margin: 15px 0;
         margin: 20px 10px;
-        background-color: #92A9BD;
+        background-color: #f5f5f5;
         border-radius: 5px;
         width: 150px;
         height: 50px;

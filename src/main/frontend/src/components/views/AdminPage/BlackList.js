@@ -10,7 +10,7 @@ const BlackList=()=>{
   const navigate = useNavigate();
   // 페이지네이션 변수
   const [memberList, setMemberList] = useState([]);
-  const [pageSize, setPageSize] = useState(3); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(7); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -85,6 +85,7 @@ const BlackList=()=>{
     return(
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
+
         <div className="blackList-container">
           <table>
                 <thead>
@@ -118,7 +119,7 @@ const BlackList=()=>{
                 </tbody>
               </table>
             </div>
-            <Pagination
+            <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
             current={currentPage} 
             pageSize={pageSize}
@@ -153,10 +154,10 @@ table,th,td {
   button{
     border: none;
     margin: 20px 10px;
-      background-color: #E3CAA5;
-      border-radius: 5px;
-      width: 340px;
-      height: 50px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    width: 340px;
+    height: 50px;
 }  
 }
 `;

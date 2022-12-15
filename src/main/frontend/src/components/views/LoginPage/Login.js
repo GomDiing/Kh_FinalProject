@@ -3,12 +3,16 @@ import styled from 'styled-components';
 import { KAKAO_AUTH_URL } from '../../Config';
 import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
+import { Link } from 'react-router-dom';
 
 const LoginWrap = styled.div`
   width: 100%;
-  background-color: #f5f5f5;
   height: 100vh;
+  background-color: #d2d2d2;
   .loginwrap{
+    margin: 0 auto;
+    width: 50%;
+    background-color: #f5f5f5;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -49,6 +53,11 @@ const LoginWrap = styled.div`
     justify-content: center;
     margin: 20px 0;
   }
+  .btn-group2{
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+  }
   p{
     cursor: pointer;
     margin: 0;
@@ -80,6 +89,7 @@ const LoginWrap = styled.div`
     /* background-color: #86868b; */
   } 
   button:hover{
+    color: black;
     background-color : #86868b;
   }
 
@@ -298,10 +308,15 @@ const t = [...props.topics];
                 <div className='btn-group'>
                   <img src='/images/test.png' alt='카카오 로그인' onClick={handleLogin}/>
                 </div>
-                <div className='btn-group'>
+                <div className='btn-group2' style={{marginTop : '40px'}}>
+                  <Link to = '/agree' style={{textDecoration:'none',color:'inherit' }}>
+                  <p className="btn--text">Sign Up</p>
+                  </Link>
+                </div>
+                <div className='btn-group2'>
                   <p className="btn--text" id='id' onClick={openModal}>Forgot id?</p>
                 </div>
-                <div className='btn-group'>
+                <div className='btn-group2'>
                   <p className="btn--text" id='pwd' onClick={openModal}>Forgot password?</p>
                 </div>
               </form>

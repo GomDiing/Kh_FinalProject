@@ -56,6 +56,7 @@ public class AccuseServiceImpl implements AccuseService {
         //중복 신고 방지
         if (isNotAccuse(findVictimMember, reviewComment)) {
             reviewComment.addAccuseCount();
+            findSuspectMember.addMemberAccuseCount();
             Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
             accuseRepository.save(saveAccuse);
         }
@@ -74,10 +75,6 @@ public class AccuseServiceImpl implements AccuseService {
                 .isEmpty();
     }
 
-    @Override
-    public void process(ProcessAccuseDTO processAccuseDTO) {
-
-    }
 
     @Override
     public List<AccuseDTO> searchAll() {

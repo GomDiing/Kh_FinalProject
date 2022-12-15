@@ -7,9 +7,9 @@ const BackContainer = styled.div`
         height: 35vh;
         /* min-height: 170px; */
     }
-    @media (max-width : 1023px){
+    @media (max-width : 1440px){
         img{
-            height: 15vh;
+        height: 380px;
         }
     }
 `

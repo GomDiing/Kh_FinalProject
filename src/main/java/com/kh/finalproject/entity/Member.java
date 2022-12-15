@@ -83,6 +83,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
 
+    @Column(name = "member_accuse_count", nullable = false)
+    private Integer memberAccuseCount;
+
 
     /**
      * Address 갱신 메서드
@@ -168,5 +171,14 @@ public class Member extends BaseTimeEntity {
         //양방향 연관관계 편의 메서드
         this.address = findAddress;
         findAddress.updateMember(this);
+    }
+
+    public void addMemberAccuseCount() {
+        this.memberAccuseCount++;
+    }
+
+    public void updateBlackByCount() {
+        this.reason = "신고 누적으로인한 블랙리스트 추가";
+        this.status = MemberStatus.BLACKLIST;
     }
 }

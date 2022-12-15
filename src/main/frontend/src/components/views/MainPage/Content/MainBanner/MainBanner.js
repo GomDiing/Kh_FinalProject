@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Carousel from 'react-bootstrap/Carousel';
 
 const BannerContainer = styled.div`
     width: 100%;
@@ -10,6 +11,11 @@ const BannerContainer = styled.div`
     img{
         width: 100%;
         height: 120px;
+    }
+    @media (max-width : 1024px){
+        img{
+        height: 160px;
+    }
     }
 `
 
@@ -28,13 +34,17 @@ const MainBanner = (props) =>{
 
     return(
         <BannerContainer>            
-        {banner.map(c =>(
-            <img
-                key={c.id}
-                src={c.img}
-                alt=""
-            ></img>
-        ))}
+            {/* <Carousel fade> */}
+                {banner.map(c =>(
+                    // <Carousel.Item>
+                    <img
+                        key={c.id}
+                        src={c.img}
+                        alt=""
+                    ></img>
+                    // </Carousel.Item>
+                ))}        
+            {/* </Carousel> */}
         </BannerContainer>
     )
 }

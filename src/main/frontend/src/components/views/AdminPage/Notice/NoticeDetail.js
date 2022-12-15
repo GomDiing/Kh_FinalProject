@@ -14,11 +14,15 @@ const NoticeDetail=()=>{
     const noticeData = async()=> {
     //  setLoading(true);
       try {
-        console.log(params);
-        const response = await AdminApi.noticeDetail(params);
-        setNoticeDetail(response.data);
-        console.log(response.data);
-      } catch (e) {
+        const res = await AdminApi.noticeDetail(params);
+        if(res.data.statusCode === 200){
+          setNoticeDetail(res.data.results);
+          console.log(res.data.results);
+          console.log(res.data.message);
+        } else {
+          alert("페이지 이동이 안됩니다.")
+        }
+      } catch(e){
         console.log(e);
       }
       // setLoading(false);
@@ -37,19 +41,15 @@ const NoticeDetail=()=>{
         <>
         <DetailBlock>
             <TopBar name="공지사항 상세보기"/>
-              {noticeDetail && noticeDetail.map(({index,title,content,createDate})=>(
-                <React.Fragment key={index}>
               <div className="notice-detail-container">
                 <div className="notice-detail-titlebox">
                   <div>
-                      <p className="notice-detail-date">{index}</p>
-                      <p className="notice-detail-title">{title}</p>
+                      <p className="notice-detail-date">{noticeDetail.createTime}</p>
+                      <p className="notice-detail-title">{noticeDetail.title}</p>
                   </div>
                 </div>
-                  <div className="notice-detail-content">{content}</div>
+                  <div className="notice-detail-content">{noticeDetail.content}</div>
               </div>
-              </React.Fragment>
-              ))}
                 <div className="buttonWrap">
                     <button className="noticeBtn" onClick={()=>{navigate('/admin/noticeList')}}>목록으로</button>
                     <button className="noticeBtn" onClick={()=>{navigate(`/admin/noticeUpdate/${params}`)}}>수정하기</button>
@@ -102,7 +102,7 @@ const DetailBlock=styled.div`
       border: none;
       margin: 15px 0;
       margin: 20px 10px;
-      background-color: #92A9BD;
+      background-color: #f5f5f5;
       border-radius: 5px;
       width: 150px;
       height: 50px;

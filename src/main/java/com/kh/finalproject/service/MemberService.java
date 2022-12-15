@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.Member;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -97,4 +98,7 @@ public interface MemberService {
      * 회원 상태 탈퇴 변환 메서드
      */
     void changeMemberStatusToUnregister(List<CheckMemberDTO> memberIndexList);
+
+    /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+    List<MemberDTO> updateStatusByCount();
 }

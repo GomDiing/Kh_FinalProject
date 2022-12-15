@@ -1,5 +1,5 @@
-package com.kh.finalproject.service.impl;
 
+package com.kh.finalproject.service.impl;
 import com.kh.finalproject.dto.qna.*;
 import com.kh.finalproject.entity.QnA;
 import com.kh.finalproject.exception.CustomErrorCode;
@@ -8,9 +8,10 @@ import com.kh.finalproject.repository.QnARepository;
 import com.kh.finalproject.service.QnAService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,21 +36,46 @@ public class QnAServiceImpl implements QnAService {
 
     }
 
+
+    /*qna 목록 조회 (마이페이지)*/
     @Override
-    public QnADTO searchByMember(Long memberIndex) {
-        return null;
+    public PagingQnaDTO searchByMember(Long index,Pageable pageable) {
+        List<QnADTO> qnaDTOList = new ArrayList<>();
+
+        Page<QnA> pageMyQnaList = qnARepository.findByMemberIndex(index, pageable);
+
+        List<QnA> qnaMypageList = pageMyQnaList.getContent();
+        Integer totalPages = pageMyQnaList.getTotalPages();
+        Integer page = pageMyQnaList.getNumber()+1;
+        Long totalResults = pageMyQnaList.getTotalElements();
+
+        for(QnA qnA : qnaMypageList){
+            QnADTO qnADTO = new QnADTO().toDTO(qnA);
+            qnaDTOList.add(qnADTO);
+        }
+        PagingQnaDTO pagingQnaDTO = new PagingQnaDTO().toPageDTO(page, totalPages, totalResults, qnaDTOList);
+
+        return pagingQnaDTO;
     }
 
 //  qna 리스트 조회 service
     @Override
-    public List<QnADTO> searchAll() {
+    public PagingQnaDTO searchAll(Pageable pageable) {
         List<QnADTO> qnaDTOList = new ArrayList<>();
-        List<QnA> qnaList = qnARepository.findAll();
-        for(QnA e : qnaList) {
-            QnADTO qnADTO = new QnADTO().toDTO(e);
+        Page<QnA> pageMyQnaList = qnARepository.findAll(pageable);
+
+        List<QnA> qnaMypageList = pageMyQnaList.getContent();
+        Integer totalPages = pageMyQnaList.getTotalPages();
+        Integer page = pageMyQnaList.getNumber()+1;
+        Long totalResults = pageMyQnaList.getTotalElements();
+
+        for(QnA qnA : qnaMypageList){
+            QnADTO qnADTO = new QnADTO().toDTO(qnA);
             qnaDTOList.add(qnADTO);
         }
-        return qnaDTOList;
+        PagingQnaDTO pagingQnaDTO = new PagingQnaDTO().toPageDTO(page, totalPages, totalResults, qnaDTOList);
+
+        return pagingQnaDTO;
     }
 
 //    qna 답장 보내기

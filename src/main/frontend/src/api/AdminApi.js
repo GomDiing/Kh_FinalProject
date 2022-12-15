@@ -1,5 +1,4 @@
 import axios from "axios";
-import { createSearchParams } from "react-router-dom";
 const HEADER = 'application/json';
 //server path
 const TCAT_DOMAIN = "http://localhost:8100";
@@ -11,7 +10,7 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.post(TCAT_DOMAIN + "/notice/write", params, HEADER);
+        return await axios.post(TCAT_DOMAIN+"/notice/write", params, HEADER);
     },
     // 공지사항 전체 목록
     noticeInfo : async function(currentPage ,setPageSize){
@@ -86,6 +85,7 @@ const AdminApi={
     getChart : async function() {
         return await axios.get(TCAT_DOMAIN + "/admin/chart", HEADER)
     },
+    
     /* 배너 등록하기(관리자) 아직 미구현   */ 
     uploadBanner : async function(){
         return await axios.post(TCAT_DOMAIN + "/admin/banner", HEADER)

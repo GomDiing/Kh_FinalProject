@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PopupDom from './PopupDom';
 import DaumPostcode from "react-daum-postcode";
@@ -8,8 +8,11 @@ import { useNavigate } from 'react-router-dom';
 const SignWrap = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #d2d2d2;
   .signwrap{
+    margin: 0 auto;
+    width: 50%;
+    background-color: #f5f5f5;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -122,21 +125,29 @@ function Sign() {
 
   // 카카오주소 api
   const [isOpen, setIsOpen] = useState(false);
+
+  
   // 주소 
   let [fullAddress, setFullAddress] = useState("");
 
+  // 도로명 주소
+  const [road, setRoad] = useState("");
+  // 지번 주소
+  const [jibun, setJibun] = useState("");
   // 상세 주소 값
   const [address, setAddress] = useState("");
+  // 상세주소 값 담기
+  const onChangeAddress = e => setAddress(e.target.value);
+
   // 우편 번호
   const [postCode, setPostCode] = useState("");
-  // 지번, 도로명 구분
-  let [type, setType] = useState("");
+
+
+
   // 팝업 열기
   const openPostCode = () => setIsOpen(true);
   // 팝업 닫기
   const closePostCode = () => setIsOpen(false);
-  // 값 담기
-  const onChangeAddress = e => setAddress(e.target.value);
 
   /**
    * 
@@ -144,12 +155,14 @@ function Sign() {
    */
   const handlePostCode = (data) => {
     setFullAddress(data.address);
-    // 우편번호
+    console.log(data.roadAddress);
+    setRoad(data.roadAddress);
+    console.log(data.jibunAddress);
+    setJibun(data.jibunAddress);
+    console.log(data.zonecode);
     setPostCode(data.zonecode);
-
-    console.log(isOpen);
     setIsOpen(false);
-    data.preventDefualt();
+    data.preventDefault();
   }
 
   const onChangeId = e => {
@@ -197,20 +210,23 @@ function Sign() {
     else setIsEmail(false);
   }
   
-  const onClickSign = e => {
+  const Navigate = useNavigate();
+
+  useEffect(() => {
     if(isId && isPwd && isCheck && isName && isEmail) {
-      setSubmit(true);
-      alert('회원가입을 축하드립니다.');
-      e.preventDefualt();
-    } else {
-      console.log(isId)
-      console.log(isPwd)
-      console.log(isCheck)
-      console.log(isName)
-      console.log(isEmail)
       setSubmit(false);
-      alert('회원가입 실패 다시 확인 부탁드립니다.');
-      e.preventDefualt();
+      return;
+    } setSubmit(true);
+  }, [isId, isPwd, isCheck, isName, isEmail]);
+
+  const onClickSign = async () => {
+    try {
+      const memberRegister = await MemberApi.signup(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
+      if(memberRegister.data.statusCode === 200) {
+      alert("가입완료");
+    } Navigate('/');
+    } catch (e) {
+      alert("젠장");
     }
   }
 
@@ -251,7 +267,7 @@ function Sign() {
           </div>
 
           <div className="input-wrapper">
-            <label for="sign-name">name</label>
+            <label for="sign-name">Name</label>
               <div className="input-group"><span className="icon"><svg viewBox="0 0 501.333 501.333">
                     <path d="M455.466,49.6h-409.6C20.267,49.6,0,69.867,0,95.466v310.4c0,25.6,20.267,45.867,45.867,45.867h409.6 c25.6,0,45.867-21.333,45.867-45.867v-310.4C501.333,69.867,481.066,49.6,455.466,49.6z M430.933,91.2L250.666,252.267 L71.466,91.2H430.933z M459.733,405.867c0,2.133-2.133,4.267-4.266,4.267h-409.6c-2.133,0-4.267-2.133-4.267-4.267V122.133 L236.8,296c4.267,3.2,8.533,5.333,13.867,5.333c5.333,0,9.6-2.133,13.867-5.333l195.2-173.867V405.867z"/>
                     </svg></span><input type="text" value={inputName} id="sign-name" onChange={onChangeName} data-lpignore="true" />
@@ -287,7 +303,7 @@ function Sign() {
           </div>
           <div>
           </div>
-            <div className="btn-group" ><button style={{width : '402px' , height : '52px', padding : '12px' , fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
+            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
           </div>
       </form>
     </div>

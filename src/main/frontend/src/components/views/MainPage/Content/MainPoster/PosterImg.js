@@ -1,11 +1,13 @@
 import styled from "styled-components";
+import HorizontalScroll from 'react-horizontal-scrolling'
 
 const PosterImgContainer = styled.div`
+        
     background-color: #f5f5f5;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 250px;
+    padding: 20px 0;
     /* border: solid 1px black; */
     
     img{
@@ -18,13 +20,17 @@ const PosterImgContainer = styled.div`
         list-style: none;
         margin: 0px;
         padding: 0px;
+        /* overflow-x: auto; */
         overflow: hidden;
     }
+    /* ul::-webkit-scrollbar {
+        display: none;
+    } */
     li{
         align-items: center;
         list-style: none;
         /* display: inline-block; */
-        margin:0 20px;
+        margin:0 15px;
     }
     p{
         width: 110px;
@@ -32,10 +38,20 @@ const PosterImgContainer = styled.div`
         font-size: 1em;
     }
     @media (max-width : 1440px){
-        li{
-            margin:10px 60px;
+        img{
+            width: 140px;
+            height: 160px;
         }
-    }   
+        li{
+            margin:0 10px;
+        }
+    }
+`
+
+const HWrap = styled.div`
+.HorizontalScrollTrack {
+    display: hidden;
+}
 `
 const posterInfo = [
         {
@@ -58,12 +74,29 @@ const posterInfo = [
             name : '4번작품',
             img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg'
         },
+        {
+            id : "1",
+            name : '1번작품',
+            img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg'
+        },
+        {
+            id : "1",
+            name : '1번작품',
+            img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg'
+        },
+        {
+            id : "1",
+            name : '1번작품',
+            img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg'
+        },
     ]
 
 const PosterImg = () =>{
-    
-    return(
-        <PosterImgContainer>
+
+        return(
+            <HWrap>
+            <HorizontalScroll>
+                <PosterImgContainer>
             <ul>
                 {posterInfo.map(c=>(
                     <li key={c.id} >
@@ -72,7 +105,9 @@ const PosterImg = () =>{
                     </li>
                 ))}
             </ul>
-        </PosterImgContainer>
+            </PosterImgContainer>
+            </HorizontalScroll>
+            </HWrap>
     )
 }
 export default PosterImg;

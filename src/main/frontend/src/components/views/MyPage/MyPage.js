@@ -17,7 +17,6 @@ const MyInfoStyle = styled.div`
   padding: 0;
   box-sizing: border-box;
   min-width: 930px;
-  /* height: auto; */
   h4{
     font-size: 18px;
     strong{
@@ -58,7 +57,7 @@ const MyInfoStyle = styled.div`
 }
   .MypageMainContainer{
     height : 100%;
-    height: 70%;
+    /* height: 70%; */
   }
   .MypageDataContainer{
     width: 60%;
