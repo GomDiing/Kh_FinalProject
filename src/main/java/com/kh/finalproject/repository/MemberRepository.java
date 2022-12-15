@@ -2,21 +2,14 @@ package com.kh.finalproject.repository;
 
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
-import com.kh.finalproject.entity.Notice;
-import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
-import com.kh.finalproject.entity.enumurate.NoticeStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import javax.persistence.PostUpdate;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +56,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<List<Member>> findAllByMemberAccuseCountGreaterThan(Integer count);
 
-
-//    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);
 }

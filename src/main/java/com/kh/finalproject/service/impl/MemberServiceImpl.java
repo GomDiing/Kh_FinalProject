@@ -1,4 +1,4 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
@@ -9,6 +9,7 @@ import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AddressRepository;
 import com.kh.finalproject.repository.MemberRepository;
+import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
 
@@ -64,24 +65,8 @@ public class MemberServiceImpl implements MemberService{
         //주어진 회원과 연결된 주소 조회
         Address findAddress = addressRepository.findByMember(findMember);
 
-        // 엔티티로 변환 OK
-//        Member saveMember = new Member().toEntity(memberInfoDTO);
-
-        //주소 정보 갱신 (단순 값 교체)
-//        findAddress.updateAddress(memberInfoDTO);
-
         //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
         findMember.updateMember(findAddress, memberInfoDTO);
-
-        // 엔티티로 변환 OK
-//        Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
-
-//        Integer updateMember = memberRepository.updateInfo(saveMember, LocalDateTime.now(), findAddress);
-
-//        addressRepository.save(findAddress);
-
-//        if(updateMember == 2) return true;
-//        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
     }
 
     @Override

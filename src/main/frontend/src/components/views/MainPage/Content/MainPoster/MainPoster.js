@@ -3,7 +3,8 @@ import PosterImg from "./PosterImg";
 import styled from "styled-components";
 
 const PosterContainer = styled.div`
-    width: 50%;
+    width: 47%;
+    margin: 0 10px;
     align-items: center;
     display: inline-block;
     /* border: solid 1px black; */
@@ -19,7 +20,7 @@ const PosterContainer = styled.div`
     }
     @media (max-width : 1440px){
         width: 100%;
-        margin: 15px 0;
+        margin: 10px 0;
     }
     `
 
@@ -28,7 +29,6 @@ const Poster = (props) =>{
         <PosterContainer>
             <PosterCategory name = {props.name}/>
             <PosterImg/>
-            <a>더보기</a>
         </PosterContainer>
     )
 }

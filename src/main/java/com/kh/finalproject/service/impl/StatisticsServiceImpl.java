@@ -1,4 +1,4 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.statistics.StatisticsDTO;
 import com.kh.finalproject.entity.Product;
@@ -7,6 +7,7 @@ import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.ProductRepository;
 import com.kh.finalproject.repository.StatisticsRepository;
+import com.kh.finalproject.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

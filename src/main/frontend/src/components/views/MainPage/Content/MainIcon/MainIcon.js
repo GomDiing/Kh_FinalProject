@@ -49,6 +49,9 @@ const MainIconContainer = styled.div`
         .IconContainer{
             margin: 0 0.5em;
         }
+        .MainIcon{
+            font-size: 2.5em;
+        }
     }
 `
 
@@ -81,7 +84,7 @@ const MainIcon = () => {
                 <p>My Page</p>
             </div>
             <div className="IconContainer">
-                <SendOutlined className="MainIcon" onClick={()=>{openModal(4)}} />
+                <Link to = '/MyPage/Contact'><SendOutlined className="MainIcon"/></Link>
                 <p>1:1문의</p>
             </div>
             <div className="IconContainer">

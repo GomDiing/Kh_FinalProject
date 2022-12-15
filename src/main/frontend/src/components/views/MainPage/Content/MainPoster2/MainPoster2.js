@@ -4,7 +4,7 @@ const MainPoster2Container = styled.div`
     width: 100%;
     background-color: #f5f5f5;
     font-family: sans-serif;
-    height: 360px;
+    padding: 30px 0;
     display: flex;
     align-items: center;
     .PosterCategory{
@@ -16,21 +16,22 @@ const MainPoster2Container = styled.div`
         opacity: 80%;
     }
     img{
-        width: 180px;
-        height: 230px;
+        width: 210px;
+        height: 260px;
     }
     ul{
         width: 100%;
         overflow: hidden;
         display: flex;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         margin: 0 20px;
         padding: 0;
         list-style: none;
     }
     li{   
+        /* margin: 0 20px; */
         list-style: none;
-        width:180px;
+        width: 230px;
         margin: 0 5px;
     }
     p{
@@ -42,12 +43,12 @@ const MainPoster2Container = styled.div`
     
     @media (max-width : 1024px){    
         img{
-            width: 120px;
-            height: 160px;
+            width: 240px;
+            height: 290px;
         }
         li{
-            margin: 0 5px;
-            width: 120px;
+            /* margin: 0 5px; */
+            width: 270px;
         }
     }
 `
@@ -81,7 +82,19 @@ const posterInfo = [
         category : "연극",
         name : "옥탑방 고양이",
         img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/21/21013096_p_s.jpg'
-    }
+    },
+    {
+        id : "3",
+        category : '뮤지컬',
+        name : '베토벤',
+        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22015806_p_s.jpg'
+    },
+    {
+        id : "4",
+        category : '뮤지컬',
+        name : '영웅',
+        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/L0/L0000021_p_s.jpg'
+    },
 ]
 
 const MainPoster2 = () =>{

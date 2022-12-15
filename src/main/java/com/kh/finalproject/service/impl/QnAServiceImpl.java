@@ -1,12 +1,11 @@
 
-package com.kh.finalproject.service;
-
+package com.kh.finalproject.service.impl;
 import com.kh.finalproject.dto.qna.*;
-import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.QnA;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.QnARepository;
+import com.kh.finalproject.service.QnAService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class QnAServiceImpl implements QnAService{
+public class QnAServiceImpl implements QnAService {
     private final QnARepository qnARepository;
 
     @Override
