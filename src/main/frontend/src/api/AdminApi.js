@@ -73,8 +73,8 @@ const AdminApi={
         return await axios.get(TCAT_DOMAIN + `/qna/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
     },
     // qna 관리자 답장
-    qnaReply : async function(inputReply,index) {
-        console.log("api통신 되는지 " + inputReply +index);
+    qnaReply : async function(inputReply, index) {
+        console.log(inputReply);
         const params = {
             reply : inputReply,
             index : index

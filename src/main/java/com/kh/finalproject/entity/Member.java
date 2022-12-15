@@ -83,7 +83,8 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
 
-    @Column(name = "member_accuse_count", nullable = false)
+    // nullable 하면 회원가입이 안대서 지웠습니다.
+    @Column(name = "member_accuse_count")
     private Integer memberAccuseCount;
 
 
