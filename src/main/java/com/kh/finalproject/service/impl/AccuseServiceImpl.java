@@ -75,11 +75,6 @@ public class AccuseServiceImpl implements AccuseService {
                 .isEmpty();
     }
 
-//    @Override
-//    public void process(ProcessAccuseDTO processAccuseDTO) {
-//        Accuse accuseProcess = accuseRepository.changeAccuseStatus(processAccuseDTO.getAccuseCount());
-//        return;
-//    }
 
     @Override
     public List<AccuseDTO> searchAll() {
