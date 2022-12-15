@@ -35,19 +35,20 @@ public class QnAServiceImpl implements QnAService{
 
     }
 
+
     /*qna 목록 조회 (마이페이지)*/
     @Override
-    public PagingQnaDTO searchByMember(String memberId, Pageable pageable) {
+    public PagingQnaDTO searchByMember(QnA qna, Pageable pageable) {
         List<QnADTO> qnaDTOList = new ArrayList<>();
 
-        Page<QnA> pageMyQnaList = qnARepository.findById(memberId,pageable);
+        Page<QnA> pageMyQnaList = qnARepository.findById(qna.getMember(),pageable);
 
         List<QnA> qnaMypageList = pageMyQnaList.getContent();
         Integer totalPages = pageMyQnaList.getTotalPages();
         Integer page = pageMyQnaList.getNumber()+1;
         Long totalResults = pageMyQnaList.getTotalElements();
 
-        for(QnA qna : qnaMypageList){
+        for(QnA qnA : qnaMypageList){
             QnADTO qnADTO = new QnADTO().toDTO(qna, qna.getMember());
             qnaDTOList.add(qnADTO);
         }

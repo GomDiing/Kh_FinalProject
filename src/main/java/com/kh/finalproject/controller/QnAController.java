@@ -38,7 +38,7 @@ public class QnAController {
     /*qna 조회(마이페이지)*/
     @GetMapping("/qna/mypage")
         public ResponseEntity<Object>qnaMypageList(Member member, Pageable pageable){
-            PagingQnaDTO searchQnaList = qnAService.searchByMember(member.getId(),pageable);
+            PagingQnaDTO searchQnaList = qnAService.searchByMember(member,pageable);
             return new ResponseEntity<>(searchQnaList, HttpStatus.OK);
         }
 }

@@ -23,5 +23,5 @@ public interface QnARepository extends JpaRepository<QnA,Long> {
     @Query("UPDATE QnA q SET q.reply =:reply, q.replyTime = now(),q.status = 'COMPLETE' where q.index =:index ")
     Integer updateReply(@Param("reply") String reply, @Param("index") Long index);
 
-    Page<QnA> findById(String memberId, Pageable pageable);
+    Page<QnA> findById(Member member, Pageable pageable);
 }

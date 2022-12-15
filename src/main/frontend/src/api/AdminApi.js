@@ -1,7 +1,7 @@
 import axios from "axios";
 const HEADER = 'application/json';
-const TCAT_DOMAIN= "http://localhost:8118";//server path
-
+//server path
+const TCAT_DOMAIN = "http://localhost:8100";
 
 const AdminApi={
     //공지사항 쓰기 api
@@ -18,12 +18,12 @@ const AdminApi={
     },
     // 공지사항 상세페이지
     noticeDetail : async function(index){
-        return await axios.get("/notice/detail/" + index, "Text/json")
+        return await axios.get(TCAT_DOMAIN +"/notice/detail/" + index, "Text/json")
     },
 
     // 공지사항 삭제 
     noticeDelete : async function(index){
-        return await axios.delete( TCAT_DOMAIN + "/notice/delete/"+ index, HEADER)
+        return await axios.delete(TCAT_DOMAIN + "/notice/delete/"+ index, HEADER)
     },
 
     // (체크박스) 공지사항 삭제
@@ -45,7 +45,7 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.put(TCAT_DOMAIN+"/notice/edit/" +index, editing, HEADER)
+        return await axios.put(TCAT_DOMAIN + "/notice/edit/" +index, editing, HEADER)
     },
 
     // 회원 전체 조회
@@ -66,11 +66,11 @@ const AdminApi={
     const params = {
         memberDTOCheckList: arrKeys
     };
-    return await axios.post( "/notice/delete/member/check",params, "application/json");
+    return await axios.post(TCAT_DOMAIN + "/notice/delete/member/check",params, "application/json");
 },
     // 일대일문의(qna) 전체 조회
     qnaList : async function(){
-        return await axios.get("/qna/list", HEADER)
+        return await axios.get(TCAT_DOMAIN + "/qna/list", HEADER)
     },
     // qna 관리자 답장
     qnaReply : async function(inputReply,index) {
@@ -79,15 +79,15 @@ const AdminApi={
             reply : inputReply,
             index : index
         }
-        return await axios.post("/qna/reply", params, HEADER);
+        return await axios.post(TCAT_DOMAIN + "/qna/reply", params, HEADER);
     },
     // 차트 정보
     getChart : async function() {
-        return await axios.get("/admin/chart", HEADER)
+        return await axios.get(TCAT_DOMAIN + "/admin/chart", HEADER)
     },
     /* 배너 등록하기(관리자) 아직 미구현   */ 
     uploadBanner : async function(){
-        return await axios.post("/admin/banner", HEADER)
+        return await axios.post(TCAT_DOMAIN + "/admin/banner", HEADER)
     }
 }
 export default AdminApi;

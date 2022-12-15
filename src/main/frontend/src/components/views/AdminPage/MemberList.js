@@ -97,7 +97,7 @@ const MemberList=()=>{
                 </tbody>
               </table>
             </div>
-            <Pagination
+            <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
             current={currentPage} 
             pageSize={pageSize}
