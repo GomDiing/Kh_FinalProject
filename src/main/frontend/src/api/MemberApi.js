@@ -57,7 +57,7 @@ const MemberApi = {
   },
 
   myQnalist : async function(currentPage, setPageSize){
-    return await axios.get(TCAT_DOMAIN + `/notice/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
+    return await axios.get(TCAT_DOMAIN+`/qna/mypage/15?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
   },
 }
 export default MemberApi;

@@ -10,7 +10,7 @@ const BlackList=()=>{
   const navigate = useNavigate();
   // 페이지네이션 변수
   const [memberList, setMemberList] = useState([]);
-  const [pageSize, setPageSize] = useState(3); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(7); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 

@@ -3,7 +3,6 @@ package com.kh.finalproject.controller;
 import com.kh.finalproject.dto.qna.PagingQnaDTO;
 import com.kh.finalproject.dto.qna.QnADTO;
 import com.kh.finalproject.dto.qna.ResponseQnADTO;
-import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;

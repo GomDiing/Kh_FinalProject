@@ -85,6 +85,7 @@ const AdminApi={
     getChart : async function() {
         return await axios.get(TCAT_DOMAIN + "/admin/chart", HEADER)
     },
+    
     /* 배너 등록하기(관리자) 아직 미구현   */ 
     uploadBanner : async function(){
         return await axios.post(TCAT_DOMAIN + "/admin/banner", HEADER)
