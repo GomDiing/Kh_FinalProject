@@ -34,7 +34,7 @@ public class QnAController {
     @PostMapping("/qna/reply")
     public ResponseEntity<DefaultResponse<Object>> qnaReply(@RequestBody ResponseQnADTO responseQnADTO) {
         qnAService.response(responseQnADTO);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.OK);
     }
 
     /*qna 조회(마이페이지)*/

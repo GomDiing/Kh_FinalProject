@@ -1,11 +1,10 @@
-import { Pagination } from 'antd';
 import React from 'react';
-import { useState,useEffect,useParams } from "react";
+import { useState,useEffect } from "react";
 import styled from "styled-components";
 import { Table, Divider } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import ReserveDetailModal from '../ReserveDetailModal';
 import MemberApi from '../../../../../api/MemberApi';
+import IqModal from '../../../../views/MyPage/section/Iquiry/IqModal'
 
 const Body = () => (
   <Style>
@@ -47,6 +46,7 @@ function IqList() {
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
+  const [index, setIndex] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const open = () => setModalOpen(true);
   const close = () => setModalOpen(false);
@@ -74,6 +74,12 @@ function IqList() {
         title: '상태',
         dataIndex: 'qnaStatus',
     },
+    {
+        title: '상태',
+        dataIndex: 'modal',
+        key: 'modal',
+        render: () => <button onClick={()=>{setModalOpen(true)}}>답장</button>
+    }
 ];
 // const data = [
 //     {
@@ -92,7 +98,8 @@ function IqList() {
       try {
         const response = await MemberApi.myQnalist(currentPage, pageSize);
           setQnaList([...qnaList, ...response.data.qnaDTOList]);
-          console.log(response.data);
+          console.log(response.data.qnaDTOList[0].index);
+          setIndex(response.data.qnaDTOList[0].index);
           // 페이징 시작
           setTotalCount(response.data.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
@@ -103,12 +110,12 @@ function IqList() {
     };
     noticeData();
   }, [currentPage]); // currentpage 값이 바뀌면 렌더링 되도록 
-
+console.log(qnaList);
   return(
     <>
-    {modalOpen && <ReserveDetailModal open={open} cancel={cancelClick} close={close} body={<Body />}/>}
+    {modalOpen && <IqModal open={open} cancel={cancelClick} close={close} index={index}/>}
     <Divider>문의 내역</Divider>
-    <Table columns={columns} dataSource={qnaList} size="middle" />
+    <Table columns={columns} dataSource={qnaList} size="middle" pagination={currentPage} />
     </>
   );
 }
@@ -145,3 +152,4 @@ const Style = styled.div`
     border: 1px solid black;
   }
 `;
+
