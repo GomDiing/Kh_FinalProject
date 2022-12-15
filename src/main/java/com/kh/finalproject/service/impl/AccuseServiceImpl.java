@@ -1,4 +1,4 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
@@ -14,6 +14,7 @@ import com.kh.finalproject.repository.AccuseRepository;
 import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.repository.ReviewCommentRepository;
 import com.kh.finalproject.response.DefaultErrorResponse;
+import com.kh.finalproject.service.AccuseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

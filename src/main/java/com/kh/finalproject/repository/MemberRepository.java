@@ -39,26 +39,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByNameAndEmail(String name, String email);
 
     Optional<Member> findByIdAndNameAndEmail(String id, String name, String email);
-
-    Optional<Member> findByIndex(Long index);
-   @Modifying
-    @Query(nativeQuery = true,
-            value = "UPDATE " +
-                      "member a INNER JOIN address b " +
-                    "ON a.member_index = b.member_index " +
-                      "SET " +
-                        "a.member_pwd=:#{#paramMember.password}" +
-                        " ,a.member_name=:#{#paramMember.name}" +
-                        " ,a.member_email=:#{#paramMember.email}" +
-                        " ,a.update_time=:nowDate" +
-                        " ,b.address_road=:#{#paramAddress.road}" +
-                        " ,b.address_jibun=:#{#paramAddress.jibun}" +
-                        " ,b.address_detail=:#{#paramAddress.detail}" +
-                        " ,b.address_zipcode=:#{#paramAddress.zipcode}" +
-                        " ,b.update_time=:nowDate" +
-                    " WHERE a.member_id=:#{#paramMember.id}")
-    Integer updateInfo(
-            @Param("paramMember") Member member, @Param("nowDate") LocalDateTime now, @Param("paramAddress") Address address);
-
 //    List<Member> findAllByCreate_timeBetween(LocalDateTime start, LocalDateTime end);
 }
