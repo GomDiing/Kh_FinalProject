@@ -14,11 +14,15 @@ const NoticeDetail=()=>{
     const noticeData = async()=> {
     //  setLoading(true);
       try {
-        console.log(params);
-        const response = await AdminApi.noticeDetail(params);
-        setNoticeDetail(response.data);
-        console.log(response.data);
-      } catch (e) {
+        const res = await AdminApi.noticeDetail(params);
+        if(res.data.statusCode === 200){
+          setNoticeDetail(res.data.results);
+          console.log(res.data.results);
+          console.log(res.data.message);
+        } else {
+          alert("페이지 이동이 안됩니다.")
+        }
+      } catch(e){
         console.log(e);
       }
       // setLoading(false);
@@ -37,12 +41,12 @@ const NoticeDetail=()=>{
         <>
         <DetailBlock>
             <TopBar name="공지사항 상세보기"/>
-              {noticeDetail && noticeDetail.map(({index,title,content,createDate})=>(
+              {noticeDetail && noticeDetail.map(({index,title,content,createTime})=>(
                 <React.Fragment key={index}>
               <div className="notice-detail-container">
                 <div className="notice-detail-titlebox">
                   <div>
-                      <p className="notice-detail-date">{index}</p>
+                      <p className="notice-detail-date">{createTime}</p>
                       <p className="notice-detail-title">{title}</p>
                   </div>
                 </div>
