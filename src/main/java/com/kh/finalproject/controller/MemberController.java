@@ -2,7 +2,6 @@ package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
-import com.kh.finalproject.dto.member.MemberDTO;
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -78,45 +77,45 @@ public class MemberController {
     }
 
     /**
-     * member sign
+     * member sign success
      */
-    @PostMapping("member/sign")
+    @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
 
         memberService.signup(signupDTO);
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER, true), HttpStatus.OK);
     }
 
     /**
-     * member select by email
+     * member select by memberId success
      */
-    @PostMapping("member/search-by-email")
-    public ResponseEntity<DefaultResponse<Object>> searchMemberByEmail(@RequestBody SignupDTO signupDTO) {
+    @PostMapping("/search-by-id")
+    public ResponseEntity<DefaultResponse<Object>> searchMemberById(@Validated @RequestBody SearchByIdDTO searchByIdDTO) {
 
-        SignupDTO memberList =  memberService.searchByEmail(signupDTO.getEmail());
+        SignupDTO memberList =  memberService.searchById(searchByIdDTO.getId());
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_EMAIL, memberList), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_ID, memberList), HttpStatus.OK);
     }
 
     /**
-     * find memberId by name and email
+     * find memberId by name and email success
      */
-    @PostMapping("/member/find-id")
-    public ResponseEntity<DefaultResponse<Object>> findMemberId(@RequestBody FindMemberDTO findMemberDTO) {
+    @PostMapping("/find-id")
+    public ResponseEntity<DefaultResponse<Object>> findMemberId(@Validated @RequestBody FindIdMemberDTO findIdMemberDTO) {
 
-        Map<String, String> memberId = memberService.findMemberId(findMemberDTO.getName(), findMemberDTO.getEmail());
+        Map<String, String> memberId = memberService.findMemberId(findIdMemberDTO.getName(), findIdMemberDTO.getEmail());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME, memberId), HttpStatus.OK);
     }
 
     /**
-     * find password by id and name and email
+     * find password by id and name and email success
      */
-    @PostMapping("/member/find-password")
-    public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindMemberDTO findMemberDTO) {
+    @PostMapping("/find-password")
+    public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 
-        Map<String, String> password = memberService.findPassword(findMemberDTO.getId(), findMemberDTO.getName(), findMemberDTO.getEmail());
+        Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
     }
@@ -124,8 +123,8 @@ public class MemberController {
     /**
      * 회원 정보 수정 메서드
      */
-    @PostMapping("/member/info-update")
-    public ResponseEntity<DefaultResponse<Object>> updateMember(@RequestBody EditMemberInfoDTO editMemberInfoDTO) {
+    @PostMapping("/info-update")
+    public ResponseEntity<DefaultResponse<Object>> updateMember(@Validated @RequestBody EditMemberInfoDTO editMemberInfoDTO) {
 
         memberService.editMemberInfo(editMemberInfoDTO);
 

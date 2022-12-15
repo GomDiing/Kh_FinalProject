@@ -1,13 +1,14 @@
 package com.kh.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.dto.member.EditMemberInfoDTO;
-import com.kh.finalproject.dto.member.SignupDTO;
-import com.kh.finalproject.dto.member.UnregisterDTO;
+import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_index")
@@ -120,10 +122,19 @@ public class Member extends BaseTimeEntity {
     }
 
     /**
+     * @param searchByIdDTO
+     */
+    public Member toEntity(SearchByIdDTO searchByIdDTO) {
+        this.id = searchByIdDTO.getId();
+
+        return this;
+    }
+
+    /**
      * @param editMemberInfoDTO
      */
+    @CreatedBy
     public Member toEntity(EditMemberInfoDTO editMemberInfoDTO) {
-        this.index = editMemberInfoDTO.getIndex();
         this.id = editMemberInfoDTO.getId();
         this.password = editMemberInfoDTO.getPassword();
         this.name = editMemberInfoDTO.getName();
@@ -145,5 +156,17 @@ public class Member extends BaseTimeEntity {
         this.status = MemberStatus.ACTIVE;
 
         return this;
+    }
+
+    public void updateMember(Address findAddress, EditMemberInfoDTO editMemberInfoDTO) {
+        this.id = editMemberInfoDTO.getId();
+        this.name = editMemberInfoDTO.getName();
+        this.password = editMemberInfoDTO.getPassword();
+        this.email = editMemberInfoDTO.getEmail();
+        findAddress.updateAddress(editMemberInfoDTO);
+
+        //양방향 연관관계 편의 메서드
+        this.address = findAddress;
+        findAddress.updateMember(this);
     }
 }

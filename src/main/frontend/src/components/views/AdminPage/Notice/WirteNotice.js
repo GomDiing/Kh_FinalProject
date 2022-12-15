@@ -14,7 +14,7 @@ const WriteNotice=()=>{
 
     const onClickSubmit=async()=>{
         const res = await AdminApi.writing(inputTitle, inputDetail);
-        if(res.data === true){
+        if(res.data.statusCode === 200){
             console.log("공지사항 작성 완료 후 목록으로 이동");
             navigate('/admin/noticeList')
         } else{

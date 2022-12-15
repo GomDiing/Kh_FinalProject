@@ -1,5 +1,6 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
+import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
@@ -8,6 +9,7 @@ import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AddressRepository;
 import com.kh.finalproject.repository.MemberRepository;
+import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
 
@@ -34,6 +36,9 @@ public class MemberServiceImpl implements MemberService{
     public void signup(SignupDTO signupDto) {
 
         Member signMember = new Member().toEntity(signupDto);
+
+        // 아이디 중복 확인
+        validateDuplicateById(signupDto.getId());
 
         //이메일 중복 확인
         validateDuplicateByEmail(signupDto.getEmail());
@@ -52,20 +57,17 @@ public class MemberServiceImpl implements MemberService{
      */
     @Override
     @Transactional
-    public Boolean editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
+    public void editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
-        Member findMember = memberRepository.findByIndex(memberInfoDTO.getIndex())
+        //주어진 ID로 회원 조회
+        Member findMember = memberRepository.findById(memberInfoDTO.getId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        Address findAddress = new Address().toEntity(memberInfoDTO, findMember);
+        //주어진 회원과 연결된 주소 조회
+        Address findAddress = addressRepository.findByMember(findMember);
 
-//        int updateMember = memberRepository.updateInfo(findMember.getIndex(), findMember.getId(),
-//                findMember.getPassword(), findMember.getName(), findMember.getEmail(), address.getRoad(), address.getJibun(), address.getDetail(), address.getZipcode());
-
-        Integer updateMember = memberRepository.updateInfo(findMember, LocalDateTime.now(), findAddress);
-
-        if(updateMember == 2) return true;
-        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
+        //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
+        findMember.updateMember(findAddress, memberInfoDTO);
     }
 
     @Override
@@ -74,9 +76,24 @@ public class MemberServiceImpl implements MemberService{
     }
 
     /**
+     * 중복 아이디 확인 메서드
+     */
+    @Transactional
+    @Override
+    public void validateDuplicateById(String id) {
+
+        Optional<Member> findId = memberRepository.findById(id);
+
+        if(findId.isPresent()) {
+            throw new CustomException(CustomErrorCode.DUPLI_MEMBER_ID);
+        }
+    }
+
+    /**
      * 중복 이메일 확인 메서드
      */
     @Override
+    @Transactional
     public void validateDuplicateByEmail(String email) {
 
         Optional<Member> findEmail = memberRepository.findByEmail(email);
@@ -88,18 +105,18 @@ public class MemberServiceImpl implements MemberService{
     }
 
     /**
-     * search member by email
+     * search member by id
      */
-    @Override
     @Transactional
-    public SignupDTO searchByEmail(String email) {
+    @Override
+    public SignupDTO searchById(String id) {
 
-        Member findEmail = memberRepository.findByEmail(email)
+        Member findId = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        Address memberAddress = addressRepository.findByMember(findEmail);
+        Address memberAddress = addressRepository.findByMember(findId);
 
-        return new SignupDTO().toDTO(findEmail, memberAddress);
+        return new SignupDTO().toDTO(findId, memberAddress);
     }
 
     /**
@@ -114,7 +131,7 @@ public class MemberServiceImpl implements MemberService{
 
         Map<String, String> memberId = new LinkedHashMap<>();
 
-        FindMemberDTO searchMemberId = new FindMemberDTO().toDTO(findNameAndEmail);
+        FindIdMemberDTO searchMemberId = new FindIdMemberDTO().toDTO(findNameAndEmail);
 
         memberId.put("member_id", searchMemberId.getId());
 
@@ -124,8 +141,8 @@ public class MemberServiceImpl implements MemberService{
     /**
      * find password search by id, name and email
      */
-    @Override
     @Transactional
+    @Override
     public Map<String, String> findPassword(String id, String name, String email) {
 
         Member findIdNameEmail = memberRepository.findByIdAndNameAndEmail(id, name, email)
@@ -133,7 +150,7 @@ public class MemberServiceImpl implements MemberService{
 
         Map<String, String> memberPassword = new LinkedHashMap<>();
 
-        FindMemberDTO searchPassword = new FindMemberDTO().toDTO(findIdNameEmail);
+        FindPwdMemberDTO searchPassword = new FindPwdMemberDTO().toDTO(findIdNameEmail);
 
         memberPassword.put("password", searchPassword.getPassword());
 

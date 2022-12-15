@@ -1,8 +1,11 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.qna.*;
 import com.kh.finalproject.entity.QnA;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.QnARepository;
+import com.kh.finalproject.service.QnAService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class QnAServiceImpl implements QnAService{
+public class QnAServiceImpl implements QnAService {
     private final QnARepository qnARepository;
 
     @Override
@@ -54,8 +57,10 @@ public class QnAServiceImpl implements QnAService{
     @Transactional
     public void response(ResponseQnADTO responseQnADTO) {
         log.info("responseQnADTO = {}", responseQnADTO.getIndex());
-        Long index = responseQnADTO.getIndex();
-        Integer reply = qnARepository.updateReply(responseQnADTO.getReply(), index);
+        QnA findQnA = qnARepository.findByIndex(responseQnADTO.getIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_QNA));
+
+        findQnA.updateQna(responseQnADTO);
     }
 
     @Override

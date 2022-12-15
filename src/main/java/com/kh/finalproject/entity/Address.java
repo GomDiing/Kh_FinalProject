@@ -3,7 +3,10 @@ package com.kh.finalproject.entity;
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.EditMemberInfoDTO;
 import com.kh.finalproject.dto.member.SignupDTO;
+import com.kh.finalproject.entity.enumurate.MemberRoleType;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import lombok.Getter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -64,5 +67,31 @@ public class Address extends BaseTimeEntity {
         saveMember.updateAddress(this);
 
         return this;
+    }
+
+    /**
+     * 디버깅용 Member 생성 메서드
+     */
+    public Address createAddress(Member saveMember, String road, String jibun, String detail, String zipcode) {
+        this.road = road;
+        this.jibun = jibun;
+        this.detail = detail;
+        this.zipcode = zipcode;
+
+        this.member = saveMember;
+        saveMember.updateAddress(this);
+
+        return this;
+    }
+
+    public void updateAddress(EditMemberInfoDTO editMemberInfoDTO) {
+        this.road = editMemberInfoDTO.getRoad();
+        this.jibun = editMemberInfoDTO.getJibun();
+        this.detail = editMemberInfoDTO.getDetail();
+        this.zipcode = editMemberInfoDTO.getZipcode();
+    }
+
+    public void updateMember(Member member) {
+        this.member = member;
     }
 }

@@ -4,33 +4,28 @@ import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 회원 정보 수정 DTO
  */
 @Getter
 public class EditMemberInfoDTO {
 
-    private Long index;
+    @NotNull(message = "아이디는 필수 입력 값")
     private String id;
+    @NotNull(message = "비밀번호는 필수 입력 값")
     private String password;
+    @NotNull(message = "이름은 필수 입력 값")
     private String name;
+    @NotNull(message = "이메일은 필수 입력 값")
     private String email;
+    @NotNull(message = "도로명주소 필수 입력 값")
     private String road;
+    @NotNull(message = "지번주소 필수 입력 값")
     private String jibun;
+    @NotNull(message = "상세주소 필수 입력 값")
     private String detail;
+    @NotNull(message = "우편번호 필수 입력 값")
     private String zipcode;
-
-    public EditMemberInfoDTO toDTO(Member member, Address address) {
-        this.index = member.getIndex();
-        this.id = member.getId();
-        this.password = member.getPassword();
-        this.name = member.getName();
-        this.email = member.getEmail();
-        this.road = address.getRoad();
-        this.jibun = address.getJibun();
-        this.detail = address.getDetail();
-        this.zipcode = address.getZipcode();
-
-        return this;
-    }
 }

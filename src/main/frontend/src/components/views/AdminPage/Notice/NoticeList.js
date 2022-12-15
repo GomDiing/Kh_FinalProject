@@ -16,9 +16,9 @@ const NoticeList=(props)=>{
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
- 
-   // 체크박스 변수
-   const [checkItems, setCheckItems] = useState([]); 
+
+  // 체크박스 변수
+  const [checkItems, setCheckItems] = useState([]); 
   // 체크박스 단일 선택
   const handleSingleCheck = (checked, obj) => {
     if (checked) {
@@ -51,8 +51,8 @@ const NoticeList=(props)=>{
       setLoading(true);
       try {
         const res = await AdminApi.noticeInfo(currentPage, pageSize);
-        console.log("위에 삭제 최종 호출", res.data.noticeDTOList);
-        setNoticeList([...noticeList, ...res.data.noticeDTOList]);
+        console.log("위에 삭제 최종 호출", res.data.results);
+        setNoticeList([...noticeList, ...res.data.results.noticeDTOList]);
         // 페이징 시작
         setTotalCount(res.data.totalResults); 
         // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
