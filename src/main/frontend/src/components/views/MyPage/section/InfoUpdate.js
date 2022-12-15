@@ -2,6 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { DaumPostcodeEmbed } from "react-daum-postcode";
 import PopupDom from "../../SignPage/PopupDom";
+import { useNavigate } from "react-router-dom";
+import MemberApi from "../../../../api/MemberApi";
 
 
 const InfoStyle = styled.div`
@@ -47,11 +49,32 @@ const postCodeStyle = {
 };
 
 const InfoUpdate = () => {
-  
+  // 테스트용
+  const [inputId, setInputId] = useState("");
+  const onChangeId = e => {
+    const value = e.target.value;
+    setInputId(value);
+  }
+
   const [inputPwd, setInputPwd] = useState('');
   const [inputName, setInputName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
+    // 주소 
+    let [fullAddress, setFullAddress] = useState("");
+
+    // 도로명 주소
+    const [road, setRoad] = useState("");
+    // 지번 주소
+    const [jibun, setJibun] = useState("");
+    // 상세 주소 값
+    const [address, setAddress] = useState("");
+    // 상세주소 값 담기
+    const onChangeAddress = e => setAddress(e.target.value);
+  
+    // 우편 번호
+    const [postCode, setPostCode] = useState("");
 
   const onChangePwd = e => setInputPwd(e.target.value);
   const onChangeName = e => setInputName(e.target.value);
@@ -61,9 +84,30 @@ const InfoUpdate = () => {
   const onClose = () => setIsOpen(false);
 
   const handlePostCode = (data) => {
-    console.log(data);
-    setIsOpen(false);
+    setFullAddress(data.address);
+    console.log(data.address);
+    console.log(data.roadAddress);
+    console.log(data.jibunAddress);
+    console.log(data.zonecode);
+
+    setRoad(data.roadAddress);
+    setJibun(data.jibunAddress);
+    setPostCode(data.zonecode);
     data.preventDefault();
+  }
+
+  const Navigate = useNavigate();
+
+
+  const onClickChange = async () => {
+    try {
+      const memberUpdate = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
+      if(memberUpdate.data.statusCode === 200) {
+      alert("회원정보 변경 완료");
+    } Navigate('/Mypage');
+    } catch (e) {
+      alert("젠장");
+    }
   }
 
   return(
@@ -71,15 +115,15 @@ const InfoUpdate = () => {
       <div className="info-container">
         <h3>회원 정보 업데이트</h3>
         <label>아이디</label>
-          <input type='text' placeholder="wlals1234" readOnly />
+          <input type='text' placeholder="asdf1234" value={inputId} onChange={onChangeId}/>
         <label>비밀번호</label>
           <input type='password' value={inputPwd} onChange={onChangePwd} placeholder="wlals1234" />
         <label>이름</label>
-          <input type='name' value={inputName} onChange={onChangeName} placeholder="지민" readOnly />
+          <input type='name' value={inputName} onChange={onChangeName} placeholder="지민" />
         <label>이메일</label>
           <input type='email' value={inputEmail} onChange={onChangeEmail} placeholder="wlals@gamil.com" />
         <label>주소</label>
-          <input type='address' placeholder="경기도 광주시 송정동" readOnly /><span><button onClick={onOpen}>주소 검색</button></span>
+          <input type='address' placeholder="경기도 광주시 송정동" readOnly value={fullAddress}/><span><button onClick={onOpen}>주소 검색</button></span>
           <div id='popupDom'>
             {isOpen && (
               <div>
@@ -90,7 +134,8 @@ const InfoUpdate = () => {
               </div>
               )}
           </div>
-        <button>변경 확인</button>
+          <input type='text' value={address} onChange={onChangeAddress} placeholder='상세 주소 입력'/>
+        <button onClick={onClickChange}>변경 확인</button>
       </div>
     </InfoStyle>
   )

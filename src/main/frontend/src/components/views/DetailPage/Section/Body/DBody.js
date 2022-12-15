@@ -16,7 +16,7 @@ function DBody() {
       activeKey={key}
       onSelect={(k) => setKey(k)}
       className="mb-3"
-
+      style={{fontSize: '16px'}}
     >
       <Tab eventKey="home" title="공연정보">
       <Contents/>

@@ -4,17 +4,26 @@ import { Rate } from 'antd';
 import WishBt from './WishBt';
 
 const PosterStyle = styled.div `
-    .poster-box-bottom{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 0 10px;
+.summary-top {
+    text-align: center;
+}
+.posterConta {
+    text-align: center;
+}
+.poster-box-top {
+    margin: 18px 0;
+}
+.poster-box-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+@media (max-width: 1225px) {
+    .poster-box-bottom {
+        width: 500px;
+        min-width: 500px;
     }
-    @media (max-width:1024px){
-        .poster-box-bottom{
-            margin-right: 80px;
-        }
-    }
+}
 `;
 
 // 상세페이지 상단 포스터
@@ -56,14 +65,14 @@ function Poster(props) {
         <h3 className='summary-top'>{item_name}</h3>
             <div className='summary-body'>
                 <div className='poster-box' style={{margin: '0'}}>
-                    <div className='posoterConta'>
+                    <div className='posterConta'>
                         <img className='poster-box-top' src='test.gif' alt='포스터 이미지'/>
                             <div className='poster-box-bottom'>
                                 <div>
                                     <Rate allowHalf value={value} onChange={handleChange} style={{ fontSize: '1.8rem'}}/>
-                                    <span>{value}</span>
+                                    <span style={{marginLeft: '6px', fontSize: 'medium'}}>{value}</span>
                                 </div>
-                                <div style={{marginRight:'20px'}}>
+                                <div>
                                     <WishBt like={like} onClick={wishHandler}/>
                                 </div>
                             </div>

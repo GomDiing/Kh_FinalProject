@@ -44,7 +44,7 @@ const PosterImgContainer = styled.div`
         li{
             margin:0 10px;
         }
-    }   
+    }
 `
 const posterInfo = [
         {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PopupDom from './PopupDom';
 import DaumPostcode from "react-daum-postcode";
@@ -125,21 +125,29 @@ function Sign() {
 
   // 카카오주소 api
   const [isOpen, setIsOpen] = useState(false);
+
+  
   // 주소 
   let [fullAddress, setFullAddress] = useState("");
 
+  // 도로명 주소
+  const [road, setRoad] = useState("");
+  // 지번 주소
+  const [jibun, setJibun] = useState("");
   // 상세 주소 값
   const [address, setAddress] = useState("");
+  // 상세주소 값 담기
+  const onChangeAddress = e => setAddress(e.target.value);
+
   // 우편 번호
   const [postCode, setPostCode] = useState("");
-  // 지번, 도로명 구분
-  let [type, setType] = useState("");
+
+
+
   // 팝업 열기
   const openPostCode = () => setIsOpen(true);
   // 팝업 닫기
   const closePostCode = () => setIsOpen(false);
-  // 값 담기
-  const onChangeAddress = e => setAddress(e.target.value);
 
   /**
    * 
@@ -147,12 +155,14 @@ function Sign() {
    */
   const handlePostCode = (data) => {
     setFullAddress(data.address);
-    // 우편번호
+    console.log(data.roadAddress);
+    setRoad(data.roadAddress);
+    console.log(data.jibunAddress);
+    setJibun(data.jibunAddress);
+    console.log(data.zonecode);
     setPostCode(data.zonecode);
-
-    console.log(isOpen);
     setIsOpen(false);
-    data.preventDefualt();
+    data.preventDefault();
   }
 
   const onChangeId = e => {
@@ -200,20 +210,23 @@ function Sign() {
     else setIsEmail(false);
   }
   
-  const onClickSign = e => {
+  const Navigate = useNavigate();
+
+  useEffect(() => {
     if(isId && isPwd && isCheck && isName && isEmail) {
-      setSubmit(true);
-      alert('회원가입을 축하드립니다.');
-      e.preventDefualt();
-    } else {
-      console.log(isId)
-      console.log(isPwd)
-      console.log(isCheck)
-      console.log(isName)
-      console.log(isEmail)
       setSubmit(false);
-      alert('회원가입 실패 다시 확인 부탁드립니다.');
-      e.preventDefualt();
+      return;
+    } setSubmit(true);
+  }, [isId, isPwd, isCheck, isName, isEmail]);
+
+  const onClickSign = async () => {
+    try {
+      const memberRegister = await MemberApi.signup(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
+      if(memberRegister.data.statusCode === 200) {
+      alert("가입완료");
+    } Navigate('/');
+    } catch (e) {
+      alert("젠장");
     }
   }
 
@@ -290,7 +303,7 @@ function Sign() {
           </div>
           <div>
           </div>
-            <div className="btn-group" ><button style={{width : '402px' , height : '52px', padding : '12px' , fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
+            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
           </div>
       </form>
     </div>

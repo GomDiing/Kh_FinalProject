@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import './calendar.css';
-import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
 import PayPopup from '../Popup/PayPopup';
 import PopupHeader from '../Popup/PopupHeader';
 import PopupContent from '../Popup/PopupContent';
 import moment from 'moment';
 
+const SideWrap = styled.div`
+    .select-date {
+        color: #006edc;
+        font-size: medium;
+    }
+`
 const Styleside = styled.div`
     .side-header{
         text-align: center;
     }
     .side-content {
         padding: 0 1.5rem;
+        text-align: center;
     }
     .button {
         border: 1px solid #EF3F43;
@@ -50,6 +56,7 @@ const Styleside = styled.div`
     .text-center {
         margin-bottom: 0;
     }
+
 `;
 
 /** 
@@ -77,30 +84,33 @@ function TCalendar (props) {
         setIndex(1);
     }
     return (
-        <div>
-            <h3 className='text-center' style={{marginTop: '1.5rem', marginBottom: '1.5rem'}}>관람일</h3>
+        <SideWrap>
+            <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
-            formatDay={(locale, date) => date.toLocaleString("en", { day: "numeric" })}
+            formatDay={(locale, date) => date.toLocaleString("en", {day: "2-digit"})}
             minDate={new Date()}
             />
             </div>
             <div className='text-center'>
             <br/>
             <span className='bold'>선택한 날짜 : </span>{' '}
-            {date.toDateString("kr", { day: "numeric" })}
+            <strong className='select-date'>{date.toLocaleString("kr", {month:"short", day: "numeric"})}</strong>
             <hr />
             </div>
             <Styleside>
                 <div className='side-container'>
                     <h4 className='side-header'>회차</h4>
-                    <div className='side-content'><button className='button select' type='button'>1회 20:00</button><button className='button no' type='button'>1회 20:00</button></div>
+                    <div className='side-content'>
+                        <button className='button select' type='button'>1회 17:00</button>
+                        <button className='button no' type='button'>2회 20:00</button>
+                        </div>
                     <p className='remain'>잔여석 70</p>
                     <button className='pay-button' onClick={openModal}>예매하기</button>
                     {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} price={price} index={index} />}/>}
                 </div>
             </Styleside>
-        </div>
+        </SideWrap>
     );
 }
 

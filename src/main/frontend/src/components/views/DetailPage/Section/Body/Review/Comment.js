@@ -29,13 +29,15 @@ width: 100%;
       .comment--header {
         display: flex;
         align-items: center;
+        img, svg {
+          vertical-align: baseline;
+        }
         .username {
           color: black;
           font-weight: medium;
         }
         .you-tag {
           color: white;
-          font-weight: regular;
           font-size: 0.9rem;
           padding: 2px 10px 3px;
           background: #86868b;
@@ -48,6 +50,14 @@ width: 100%;
         }
         .comment--btn {
           display: none;
+        }
+        .reportBt {
+          border: none;
+          background-color: none;
+          margin-left: 1rem;
+        }
+        .rate {
+          margin-left: 1rem;
         }
       }
       .comment-content {
@@ -178,12 +188,14 @@ const Comment = ({
   editComment,
   commentDelete,
   setDeleteModalState,
+  setRate
 }) => {
   const [replying, setReplying] = useState(false);
   const [time, setTime] = useState("");
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(commentData.content);
   const [deleting, setDeleting] = useState(false);
+  const [report, setReport] = useState(false);
 
   // 댓글 작성 시간 받아오기
   const createdAt = new Date(commentData.createdAt);
@@ -210,9 +222,12 @@ const Comment = ({
     const finalId = id !== undefined ? id : commentData.id;
     commentDelete(finalId, finalType, commentData.id);
     setDeleting(false);
-  };
-
-
+  };    
+  
+  const acuseReport = () => {
+    setReport(true);
+  }
+  
   return (
     <CWrap>
     <div
@@ -224,10 +239,8 @@ const Comment = ({
         <div className="comment--body">
           <CommentHeader
             commentData={commentData}
-            setReplying={setReplying}
-            setDeleting={setDeleting}
-            setDeleteModalState={setDeleteModalState}
             setEditing={setEditing}
+            setReport={setReport}
             time={time}
           />
           {!editing ? (

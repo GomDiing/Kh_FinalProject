@@ -3,18 +3,18 @@ const HEADER = 'application/json';
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const MemberApi = {
-  signup : async function(id, password, name, email, road, jibun, detail, zipcode) {
+  signup : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode) {
     const signMember = {
-      id : id,
-      password : password,
-      name : name,
-      email : email,
+      id : inputId,
+      password : inputPwd,
+      name : inputName,
+      email : inputEmail,
       road : road,
       jibun : jibun,
-      detail : detail,
-      zipcode : zipcode
+      detail : address,
+      zipcode : postCode
     }
-    return await axios.post(TCAT_DOMAIN + "/member/sign", signMember, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   },
 
   findId : async function(name, email) {
@@ -22,7 +22,7 @@ const MemberApi = {
       name : name,
       email : email
     }
-    return await axios.post(TCAT_DOMAIN + "/member/find-id", findIdObj, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/find-id", findIdObj, HEADER);
   },
 
   findPassword : async function(id, name, email) {
@@ -31,29 +31,28 @@ const MemberApi = {
       name : name,
       email : email
     }
-    return await axios.post(TCAT_DOMAIN + "/member/find-password", findPwdObj, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
 
   searchEmail : async function(email) {
     const searchByEmail = {
       email : email
     }
-    return await axios.post(TCAT_DOMAIN + "/member/search-by-email", searchByEmail, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-email", searchByEmail, HEADER);
   },
 
-  memberUpdate : async function(index, id, password, name, email, road, jibun, detail, zipcode) {
+  memberUpdate : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode) {
     const updateMember = {
-      index : index,
-      id : id,
-      password : password,
-      name : name,
-      email : email,
+      id : inputId,
+      password : inputPwd,
+      name : inputName,
+      email : inputEmail,
       road : road,
       jibun : jibun,
-      detail : detail,
-      zipcode : zipcode
+      detail : address,
+      zipcode : postCode
     }
-    return await axios.post(TCAT_DOMAIN + "/mebmer/info-update", updateMember, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/mebmer/info-update", updateMember, HEADER);
   },
 
   myQnalist : async function(currentPage, setPageSize){
