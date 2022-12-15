@@ -1,6 +1,7 @@
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
+import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -29,4 +30,9 @@ public class AccuseController {
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_ACCUSE), HttpStatus.OK);
     }
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
+//    @PostMapping("/accuse/process")
+//    public ResponseEntity accuseProcess(@RequestBody ProcessAccuseDTO processAccuseDTO){
+//        accuseService.process(processAccuseDTO);
+//        return new ResponseEntity<>(true, HttpStatus.OK);
+//    }
 }

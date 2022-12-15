@@ -4,6 +4,7 @@ import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.EditMemberInfoDTO;
 import com.kh.finalproject.dto.member.SignupDTO;
 import lombok.Getter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "address")
+@EntityListeners(AuditingEntityListener.class)
 public class Address extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

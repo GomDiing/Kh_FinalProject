@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = 'application/json';
-const TCAT_DOMAIN= "http://localhost:8211";//server path
+
 
 
 const MainApi={
@@ -8,7 +8,7 @@ const MainApi={
   rankingWeek : async function(category,size){
       // category = category,
       // size = size;
-      return await axios.post(TCAT_DOMAIN + "/ranking/week", HEADER);
+      return await axios.post("/ranking/week", HEADER);
     },
    
 }

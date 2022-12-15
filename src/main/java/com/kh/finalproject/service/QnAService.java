@@ -2,6 +2,7 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.notice.PagingNoticeDTO;
 import com.kh.finalproject.dto.qna.*;
+import com.kh.finalproject.entity.Member;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public interface QnAService {
     /**
      * 회원 인덱스로 문의 조회 메서드
      */
-    PagingQnaDTO searchByMember(Long memberIndex, Pageable pageable);
+    PagingQnaDTO searchByMember(String memberId, Pageable pageable);
 
     /**
      * 문의 전체 조회 메서드
@@ -42,7 +43,7 @@ public interface QnAService {
      * 문의 응답 메서드
      * 적절한 응답 처리 후 문의 상태를 '응답 완료'로 변경
      */
-    Boolean response(ResponseQnADTO responseQnADTO);
+    void response(ResponseQnADTO responseQnADTO);
 
     /**
      * 추가 문의 메서드

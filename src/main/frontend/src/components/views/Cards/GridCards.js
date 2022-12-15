@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col } from 'antd';
-import NowLoading from '../../util/Loading';
-import xbox from "../../images/sad.jpg";
+import NowLoading from '../../../util/Loading';
+import xbox from "../../../images/sad.jpg";
 
-// 상세 페이지 카테고리별 배우 사진용 그리드카드
+// 상세 페이지 배우 사진용 그리드카드
 function GridCards(props) {
     // 로딩중
     const [Loading, setLoading] = useState(true);

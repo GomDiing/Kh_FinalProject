@@ -1,6 +1,4 @@
 
-
-
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.notice.NoticeDTO;
@@ -30,6 +28,6 @@ public class StatisticsController {
 
         StatisticsDTO statisticsDTO = statisticsService.selectByIndex(code);
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MOVIE_INQUIRE, statisticsDTO), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_STATIC, statisticsDTO), HttpStatus.OK);
     }
 }

@@ -12,6 +12,11 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_CREATE_NOTICE = "공지사항 작성 성공";
     public static final String SUCCESS_SEARCH_NOTICE = "공지사항 상세페이지 조회 성공";
     public static final String SUCCESS_DELETE_NOTICE = "공지사항 삭제 성공";
+    public static final String SUCCESS_UPDATE_NOTICE = "공지사항 수정 성공";
+    public static final String SUCCESS_DELETE_NOTICE_BY_CHECKBOX = "체크박스 공지사항 삭제 성공";
+    public static final String SUCCESS_SEARCH_QNALIST = "문의 목록 조회 성공";
+    public static final String SUCCESS_REPLY_QNA = "문의 답장 성공";
+    public static final String SUCCESS_SEARCH_STATIC = "예매자 통계 조회 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";
@@ -19,7 +24,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_UPDATE_MEMBER = "회원정보 수정 성공";
     public static final String SUCCESS_DELETE = "회원탈퇴가 완료되었습니다";
     public static final String SUCCESS_MYPAGE = "회원 정보 조회가 완료되었습니다";
-    public static final String SUCCESS_SEARCH_MEMBER_BY_EMAIL = "이메일로 회원 정보 조회 완료";
+    public static final String SUCCESS_SEARCH_MEMBER_BY_ID = "아이디로 회원 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME = "이메일과 이름으로 회원 아이디 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME = "아이디와 이메일과 이름으로 회원 아이디 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBERS_ACTIVE = "전체 일반 회원 정보 조회 완료";

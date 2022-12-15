@@ -53,15 +53,5 @@ public class Accuse extends BaseTimeEntity {
         return this;
     }
 
-//    신고하기
-//    public Accuse toEntity(CreateAccuseDTO createAccuseDTO){
-//        this.index = createAccuseDTO.getIndex();
-//        this.memberSuspect = createAccuseDTO.getMemberSuspect();
-//        this.memberVictim = createAccuseDTO.getMemberVictim();
-//        this.reason = createAccuseDTO.getReason();
-//        this.process = createAccuseDTO.getProcess();
-//        this.status = createAccuseDTO.getStatus();
-//        this.reviewComment = createAccuseDTO.getReviewComment();
-//        return this;
-//    }
+
 }

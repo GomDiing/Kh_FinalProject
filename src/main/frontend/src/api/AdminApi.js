@@ -1,7 +1,6 @@
 import axios from "axios";
-import { createSearchParams } from "react-router-dom";
 const HEADER = 'application/json';
-const TCAT_DOMAIN= "http://localhost:7777";//server path
+const TCAT_DOMAIN= "http://localhost:8118";//server path
 
 
 const AdminApi={
