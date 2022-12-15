@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components"
+import AdminApi from "../../../../../api/AdminApi";
 
 const MainNoticeContainer = styled.div` 
     @keyframes slide{
@@ -48,14 +50,6 @@ const MainNoticeContainer = styled.div`
         margin-left: 20px;
         margin-right: 10px;
     }
-    @media (max-width : 1440px){
-        /* font-size: 0.9em; */
-        /* height: 20px; */
-        .Noticeimg{
-            width: 20px;
-            height: 15px;
-        }
-    }
     `
 const notice = [
     {
@@ -83,7 +77,23 @@ const notice = [
 
 
 const MainNotice = () =>{
-    
+    // const [notice , setNotice] = useState([]);
+
+    // useEffect(() =>{
+    //     const noticeList = async() => {
+    //         try{
+    //             const currentPage = 1;
+    //             const pageSize = 2;
+    //             const res = await AdminApi.noticeInfo(currentPage, pageSize);
+    //             console.log(res);
+    //             setNotice(res.data.noticeDTOList);
+    //         } catch (e){
+    //             console.log(e)
+    //         }
+    //     }
+    //     noticeList(); 
+    // },[])
+    // console.log(notice);
     return(
         <MainNoticeContainer>
             <div className="MainNotice">

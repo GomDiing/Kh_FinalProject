@@ -23,8 +23,9 @@ public interface AccuseService {
     /**
      * 신고 처리 메서드
      * 관리자가 신고된 내용을 처리, 신고 사유를 반드시 기입
+     * (5번 이상 신고당하면 블랙리스트 목록으로 이동)
      */
-    void process(ProcessAccuseDTO processAccuseDTO);
+//    void process(ProcessAccuseDTO processAccuseDTO);
 
     /**
      * 전체 신고 조회 메서드

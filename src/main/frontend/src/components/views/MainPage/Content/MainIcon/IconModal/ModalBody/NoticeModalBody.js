@@ -7,6 +7,7 @@ const BodyContainer = styled.div`
         border-bottom:1px solid silver;
     }
     td{
+        opacity: 60%;
         cursor: pointer;
         width: 600px;
         overflow: hidden;
@@ -19,11 +20,18 @@ const BodyContainer = styled.div`
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+    td:hover{
+        font-weight: bold;
+        opacity: 100%;
+    }
     th{
         width: 100px;
         text-align: center;
         /* border-bottom:1px solid silver; */
     }
+    @media (max-width:1024px){
+  
+}
     
 `
 const notice = [

@@ -27,6 +27,9 @@ const PosterCategoryContainer = styled.div`
         background-color: #86868b;
         color: white;
     }
+    @media (max-width : 1440px){
+        margin: 10px 0;
+    }
     `
 
 const categories = [

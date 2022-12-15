@@ -1,6 +1,7 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.reserve.*;
+import com.kh.finalproject.service.ReserveService;
 
 import java.util.List;
 

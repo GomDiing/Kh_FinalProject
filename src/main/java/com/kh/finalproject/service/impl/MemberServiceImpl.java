@@ -1,4 +1,4 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
@@ -9,13 +9,13 @@ import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AddressRepository;
 import com.kh.finalproject.repository.MemberRepository;
+import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,7 +23,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
 
@@ -65,24 +65,8 @@ public class MemberServiceImpl implements MemberService{
         //주어진 회원과 연결된 주소 조회
         Address findAddress = addressRepository.findByMember(findMember);
 
-        // 엔티티로 변환 OK
-//        Member saveMember = new Member().toEntity(memberInfoDTO);
-
-        //주소 정보 갱신 (단순 값 교체)
-//        findAddress.updateAddress(memberInfoDTO);
-
         //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
         findMember.updateMember(findAddress, memberInfoDTO);
-
-        // 엔티티로 변환 OK
-//        Address findAddress = new Address().toEntity(memberInfoDTO, saveMember);
-
-//        Integer updateMember = memberRepository.updateInfo(saveMember, LocalDateTime.now(), findAddress);
-
-//        addressRepository.save(findAddress);
-
-//        if(updateMember == 2) return true;
-//        else throw new CustomException(CustomErrorCode.ERROR_UPDATE_MEMBER_INFO);
     }
 
     @Override
@@ -241,49 +225,7 @@ public class MemberServiceImpl implements MemberService{
         PagingMemberDTO pagingMemberDTO = new PagingMemberDTO().toPageDTO(page,totalPages,totalResults,memberDTOList);
 
         return pagingMemberDTO;
-
-//        for(Member e : memberList){
-//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
-//            memberBlackDTOList.add(memberDTO);
-//        }
-//        return memberBlackDTOList;
     }
-
-
-
-//    /**
-//     * 전체 일반 회원 조회 서비스
-//     */
-//    @Override
-//    public List<MemberDTO> searchAllActiveMember() {
-//        List<MemberDTO> memberDTOSList = new ArrayList<>();
-//        //활성 상태 회원 조회
-//        List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE)
-//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_ACTIVE_LIST));
-//
-//        for(Member e : memberList){
-//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
-//            memberDTOSList.add(memberDTO);
-//        }
-//        return memberDTOSList;
-//    }
-//
-//    /**
-//     * 전체 블랙리스트 회원 조회
-//     */
-//    @Override
-//    public List<MemberDTO> searchAllBlackMember() {
-//        //회원 목록
-//        List<MemberDTO> memberBlackDTOList = new ArrayList<>();
-//        //블랙 상태 회원 조회
-//        List<Member> memberList = memberRepository.findByStatus(MemberStatus.BLACKLIST)
-//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST));
-//        for(Member e : memberList){
-//            MemberDTO memberDTO = new MemberDTO().toDTO(e);
-//            memberBlackDTOList.add(memberDTO);
-//        }
-//        return memberBlackDTOList;
-//    }
 
     @Override
     public void updateTotalMemberInChart(Integer count) {
@@ -305,5 +247,21 @@ public class MemberServiceImpl implements MemberService{
             memberRepository.changeStatusMember(checkMemberDTO.getIndex(), MemberStatus.UNREGISTER)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
         }
+    }
+
+    @Override
+    @Transactional
+    public List<MemberDTO> updateStatusByCount() {
+        List<MemberDTO> memberDTOList = new ArrayList<>();
+
+        List<Member> findMemberList = memberRepository.findAllByMemberAccuseCountGreaterThan(4)
+                .orElseThrow(() -> new IllegalArgumentException("조회된 신고횟수가 5개 이상인 회원이 없습니다"));
+
+        for (Member member : findMemberList) {
+            member.updateBlackByCount();
+            memberDTOList.add(new MemberDTO().toDTOByCount(member));
+        }
+
+        return memberDTOList;
     }
 }

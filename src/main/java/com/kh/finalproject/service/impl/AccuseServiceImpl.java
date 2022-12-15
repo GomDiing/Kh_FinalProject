@@ -1,4 +1,4 @@
-package com.kh.finalproject.service;
+package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
@@ -14,6 +14,7 @@ import com.kh.finalproject.repository.AccuseRepository;
 import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.repository.ReviewCommentRepository;
 import com.kh.finalproject.response.DefaultErrorResponse;
+import com.kh.finalproject.service.AccuseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class AccuseServiceImpl implements AccuseService {
         //중복 신고 방지
         if (isNotAccuse(findVictimMember, reviewComment)) {
             reviewComment.addAccuseCount();
+            findSuspectMember.addMemberAccuseCount();
             Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
             accuseRepository.save(saveAccuse);
         }
@@ -73,10 +75,11 @@ public class AccuseServiceImpl implements AccuseService {
                 .isEmpty();
     }
 
-    @Override
-    public void process(ProcessAccuseDTO processAccuseDTO) {
-
-    }
+//    @Override
+//    public void process(ProcessAccuseDTO processAccuseDTO) {
+//        Accuse accuseProcess = accuseRepository.changeAccuseStatus(processAccuseDTO.getAccuseCount());
+//        return;
+//    }
 
     @Override
     public List<AccuseDTO> searchAll() {

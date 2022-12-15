@@ -85,6 +85,7 @@ const BlackList=()=>{
     return(
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
+
         <div className="blackList-container">
           <table>
                 <thead>
@@ -118,7 +119,7 @@ const BlackList=()=>{
                 </tbody>
               </table>
             </div>
-            <Pagination
+            <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
             current={currentPage} 
             pageSize={pageSize}
@@ -153,10 +154,10 @@ table,th,td {
   button{
     border: none;
     margin: 20px 10px;
-      background-color: #E3CAA5;
-      border-radius: 5px;
-      width: 340px;
-      height: 50px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    width: 340px;
+    height: 50px;
 }  
 }
 `;

@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components"
 const BodyContainer = styled.div`
+    a{
+        text-decoration:none;
+        color : inherit;
+    }
     table{
         border-bottom:1px solid silver;
     }
@@ -9,6 +14,11 @@ const BodyContainer = styled.div`
         width: 600px;
         height: 40px;
         border-bottom: 1px solid silver;
+        opacity: 60%;
+    }
+    td:hover{
+        font-weight: bold;
+        opacity: 100%;
     }
     th{
         width: 100px;
@@ -75,11 +85,11 @@ const AnswerModalBody = () => {
                         결제단계에서 다른 고객이 선택하신 좌석을 먼저 예매하는 경우가 있습니다.
                     </p>
                     <p>
-                        결제가 되었다는 메시지를 받으셨더라도 홈페이지의 <span className="strong">[예매내역]</span>에서 정상 예매되었는지
+                        결제가 되었다는 메시지를 받으셨더라도 홈페이지의 <Link to = '/MyPage/RList'><span className="strong">[예매내역]</span></Link>에서 정상 예매되었는지
                         꼭 확인해 주시기 바랍니다.
                     <br></br>
                         만약, 예매는 이루어지지 않고 결제만 완료가 되었다면  자동으로 취소가 진행되나,
-                        빠른 취소를 원하신다면 예매자 본인께서 <span className="strong">1:1문의하기</span>로 연락해 주시기 바랍니다.</p>
+                        빠른 취소를 원하신다면 예매자 본인께서 <Link to = '/MyPage/Contact'><span className="strong">1:1문의하기</span></Link>로 연락해 주시기 바랍니다.</p>
                 </div>
                 }
                 {isContents === 3 && 

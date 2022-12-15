@@ -8,8 +8,11 @@ import { useNavigate } from 'react-router-dom';
 const SignWrap = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #d2d2d2;
   .signwrap{
+    margin: 0 auto;
+    width: 50%;
+    background-color: #f5f5f5;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -264,7 +267,7 @@ function Sign() {
           </div>
 
           <div className="input-wrapper">
-            <label for="sign-name">name</label>
+            <label for="sign-name">Name</label>
               <div className="input-group"><span className="icon"><svg viewBox="0 0 501.333 501.333">
                     <path d="M455.466,49.6h-409.6C20.267,49.6,0,69.867,0,95.466v310.4c0,25.6,20.267,45.867,45.867,45.867h409.6 c25.6,0,45.867-21.333,45.867-45.867v-310.4C501.333,69.867,481.066,49.6,455.466,49.6z M430.933,91.2L250.666,252.267 L71.466,91.2H430.933z M459.733,405.867c0,2.133-2.133,4.267-4.266,4.267h-409.6c-2.133,0-4.267-2.133-4.267-4.267V122.133 L236.8,296c4.267,3.2,8.533,5.333,13.867,5.333c5.333,0,9.6-2.133,13.867-5.333l195.2-173.867V405.867z"/>
                     </svg></span><input type="text" value={inputName} id="sign-name" onChange={onChangeName} data-lpignore="true" />

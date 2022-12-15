@@ -123,7 +123,7 @@ const NoticeList=(props)=>{
                 </tbody>
               </table>
             </div>
-            <Pagination
+            <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
              current={currentPage} 
              pageSize={pageSize}
@@ -162,7 +162,7 @@ table,th,td {
       border: none;
       margin: 15px 0;
       margin: 20px 10px;
-      background-color: #92A9BD;
+      background-color: #f5f5f5;
       border-radius: 5px;
       width: 150px;
       height: 50px;

@@ -1,6 +1,4 @@
 
-
-
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.notice.NoticeDTO;

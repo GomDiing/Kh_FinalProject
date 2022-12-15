@@ -1,21 +1,26 @@
 package com.kh.finalproject.controller;
 
+import com.kh.finalproject.dto.qna.PagingQnaDTO;
 import com.kh.finalproject.dto.qna.QnADTO;
 import com.kh.finalproject.dto.qna.ResponseQnADTO;
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
 import com.kh.finalproject.service.QnAService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
+@CrossOrigin(origins = "http://localhost:3000")
 public class QnAController {
     private final QnAService qnAService;
 
@@ -32,4 +37,11 @@ public class QnAController {
         qnAService.response(responseQnADTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.BAD_REQUEST);
     }
+
+    /*qna 조회(마이페이지)*/
+    @GetMapping("/qna/mypage/{index}")
+        public ResponseEntity<Object>qnaMypageList(@PathVariable Long index, Pageable pageable){
+            PagingQnaDTO searchQnaList = qnAService.searchByMember(index,pageable);
+            return new ResponseEntity<>(searchQnaList, HttpStatus.OK);
+        }
 }

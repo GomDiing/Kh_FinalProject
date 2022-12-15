@@ -1,6 +1,7 @@
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
+import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -28,4 +29,6 @@ public class AccuseController {
         accuseService.create(createAccuseDTO, index);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_ACCUSE), HttpStatus.OK);
     }
+
+
 }

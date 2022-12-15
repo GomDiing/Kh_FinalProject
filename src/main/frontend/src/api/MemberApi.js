@@ -53,6 +53,10 @@ const MemberApi = {
       zipcode : postCode
     }
     return await axios.post(TCAT_DOMAIN + "/api/mebmer/info-update", updateMember, HEADER);
-  }
+  },
+
+  myQnalist : async function(currentPage, setPageSize) {
+    return await axios.get(TCAT_DOMAIN + `/notice/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
+  },
 }
 export default MemberApi;
