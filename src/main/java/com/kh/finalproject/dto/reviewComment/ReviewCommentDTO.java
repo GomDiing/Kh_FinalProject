@@ -1,7 +1,5 @@
 package com.kh.finalproject.dto.reviewComment;
 
-import com.kh.finalproject.entity.Member;
-import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
 import lombok.Getter;
 

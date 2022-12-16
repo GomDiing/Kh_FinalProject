@@ -20,5 +20,5 @@ public class CreateReviewCommentDTO {
     private Integer order;
     private String reviewCommentStatus;
     private Integer accuseCount;
-    private String productTitle;
+    private String code;
 }

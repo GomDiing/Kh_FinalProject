@@ -111,7 +111,6 @@ const InfoUpdate = (props) => {
   }
 
 
-  
   return(
     <InfoStyle>
       <div className="info-container">
