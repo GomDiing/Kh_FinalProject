@@ -145,8 +145,8 @@ def commitRankingChangeStatus(product_code, product_category, rank_status):
               'product_code = ' + product_code +
               ',and rank_status = ' + rank_status)
         t_rank = Table(t_rank_name, metadata_obj, autoload_with=engine, autoload=True)
-        updateQuery = t_rank.update().where(t_rank.c.product_code == product_code)\
-            .where(t_rank.c.ranking_category == product_category)\
+        updateQuery = t_rank.update().where(t_rank.c.product_code == product_code) \
+            .where(t_rank.c.ranking_category == product_category) \
             .values(ranking_status=rank_status)
         print(updateQuery)
 
@@ -219,6 +219,7 @@ def commitRankingDataList(rankingDataList):
         resultSelectQuery = db.execute(selectQuery)
 
         searchOrder = 0
+        searchRankingIndex = 0
         searchRankingStatus = 'READY'
 
         # 동일하지 않으면 기존 영화 정보를 갱신
@@ -227,6 +228,7 @@ def commitRankingDataList(rankingDataList):
         for resultDataRecord in resultSelectQuery:
             searchOrder = int(resultDataRecord['ranking_order'])
             searchRankingStatus = resultDataRecord['ranking_status']
+            searchRankingIndex = resultDataRecord['ranking_index']
             # print(str(resultDataRecord))
             print('searchOrder = ' + str(searchOrder))
 
@@ -234,8 +236,9 @@ def commitRankingDataList(rankingDataList):
             # isTrue = True
 
             print('Update Query!!!' + urlKey)
-            updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == searchOrder)\
-                .where(t_ranking.c.ranking_category == category)\
+            updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == searchOrder) \
+                .where(t_ranking.c.ranking_category == category) \
+                .where(t_ranking.c.ranking_index == searchRankingIndex) \
                 .values(ranking_order=currentOrder,
                         ranking_category=category,
                         product_code=str(urlKey),
@@ -599,7 +602,7 @@ def crawlingRankingFromDBMain(count, rankingDataList):
     # selectQuery = select(t_table).where(t_table.c.ranking_status).exists(isSearchableColumn)
     selectQuery = select(t_table).where((t_table.c.ranking_status == 'READY') | (t_table.c.ranking_status == 'SCHEDULED'))
     print(selectQuery)
-        # .where(t_table.c.ranking_status == 'SCHEDULED')
+    # .where(t_table.c.ranking_status == 'SCHEDULED')
 
     resultSelectQuery = db.execute(selectQuery)
 
