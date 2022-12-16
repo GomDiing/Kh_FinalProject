@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import lombok.Getter;
 
@@ -71,4 +72,16 @@ public class ReviewComment extends BaseTimeEntity {
     public void addAccuseCount() {
         this.accuseCount++;
     }
+
+    /*공연 후기 작성*/
+    public ReviewComment toEntity(CreateReviewCommentDTO createReviewCommentDTO){
+        this.member = createReviewCommentDTO.getMemberId();
+        this.title = createReviewCommentDTO.getTitle();
+        this.content = createReviewCommentDTO.getContent();
+        this.like = createReviewCommentDTO.getLike();
+        this.rate = createReviewCommentDTO.getRate();
+        this.status = createReviewCommentDTO.getReviewCommentStatus();
+    }
+
+
 }
