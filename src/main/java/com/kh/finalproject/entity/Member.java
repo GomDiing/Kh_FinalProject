@@ -1,6 +1,5 @@
 package com.kh.finalproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
@@ -8,10 +7,7 @@ import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +130,7 @@ public class Member extends BaseTimeEntity {
         this.id = deleteMemberDTO.getId();
         this.password = deleteMemberDTO.getPassword();
         this.status = MemberStatus.DELETE;
+        this.unregister = LocalDateTime.now();
 
         return this;
     }
