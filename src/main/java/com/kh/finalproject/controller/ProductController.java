@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -18,12 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("/api/product")
 public class ProductController {
 
     private final ProductService productService;
 
 //    상품 전체 조회
-    @GetMapping("/product")
+    @GetMapping("/list")
     public ResponseEntity productList(){
         List<ProductDTO> productDTOList = productService.searchAll();
         return new ResponseEntity<>(productDTOList, HttpStatus.OK);
@@ -32,7 +34,7 @@ public class ProductController {
     /**
      * 상품 제목으로 검색 기능 추가로 메인에서 필요한 기능 있으면 구현 예정
      */
-    @GetMapping("/product/search")
+    @GetMapping("/search")
     public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title) {
 
         List<BrowseKeywordDTO> productDTOList = productService.browseByKeyword(title);
