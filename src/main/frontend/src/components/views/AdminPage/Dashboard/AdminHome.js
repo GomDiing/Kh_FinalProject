@@ -5,6 +5,7 @@ import Chart from "./chart/Chart";
 import Profile from "./profile/Profile";
 
 
+
 const AdminBlock=styled.div`
         width: 85%;
         margin: 0 auto;

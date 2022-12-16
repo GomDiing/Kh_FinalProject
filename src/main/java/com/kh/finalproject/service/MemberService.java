@@ -105,6 +105,10 @@ public interface MemberService {
      */
     void changeMemberStatusToUnregister(List<CheckMemberDTO> memberIndexList);
 
+    /**
+     * 1주일 지난 회원들 DELETE -> STATUS UNREGISTER 변경
+     */
+    void unregisterCheck();
     /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
     List<MemberDTO> updateStatusByCount();
 }

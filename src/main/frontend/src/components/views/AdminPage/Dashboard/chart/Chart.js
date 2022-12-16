@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import AdminApi from '../../../../../api/AdminApi';
-import Loading from '../../../../../util/Loading'
 
 const ChartBlock=styled.div`
     .chart{
@@ -21,16 +20,7 @@ const ChartBlock=styled.div`
 const Chart = () => {
   const [chartData, setChartData] = useState([]);
   const [chart, setChart] = useState([]);
-  const [NowLoading, SetNowloading] = useState(true);
-
-  useEffect(() => {
-    if(chartData.length === 0) {
-      SetNowloading(true);
-    } else {
-      SetNowloading(false);
-    } 
-  },[]);
-
+  
   useEffect(() => {
     const getChartData = async()=> {
       try {
@@ -45,41 +35,19 @@ const Chart = () => {
                   discount: data.cumuDiscount,
                   all: data.finalAmount
                 }
-              }); setChart(mapChart);
-            }
-          } else {
-            console.log("자고싶다....좀 되라");
-          }
+              }); 
+              setChart(mapChart); 
+            }} 
           } catch (e) {
             console.log(e);
           }
       }
       getChartData();
-  }, []);
-
-
-  // useEffect(() => {
-  // const mapChart = chartData.map((data, index) => {
-  //   return {
-  //     XAxis: data.index,
-  //     income: data.cumuAmount,
-  //     discount: data.cumuDiscount,
-  //     all: data.finalAmount
-  //   }
-  // }); setChart(mapChart);
-  // }, []);
-
-
-
-
-  console.log(chartData);
-
-
+  }, [chart]);
 
     return (
         <ChartBlock>
         <div className='chart'>
-        {NowLoading && <div><Loading/></div>}
         <h3 className="chartTitle">누적 차트</h3>
         <ResponsiveContainer width="100%" aspect={4/1}>
         <BarChart
