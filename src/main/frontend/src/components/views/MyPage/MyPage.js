@@ -154,7 +154,7 @@ function MyPage() {
           </div>
           </div>
           <div className='MypageDataContainer' >
-            <MyBody id={info.id} pwd={info.pwd} name={info.name} email={info.email} road={info.road} detail={info.detail}/>
+            <MyBody />
           </div>
         </Content>
       </Layout>
@@ -164,14 +164,14 @@ function MyPage() {
   );
 }
 
-const MyBody = (info) => (
+const MyBody = () => (
   <>
     <Routes>
       <Route path='/RList' element={<RList/>}/>
       <Route path='/CList' element={<CList/>}/>
       <Route path='/Contact' element={<Contact/>}/>
       <Route path='/IqLIst' element={<IqList/>}/>
-      <Route path='/InfoUpdate' element={<InfoUpdate id={info.id} pwd={info.pwd} name={info.name} email={info.email} road={info.road} detail={info.detail}/>} />
+      <Route exact path='/InfoUpdate' element={<InfoUpdate />} />
     </Routes>
     </>
 );
