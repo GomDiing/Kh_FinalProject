@@ -15,9 +15,7 @@ import Inquiry from './Inquiry/Inquiry';
 import UpdateNotice from './Notice/UpdateNotice';
 
 const HeaderBlock=styled.div`
-  /* width: 100%; */
   background-color: #92A9BD;
-  /* display: flex; */
   justify-content: center;
   align-items: center;
   .logoContainer{

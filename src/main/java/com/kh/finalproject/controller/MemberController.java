@@ -75,7 +75,7 @@ public class MemberController {
     @PostMapping("/search-by-id")
     public ResponseEntity<DefaultResponse<Object>> searchMemberById(@Validated @RequestBody SearchByIdDTO searchByIdDTO) {
 
-        SignupDTO memberList =  memberService.searchById(searchByIdDTO.getId());
+        MemberDTO memberList =  memberService.searchById(searchByIdDTO.getId());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_ID, memberList), HttpStatus.OK);
     }

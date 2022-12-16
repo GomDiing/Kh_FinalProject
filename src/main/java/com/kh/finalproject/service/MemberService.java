@@ -20,9 +20,9 @@ public interface MemberService {
     void signup(SignupDTO signupDto);
 
     /**
-     * 이메일로 회원 조회
+     * 아이디로 회원 조회
      */
-    SignupDTO searchById(String id);
+    MemberDTO searchById(String id);
 
     /**
      * 회원 이름과 이메일로 아이디 찾기

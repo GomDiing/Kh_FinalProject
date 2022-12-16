@@ -29,7 +29,7 @@ public class SignupDTO {
     @NotNull(message =  "우편번호 필수 입력 값")
     private String zipcode;
 
-    // 이메일을 입력 받으면 그에 맞은 회원 조회
+    // 아이디를 입력 받으면 그에 맞는 회원 조회
     public SignupDTO toDTO(Member member, Address address) {
         this.id = member.getId();
         this.password = member.getPassword();
