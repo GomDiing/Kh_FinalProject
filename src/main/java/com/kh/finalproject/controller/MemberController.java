@@ -75,7 +75,7 @@ public class MemberController {
     @PostMapping("/search-by-id")
     public ResponseEntity<DefaultResponse<Object>> searchMemberById(@Validated @RequestBody SearchByIdDTO searchByIdDTO) {
 
-        SignupDTO memberList =  memberService.searchById(searchByIdDTO.getId());
+        MemberDTO memberList =  memberService.searchById(searchByIdDTO.getId());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_ID, memberList), HttpStatus.OK);
     }
@@ -111,6 +111,17 @@ public class MemberController {
         memberService.editMemberInfo(editMemberInfoDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
+    }
+
+    /**
+     * member delete status change
+     */
+    @PostMapping("/delete")
+    public ResponseEntity<DefaultResponse<Object>> deleteChangeMember(@Validated @RequestBody DeleteMemberDTO deleteMemberDTO) {
+
+        memberService.deleteChangeMember(deleteMemberDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE), HttpStatus.OK);
     }
 
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */

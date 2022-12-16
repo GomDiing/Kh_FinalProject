@@ -17,7 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static com.kh.finalproject.entity.enumurate.MemberStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +37,22 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void signup(SignupDTO signupDto) {
 
+        // DTO -> ENTITY 변환
         Member signMember = new Member().toEntity(signupDto);
 
-        // 아이디 중복 확인
+        // 해당 하는 아이디의 정보를 가져옴 재가입일 수도 있기 때문에 아이디 중복처리는 아직.
+        Optional<Member> findId = memberRepository.findById(signMember.getId());
+
+        // 아이디가 있다면 그 회원의 상태가 블랙리스트 또는 영구탈퇴라면 재가입 방지.
+        if(findId.isPresent()) {
+            if (findId.get().getStatus().getStatus().equals("Unregister")) {
+                throw new CustomException(CustomErrorCode.UNREGISTER_MEMBER_SIGN);
+            } else if(findId.get().getStatus().getStatus().equals("Blacklist")) {
+                throw new CustomException(CustomErrorCode.BLACKLIST_MEMBER_SIGN);
+            }
+        }
+
+        // 그 다음 절차에 따라 아이디 중복 확인
         validateDuplicateById(signupDto.getId());
 
         //이메일 중복 확인
@@ -108,14 +124,14 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     @Override
-    public SignupDTO searchById(String id) {
+    public MemberDTO searchById(String id) {
 
         Member findId = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         Address memberAddress = addressRepository.findByMember(findId);
 
-        return new SignupDTO().toDTO(findId, memberAddress);
+        return new MemberDTO().toDTO(findId, memberAddress);
     }
 
     /**
@@ -154,6 +170,32 @@ public class MemberServiceImpl implements MemberService {
         memberPassword.put("password", searchPassword.getPassword());
 
         return memberPassword;
+    }
+
+    /**
+     * 회원이 탈퇴 버튼 누르면 상태 변경 1주일 후에는 영구 탈퇴
+     */
+    @Override
+    @Transactional
+    public Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO) {
+
+        Optional<Member> findMember = memberRepository.findByIdAndPassword(deleteMemberDTO.getId(), deleteMemberDTO.getPassword());
+
+        // 1주일 후에 시간
+        LocalDateTime result = memberRepository.memberDelete(findMember.get().getIndex());
+
+        // 아이디 패스워드 일치하면 ACTIVE -> DELETE Change
+        if(findMember.isPresent()) {
+            findMember.get().changeMemberStatus(deleteMemberDTO);
+
+            // 탈퇴 시 update_time 바뀌고 이 시간이랑 1주일 뒤에 시간이랑 같아지면 자동으로 UNREGISTER.. 잘 모르겠습니다. 도움 요청..
+            if(result.isEqual(findMember.get().getUpdate_time())) {
+                findMember.get().changeMemberStatus();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

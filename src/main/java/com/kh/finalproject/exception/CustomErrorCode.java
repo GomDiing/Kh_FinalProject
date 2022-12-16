@@ -15,6 +15,8 @@ public enum CustomErrorCode {
     ERROR_UPDATE_UNREGISTER_MEMBER(StatusCode.BAD_REQUEST, "M003", "회원의 탈퇴 상태 변환이 실패했습니다"),
     EMPTY_MEMBER_ACTIVE_LIST(StatusCode.BAD_REQUEST, "M004", "조회한 활성 상태 회원 목록이 없습니다"),
     EMPTY_MEMBER_BLAK_LIST(StatusCode.BAD_REQUEST, "M005", "조회한 블랙 상태 회원 목록이 없습니다"),
+    UNREGISTER_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M005", "이미 탈퇴한지 1주일이 지난 회원입니다. (재가입 불가)"),
+    BLACKLIST_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M005", "저희 사이트에 블랙리스트 대상입니다."),
     DUPLI_EMAIL(StatusCode.BAD_REQUEST, "M006", "이미 가입된 이메일이 있습니다"),
     DUPLI_EMAIL_NAME(StatusCode.BAD_REQUEST, "M007", "이름과 이메일로 조회되는 회원이 있습니다"),
     NOT_MATCH_ID_EMAIL_NAME(StatusCode.BAD_REQUEST, "M008", "아이디 혹은 이메일 혹은 이름이 올바르지 않습니다"),

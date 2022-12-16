@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,24 @@ public class Member extends BaseTimeEntity {
         this.role = MemberRoleType.ROLE_USER;
         this.point = 0;
         this.status = MemberStatus.ACTIVE;
+        this.memberAccuseCount = 0;
+
+        return this;
+    }
+
+    /**
+     * @param deleteMemberDTO
+     */
+    public Member changeMemberStatus(DeleteMemberDTO deleteMemberDTO) {
+        this.id = deleteMemberDTO.getId();
+        this.password = deleteMemberDTO.getPassword();
+        this.status = MemberStatus.DELETE;
+
+        return this;
+    }
+
+    public Member changeMemberStatus() {
+        this.status = MemberStatus.UNREGISTER;
 
         return this;
     }
