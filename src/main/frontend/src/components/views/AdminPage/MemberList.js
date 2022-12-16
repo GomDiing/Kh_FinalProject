@@ -47,7 +47,7 @@ const MemberList=()=>{
         const res = await AdminApi.totalMember(currentPage, pageSize);
         if(res.data.statusCode === 200){
           setMemberList([...memberList, ...res.data.results.memberDTOList]);
-          console.log(setMemberList);
+          
           // 페이징 시작
           setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
@@ -61,7 +61,7 @@ const MemberList=()=>{
     };
     memberData();
   }, [currentPage]);
-
+  console.log(memberList);
     return(
         <MemberBlock>
           <TopBar name="일반회원관리"/>
@@ -82,7 +82,7 @@ const MemberList=()=>{
                   </tr>
                 </thead>
                 <tbody>
-                  {memberList.map(({index,id, name, date, email, address,createTime}) => (<tr>
+                  {memberList.map(({index,id, name, email, road, createTime}) => (<tr>
                   <td><input type='checkbox' name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked, index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />
@@ -91,7 +91,7 @@ const MemberList=()=>{
                     <td>{name}</td>
                     <td>{email}</td>
                     <td>{createTime}</td>
-                    <td>{address}</td>
+                    <td>{road}</td>
                 </tr>
                 ))}
                 </tbody>
