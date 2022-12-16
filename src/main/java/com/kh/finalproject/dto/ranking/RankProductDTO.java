@@ -7,18 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RankProductDTO {
-    private String posterUrl;
+    private String poster_url;
     private String title;
     private String location;
-    private String periodStart;
-    private String periodEnd;
+    private String period_start;
+    private String period_end;
 
     public RankProductDTO toDTO(Product product) {
-        this.posterUrl = product.getThumbPosterUrl();
+        this.poster_url = product.getThumbPosterUrl();
         this.title = product.getTitle();
         this.location = product.getLocation();
-        this.periodStart = product.getPeriodStart();
-        this.periodEnd = product.getPeriodEnd();
+        this.period_start = product.getPeriodStart();
+        this.period_end = product.getPeriodEnd();
 
         return this;
     }

@@ -72,12 +72,12 @@ const RecentComment=()=>{
             contents : "재미있습니다."
         },
         {
-            id : "3",
+            id : "4",
             title : "첫번째 후기 제목입니다.",
             contents : "재미있습니다."
         },
         {
-            id : "3",
+            id : "5",
             title : "첫번째 후기 제목입니다.",
             contents : "재미있습니다."
         },

@@ -18,7 +18,7 @@ public interface RankingService {
     /**
      * 월간 순위 상품 조회 메서드
      */
-    RankingMonDTO searchAllAboutMonth();
+    List<RankingMonDTO> searchAllAboutMonth();
 
     /**
      * 곧 종료 예정 순위 상품 조회 메서드

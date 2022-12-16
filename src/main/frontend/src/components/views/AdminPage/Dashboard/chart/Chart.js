@@ -1,7 +1,8 @@
-import React, { PureComponent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
-// import AdminApi from '../../../../../api/AdminApi';
+import AdminApi from '../../../../../api/AdminApi';
+import Loading from '../../../../../util/Loading'
 
 const ChartBlock=styled.div`
     .chart{
@@ -17,70 +18,70 @@ const ChartBlock=styled.div`
 }
 
 `;
-const Chart=()=>{
-//   const [chartAmount, setChartAmount] = useState('');
-//   const [chartMember, setChartMember] = useState('');
-//   const [chartReserve, setChartReserve] = useState('');
-//   const [chartData, setChartData] = useState([]);
+const Chart = () => {
+  const [chartData, setChartData] = useState([]);
+  const [chart, setChart] = useState([]);
+  // const [NowLoading, SetNowloading] = useState(true);
 
-//   useEffect(() => {
-//       const getChart = async()=> {
-//       try {
-//           const response = await AdminApi.getChart();
-//           setChartData(response.data);
-//           setChartAmount(response.data.cumuAmount);
-//           setChartMember(response.data.totalMember);
-//           setChartReserve(response.data.totalReserve);
-//           console.log(response.data);
-//       } catch (e) {
-//           console.log(e);
-//   }
-//   };
-//   getChart();
-// }, []);
+  useEffect(() => {
+    const getChartData = async()=> {
+      try {
+          const res = await AdminApi.getChart();
+          if(res.data.statusCode === 200){
+            setChartData([...chartData, ...res.data.results]);
+          } else {
+            // console.log("자고싶다....좀 되라");
+          }
+          } catch (e) {
+            console.log(e);
+          }
+      }
+    getChartData();
+    const mapChart = chartData.map((data) => {
+      return {
+        XAxis: data.index,
+        income: data.cumuAmount,
+        discount: data.cumuDiscount,
+        all: data.finalAmount
+      }
+    }); setChart(mapChart);
+  }, []);
 
 
-const datas = [
-  {
-    name: '9월',
-    수익: 1000,
-    회원: 1500,
-    예매: 2000,
-    amt: 2300,
-  },
-    {
-        name: '10월',
-        수익: 4000,
-        회원: 2400,
-        예매: 3000,
-        amt: 2400,
-      },
-      {
-        name: '11월',
-        수익: 3000,
-        회원: 1398,
-        예매: 2210,
-        amt: 2300,
-      },
-      {
-        name: '12월',
-        수익: 1000,
-        회원: 1500,
-        예매: 2000,
-        amt: 2300,
-      },
-];
+  // useEffect(() => {
+  // const mapChart = chartData.map((data, index) => {
+  //   return {
+  //     XAxis: data.index,
+  //     income: data.cumuAmount,
+  //     discount: data.cumuDiscount,
+  //     all: data.finalAmount
+  //   }
+  // }); setChart(mapChart);
+  // }, []);
+
+  // useEffect(() => {
+  //   if(chart.length === 0) {
+  //     SetNowloading(true);
+  //   } else {
+  //     SetNowloading(false);
+  //   } 
+  // },[]);
+
+
+  console.log(chartData);
+
 
 
     return (
         <ChartBlock>
+        {/* {NowLoading && <div><Loading/></div>} */}
         <div className='chart'>
         <h3 className="chartTitle">누적 차트</h3>
-      <ResponsiveContainer width="100%" aspect={4/1}>
-      <BarChart
-        //   width={500}
-        //   height={300}
-          data={datas}
+        <ResponsiveContainer width="100%" aspect={4/1}>
+        <BarChart
+          // width={500}
+          // height={300}
+          data={chart}
           margin={{
             top: 10,
             // right: 30,
@@ -89,15 +90,14 @@ const datas = [
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="index"/>
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="수익" fill="skyblue" />
-          <Bar dataKey="회원" fill="olive" />
-          <Bar dataKey="예매" fill="orange" />
+          <Bar dataKey="income" fill="skyblue" />
+          <Bar dataKey="discount" fill="olive" />
+          <Bar dataKey="all" fill="orange" />
         </BarChart>
-
       </ResponsiveContainer>
       </div>
       </ChartBlock>
