@@ -20,45 +20,30 @@ const ChartBlock=styled.div`
 const Chart = () => {
   const [chartData, setChartData] = useState([]);
   const [chart, setChart] = useState([]);
-
-
+  
   useEffect(() => {
     const getChartData = async()=> {
       try {
           const res = await AdminApi.getChart();
           if(res.data.statusCode === 200){
             setChartData([...chartData, ...res.data.results]);
-          } else {
-            console.log("자고싶다....좀 되라");
-          }
+            if(chart.length === 0) {
+              const mapChart = chartData.map((data) => {
+                return {
+                  XAxis: data.index,
+                  income: data.cumuAmount,
+                  discount: data.cumuDiscount,
+                  all: data.finalAmount
+                }
+              }); 
+              setChart(mapChart); 
+            }} 
           } catch (e) {
             console.log(e);
           }
       }
       getChartData();
-      const mapChart = chartData.map((data, index) => {
-        return {
-          XAxis: data.index,
-          income: data.cumuAmount,
-          discount: data.cumuDiscount,
-          all: data.finalAmount
-        }
-      }); setChart(mapChart);
-  }, []);
-
-
-  // useEffect(() => {
-  // const mapChart = chartData.map((data, index) => {
-  //   return {
-  //     XAxis: data.index,
-  //     income: data.cumuAmount,
-  //     discount: data.cumuDiscount,
-  //     all: data.finalAmount
-  //   }
-  // }); setChart(mapChart);
-  // }, []);
-
-  console.log(chartData);
+  }, [chart]);
 
     return (
         <ChartBlock>
