@@ -59,14 +59,15 @@ const MemberApi = {
     return await axios.get(TCAT_DOMAIN+`/qna/mypage/15?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
   },
   // qna 전송하기
-  sendQna : async function(inputSelect,inputQnaTitle,inputQnaContent) {
-    console.log("문의 값: " + inputSelect, inputQnaContent );
+  sendQna : async function(memberId,inputSelect,inputQnaTitle,inputQnaContent) {
+    console.log("문의 값: " +memberId, inputSelect,inputSelect, inputQnaContent );
     const params = {
+      memberId : memberId,
       category : inputSelect,
       title : inputQnaTitle,
       content : inputQnaContent
     }
-    return await axios.post(TCAT_DOMAIN + "/api/mebmer/qna/write", params, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/qna/write", params, HEADER);
   },
 }
 export default MemberApi;
