@@ -1,5 +1,6 @@
 package com.kh.finalproject.controller;
 
+import com.kh.finalproject.dto.qna.CreateQnADTO;
 import com.kh.finalproject.dto.qna.PagingQnaDTO;
 import com.kh.finalproject.dto.qna.QnADTO;
 import com.kh.finalproject.dto.qna.ResponseQnADTO;
@@ -23,7 +24,7 @@ import java.util.List;
 public class QnAController {
     private final QnAService qnAService;
 
-    //    qna 조회
+    //    qna 조회(관리자페이지)
     @GetMapping("/qna/list")
     public ResponseEntity<DefaultResponse<Object>> qnaList(Pageable pageable) {
         PagingQnaDTO qnADTOList = qnAService.searchAll(pageable);
@@ -41,6 +42,13 @@ public class QnAController {
     @GetMapping("/qna/mypage/{index}")
         public ResponseEntity<Object>qnaMypageList(@PathVariable Long index, Pageable pageable){
             PagingQnaDTO searchQnaList = qnAService.searchByMember(index,pageable);
-            return new ResponseEntity<>(searchQnaList, HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_QNALIST, searchQnaList), HttpStatus.OK);
         }
+
+        /*qna 작성하기*/
+    @PostMapping("/qna/write")
+    public ResponseEntity<DefaultResponse<Object>> writeQna(@RequestBody CreateQnADTO createQnADTO){
+        qnAService.create(createQnADTO);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEND_QNA), HttpStatus.OK);
+    }
 }

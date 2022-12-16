@@ -27,6 +27,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Integer> changeStatusMember(@Param("index") Long index, @Param("status") MemberStatus status);
 
     Optional<Member> findById(String id);
+//    List<Member> findById(String id);
 
     Optional<Member> findByEmail(String email);
 
@@ -55,5 +56,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("paramMember") Member member, @Param("nowDate") LocalDateTime now, @Param("paramAddress") Address address);
 
     Optional<List<Member>> findAllByMemberAccuseCountGreaterThan(Integer count);
+
+//    List<Member> findById(String id);
 
 }

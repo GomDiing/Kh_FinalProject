@@ -1,9 +1,11 @@
 
 package com.kh.finalproject.service.impl;
 import com.kh.finalproject.dto.qna.*;
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.QnA;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
+import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.repository.QnARepository;
 import com.kh.finalproject.service.QnAService;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +16,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class QnAServiceImpl implements QnAService {
     private final QnARepository qnARepository;
+    private final MemberRepository memberRepository;
 
+//   qna 작성
     @Override
-    public void create(CreateQnADTO createQnADTO) {
-
+    @Transactional
+    public Map<String,String> create(CreateQnADTO createQnADTO) {
+//        작성할때 회원 아이디로 회원 조회
+        Optional<Member> findOne = memberRepository.findById(createQnADTO.getMemberId());
+        if(findOne.isEmpty()) {
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
+        }
+        Member member = findOne.get(); // repository list로 쓰고 싶은데 optional findbyid 이미 쓰면 list findbyId 못쓰는지?
+//        qna 생성
+        QnA writeQna = new QnA().createQnA(member, createQnADTO.getTitle(), createQnADTO.getCategory(), createQnADTO.getContent());
+        qnARepository.save(writeQna);
+        return null;
     }
 
     @Override

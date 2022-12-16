@@ -69,8 +69,8 @@ const AdminApi={
     return await axios.post(TCAT_DOMAIN + "/notice/delete/member/check",params, "application/json");
 },
     // 일대일문의(qna) 전체 조회
-    qnaList : async function(){
-        return await axios.get(TCAT_DOMAIN + "/qna/list", HEADER)
+    qnaList : async function(currentPage ,setPageSize){
+        return await axios.get(TCAT_DOMAIN + `/qna/list?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
     },
     // qna 관리자 답장
     qnaReply : async function(inputReply, index) {
@@ -85,7 +85,7 @@ const AdminApi={
     getChart : async function() {
         return await axios.get(TCAT_DOMAIN + "/admin/chart", HEADER)
     },
-    
+
     /* 배너 등록하기(관리자) 아직 미구현   */ 
     uploadBanner : async function(){
         return await axios.post(TCAT_DOMAIN + "/admin/banner", HEADER)
