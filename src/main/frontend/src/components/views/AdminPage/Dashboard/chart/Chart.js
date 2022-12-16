@@ -21,7 +21,15 @@ const ChartBlock=styled.div`
 const Chart = () => {
   const [chartData, setChartData] = useState([]);
   const [chart, setChart] = useState([]);
-  // const [NowLoading, SetNowloading] = useState(true);
+  const [NowLoading, SetNowloading] = useState(true);
+
+  useEffect(() => {
+    if(chartData.length === 0) {
+      SetNowloading(true);
+    } else {
+      SetNowloading(false);
+    } 
+  },[]);
 
   useEffect(() => {
     const getChartData = async()=> {
@@ -46,7 +54,7 @@ const Chart = () => {
             console.log(e);
           }
       }
-    getChartData();
+      getChartData();
   }, []);
 
 
@@ -61,13 +69,7 @@ const Chart = () => {
   // }); setChart(mapChart);
   // }, []);
 
-  // useEffect(() => {
-  //   if(chart.length === 0) {
-  //     SetNowloading(true);
-  //   } else {
-  //     SetNowloading(false);
-  //   } 
-  // },[]);
+
 
 
   console.log(chartData);
@@ -76,8 +78,8 @@ const Chart = () => {
 
     return (
         <ChartBlock>
-        {/* {NowLoading && <div><Loading/></div>} */}
         <div className='chart'>
+        {NowLoading && <div><Loading/></div>}
         <h3 className="chartTitle">누적 차트</h3>
         <ResponsiveContainer width="100%" aspect={4/1}>
         <BarChart
