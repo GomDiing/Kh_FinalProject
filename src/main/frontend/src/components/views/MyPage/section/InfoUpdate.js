@@ -50,7 +50,7 @@ const postCodeStyle = {
 
 const InfoUpdate = () => {
   // 테스트용
-  const [id, setId] = useState('asdf1234');
+  const [id, setId] = useState('test456');
 
   const [inputId, setInputId] = useState('');
   const [inputPwd, setInputPwd] = useState('');

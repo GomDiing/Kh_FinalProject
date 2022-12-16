@@ -1,7 +1,6 @@
 import axios from "axios";
-const HEADER = 'application/json';
-//server path
-const TCAT_DOMAIN = "http://localhost:8100";
+const HEADER = 'application/json'; 
+const TCAT_DOMAIN = "http://localhost:8100"; //server path
 
 const AdminApi={
     //공지사항 쓰기 api
@@ -89,6 +88,11 @@ const AdminApi={
     /* 배너 등록하기(관리자) 아직 미구현   */ 
     uploadBanner : async function(){
         return await axios.post(TCAT_DOMAIN + "/admin/banner", HEADER)
-    }
+    },
+
+    // 최신 공연 후기 글 4개 조회(메인페이지 화면 같이 씀)
+    recentReview : async function(){
+        return await axios.get(TCAT_DOMAIN + "/dashboard/review", HEADER)
+    },
 }
 export default AdminApi;

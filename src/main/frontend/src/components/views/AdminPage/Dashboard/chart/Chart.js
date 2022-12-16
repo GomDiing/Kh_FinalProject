@@ -30,7 +30,7 @@ const Chart = () => {
             if(chart.length === 0) {
               const mapChart = chartData.map((data) => {
                 return {
-                  XAxis: data.index,
+                  index: data.index + '월',
                   income: data.cumuAmount,
                   discount: data.cumuDiscount,
                   all: data.finalAmount
