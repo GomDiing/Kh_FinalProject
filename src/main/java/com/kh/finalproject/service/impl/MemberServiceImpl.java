@@ -108,14 +108,14 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     @Override
-    public SignupDTO searchById(String id) {
+    public MemberDTO searchById(String id) {
 
         Member findId = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         Address memberAddress = addressRepository.findByMember(findId);
 
-        return new SignupDTO().toDTO(findId, memberAddress);
+        return new MemberDTO().toDTO(findId, memberAddress);
     }
 
     /**
