@@ -21,7 +21,15 @@ const ChartBlock=styled.div`
 const Chart = () => {
   const [chartData, setChartData] = useState([]);
   const [chart, setChart] = useState([]);
-  // const [NowLoading, SetNowloading] = useState(true);
+  const [NowLoading, SetNowloading] = useState(true);
+
+  useEffect(() => {
+    if(chartData.length === 0) {
+      SetNowloading(true);
+    } else {
+      SetNowloading(false);
+    } 
+  },[]);
 
   useEffect(() => {
     const getChartData = async()=> {
@@ -29,22 +37,24 @@ const Chart = () => {
           const res = await AdminApi.getChart();
           if(res.data.statusCode === 200){
             setChartData([...chartData, ...res.data.results]);
+            if(chart.length === 0) {
+              const mapChart = chartData.map((data) => {
+                return {
+                  XAxis: data.index,
+                  income: data.cumuAmount,
+                  discount: data.cumuDiscount,
+                  all: data.finalAmount
+                }
+              }); setChart(mapChart);
+            }
           } else {
-            // console.log("자고싶다....좀 되라");
+            console.log("자고싶다....좀 되라");
           }
           } catch (e) {
             console.log(e);
           }
       }
-    getChartData();
-    const mapChart = chartData.map((data) => {
-      return {
-        XAxis: data.index,
-        income: data.cumuAmount,
-        discount: data.cumuDiscount,
-        all: data.finalAmount
-      }
-    }); setChart(mapChart);
+      getChartData();
   }, []);
 
 
@@ -59,13 +69,7 @@ const Chart = () => {
   // }); setChart(mapChart);
   // }, []);
 
-  // useEffect(() => {
-  //   if(chart.length === 0) {
-  //     SetNowloading(true);
-  //   } else {
-  //     SetNowloading(false);
-  //   } 
-  // },[]);
+
 
 
   console.log(chartData);
@@ -74,8 +78,8 @@ const Chart = () => {
 
     return (
         <ChartBlock>
-        {/* {NowLoading && <div><Loading/></div>} */}
         <div className='chart'>
+        {NowLoading && <div><Loading/></div>}
         <h3 className="chartTitle">누적 차트</h3>
         <ResponsiveContainer width="100%" aspect={4/1}>
         <BarChart

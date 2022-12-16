@@ -20,6 +20,12 @@ public class RankProductDTO {
         this.period_start = product.getPeriodStart();
         this.period_end = product.getPeriodEnd();
 
+        if(product.getPeriodEnd() == null) {
+            this.period_end = "당일 공연";
+        } else {
+            this.period_end = product.getPeriodEnd();
+        }
+
         return this;
     }
 }
