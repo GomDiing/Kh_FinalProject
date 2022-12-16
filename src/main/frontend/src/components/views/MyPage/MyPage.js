@@ -82,7 +82,7 @@ function MyPage() {
   const [info, SetInfo] = useState('');
 
   // 회원 정보 테스트
-  const [id, setId] = useState('asdf1234');
+  const [id, setId] = useState('test456');
 
   useEffect(() => {
     const getInfo = async() => {
