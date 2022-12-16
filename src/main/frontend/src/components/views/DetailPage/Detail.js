@@ -126,7 +126,7 @@ function Detail() {
         <Content >
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
-            <Content className='posterCon' style={{border:'1px solid black'}}>
+            <Content className='posterCon'>
               <Poster/>
             </Content>
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
