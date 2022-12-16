@@ -113,6 +113,17 @@ public class MemberController {
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
     }
 
+    /**
+     * member delete status change
+     */
+    @PostMapping("/delete")
+    public ResponseEntity<DefaultResponse<Object>> deleteChangeMember(@Validated @RequestBody DeleteMemberDTO deleteMemberDTO) {
+
+        memberService.deleteChangeMember(deleteMemberDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE), HttpStatus.OK);
+    }
+
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
     @PostMapping("/accuse/process")
     public ResponseEntity changeBlacklistByCount(){

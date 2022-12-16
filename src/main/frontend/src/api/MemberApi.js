@@ -34,11 +34,11 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
 
-  searchEmail : async function(email) {
-    const searchByEmail = {
-      email : email
+  searchById : async function(id) {
+    const searchById = {
+      id : id
     }
-    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-email", searchByEmail, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-id", searchById, HEADER);
   },
 
   memberUpdate : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode) {
