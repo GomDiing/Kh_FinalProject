@@ -118,12 +118,16 @@ const MainHeader = () =>{
     }
     // console.log(categoryvalue);
 
+
     return(
         <>
             <HeaderContainer>
                 <Navbar expand="lg">
                 <Container fluid>
-                    <Navbar.Brand><Link to = "/"><img className="Logo" src="images/TCat.jpg" alt=""/></Link></Navbar.Brand>
+                    {/* <Navbar.Brand><Link to = "/"><img className="Logo" src="images/TCat.jpg" alt=""/></Link></Navbar.Brand> */}
+                    {/* 자꾸 상단 로고 엑박이 떠서 바꿔놨습니다~! */}
+                    <Navbar.Brand><Link to = "/"><img className="Logo" src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=""/></Link></Navbar.Brand>
+
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0"navbarScroll>
