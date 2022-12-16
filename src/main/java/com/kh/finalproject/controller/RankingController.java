@@ -1,6 +1,7 @@
 package com.kh.finalproject.controller;
 
 
+import com.kh.finalproject.dto.ranking.RankingCloseDTO;
 import com.kh.finalproject.dto.ranking.RankingMonDTO;
 import com.kh.finalproject.dto.ranking.RankingWeekDTO;
 import com.kh.finalproject.response.DefaultResponse;
@@ -38,6 +39,13 @@ public class RankingController {
         List<RankingMonDTO> rankingMonDTOList = rankingService.searchAllAboutMonth();
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_MONTH, rankingMonDTOList), HttpStatus.OK);
+    }
+    @GetMapping("/close")
+    public ResponseEntity<DefaultResponse<Object>> closeRankProduct() {
+        List<RankingCloseDTO> rankingCloseDTOList = rankingService.searchAllAboutCloseSoon();
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_CLOSE, rankingCloseDTOList), HttpStatus.OK);
+
     }
 }
 

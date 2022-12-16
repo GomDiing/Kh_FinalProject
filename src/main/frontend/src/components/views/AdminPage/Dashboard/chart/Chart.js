@@ -29,22 +29,24 @@ const Chart = () => {
           const res = await AdminApi.getChart();
           if(res.data.statusCode === 200){
             setChartData([...chartData, ...res.data.results]);
+            if(chart.length === 0) {
+              const mapChart = chartData.map((data) => {
+                return {
+                  XAxis: data.index,
+                  income: data.cumuAmount,
+                  discount: data.cumuDiscount,
+                  all: data.finalAmount
+                }
+              }); setChart(mapChart);
+            }
           } else {
-            // console.log("자고싶다....좀 되라");
+            console.log("자고싶다....좀 되라");
           }
           } catch (e) {
             console.log(e);
           }
       }
     getChartData();
-    const mapChart = chartData.map((data) => {
-      return {
-        XAxis: data.index,
-        income: data.cumuAmount,
-        discount: data.cumuDiscount,
-        all: data.finalAmount
-      }
-    }); setChart(mapChart);
   }, []);
 
 

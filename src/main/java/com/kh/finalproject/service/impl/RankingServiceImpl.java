@@ -1,13 +1,16 @@
 package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.ranking.RankProductDTO;
+import com.kh.finalproject.dto.ranking.RankingCloseDTO;
 import com.kh.finalproject.dto.ranking.RankingMonDTO;
 import com.kh.finalproject.dto.ranking.RankingWeekDTO;
 import com.kh.finalproject.entity.Product;
+import com.kh.finalproject.entity.RankingCloseSoon;
 import com.kh.finalproject.entity.RankingMonth;
 import com.kh.finalproject.entity.RankingWeek;
 import com.kh.finalproject.entity.enumurate.RankStatus;
 import com.kh.finalproject.repository.ProductRepository;
+import com.kh.finalproject.repository.RankingCloseRepository;
 import com.kh.finalproject.repository.RankingMonRepository;
 import com.kh.finalproject.repository.RankingWeekRepository;
 import com.kh.finalproject.service.RankingService;
@@ -27,6 +30,7 @@ public class RankingServiceImpl implements RankingService {
     private final RankingWeekRepository rankingWeekRepository;
     private final ProductRepository productRepository;
     private final RankingMonRepository rankingMonRepository;
+    private final RankingCloseRepository rankingCloseRepository;
 
     /**
      * 주간 랭킹 조회 서비스
@@ -68,7 +72,16 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
-    public RankingMonDTO searchAllAboutCloseSoon() {
-        return null;
+    public List<RankingCloseDTO> searchAllAboutCloseSoon() {
+        List<RankingCloseDTO> rankingCloseDTOS = new ArrayList<>();
+        List<RankingCloseSoon> rankingCloseSoonList = rankingCloseRepository.findAllByRankStatus(RankStatus.COMPLETE);
+        for(RankingCloseSoon rankingCloseSoon : rankingCloseSoonList) {
+            Optional<Product> product = productRepository.findByCode(rankingCloseSoon.getCode());
+            if(product.isPresent()) {
+                RankProductDTO rankProductDTO = new RankProductDTO().toDTO(product.get());
+                rankingCloseDTOS.add(new RankingCloseDTO().toDTO(rankingCloseSoon, rankProductDTO));
+            }
+        }
+        return rankingCloseDTOS;
     }
 }

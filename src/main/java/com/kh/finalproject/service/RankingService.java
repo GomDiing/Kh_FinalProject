@@ -1,5 +1,6 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.ranking.RankingCloseDTO;
 import com.kh.finalproject.dto.ranking.RankingMonDTO;
 import com.kh.finalproject.dto.ranking.RankingWeekDTO;
 
@@ -23,5 +24,5 @@ public interface RankingService {
     /**
      * 곧 종료 예정 순위 상품 조회 메서드
      */
-    RankingMonDTO searchAllAboutCloseSoon();
+    List<RankingCloseDTO> searchAllAboutCloseSoon();
 }
