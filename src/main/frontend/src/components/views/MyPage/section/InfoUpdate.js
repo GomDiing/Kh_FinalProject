@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DaumPostcodeEmbed } from "react-daum-postcode";
 import PopupDom from "../../SignPage/PopupDom";
@@ -48,32 +48,46 @@ const postCodeStyle = {
   padding: "7px",
 };
 
-const InfoUpdate = (props) => {
-  console.log(props.id);
-  console.log(props.name);
-  console.log(props.pwd);
-  console.log(props.email);
-  console.log(props.road);
-  console.log(props.detail);
+const InfoUpdate = () => {
+  // 테스트용
+  const [id, setId] = useState('asdf1234');
 
-
-  const [inputId, setInputId] = useState(props.id);
-  const [inputPwd, setInputPwd] = useState(props.pwd);
-  const [inputName, setInputName] = useState(props.name);
-  const [inputEmail, setInputEmail] = useState(props.email);
-  const [address, setAddress] = useState(props.detail);
+  const [inputId, setInputId] = useState('');
+  const [inputPwd, setInputPwd] = useState('');
+  const [inputName, setInputName] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
     // 주소 
-    let [fullAddress, setFullAddress] = useState(props.road);
-
+    let [fullAddress, setFullAddress] = useState('');
     // 도로명 주소
     const [road, setRoad] = useState("");
     // 지번 주소
     const [jibun, setJibun] = useState("");
-  
+
     // 우편 번호
     const [postCode, setPostCode] = useState("");
+
+    useEffect(() => {
+      const getInfo = async() => {
+        try {
+          const res = await MemberApi.searchId(id);
+          if(res.data.statusCode === 200) {
+            setInputId(res.data.results.id);
+            setInputPwd(res.data.results.pwd);
+            setInputName(res.data.results.name);
+            setInputEmail(res.data.results.email);
+            setFullAddress(res.data.results.road);
+            setAddress(res.data.results.detail);
+            console.log(res.data);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }; getInfo();
+    }, []);
+    
 
   const onChangePwd = e => setInputPwd(e.target.value);
   const onChangeName = e => setInputName(e.target.value);
@@ -85,31 +99,39 @@ const InfoUpdate = (props) => {
 
   const handlePostCode = (data) => {
     setFullAddress(data.address);
+    setRoad(data.roadAddress);
+    setJibun(data.jibunAddress);
+    setPostCode(data.zonecode);
+
     console.log(data.address);
     console.log(data.roadAddress);
     console.log(data.jibunAddress);
     console.log(data.zonecode);
 
-    setRoad(data.roadAddress);
-    setJibun(data.jibunAddress);
-    setPostCode(data.zonecode);
     data.preventDefault();
   }
 
   const Navigate = useNavigate();
 
+  console.log(inputId);
+  console.log(inputPwd);
+  console.log(inputName);
+  console.log(inputEmail);
+  console.log(road);
+  console.log(jibun);
+  console.log(address);
+  console.log(postCode);
 
   const onClickChange = async () => {
     try {
-      const memberUpdate = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
-      if(memberUpdate.data.statusCode === 200) {
+      const res = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode);
+      if(res.data.statusCode === 200) {
       alert("회원정보 변경 완료");
     } Navigate('/Mypage');
     } catch (e) {
-      alert("젠장");
+      alert("이러지마.....ㅠㅠ");
     }
   }
-
 
   
   return(
