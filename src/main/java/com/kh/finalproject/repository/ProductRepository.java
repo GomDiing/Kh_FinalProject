@@ -12,5 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     Optional<Product> findByCode(String code);
 
     List<Product> findAllByCode(String code);
+
+    List<Product> findByTitleContaining(String title);
 }
 

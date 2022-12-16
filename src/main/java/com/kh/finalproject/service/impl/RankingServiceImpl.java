@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -41,7 +42,7 @@ public class RankingServiceImpl implements RankingService {
     @Override
     public List<RankingWeekDTO> searchAllAboutWeek(String category, Pageable pageSize) {
 
-        List<RankingWeekDTO> weekDTOList = new ArrayList<>();
+        List<RankingWeekDTO> weekDTOList = new LinkedList<>();
 
         // 크롤링이 완료된 랭킹 코드를 찾음
         List<RankingWeek> rankingCodeList = rankingWeekRepository.findAllByRankStatusAndProductCategoryOrderByOrder(RankStatus.COMPLETE, ProductCategory.valueOf(category), pageSize);
@@ -55,7 +56,10 @@ public class RankingServiceImpl implements RankingService {
                 weekDTOList.add(new RankingWeekDTO().toDTO(rankingCode, rankProductDTO));
             }
         }
-        return weekDTOList;
+
+        Set<RankingWeekDTO> set = new HashSet<>(weekDTOList);
+        List<RankingWeekDTO> list = new ArrayList<>(set);
+        return list;
     }
 
     @Override

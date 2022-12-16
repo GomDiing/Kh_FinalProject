@@ -27,6 +27,7 @@ public class RankingController {
 
     private final RankingService rankingService;
 
+    // 기본 값 500개로 설정하면 처음에 다 보여줌
     @GetMapping("/week")
     public ResponseEntity<DefaultResponse<Object>> weekRankProduct(@RequestParam String category, @PageableDefault(size = 500) Pageable size) {
 

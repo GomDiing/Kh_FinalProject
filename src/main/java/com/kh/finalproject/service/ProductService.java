@@ -13,7 +13,7 @@ public interface ProductService {
     /**
      * 상품 검색 메서드
      */
-    ProductDTO browseByKeyword(BrowseKeywordDTO browseKeywordDTO);
+    List<BrowseKeywordDTO> browseByKeyword(String keyword);
 
     /**
      * 상품 전체 조회 메서드

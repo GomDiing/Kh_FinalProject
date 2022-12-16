@@ -1,10 +1,8 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
-import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
