@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import AdminApi from '../../../../../api/AdminApi';
-
+import Loading from '../../../../../util/Loading'
 
 const ChartBlock=styled.div`
     .chart{
@@ -20,8 +20,9 @@ const ChartBlock=styled.div`
 `;
 const Chart = () => {
   const [chartData, setChartData] = useState([]);
-  const [chart, setChart] = useState({});
-  
+  const [chart, setChart] = useState([]);
+  // const [NowLoading, SetNowloading] = useState(true);
+
   useEffect(() => {
     const getChartData = async()=> {
       try {
@@ -29,13 +30,13 @@ const Chart = () => {
           if(res.data.statusCode === 200){
             setChartData([...chartData, ...res.data.results]);
           } else {
-            console.log("자고싶다....좀 되라");
+            // console.log("자고싶다....좀 되라");
           }
           } catch (e) {
             console.log(e);
           }
       }
-      getChartData();
+    getChartData();
     const mapChart = chartData.map((data) => {
       return {
         XAxis: data.index,
@@ -45,8 +46,8 @@ const Chart = () => {
       }
     }); setChart(mapChart);
   }, []);
-  console.log(chartData);
-  
+
+
   // useEffect(() => {
   // const mapChart = chartData.map((data, index) => {
   //   return {
@@ -58,10 +59,22 @@ const Chart = () => {
   // }); setChart(mapChart);
   // }, []);
 
+  // useEffect(() => {
+  //   if(chart.length === 0) {
+  //     SetNowloading(true);
+  //   } else {
+  //     SetNowloading(false);
+  //   } 
+  // },[]);
+
+
+  console.log(chartData);
+
 
 
     return (
         <ChartBlock>
+        {/* {NowLoading && <div><Loading/></div>} */}
         <div className='chart'>
         <h3 className="chartTitle">누적 차트</h3>
         <ResponsiveContainer width="100%" aspect={4/1}>
