@@ -20,9 +20,9 @@ public interface MemberService {
     void signup(SignupDTO signupDto);
 
     /**
-     * 이메일로 회원 조회
+     * 아이디로 회원 조회
      */
-    SignupDTO searchById(String id);
+    MemberDTO searchById(String id);
 
     /**
      * 회원 이름과 이메일로 아이디 찾기
@@ -33,6 +33,12 @@ public interface MemberService {
      * 회원 아이디 이름 이메일로 비밀번호 찾기
      */
     Map<String, String> findPassword(String id, String name, String email);
+
+    /**
+     * 회원이 회원탈퇴 버튼 눌르면 실행되는 메서드
+     */
+    Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO);
+
     /**
      * 회원 탈퇴 메서드(관리자 강제탈퇴)
      * 실제로 삭제되지 않고 상태 변환 후 탈퇴 시간 기록
@@ -99,6 +105,10 @@ public interface MemberService {
      */
     void changeMemberStatusToUnregister(List<CheckMemberDTO> memberIndexList);
 
+    /**
+     * 1주일 지난 회원들 DELETE -> STATUS UNREGISTER 변경
+     */
+    void unregisterCheck();
     /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
     List<MemberDTO> updateStatusByCount();
 }

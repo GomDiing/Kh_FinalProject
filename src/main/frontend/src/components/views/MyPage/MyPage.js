@@ -10,6 +10,7 @@ import IqList from './section/Iquiry/IqList';
 import Footer from '../Footer/Footer';
 import InfoUpdate from './section/InfoUpdate';
 import styled from 'styled-components';
+import MemberApi from '../../../api/MemberApi';
 
 const MyInfoStyle = styled.div`
   width: 100%;
@@ -77,8 +78,27 @@ const MyInfoStyle = styled.div`
 
 function MyPage() {
   const { Content, Sider } = Layout;
-
   const [collapsed, setCollapsed] = useState(false);
+  const [info, SetInfo] = useState('');
+
+  // 회원 정보 테스트
+  const [id, setId] = useState('asdf1234');
+
+  useEffect(() => {
+    const getInfo = async() => {
+      try {
+        const res = await MemberApi.searchId(id);
+        if(res.data.statusCode === 200) {
+          SetInfo(res.data.results);
+          console.log(res.data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }; getInfo();
+    }, []);
+
+    console.log(info);
 
   useEffect(() => {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
@@ -124,17 +144,17 @@ function MyPage() {
                 </div>
                   <div className='info-des'>
                     <div className='description'>
-                      <h4><strong>지민</strong>님 오늘도 TCat을 방문해주셔 감사합니다. 좋은 하루 되세요</h4>
-                      <p>나의 아이디는 jimin0601</p>
-                      <p>나의 이메일은 jimin600155@naver.com</p>
-                      <p>현재 회원님의 포인트는 <input className='point-box' readOnly value={50000}/></p>
+                      <h4><strong>{info.name}</strong>님 오늘도 TCat을 방문해주셔 감사합니다. 좋은 하루 되세요</h4>
+                      <p>나의 아이디는 {info.id}</p>
+                      <p>나의 이메일은 {info.email}</p>
+                      <p>현재 회원님의 포인트는 {info.point}</p>
                     </div>
                   </div>
               </div>
           </div>
           </div>
           <div className='MypageDataContainer' >
-            <MyBody/>
+            <MyBody id={info.id} pwd={info.pwd} name={info.name} email={info.email} road={info.road} detail={info.detail}/>
           </div>
         </Content>
       </Layout>
@@ -144,14 +164,14 @@ function MyPage() {
   );
 }
 
-const MyBody = () => (
+const MyBody = (info) => (
   <>
     <Routes>
       <Route path='/RList' element={<RList/>}/>
       <Route path='/CList' element={<CList/>}/>
       <Route path='/Contact' element={<Contact/>}/>
       <Route path='/IqLIst' element={<IqList/>}/>
-      <Route path='/InfoUpdate' element={<InfoUpdate />} />
+      <Route path='/InfoUpdate' element={<InfoUpdate id={info.id} pwd={info.pwd} name={info.name} email={info.email} road={info.road} detail={info.detail}/>} />
     </Routes>
     </>
 );
