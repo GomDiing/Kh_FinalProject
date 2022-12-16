@@ -1,7 +1,6 @@
-import PosterCategory from "./PosterCategory";
 // import PosterImg from "./PosterImg.js";
 import styled from "styled-components";
-import PosterImg from './PosterImg';
+import RankingWeek from "./RankingWeek";
 
 const PosterContainer = styled.div`
     width: 47%;
@@ -25,11 +24,10 @@ const PosterContainer = styled.div`
     }
     `
 
-const Poster = (props) =>{
+const Poster = () =>{
     return(
         <PosterContainer>
-            <PosterCategory name = {props.name}/>
-            <PosterImg/>
+            <RankingWeek/>
         </PosterContainer>
     )
 }

@@ -51,57 +51,58 @@ const MainNoticeContainer = styled.div`
         margin-right: 10px;
     }
     `
-const notice = [
-    {
+// const notice = [
+//     {
 
-        id : 'Notice1',
-        categories : 'Notice',
-        text : '1번 공지사항 내용입니다.'
-    },
-    {
-        id : 'Notice2',
-        categories : 'Notice',
-        text : '2번 공지사항 내용입니다.'
-    },
-    {
-        id : 'Notice3',
-        categories : 'Event',
-        text : '3번 이벤트 내용입니다.'
-    },
-    {
-        id : 'Notice4',
-        categories : 'Event',
-        text : '4번 이벤트 내용입니다.'
-    },
-]
+//         id : 'Notice1',
+//         categories : 'Notice',
+//         text : '1번 공지사항 내용입니다.'
+//     },
+//     {
+//         id : 'Notice2',
+//         categories : 'Notice',
+//         text : '2번 공지사항 내용입니다.'
+//     },
+//     {
+//         id : 'Notice3',
+//         categories : 'Event',
+//         text : '3번 이벤트 내용입니다.'
+//     },
+//     {
+//         id : 'Notice4',
+//         categories : 'Event',
+//         text : '4번 이벤트 내용입니다.'
+//     },
+// ]
 
 
 const MainNotice = () =>{
-    // const [notice , setNotice] = useState([]);
 
-    // useEffect(() =>{
-    //     const noticeList = async() => {
-    //         try{
-    //             const currentPage = 1;
-    //             const pageSize = 2;
-    //             const res = await AdminApi.noticeInfo(currentPage, pageSize);
-    //             console.log(res);
-    //             setNotice(res.data.noticeDTOList);
-    //         } catch (e){
-    //             console.log(e)
-    //         }
-    //     }
-    //     noticeList(); 
-    // },[])
-    // console.log(notice);
+    const [notice , setNotice] = useState([]);
+
+    useEffect(() =>{
+        const noticeList = async() => {
+            try{
+                const res = await AdminApi.noticeInfo(0, 5);
+                if(res.data.statusCode === 200){
+                    setNotice(res.data.results.noticeDTOList);
+                }
+
+            } catch (e){
+                console.log(e)
+            }
+        }
+        noticeList(); 
+    },[])
+
     return(
         <MainNoticeContainer>
             <div className="MainNotice">
-                {notice.map(c=>(
+                {notice.map((notice)=>(
                     <div className="Notice1">
                         <img className="Noticeimg" src="https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/6562f7bc017800001.png?type=thumb&opt=C72x72.fwebp" alt=""></img>
-                        <p>{c.categories}</p>
-                        <span key={c.id} >{c.text}</span>
+                        <p>Notice</p>
+                        <span >{notice.content}</span>
                         <br></br>
                     </div>
                 ))}

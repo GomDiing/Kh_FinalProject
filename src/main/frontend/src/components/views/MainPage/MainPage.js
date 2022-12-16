@@ -57,6 +57,7 @@ const MainContainer = styled.div`
 const MainPage = () =>{
     const [ScrollY, setScrollY] = useState(0);
     const [BtnStatus, setBtnStatus] = useState(false);
+    
     const handleFollow = () => {
         setScrollY(window.pageYOffset);
         if(ScrollY > 100) {
@@ -92,8 +93,8 @@ const MainPage = () =>{
             <MainHeader/>
                 <ContentWarp/>
                     <ItemContainer>
-                        <MainPoster name = "주간 랭킹"/>
-                        <MainPoster name = "일간 랭킹"/>
+                        <MainPoster/>
+                        <MainPoster/>
                         
                         <MainNotice/>
                         <hr></hr>
