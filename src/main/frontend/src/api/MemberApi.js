@@ -54,9 +54,19 @@ const MemberApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/mebmer/info-update", updateMember, HEADER);
   },
-
+  // 마이페이지 qna 목록
   myQnalist : async function(currentPage, setPageSize){
     return await axios.get(TCAT_DOMAIN+`/qna/mypage/15?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
+  },
+  // qna 전송하기
+  sendQna : async function(inputSelect,inputQnaTitle,inputQnaContent) {
+    console.log("문의 값: " + inputSelect, inputQnaContent );
+    const params = {
+      category : inputSelect,
+      title : inputQnaTitle,
+      content : inputQnaContent
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/mebmer/qna/write", params, HEADER);
   },
 }
 export default MemberApi;
