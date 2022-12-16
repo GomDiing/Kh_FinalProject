@@ -35,15 +35,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByIdAndNameAndEmail(String id, String name, String email);
 
-    Optional<Member> findByIndex(Long index);
     Optional<List<Member>> findAllByMemberAccuseCountGreaterThan(Integer count);
 
     Optional<Member> findByIdAndPassword(String id, String password);
+
+    Optional<List<Member>> findAllByStatusAndUnregisterAfter(MemberStatus status, LocalDateTime time);
 
     @Query(nativeQuery = true,
     value = "select DATE_ADD(update_time, INTERVAL 7 DAY) from member where member_index = :member_index"
     )
     LocalDateTime memberDelete(@Param("member_index") Long index);
 //    List<Member> findById(String id);
-
 }

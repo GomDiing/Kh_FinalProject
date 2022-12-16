@@ -37,6 +37,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void signup(SignupDTO signupDto) {
 
+        unregisterCheck();
+
         // DTO -> ENTITY 변환
         Member signMember = new Member().toEntity(signupDto);
 
@@ -74,6 +76,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
 
+        unregisterCheck();
+
         //주어진 ID로 회원 조회
         Member findMember = memberRepository.findById(memberInfoDTO.getId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
@@ -96,6 +100,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public void validateDuplicateById(String id) {
+
+        unregisterCheck();
 
         Optional<Member> findId = memberRepository.findById(id);
 
@@ -141,6 +147,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Map<String, String> findMemberId(String name, String email) {
 
+        unregisterCheck();
+
         Member findNameAndEmail = memberRepository.findByNameAndEmail(name, email)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.DUPLI_EMAIL_NAME));
 
@@ -159,6 +167,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Map<String, String> findPassword(String id, String name, String email) {
+
+        unregisterCheck();
 
         Member findIdNameEmail = memberRepository.findByIdAndNameAndEmail(id, name, email)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_MATCH_ID_EMAIL_NAME));
@@ -179,22 +189,36 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO) {
 
-        Optional<Member> findMember = memberRepository.findByIdAndPassword(deleteMemberDTO.getId(), deleteMemberDTO.getPassword());
+        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
+        unregisterCheck();
 
-        // 1주일 후에 시간
-        LocalDateTime result = memberRepository.memberDelete(findMember.get().getIndex());
+        // 아이디 패스워드로 조회 성공하면
+        Member findMember = memberRepository.findByIdAndPassword(deleteMemberDTO.getId(), deleteMemberDTO.getPassword())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-        // 아이디 패스워드 일치하면 ACTIVE -> DELETE Change
-        if(findMember.isPresent()) {
-            findMember.get().changeMemberStatus(deleteMemberDTO);
+        // 조회한 회원의 정보를 DELETE 업데이트 !!
+        findMember.changeMemberStatus(deleteMemberDTO);
+        return true;
+    }
 
-            // 탈퇴 시 update_time 바뀌고 이 시간이랑 1주일 뒤에 시간이랑 같아지면 자동으로 UNREGISTER.. 잘 모르겠습니다. 도움 요청..
-            if(result.isEqual(findMember.get().getUpdate_time())) {
-                findMember.get().changeMemberStatus();
+    @Override
+    @Transactional
+    /**
+     * DELETE인 회원 중에 update_time 이 1주일 지난 회원은 UNREGISTER
+     */
+    public void unregisterCheck() {
+        // 현재 시간
+        LocalDateTime now = LocalDateTime.now();
+        // 1주일 뒤에 시간
+        LocalDateTime afterTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth() + 7, now.getHour(), now.getMinute());
+        // DELETE 회원 중 1주일이 지난 회원을 체크
+        Optional<List<Member>> deleteListMember = memberRepository.findAllByStatusAndUnregisterAfter(MemberStatus.DELETE, afterTime);
+        // 찾은 회원이 있으면 그 회원만 UNREGISTER 변경 !!
+        if(deleteListMember.isPresent()) {
+            for(Member deleteMember : deleteListMember.get()) {
+                // 1주일이 지난 회원들은 다 unregister status Change
+                deleteMember.changeMemberStatus();
             }
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -217,6 +241,9 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public PagingMemberDTO searchAllActiveMember(Pageable pageable) {
+
+        unregisterCheck();
+
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
         //활성 상태 회원 조회
@@ -246,6 +273,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public PagingMemberDTO searchAllBlackMember(Pageable pageable) {
+        unregisterCheck();
         //회원 목록
         List<MemberDTO> memberDTOList = new ArrayList<>();
         //블랙 상태 회원 조회
@@ -284,6 +312,8 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     public void changeMemberStatusToUnregister(List<CheckMemberDTO> checkMemberDTOList){
+        unregisterCheck();
+
         for(CheckMemberDTO checkMemberDTO : checkMemberDTOList){
             log.info("memberIndex = {}", checkMemberDTO.getIndex());
             memberRepository.changeStatusMember(checkMemberDTO.getIndex(), MemberStatus.UNREGISTER)
@@ -294,6 +324,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberDTO> updateStatusByCount() {
+        unregisterCheck();
+
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
         List<Member> findMemberList = memberRepository.findAllByMemberAccuseCountGreaterThan(4)
