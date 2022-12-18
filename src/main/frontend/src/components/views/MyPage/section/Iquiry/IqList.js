@@ -14,7 +14,6 @@ function IqList() {
   const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
-
   const [modalText, setModalText] = useState('');
 
 

@@ -13,7 +13,7 @@ const PostManagement=()=>{
   const navigate = useNavigate();
 
     //  리액트 페이지네이션 변수 
-    const [list, setlist] = useState([]); //db 에서 정보 받아오기(배열에  담기)
+    const [list, setList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
     const [pageSize, setPageSize] = useState(12); // 한페이지에 몇개씩 있을건지
     const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
@@ -37,7 +37,7 @@ const PostManagement=()=>{
     if(checked) {
       // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
       const idArray = [];
-      list.forEach((el) => idArray.push(el.index));
+      list.forEach((el) => idArray.push(el.code));
       setCheckItems(idArray);
       console.log(idArray);
     }
@@ -49,9 +49,9 @@ const PostManagement=()=>{
     useEffect(() => {
       const data = async()=> {
         try {
-          const res = await AdminApi.noticeInfo(currentPage, pageSize);
+          const res = await AdminApi.exhibitionList(currentPage, pageSize);
           if(res.data.statusCode === 200){
-            setlist([...list, ...res.data.results.noticeDTOList]);
+            setList([...list, ...res.data.results.productDTOList]);
             console.log(res.data.results);
             // 페이징 시작
             setTotalCount(res.data.results.totalResults); 
@@ -87,8 +87,6 @@ const PostManagement=()=>{
       } 
       setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
     };
-
-  
   
     return(
         <PostBlock>
@@ -102,26 +100,33 @@ const PostManagement=()=>{
                     // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                     checked={checkItems.length === list.length ? true : false} />
                     </th>
-                    <th width = "80px">글번호</th>
+                    <th width = "80px">카테고리</th>
                     <th>전시명</th>
                     <th>전시기간</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((data,key) => (<tr key={key}>
-                  <td><input type='checkbox' name={`select-${data.id}`} onChange={(e) => handleSingleCheck(e.target.checked, data.id)}
+                  {list.map(({code,title,productCategory,periodStart,periodEnd}) => (
+                  <tr>
+                  <td><input type='checkbox' name={`select-${code}`} onChange={(e) => handleSingleCheck(e.target.checked, code)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                  checked={checkItems.includes(data.id) ? true : false} />
+                  checked={checkItems.includes(code) ? true : false} />
                   </td>
-                    <td>{data.num}</td>
-                    <td>{data.title}</td>
-                    <td>{data.date}</td>
+                    <td>{productCategory}</td>
+                    <td>{title}</td>
+                    <td>{periodStart+"~"+periodEnd}</td>
                 </tr>
                 ))}
                 </tbody>
             </Table>
             </div>
-            <div className="delete"><button onClick={onClickDelete}>삭제하기</button></div>
+            <Pagination className="d-flex justify-content-center"
+             total={totalCount}  //총 데이터 갯수
+             current={currentPage} 
+             pageSize={pageSize}
+             onChange={(page) => {setCurrentPage(page); setList([]);}} //숫자 누르면 해당 페이지로 이동
+            />
+            <div className="post-btn-container"><button className="postBtn" onClick={onClickDelete}>삭제하기</button></div>
         </PostBlock>
     );
 }
@@ -138,15 +143,16 @@ const PostBlock=styled.div`
     flex-direction: column;
     text-align: center;
   }
-.delete{
-  float: right;
-  button{
+  .post-btn-container{
+    float: right;
+  }
+  .postBtn{
     border: none;
+    margin: 15px 0;
     margin: 20px 10px;
-        background-color: #92A9BD;
-        border-radius: 5px;
-        width: 340px;
-        height: 50px;
-}  
-}
+    background-color: #92A9BD;
+    border-radius: 5px;
+    width: 150px;
+    height: 50px;
+  }
 `;

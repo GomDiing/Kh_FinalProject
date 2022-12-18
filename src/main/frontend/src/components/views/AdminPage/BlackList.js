@@ -120,7 +120,6 @@ const BlackList=()=>{
                 ))}
                 </tbody>
             </Table>
-            <Button variant="primary" onClick={onClickDelete} >회원 탈퇴</Button>
             </div>
             <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
@@ -128,6 +127,7 @@ const BlackList=()=>{
             pageSize={pageSize}
             onChange={(page) => {setCurrentPage(page); setMemberList([]);}}
             />
+            <div className="black-btn-container"><button className="blackBtn" onClick={onClickDelete}>회원탈퇴</button></div>
         </MemberBlock>
     );
 
@@ -145,8 +145,16 @@ const MemberBlock=styled.div`
     flex-direction: column;
     text-align: center;
   }
-  button{
-    width: 8vw;
+  .black-btn-container{
     float: right;
+  }
+  .blackBtn{
+    border: none;
+    margin: 15px 0;
+    margin: 20px 10px;
+    background-color: #92A9BD;
+    border-radius: 5px;
+    width: 150px;
+    height: 50px;
   }
 `;

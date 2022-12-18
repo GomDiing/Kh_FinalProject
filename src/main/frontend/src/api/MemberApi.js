@@ -56,7 +56,7 @@ const MemberApi = {
   },
   // 마이페이지 qna 목록
   myQnalist : async function(currentPage, setPageSize){
-    return await axios.get(TCAT_DOMAIN+`/qna/mypage/15?page=${(currentPage - 1)}&size=${setPageSize}`, HEADER)
+    return await axios.get(TCAT_DOMAIN+`/api/qna/mypage/1?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
   },
   // qna 전송하기
   sendQna : async function(memberId,inputSelect,inputQnaTitle,inputQnaContent) {
@@ -67,7 +67,11 @@ const MemberApi = {
       title : inputQnaTitle,
       content : inputQnaContent
     }
-    return await axios.post(TCAT_DOMAIN + "/qna/write", params, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/qna/write", params, HEADER);
+  },
+  // 5번 이상 신고당했을 시, 블랙리스트 회원으로 전환(프론트 미구현)
+  changeBlack : async function(){
+    return await axios.get(TCAT_DOMAIN+ "/api/mebmer/accuse/process", HEADER)
   },
 }
 export default MemberApi;

@@ -11,7 +11,8 @@ const DetailApi={
             rate : rate,
             code : code
         }
-        return await axios.post(TCAT_DOMAIN+"/review/write", params, HEADER);
+        return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
     },
+    
   }
   export default DetailApi;

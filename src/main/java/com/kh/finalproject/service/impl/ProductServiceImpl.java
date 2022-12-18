@@ -2,6 +2,7 @@ package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.casting.CastingDTO;
 import com.kh.finalproject.dto.casting.CastingSimpleDTO;
+import com.kh.finalproject.dto.member.PagingMemberDTO;
 import com.kh.finalproject.dto.product.*;
 import com.kh.finalproject.dto.reserveTimeSeatPrice.ReserveTimeSeatPriceDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
@@ -18,6 +19,8 @@ import com.kh.finalproject.vo.CalendarReserveInfoVO;
 import com.kh.finalproject.vo.CastingInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,17 +59,23 @@ public class ProductServiceImpl implements ProductService {
         return browseKeywordDTOList;
     }
 
-
-    //    상품 전체 조회
+    /*관리자 페이지 전시 전체 조회(페이지네이션)*/
     @Override
-    public List<ProductDTO> searchAll() {
+    public PagingProductDTO searchAll(Pageable pageable) {
         List<ProductDTO> productDTOList = new ArrayList<>();
-        List<Product> productList = productRepository.findAll();
+        Page<Product> pageProductList = productRepository.findAll(pageable);
+
+        List<Product> productList = pageProductList.getContent();
+        Integer totalPages = pageProductList.getTotalPages();
+        Integer page = pageProductList.getNumber()+1;
+        Long totalResults = pageProductList.getTotalElements();
+
         for (Product e : productList) {
             ProductDTO productDTO = new ProductDTO().toDTO(e);
             productDTOList.add(productDTO);
         }
-        return productDTOList;
+        PagingProductDTO pagingProductDTO =new PagingProductDTO().toPageDTO(page,totalPages,totalResults,productDTOList);
+        return pagingProductDTO;
     }
 
     @Override
