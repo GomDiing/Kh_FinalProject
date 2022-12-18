@@ -13,14 +13,10 @@ const Contact = () => {
     const [inputQnaTitle, setInputQnaTitle] = useState("");
     const [inputQnaContent, setInputQnaContent] = useState("");
 
-    const onChangeSelect=(e)=>{setInputSelect(e.target);}
+    const onChangeSelect=(e)=>{setInputSelect(e.target.value);}
     const onChangeQnaTitle=(e)=>{setInputQnaTitle(e.target.value);}
     const onChangeQnaContent=(e)=>{setInputQnaContent(e.target.value);}
     console.log("셀렉트 표시 : " +inputSelect);
-
-    useEffect(()=>{
-        console.log("옵션값");
-    },[inputSelect])
 
     const onClickReply=async(e)=>{
         if(inputQnaContent.length <= 5 || inputQnaContent.length >= 1000) {
@@ -45,14 +41,20 @@ const data=["티켓예매/발권", "취소/환불", "신고"];
             wrapperCol={{span: 14,}}>
         <div style={{margin : '20px 0px'}}>
         <Form.Item label="문의 항목">
-            <Select style={{ width: 220 }} value={inputSelect || ''} onChange={onChangeSelect}>
-                {data.map((item)=>(
+        <select style={{ width: 220 }} value={inputSelect} onChange={onChangeSelect}>
+            <option>티켓예매/발권</option>
+            <option>취소/환불</option>
+            <option>신고</option>
+        </select>
+        {/* antd select 라이브러리 쓰면 value 값을 못읽음 */}
+            {/* <Select style={{ width: 220 }} value={inputSelect} onChange={onChangeSelect}>
+                {data.map((item)=>
                 // <Select.Option value={JSON.stringify(item)} key={item}>
-                <Select.Option value={item} key={item}>
+                <Select.Option value={item} key={item.id}>
                     {item}
                 </Select.Option>
-            ))}
-            </Select>
+            )}
+            </Select> */}
         </Form.Item>
                 <Form.Item label="문의 제목">
                     <Input type='text' onChange={onChangeQnaTitle} value={inputQnaTitle}/>
