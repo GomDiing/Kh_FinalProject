@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,19 +53,20 @@ public class ReviewCommentImpl implements ReviewCommentService {
         return;
 
     }
-    /*후기 대댓글 작성*/
+    /*후기 대댓글 작성(미구현)*/
     @Override
     public void reCreate(CreateReviewCommentDTO createReviewCommentDTO){
-        Integer commentLayer = reviewCommentRepository.findCommentGroup().orElse(0);
-        Integer commentOrder = reviewCommentRepository.findCommentGroup().orElse(0);
+//        Integer commentLayer = reviewCommentRepository.findCommentGroup().orElse(0);
+//        Integer commentOrder = reviewCommentRepository.findCommentGroup().orElse(0);
 
         ReviewComment reviewComment = new ReviewComment();
-        reviewComment.changeLayer(commentLayer,commentOrder);
+//        reviewComment.changeLayer(commentLayer,commentOrder);
         reviewCommentRepository.save(reviewComment);
     }
 
-    /*후기 댓글 삭제하기*/
+    /*후기 댓글 삭제하기(status 상태 변화 안됨)*/
     @Override
+    @Transactional
     public void remove(RemoveReviewCommentDTO removeReviewCommentDTO) {
 //        아이디 조회
         Optional<Member> findOne = memberRepository.findByIndex(removeReviewCommentDTO.getMemberIndex());
@@ -75,21 +79,21 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Optional<ReviewComment> findReview = reviewCommentRepository.findById(removeReviewCommentDTO.getIndex());
         ReviewComment reviewComment = findReview.get();
 
-//        changeReviewCommentStatus를 불러오고 싶은데
-        return;
+        /*상태 변화 안됨.. 왜이럴까*/
+        reviewComment.changeReviewCommentStatus(removeReviewCommentDTO);
     }
 
     /*후기 댓글 수정하기*/
     @Override
+    @Transactional
     public void update(UpdateReviewCommentDTO updateReviewCommentDTO) {
-
-//        Member findMember = memberRepository.findById()
-//
-//        Member findMember = memberRepository.findById(memberInfoDTO.getId())
-//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-//        /*작성한 댓글 아이디, index 조회*/
-//        Integer updateCount = reviewCommentRepository.updateNotice(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO));
-
+        // 회원 고유 index 값으로 회원 조회
+        Optional<Member> findOne = memberRepository.findByIndex(updateReviewCommentDTO.getMemberIndex());
+        if(findOne.isEmpty()){
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
+        }
+        Member member = findOne.get();
+        Integer updateCount = reviewCommentRepository.updateReviewComment(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO), LocalDateTime.now());
     }
 
     @Override

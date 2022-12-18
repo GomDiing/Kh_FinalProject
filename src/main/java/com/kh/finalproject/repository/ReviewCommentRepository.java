@@ -27,11 +27,12 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     value = "select * from review_comment")
     List<ReviewComment> selectAll(Pageable size);
 
-    /*review 수정 시 아이디, index 번호로 조회 후 수정*/
+
+    /*review 수정 시 게시글 index 번호로 조회 후 수정*/
     @Modifying
-    @Query("UPDATE ReviewComment r SET r.content = :#{#paramReviewComment.content},r.like = :#{#paramReviewComment.like}," +
-            "r.update_time = :updateTime where r.index = :#{#paramReviewComment.index}")
-    Integer updateNotice(@Param("paramReviewComment") ReviewComment reviewComment, @Param("updateTime") LocalDateTime now);
+    @Query("UPDATE ReviewComment r SET r.content = :#{#paramReviewComment.content},r.rate = :#{#paramReviewComment.rate},r.update_time = :updateTime " +
+            "where r.index = :#{#paramReviewComment.index}")
+    Integer updateReviewComment(@Param("paramReviewComment") ReviewComment reviewComment, @Param("updateTime")LocalDateTime now);
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 

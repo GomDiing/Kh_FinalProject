@@ -95,6 +95,7 @@ public class ReviewComment extends BaseTimeEntity {
     public ReviewComment changeLayer(Integer layer, Integer order){
         this.layer =layer +1;
         this.order = order +1;
+        return this;
     }
 
     /*대댓글 작성(진행중)*/
