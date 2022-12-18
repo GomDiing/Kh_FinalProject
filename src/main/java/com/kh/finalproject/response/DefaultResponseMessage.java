@@ -17,6 +17,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_SEARCH_QNALIST = "문의 목록 조회 성공";
     public static final String SUCCESS_REPLY_QNA = "문의 답장 성공";
     public static final String SUCCESS_SEARCH_STATIC = "예매자 통계 조회 성공";
+    public static final String SUCCESS_SEARCH_PRODUCT_DETAIL = "상품 상세 조회 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";
