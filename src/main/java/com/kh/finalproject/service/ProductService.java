@@ -1,8 +1,8 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.product.BrowseKeywordDTO;
-import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.product.ProductDTO;
+import com.kh.finalproject.dto.product.DetailProductDTO;
 
 import java.util.List;
 
@@ -23,5 +23,5 @@ public interface ProductService {
     /**
      * 상품 상세페이지 메서드
      */
-    DetailProductDTO detailProductPage(Long productCode);
+    DetailProductDTO detailProductPage(String productCode);
 }
