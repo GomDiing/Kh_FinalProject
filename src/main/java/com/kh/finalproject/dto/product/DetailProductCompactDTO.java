@@ -50,9 +50,11 @@ public class DetailProductCompactDTO {
         if (Objects.isNull(product.getCastingPosterUrl())) this.castingPosterUrl = "null";
         else this.castingPosterUrl = product.getCastingPosterUrl();
         this.location = product.getLocation();
-        this.detailLocation = product.getDetailLocation();
+        if (Objects.isNull(product.getDetailLocation())) this.detailLocation = "null";
+        else this.detailLocation = product.getDetailLocation();
         this.periodStart = product.getPeriodStart();
-        this.periodEnd = product.getPeriodEnd();
+        if (Objects.isNull(product.getPeriodEnd())) this.periodEnd = "null";
+        else this.periodEnd = product.getPeriodEnd();
         this.age = product.getAge();
         this.timeBreak = product.getTimeBreak();
         if (product.getTimeMin() == -1) this.timeMin = 0;

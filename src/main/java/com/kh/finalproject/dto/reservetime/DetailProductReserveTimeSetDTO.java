@@ -8,18 +8,18 @@ import java.util.List;
 
 @Getter
 public class DetailProductReserveTimeSetDTO {
-    String year;
-    String month;
-    String day;
+    Integer year;
+    Integer month;
+    Integer day;
     String date;
 
     @JsonProperty("reserve_list")
     List<DetailProductReserveTimeDTO> detailProductReserveTimeDTOList = new ArrayList<>();
 
     public DetailProductReserveTimeSetDTO toDTO(DetailProductReserveTimeDTO detailProductReserveTimeDTO) {
-        this.year = detailProductReserveTimeDTO.getDate().split("/")[0];
-        this.month = detailProductReserveTimeDTO.getDate().split("/")[1];
-        this.day = detailProductReserveTimeDTO.getDate().split("/")[2];
+        this.year = Integer.parseInt(detailProductReserveTimeDTO.getDate().split("/")[0]);
+        this.month = Integer.parseInt(detailProductReserveTimeDTO.getDate().split("/")[1]);
+        this.day = Integer.parseInt(detailProductReserveTimeDTO.getDate().split("/")[2]);
         this.date = detailProductReserveTimeDTO.getDate();
 
         return this;

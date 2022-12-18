@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.seatPrice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kh.finalproject.entity.SeatPrice;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  */
 @Getter
 public class SeatPriceDTO {
+    @JsonIgnore
     private Long index;
 
     private String seat;

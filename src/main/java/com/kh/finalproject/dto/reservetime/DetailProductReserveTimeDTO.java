@@ -31,7 +31,7 @@ public class DetailProductReserveTimeDTO {
     @JsonProperty("compact_casting")
     private List<String> castingList = new LinkedList<>();
 
-    @JsonProperty("reserve")
+    @JsonProperty("reserve_seat_time")
     private List<ReserveTimeSeatPriceDTO> reserveTimeSeatPriceListDTOList = new ArrayList<>();
 
     /**
