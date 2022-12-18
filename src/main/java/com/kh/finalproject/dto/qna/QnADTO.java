@@ -32,7 +32,7 @@ public class QnADTO {
         this.title = qna.getTitle();
         this.category=qna.getCategory();
         this.content=qna.getContent();
-        this.qnaStatus=qna.getStatus().getStatus();
+        this.qnaStatus=qna.getStatus().getDescription();
         this.reply = qna.getReply();
 //        this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.createTime = qna.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));

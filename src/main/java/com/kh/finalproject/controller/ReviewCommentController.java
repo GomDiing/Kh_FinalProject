@@ -1,7 +1,9 @@
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
 import com.kh.finalproject.dto.reviewComment.ReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -35,5 +37,27 @@ public class ReviewCommentController {
     public ResponseEntity<Object> writeReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
         reviewCommentService.create(createReviewCommentDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
+    }
+
+    /*공연 후기 대댓글 작성*/
+    @PostMapping("/review/add")
+    public ResponseEntity<Object> addReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
+        reviewCommentService.reCreate(createReviewCommentDTO);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK,DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
+    }
+
+    /*공연 후기 댓글 수정*/
+    @PostMapping("/review/update")
+    public ResponseEntity<Object> updateReview(@RequestBody UpdateReviewCommentDTO updateReviewCommentDTO){
+        reviewCommentService.update(updateReviewCommentDTO);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_REVIEW), HttpStatus.OK);
+    }
+
+    /*공연 후기 댓글 삭제*/
+    @PostMapping("/review/delete")
+    public ResponseEntity<Object> deleteReview(@RequestBody RemoveReviewCommentDTO removeReviewCommentDTO){
+        reviewCommentService.remove(removeReviewCommentDTO);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_REVIEW), HttpStatus.OK);
+
     }
 }

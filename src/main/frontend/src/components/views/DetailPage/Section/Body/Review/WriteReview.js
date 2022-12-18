@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Rate } from 'antd';
 import styled from "styled-components";
+import DetailApi from '../../../../../../api/DetailApi';
 
 const ACWrap = styled.div`
 width: 100%;
@@ -187,10 +188,14 @@ function WriteReview(props) {
   const { buttonValue, addComments, replyingTo, open, close } = props;
 
   // 별점
-  const [value, setValue] = React.useState(0);
+  const [rate, setRate] = React.useState(0);
+  const [content, setContent]  =useState("");
+  const [memberId, setMemberId] = useState("");
+  const[code, setCode] = useState("");
+
 
   function handleChange(value) {
-      setValue(value);
+    setRate(value);
   }
 
   const replyingToUser = replyingTo ? `@${replyingTo}, ` : "";
@@ -210,8 +215,17 @@ function WriteReview(props) {
     addComments(newComment);
     setComment("");
     close(true);
-    setValue(value);
+    setRate(rate);
   };
+
+  const onClickSubmit=async()=>{
+    const res = DetailApi.sendComment(memberId, content, rate, code);
+    if(res.data.statusCode === 200){
+        console.log("공지사항 작성 완료 후 목록으로 이동");
+    } else{
+        console.log("공지사항 작성 실패");
+    }
+}
 
 
   return (
@@ -226,13 +240,14 @@ function WriteReview(props) {
             </button>
           </header>
           <main>
-            <Rate allowHalf value={value} onChange={handleChange} style={{ fontSize: '1.8rem'}}/>
+            <Rate allowHalf value={rate} onChange={handleChange} style={{ fontSize: '1.8rem'}}/>
             <ACWrap>
               <div className="add-comment">
                 <textarea
                   className="comment-input"
                   placeholder="댓글을 작성해 보세요."
-                  value={replyingToUser + comment}
+                  // value={replyingToUser + comment}
+                  value={content}
                   onChange={(e) => {
                     setComment(
                       e.target.value.replace(replyingTo ? `@${replyingTo}, ` : "", "")
@@ -244,9 +259,12 @@ function WriteReview(props) {
           </main>
           <footer>
             <div className="btn-container">
-              <button className="add-btn" onClick={clickHandler}>
+            <button className="add-btn" onClick={onClickSubmit}>
                 {buttonValue}
               </button>
+              {/* <button className="add-btn" onClick={clickHandler}>
+                {buttonValue}
+              </button> */}
               <button className="cancel-btn" onClick={close}>
                   취소
               </button>

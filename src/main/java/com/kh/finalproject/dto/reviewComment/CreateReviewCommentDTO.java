@@ -10,9 +10,9 @@ import lombok.Setter;
 @Setter
 public class CreateReviewCommentDTO {
     private Long index;
+    private Long memberIndex;
     private String memberId;
     private String title;
-    private Integer like;
     private Integer rate;
     private String content;
     private Long group;
@@ -21,4 +21,5 @@ public class CreateReviewCommentDTO {
     private String reviewCommentStatus;
     private Integer accuseCount;
     private String code;
+    private String createTime;
 }

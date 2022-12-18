@@ -30,7 +30,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Override
     public void create(CreateReviewCommentDTO createReviewCommentDTO) {
     /*공연 후기 작성 시 회원 아이디로 회원 조회*/
-        Optional<Member> findOne = memberRepository.findById(createReviewCommentDTO.getMemberId());
+        Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
         if(findOne.isEmpty()){
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
@@ -45,19 +45,50 @@ public class ReviewCommentImpl implements ReviewCommentService {
         log.info("일치하는 공연명이 있습니다.", product);
 
         ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product, createReviewCommentDTO.getContent(),
-                createReviewCommentDTO.getLike(), createReviewCommentDTO.getRate());
+                 createReviewCommentDTO.getRate());
         reviewCommentRepository.save(writeReviewComment);
         return;
 
     }
-
+    /*후기 대댓글 작성*/
     @Override
-    public void remove(RemoveReviewCommentDTO removeReviewCommentDTO) {
+    public void reCreate(CreateReviewCommentDTO createReviewCommentDTO){
+        Integer commentLayer = reviewCommentRepository.findCommentGroup().orElse(0);
+        Integer commentOrder = reviewCommentRepository.findCommentGroup().orElse(0);
 
+        ReviewComment reviewComment = new ReviewComment();
+        reviewComment.changeLayer(commentLayer,commentOrder);
+        reviewCommentRepository.save(reviewComment);
     }
 
+    /*후기 댓글 삭제하기*/
+    @Override
+    public void remove(RemoveReviewCommentDTO removeReviewCommentDTO) {
+//        아이디 조회
+        Optional<Member> findOne = memberRepository.findByIndex(removeReviewCommentDTO.getMemberIndex());
+        if(findOne.isEmpty()){
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
+        }
+        Member member = findOne.get();
+        log.info("일치하는 아이디가 있습니다.", member);
+//        글 조회
+        Optional<ReviewComment> findReview = reviewCommentRepository.findById(removeReviewCommentDTO.getIndex());
+        ReviewComment reviewComment = findReview.get();
+
+//        changeReviewCommentStatus를 불러오고 싶은데
+        return;
+    }
+
+    /*후기 댓글 수정하기*/
     @Override
     public void update(UpdateReviewCommentDTO updateReviewCommentDTO) {
+
+//        Member findMember = memberRepository.findById()
+//
+//        Member findMember = memberRepository.findById(memberInfoDTO.getId())
+//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//        /*작성한 댓글 아이디, index 조회*/
+//        Integer updateCount = reviewCommentRepository.updateNotice(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO));
 
     }
 
@@ -76,7 +107,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         return null;
     }
 
-    /*공연 리뷰 리스트*/
+    /*공연 후기 리스트*/
     @Override
     public List<ReviewCommentDTO> searchAll(Pageable pageSize) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();

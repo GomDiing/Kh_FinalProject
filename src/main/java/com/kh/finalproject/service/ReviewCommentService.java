@@ -15,6 +15,9 @@ public interface ReviewCommentService {
      */
     void create(CreateReviewCommentDTO createReviewCommentDTO);
 
+    /*후기/댓글 대댓글 생성 메서드*/
+    void reCreate(CreateReviewCommentDTO createReviewCommentDTO);
+
     /**
      * 후기/댓글 삭제 메서드
      * 실제로 삭제되지않고 해당 후기/댓글 상태 변경

@@ -2,6 +2,8 @@ package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import lombok.Getter;
 
@@ -74,19 +76,9 @@ public class ReviewComment extends BaseTimeEntity {
         this.accuseCount++;
     }
 
-    /*공연 후기 작성*/
-//    public ReviewComment toEntity(CreateReviewCommentDTO createReviewCommentDTO){
-//        this.member = createReviewCommentDTO.getMemberId();
-//        this.title = createReviewCommentDTO.getTitle();
-//        this.content = createReviewCommentDTO.getContent();
-//        this.like = createReviewCommentDTO.getLike();
-//        this.rate = createReviewCommentDTO.getRate();
-//        this.status = createReviewCommentDTO.getReviewCommentStatus();
-//    }
-
-    public ReviewComment createReviewComment(Member member,Product product, String content, Integer like, Integer rate){
+    /*공연 후기 작성(댓글 형식)*/
+    public ReviewComment createReviewComment(Member member,Product product, String content, Integer rate){
         this.content = content;
-        this.like = like;
         this.rate = rate;
         this.status = ReviewCommentStatus.ACTIVE;
         this.group = 0L;
@@ -100,4 +92,36 @@ public class ReviewComment extends BaseTimeEntity {
         member.getReviewCommentList().add(this);
         return this;
     }
+    public ReviewComment changeLayer(Integer layer, Integer order){
+        this.layer =layer +1;
+        this.order = order +1;
+    }
+
+    /*대댓글 작성(진행중)*/
+    public ReviewComment createAddReviewComment(Member member, Product product, String content, Integer rate){
+        this.content = content;
+        this.rate = rate;
+        this.group = 0L;
+        this.layer = layer++;
+
+        this.member = member;
+        member.getReviewCommentList().add(this);
+        return this;
+
+    }
+
+    /*공연 후기 수정(진행중)*/
+    public ReviewComment UpdateReviewComment(UpdateReviewCommentDTO updateReviewCommentDTO){
+        this.index = updateReviewCommentDTO.getIndex();
+        this.rate = updateReviewCommentDTO.getRate();
+        this.content = updateReviewCommentDTO.getContent();
+        return this;
+    }
+
+    /*공연 후기 삭제 => 상태값 변경*/
+    public ReviewComment changeReviewCommentStatus(RemoveReviewCommentDTO removeReviewCommentDTO){
+        this.status = ReviewCommentStatus.DELETE;
+        return this;
+    }
+
 }

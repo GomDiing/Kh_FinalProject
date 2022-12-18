@@ -92,6 +92,7 @@ public class MemberController {
     /**
      * find password by id and name and email success
      */
+
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 

@@ -29,6 +29,9 @@ public class ReviewCommentDTO {
         this.like = reviewComment.getLike();
         this.rate = reviewComment.getRate();
         this.content = reviewComment.getContent();
+        this.group = reviewComment.getGroup();
+        this.layer = reviewComment.getLayer();
+        this.order = reviewComment.getOrder();
         this.reviewCommentStatus = reviewComment.getStatus().getStatus();
         this.accuseCount = reviewComment.getAccuseCount();
         this.productTitle = reviewComment.getProduct().getTitle();

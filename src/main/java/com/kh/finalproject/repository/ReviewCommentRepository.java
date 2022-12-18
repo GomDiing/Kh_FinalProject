@@ -1,5 +1,6 @@
 package com.kh.finalproject.repository;
 
+import com.kh.finalproject.entity.Notice;
 import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,16 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     @Query(nativeQuery = true,
     value = "select * from review_comment")
     List<ReviewComment> selectAll(Pageable size);
+
+    /*review 수정 시 아이디, index 번호로 조회 후 수정*/
+    @Modifying
+    @Query("UPDATE ReviewComment r SET r.content = :#{#paramReviewComment.content},r.like = :#{#paramReviewComment.like}," +
+            "r.update_time = :updateTime where r.index = :#{#paramReviewComment.index}")
+    Integer updateNotice(@Param("paramReviewComment") ReviewComment reviewComment, @Param("updateTime") LocalDateTime now);
+
+    Optional<ReviewComment> findByMember_Id(String memberId);
+
+
 
 
 }

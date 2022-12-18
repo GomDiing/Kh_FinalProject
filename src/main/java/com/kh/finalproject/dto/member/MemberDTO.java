@@ -29,6 +29,7 @@ public class MemberDTO {
     private String unregisterTime;
     private Integer memberAccuseCount;
     private String zipcode;
+    private Integer MemberAccuseCount;
 
     /**
      * 전체 일반 회원 조회 Entity -> DTO
@@ -66,6 +67,7 @@ public class MemberDTO {
             this.unregisterTime = "null";
         }
         else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.memberAccuseCount = member.getMemberAccuseCount();
         this.memberAccuseCount = member.getMemberAccuseCount();
 
         return this;

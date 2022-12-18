@@ -5,12 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AdminApi from "../../../api/AdminApi";
 import { useNavigate} from "react-router-dom";
 import { Pagination } from "antd";
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 
 const BlackList=()=>{
   const navigate = useNavigate();
   // 페이지네이션 변수
   const [memberList, setMemberList] = useState([]);
-  const [pageSize, setPageSize] = useState(7); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(12); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -67,6 +69,7 @@ const BlackList=()=>{
   const onClickDelete=async()=>{
     if(checkItems.length<1){
       alert("체크박스 한개 이상 체크해주세요")
+      navigate(0);
     } else{
       console.log(checkItems);
       const res = await AdminApi.deleteMemberAdmin(checkItems);
@@ -85,9 +88,8 @@ const BlackList=()=>{
     return(
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
-
         <div className="blackList-container">
-          <table>
+            <Table striped bordered hover>
                 <thead>
                   <tr>
                   <th width = "30px">
@@ -103,7 +105,7 @@ const BlackList=()=>{
                   </tr>
                 </thead>
                 <tbody>
-                {memberList.map(({index,id,name,email,createTime,memberStatus}) => (
+                {memberList.map(({index,id,name,email,createTime,memberAccuseCount}) => (
                 <tr>
                   <td><input type='checkbox' name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked, index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
@@ -113,11 +115,12 @@ const BlackList=()=>{
                     <td>{name}</td>
                     <td>{email}</td>
                     <td>{createTime}</td>
-                    <td>{memberStatus}</td>
+                    <td>{memberAccuseCount} 회</td>
                 </tr>
                 ))}
                 </tbody>
-              </table>
+            </Table>
+            <Button variant="primary" onClick={onClickDelete} >회원 탈퇴</Button>
             </div>
             <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
@@ -125,7 +128,6 @@ const BlackList=()=>{
             pageSize={pageSize}
             onChange={(page) => {setCurrentPage(page); setMemberList([]);}}
             />
-            <div className="delete"><button onClick={onClickDelete}>탈퇴하기</button></div>
         </MemberBlock>
     );
 
@@ -135,29 +137,16 @@ export default BlackList;
 const MemberBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
-  /* width: 100vw; */
   .blackList-container {
     width: 70vw;
     margin : 10px;
     display: flex;
-    border: 1px solid black;
     height: 60%;
     flex-direction: column;
     text-align: center;
-    padding: 3rem;
   }
-table,th,td {
-  border: 1px solid black;
-}
-.delete{
-  float: right;
   button{
-    border: none;
-    margin: 20px 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    width: 340px;
-    height: 50px;
-}  
-}
+    width: 8vw;
+    float: right;
+  }
 `;

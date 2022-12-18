@@ -145,7 +145,6 @@ const QnaModal = (props) => {
                         </button>
                     </header>
                     <main>
-                    <div>작성자</div>
                     {props.children}
                     <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply}/>
                     </main>
