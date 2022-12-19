@@ -92,8 +92,12 @@ function Detail() {
   const price = 150000;
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
+<<<<<<< HEAD
+  const [pCode, setPcode] = useState('');
+=======
   const [pCode, setPcode] = useState(22009226);
   const [ckList, setCkList] = useState([]);
+>>>>>>> 5408a823441ffaf058cd62f8e1a1824c010a0b6b
   const [comList, setComList] = useState([]);
   const [seat, setSeat] = useState([]);
   const [stat, setStat] = useState([]);
@@ -130,6 +134,8 @@ function Detail() {
   })
 
   useEffect(() => {
+    const code = window.localStorage.getItem("code")
+    setPcode(code);
     const getData = async()=> {
       try {
         const res = await DetailApi.getDetail(pCode);
