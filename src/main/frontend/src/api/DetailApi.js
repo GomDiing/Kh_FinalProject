@@ -13,6 +13,14 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
     },
-    
+
+    // 후기 삭제 
+    deleteComment : async function(index, memberIndex){
+        const params = {
+            index : index,
+            memberIndex : memberIndex
+        }
+        return await axios.post(TCAT_DOMAIN+"/api/review/delete", HEADER)
+    },
   }
   export default DetailApi;

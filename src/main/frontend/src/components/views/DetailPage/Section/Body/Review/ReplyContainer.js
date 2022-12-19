@@ -1,5 +1,6 @@
 import Reply from "./Reply";
 
+// 댓글 조회하는거..?
 const ReplyContainer = ({
   commentData,
   commentPostedTime,
@@ -8,6 +9,7 @@ const ReplyContainer = ({
   deleteComment,
   setDeleteModalState,
 }) => {
+  
   return (
     <div className="reply-container">
       {commentData.map((data) => (

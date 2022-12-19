@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import DetailApi from '../../../../../../api/DetailApi';
 
 const DModal = styled.div`
 .modal {
@@ -94,7 +95,6 @@ const DModal = styled.div`
   }
 }
 `
-
 const DeleteModal = (props) => {
   const { setDeleting, deleteComment, setDeleteModalState } = props;
 
@@ -103,8 +103,16 @@ const DeleteModal = (props) => {
     setDeleteModalState(false);
   };
 
-  const deleteBtnClick = () => {
+  const deleteBtnClick =()=> {
     deleteComment();
+    setDeleteModalState(false);
+  };
+
+  let index = 1;
+  let memberIndex = 1;
+
+  const onClickDelete=async()=>{
+    const res = await DetailApi.deleteComment(index, memberIndex); // 후기 index랑 회원 index 넘기기 
     setDeleteModalState(false);
   };
 
@@ -122,7 +130,7 @@ const DeleteModal = (props) => {
             </header>
             <main>삭제하시겠습니까?</main>
             <footer>
-            <button className="delete-btn" onClick={deleteBtnClick}>
+            <button className="delete-btn" onClick={onClickDelete}>
             삭제
             </button>
             <button className="cancel-btn" onClick={cancelDelete}>

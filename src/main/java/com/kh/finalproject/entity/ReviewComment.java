@@ -76,7 +76,7 @@ public class ReviewComment extends BaseTimeEntity {
         this.accuseCount++;
     }
 
-    /*공연 후기 작성(댓글 형식)*/
+    /*공연 후기 작성(댓글 형식)(회원 index, */
     public ReviewComment createReviewComment(Member member,Product product, String content, Integer rate){
         this.content = content;
         this.rate = rate;
@@ -97,7 +97,6 @@ public class ReviewComment extends BaseTimeEntity {
         this.order = order +1;
         return this;
     }
-
     /*대댓글 작성(진행중)*/
     public ReviewComment createAddReviewComment(Member member, Product product, String content, Integer rate){
         this.content = content;

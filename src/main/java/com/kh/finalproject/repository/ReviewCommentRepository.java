@@ -36,6 +36,8 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 
+    List<ReviewComment> searchAllByIndex(Long index);
+
 
 
 

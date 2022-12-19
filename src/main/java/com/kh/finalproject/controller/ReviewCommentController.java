@@ -30,7 +30,7 @@ public class ReviewCommentController {
     @GetMapping("/dashboard")
     public ResponseEntity<Object> recentReview(@PageableDefault(size = 4) Pageable size){
         List<ReviewCommentDTO> reviewCommentDTOList = reviewCommentService.searchAll(size);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_RECEIVE_QNA, reviewCommentDTOList), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW, reviewCommentDTOList), HttpStatus.OK);
     }
 
     /*공연 후기 작성 */
@@ -60,5 +60,11 @@ public class ReviewCommentController {
         reviewCommentService.remove(removeReviewCommentDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_REVIEW), HttpStatus.OK);
 
+    }
+    /*상세페이지에 전체 댓글 목록 */
+    @GetMapping("/all/{index}")
+    public ResponseEntity<Object> viewAllReview(@PathVariable Long index){
+        reviewCommentService.allComment(index);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW),HttpStatus.OK);
     }
 }

@@ -218,12 +218,13 @@ function WriteReview(props) {
     setRate(rate);
   };
 
+  // 후기 작성 api 
   const onClickSubmit=async()=>{
     const res = DetailApi.sendComment(memberId, content, rate, code);
     if(res.data.statusCode === 200){
-        console.log("공지사항 작성 완료 후 목록으로 이동");
+        console.log("작성 완료 후 목록으로 이동");
     } else{
-        console.log("공지사항 작성 실패");
+        console.log("작성 실패");
     }
 }
 

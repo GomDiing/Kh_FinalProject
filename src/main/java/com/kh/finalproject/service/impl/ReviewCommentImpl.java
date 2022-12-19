@@ -75,6 +75,17 @@ public class ReviewCommentImpl implements ReviewCommentService {
         }
         Member member = findOne.get();
         log.info("일치하는 아이디가 있습니다.", member);
+        Integer layer = removeReviewCommentDTO.getLayer();
+        Long group = removeReviewCommentDTO.getGroup();
+
+//        관리자가 삭제할 경우 댓글, 대댓글 다 삭제
+//        if(group == 0){
+//            if(){
+//                reviewCommentRepository.
+//                        return 0L
+//            }
+//            if()
+//        }
 //        글 조회
         Optional<ReviewComment> findReview = reviewCommentRepository.findById(removeReviewCommentDTO.getIndex());
         ReviewComment reviewComment = findReview.get();
@@ -111,13 +122,26 @@ public class ReviewCommentImpl implements ReviewCommentService {
         return null;
     }
 
-    /*공연 후기 리스트*/
+    /*공연 후기 리스트(페이지 사이즈 자른거)*/
     @Override
     public List<ReviewCommentDTO> searchAll(Pageable pageSize) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
         List<ReviewComment> reviewCommentList = reviewCommentRepository.selectAll(pageSize);
 
         for (ReviewComment e : reviewCommentList) {
+            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
+            reviewCommentDTOList.add(reviewCommentDTO);
+        }
+        return reviewCommentDTOList;
+    }
+
+    /*공연 후기 전체 리스트*/
+    @Override
+    public List<ReviewCommentDTO> allComment(Long index) {
+        List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByIndex(index);
+
+        for(ReviewComment e : reviewCommentList){
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
             reviewCommentDTOList.add(reviewCommentDTO);
         }
