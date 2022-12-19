@@ -65,7 +65,7 @@ const Styleside = styled.div`
  */
 function TCalendar (props) {
 
-    const { item_name, price, dateList } = props;
+    const {cast, reserve, dim, code, title, item_name, price, dateList } = props;
     // str -> date type convert
     function parseDate(dateList) {
         let y = dateList.substr(0,4);
@@ -128,40 +128,41 @@ function TCalendar (props) {
                 <div className='side-container'>
                     <h4 className='side-header'>회차</h4>
                     <div className='side-content'>
-                      {reserve_turn === 1 &&
-                      <>
-                      <div>
+                    {reserve_turn === 1 &&
+                    <>
+                    <div>
                         <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                      </div>
-                      {seatList && seatList.map(seat => {
+                    </div>
+                    {seatList && seatList.map(seat => {
                         return(
-                          <>
+                        <>
                             <div style={{display : 'inline'}} key={seat.index}>
-                              <span>{seat.seat} {seat.remain_quantity} / </span>
+                            <span>{seat.seat} {seat.remain_quantity} / </span>
                             </div>
-                          </>
+                        </>
                         );
-                      })}
-                      <hr />
-                      <h4 className='side-header'>캐스팅</h4>
-                      {castingList && castingList.map((cast) => {
+                    })}
+                    <hr />
+                    <h4 className='side-header'>캐스팅</h4>
+                    {castingList && castingList.map((cast) => {
                         return(
-                          <>
+                        <>
                             <div style={{display: 'inline'}} key={seatList.index}>
-                              <span>{cast}, </span>
+                            <span>{cast}, </span>
                             </div>
-                          </>
+                        </>
                         );
-                      })}
-                      </>
-                      }
-                      {reserve_turn > 1 &&
-                      <button className='button no' type='button'>2회 20:00</button>
-                      }
+                    })}
+                    </>
+                    }
+                    {reserve_turn > 1 &&
+                    <button className='button no' type='button'>2회 20:00</button>
+                    }
                         </div>
                         <p />
                     <button className='pay-button' onClick={openModal}>예매하기</button>
-                    {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} price={price} index={index} />}/>}
+                    {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} 
+                    seat={props.seat} title={title} price={price} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>
