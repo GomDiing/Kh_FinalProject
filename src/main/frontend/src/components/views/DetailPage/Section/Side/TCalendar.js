@@ -75,21 +75,19 @@ function TCalendar (props) {
     }
     // 첫 예매 가능한 날짜
     const first_reserve_day = parseDate(dateList.date);
+    // 회차 정보 0이면 상시 상품
     const reserve_turn = dateList.reserve_list[0].turn;
     // 첫 회차별 예매 상세 정보 2회차가 있으면 1도 있을 듯 나중에 2회차도 하려면 로직 짜야함.
     const detail_info = dateList.reserve_list[0];
+    // 첫 회차별 예매 시간
     const info_hour = detail_info.hour;
+    // 첫 회차별 예매 분
     const info_minute = detail_info.minute;
-
     // 좌석 리스트
     const seatList = detail_info.reserve_seat_time;
     // 캐스팅 리스트
     const castingList = detail_info.compact_casting;
 
-    console.log('데이트 리스트', dateList);
-    console.log('첫 회차별 예매 상세 정보', dateList.reserve_list[0]);
-    console.log('첫 회차 좌석 정보', seatList);
-    console.log('첫 회차 캐스팅 정보', castingList);
     const [date, setDate] = useState(new Date());
     const [modalOpen, setModalOpen] = useState(false);
     const [index, setIndex] = useState(1);
@@ -114,7 +112,7 @@ function TCalendar (props) {
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => date.toLocaleString("en", {day: "2-digit"})}
-            // 첫 날짜 집어넣음
+            // 예메 가능한 첫 날짜 집어넣음
             minDate={first_reserve_day}
             />
             </div>
@@ -128,6 +126,7 @@ function TCalendar (props) {
                 <div className='side-container'>
                     <h4 className='side-header'>회차</h4>
                     <div className='side-content'>
+                      {/* 1회차 정보 상시 상품은 안보임. */}
                       {reserve_turn === 1 &&
                       <>
                       <div>
@@ -155,6 +154,7 @@ function TCalendar (props) {
                       })}
                       </>
                       }
+                      {/* 2회차 정보가 들어오면 할 예정 */}
                       {reserve_turn > 1 &&
                       <button className='button no' type='button'>2회 20:00</button>
                       }
