@@ -3,9 +3,11 @@ package com.kh.finalproject.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.finalproject.dto.member.KakaoLoginResponseDTO;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
+import com.kh.finalproject.service.MemberService;
 import com.kh.finalproject.vo.kakao.KakaoLoginInfoAccount;
 import com.kh.finalproject.vo.kakao.KakaoLoginInfoProfile;
 import com.kh.finalproject.vo.kakao.KakaoLoginInfoProperties;
@@ -28,6 +30,8 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @Transactional(readOnly = true)
 public class SocialLoginServiceImpl {
+
+    private final MemberService memberService;
     @Value("${kakao.client-id}")
     private String kakaoId;
 
@@ -89,7 +93,9 @@ public class SocialLoginServiceImpl {
                 String nickname = properties.getNickname();
                 String email = kakao_account.getEmail();
 
-                return new KakaoLoginResponseDTO().toDTO(email, nickname);
+                Boolean isJoin = memberService.searchByEmailSocialLogin(email);
+
+                return new KakaoLoginResponseDTO().toDTO(email, isJoin);
             }
 
         } catch (Exception e) {

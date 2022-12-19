@@ -41,6 +41,10 @@ public class SocialLoginController {
 
         KakaoLoginResponseDTO kakaoLoginResponse = socialLoginService.processKakaoLogin(authCode, res, session);
 
+        res.setHeader("ProviderType", kakaoLoginResponse.getProviderType());
+        res.setHeader("IsJoined", kakaoLoginResponse.getIsJoin());
+        res.setHeader("MemberEmail", kakaoLoginResponse.getEmail());
+
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_KAKAO_SIGNUP, kakaoLoginResponse), HttpStatus.OK);
     }
 }

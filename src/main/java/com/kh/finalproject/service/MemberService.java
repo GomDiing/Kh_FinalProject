@@ -24,6 +24,11 @@ public interface MemberService {
     MemberDTO searchById(String id);
 
     /**
+     * 이메일로 회원 조회 (소셜 로그인)
+     */
+    Boolean searchByEmailSocialLogin(String email);
+
+    /**
      * 회원 이름과 이메일로 아이디 찾기
      */
     Map<String, String> findMemberId(String name, String email);

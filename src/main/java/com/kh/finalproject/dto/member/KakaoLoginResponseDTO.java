@@ -5,11 +5,14 @@ import lombok.Getter;
 @Getter
 public class KakaoLoginResponseDTO {
     String email;
-    String nickname;
+    String isJoin;
+    String providerType;
 
-    public KakaoLoginResponseDTO toDTO(String email, String nickname) {
+    public KakaoLoginResponseDTO toDTO(String email, Boolean isJoin) {
         this.email = email;
-        this.nickname = nickname;
+        if (isJoin) this.isJoin = "true";
+        else this.isJoin = "false";
+        this.providerType = "kakao";
 
         return this;
     }
