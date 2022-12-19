@@ -180,7 +180,7 @@ function Detail() {
           </Layout>
 
           <Content>
-              <div style={{width: '70%', height: '100rem'}}>
+              <div style={{width: '70%'}}>
               <Tabs
                 id="controlled-tab-example"
                 activeKey={key}
