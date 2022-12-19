@@ -55,4 +55,7 @@ public class Reserve extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "reserve")
     private List<MemberReserve> memberReserveList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<KakaoPay> kakaoPayList = new ArrayList<>();
 }
