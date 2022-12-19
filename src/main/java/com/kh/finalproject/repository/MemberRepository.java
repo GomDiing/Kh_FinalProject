@@ -1,6 +1,5 @@
 package com.kh.finalproject.repository;
 
-import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import org.springframework.data.domain.Page;
@@ -37,7 +36,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByIdAndNameAndEmail(String id, String name, String email);
 
-    Optional<List<Member>> findAllByMemberAccuseCountGreaterThan(Integer count);
+    Optional<List<Member>> findAllByAccuseCountGreaterThan(Integer count);
 
     Optional<Member> findByIdAndPassword(String id, String password);
 
