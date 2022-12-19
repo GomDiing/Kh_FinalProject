@@ -67,15 +67,14 @@ public class MemberDTO {
             this.unregisterTime = "null";
         }
         else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        this.memberAccuseCount = member.getMemberAccuseCount();
-        this.memberAccuseCount = member.getMemberAccuseCount();
+        this.memberAccuseCount = member.getAccuseCount();
 
         return this;
     }
     public MemberDTO toDTOByCount(Member member){
         this.index = member.getIndex();
         this.memberStatus = member.getStatus().getStatus();
-        this.memberAccuseCount = member.getMemberAccuseCount();
+        this.memberAccuseCount = member.getAccuseCount();
         return this;
 
     }

@@ -149,27 +149,17 @@ function PopupContent (props) {
     <div>
       <h2>좌석 선택</h2>
       <div className='seat-container'>
-        <ul>
-          <span className='seat seat-vip'/>
-            <li>VIP석 0석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-r'/>
-            <li>R석 5석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-s'/>
-            <li>S석 28석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-a'/>
-            <li>A석 94석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
+      {props.seat && props.seat.map((seats, index) => (
+        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
+          <li className="infoPriceItem">
+            <span className="name">{seats.seat}</span>
+            <span className="price">{seats.price}</span>
+          </li> <br />
         </ul>
+      ))}
       </div>
         <hr />
-        <MyInfo item_name={item_name} date={date} cancelday={cancelday} />
+        <MyInfo title={props.title} item_name={item_name} date={date} cancelday={cancelday} />
     </div>
     }
     {index === 2 &&
@@ -271,7 +261,7 @@ function PopupContent (props) {
     return(
       <div>
       <div>
-          <MyInfo cancelday={cancelday} item_name={item_name} date={date} value={value} ticket={ticket} tax={tax} total={total} />
+          <MyInfo cancelday={cancelday} item_name={item_name} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
           <a href={payUrl}><button className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
       </div>
@@ -281,7 +271,7 @@ function PopupContent (props) {
 
   const MyInfo = props => {
     
-    const { item_name, date, ticket, tax, total,  cancelday } = props;
+    const { date, ticket, tax, total,  cancelday } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -289,7 +279,7 @@ function PopupContent (props) {
           <tbody>
           <tr>
             <th>제목</th>
-            <td>{item_name}</td>
+            <td>{props.title}</td>
             <th className="sh">일시</th>
             <td>{date}</td>
           </tr>

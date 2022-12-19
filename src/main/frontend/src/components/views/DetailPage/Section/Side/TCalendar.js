@@ -61,35 +61,35 @@ const Styleside = styled.div`
 `;
 
 /** 
- * 
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
+
+    const {cast, reserve, dim, code, title, item_name, price, dateList } = props;
     // str -> date type convert
-    function parseDate(date) {
-        let y = date.substr(0,4);
-        let m = date.substr(5,2);
-        let d = date.substr(8,2);
+    function parseDate(dateList) {
+        let y = dateList.substr(0,4);
+        let m = dateList.substr(5,2);
+        let d = dateList.substr(8,2);
         return new Date(y,m-1,d);
     }
-    const { item_name, price, dateList } = props;
     // 첫 예매 가능한 날짜
-    // const first_reserve_day = parseDate(dateList.date);
-    // const reserve_turn = dateList.reserve_list[0].turn;
+    const first_reserve_day = parseDate(dateList.date);
+    const reserve_turn = dateList.reserve_list[0].turn;
     // 첫 회차별 예매 상세 정보 2회차가 있으면 1도 있을 듯 나중에 2회차도 하려면 로직 짜야함.
-    // const detail_info = dateList.reserve_list[0];
-    // const info_hour = detail_info.hour;
-    // const info_minute = detail_info.minute;
+    const detail_info = dateList.reserve_list[0];
+    const info_hour = detail_info.hour;
+    const info_minute = detail_info.minute;
 
     // 좌석 리스트
-    // const seatList = detail_info.reserve_seat_time;
+    const seatList = detail_info.reserve_seat_time;
     // 캐스팅 리스트
-    // const castingList = detail_info.compact_casting;
+    const castingList = detail_info.compact_casting;
 
-    // console.log('데이트 리스트', dateList);
-    // console.log('첫 회차별 예매 상세 정보', dateList.reserve_list[0]);
-    // console.log('첫 회차 좌석 정보', seatList);
-    // console.log('첫 회차 캐스팅 정보', castingList);
+    console.log('데이트 리스트', dateList);
+    console.log('첫 회차별 예매 상세 정보', dateList.reserve_list[0]);
+    console.log('첫 회차 좌석 정보', seatList);
+    console.log('첫 회차 캐스팅 정보', castingList);
     const [date, setDate] = useState(new Date());
     const [modalOpen, setModalOpen] = useState(false);
     const [index, setIndex] = useState(1);
@@ -115,7 +115,7 @@ function TCalendar (props) {
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => date.toLocaleString("en", {day: "2-digit"})}
             // 첫 날짜 집어넣음
-            minDate={new Date()}
+            minDate={first_reserve_day}
             />
             </div>
             <div className='text-center'>
@@ -128,41 +128,41 @@ function TCalendar (props) {
                 <div className='side-container'>
                     <h4 className='side-header'>회차</h4>
                     <div className='side-content'>
-                        {/* {reserve_turn === 1 &&
+                    {reserve_turn === 1 &&
+                    <>
+                    <div>
+                        <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
+                    </div>
+                    {seatList && seatList.map(seat => {
+                        return(
                         <>
-                        <div>
-                          <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                        </div>
-                        {seatList && seatList.map(seat => {
-                          return(
-                            <>
-                              <div style={{display : 'inline'}} key={seat.index}>
-                                <span>{seat.seat} / </span>
-                                <span>{seat.remain_quantity}</span>
-                              </div>
-                            </>
-                          );
-                        })}
-                        <hr />
-                        <h4 className='side-header'>캐스팅</h4>
-                        {castingList && castingList.map((cast, index) => {
-                          return(
-                            <>
-                              <div style={{display: 'inline'}} key={index}>
-                                <span>{cast}, </span>
-                              </div>
-                            </>
-                          )
-                        })}
+                            <div style={{display : 'inline'}} key={seat.index}>
+                            <span>{seat.seat} {seat.remain_quantity} / </span>
+                            </div>
                         </>
-                        }
-                        {reserve_turn > 1 &&
-                        <button className='button no' type='button'>2회 20:00</button>
-                        } */}
+                        );
+                    })}
+                    <hr />
+                    <h4 className='side-header'>캐스팅</h4>
+                    {castingList && castingList.map((cast) => {
+                        return(
+                        <>
+                            <div style={{display: 'inline'}} key={seatList.index}>
+                            <span>{cast}, </span>
+                            </div>
+                        </>
+                        );
+                    })}
+                    </>
+                    }
+                    {reserve_turn > 1 &&
+                    <button className='button no' type='button'>2회 20:00</button>
+                    }
                         </div>
                         <p />
                     <button className='pay-button' onClick={openModal}>예매하기</button>
-                    {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} price={price} index={index} />}/>}
+                    {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} 
+                    seat={props.seat} title={title} price={price} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

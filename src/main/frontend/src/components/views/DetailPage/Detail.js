@@ -92,13 +92,19 @@ function Detail() {
   const price = 150000;
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
+<<<<<<< HEAD
   const [pCode, setPcode] = useState('');
+=======
+  const [pCode, setPcode] = useState(22009226);
+  const [ckList, setCkList] = useState([]);
+>>>>>>> 5408a823441ffaf058cd62f8e1a1824c010a0b6b
   const [comList, setComList] = useState([]);
   const [seat, setSeat] = useState([]);
   const [stat, setStat] = useState([]);
   const [cast, setCast] = useState([]);
   const [key, setKey] = useState('info');
-  const [dateList, setDateList] = [];
+  const [dateList, setDateList] = useState('');
+  const [open, setOpen] = useState(false);
   
   // 최상단 스크롤
   const handleFollow = () => {
@@ -109,7 +115,6 @@ function Detail() {
       setBtnStatus(false);
     }
   }
-
   const handleTop = () => {
     window.scrollTo({
       top: 0,
@@ -118,7 +123,6 @@ function Detail() {
     setScrollY(0);
     setBtnStatus(false);
   }
-
   useEffect(() => {
     const watch = () => {
       window.addEventListener('scroll', handleFollow)
@@ -136,13 +140,24 @@ function Detail() {
       try {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
-          console.log(res.data.results);
-          // console.log(res.data.results.compact_list);
+          // console.log(res.data.results);
+          // checkList 특정 요소의 유무 판단
+          setCkList(res.data.results.check_list);
+          if(res.data.results.check_list.is_info_casting === false) {
+            
+          } else 
+          // comList 상세 상품에 표기할 정보 모음
           setComList(res.data.results.compact_list);
+          // 좌석/가격 정보
           setSeat(res.data.results.seat_price_list);
+          // 통계 정보
           setStat(res.data.results.statistics_list);
+          // 캐스팅 정보
           setCast(res.data.results.info_casting);
+          // 예매 정보
           setDateList(res.data.results.calendar_list[0]);
+          console.log(res.data.results.calendar_list);
+          setOpen(true);
           // setContent(res.data.results.compact_list.detail_poster_url);
         } else {
           alert("데이터 조회가 실패.")
@@ -153,7 +168,9 @@ function Detail() {
     };
     getData();
   }, [pCode]);
-  // console.log(cast);
+  console.log(ckList);
+
+  
 
   return (
     <DWrap>
@@ -178,12 +195,13 @@ function Detail() {
             </div>
 
             <Sider className="detailSiderContainer" width={310} >
-              <TCalendar item_name={item_name} price={price}/>
+              {open && <TCalendar dateList={dateList} item_name={item_name} seat={seat} price={price} title={comList.title} code={comList.code}
+              cast={ckList.is_info_casting} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
           </Layout>
 
           <Content>
-              <div style={{width: '70%', height: '100rem'}}>
+              <div style={{width: '70%'}}>
               <Tabs
                 id="controlled-tab-example"
                 activeKey={key}
@@ -195,6 +213,8 @@ function Detail() {
                 <Contents image={comList.detail_poster_url} stat={stat}/>
                 </Tab>
                 <Tab eventKey="cast" title="캐스팅 정보">
+                
+                <h2>캐스팅 정보가 없습니다.</h2>
                 {cast && cast.map((cast, id) => (
                 <React.Fragment key={id}>
                 <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
