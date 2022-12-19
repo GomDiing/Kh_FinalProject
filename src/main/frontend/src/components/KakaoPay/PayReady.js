@@ -6,7 +6,7 @@ import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
 let totals, taxs = 0;
 
-const PayReady = (item_name, total, tax, value) => {
+const PayReady = (title, total, tax, value) => {
 	totals = total;
 	taxs = tax;
     let [data, setData] = useState({
@@ -20,7 +20,7 @@ const PayReady = (item_name, total, tax, value) => {
         // 가맹점 회원 id
         partner_user_id: "partner_user_id",
         // 상품 이름
-        item_name: item_name,
+        item_name: title,
         // 상품 수량
         quantity: value,
         // 총 가격
@@ -28,16 +28,15 @@ const PayReady = (item_name, total, tax, value) => {
         // 상품 비과세
         tax_free_amount: tax,
         // 결제 성공 URL
-        approval_url: "http://localhost:7700/payresult",
+        approval_url: "http://localhost:8100/payresult",
         // 결제 실패 URL
-        fail_url: "http://localhost:7700/resultfalse",
+        fail_url: "http://localhost:8100/resultfalse",
         // 결제 취소 URL
-        cancel_url: "http://localhost:7700/resultfalse"
+        cancel_url: "http://localhost:8100/resultfalse"
 		}
     });
     
     useEffect(() => {
-        console.log("test");
         const { params } = data;
         axios({
             url: "https://kapi.kakao.com/v1/payment/ready",

@@ -29,6 +29,8 @@ const BackContainer = styled.div`
     ]
 
 const ContentWarp = () =>{
+
+
     return(
         <BackContainer>
             <Carousel fade>            

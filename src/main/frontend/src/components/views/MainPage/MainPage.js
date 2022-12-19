@@ -2,16 +2,15 @@ import styled from "styled-components";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ContentWarp from "./Content/ContentWarp";
 import MainHeader from "../MainHeader/MainHeader";
-import MainPoster from "./Content/MainPoster/MainPoster";
 import MainIcon from "./Content/MainIcon/MainIcon";
 import MainNotice from "./Content/MainNotice/MainNotice";
 import MainBanner from "./Content/MainBanner/MainBanner";
 import Footer from "../Footer/Footer";
-import MainPoster2 from "./Content/MainPoster2/MainPoster2";
-import PosterCategory2 from "./Content/MainPoster2/MainCategory2";
-import MainReview from "./Content/MainReview/MainReview";
 import { useEffect, useState } from "react";
 import { BsArrowUpCircle } from "react-icons/bs";
+import MainPoster from "./Content/MainPoster/MainPoster";
+import RankingClose from "./Content/MainRankingClose/RankingClose";
+import MainReview from "./Content/MainReview/MainReview";
 
 const ItemContainer = styled.div`
     width: 80%;
@@ -93,15 +92,13 @@ const MainPage = () =>{
             <MainHeader/>
                 <ContentWarp/>
                     <ItemContainer>
-                        <MainPoster/>
-                        <MainPoster/>
                         
+                        <MainPoster/>
                         <MainNotice/>
                         <hr></hr>
                         <MainBanner/>
-                        <PosterCategory2/>
-                        <MainPoster2/>
-                        
+                        <RankingClose/>
+
                         <MainReview/>
                         <hr></hr>
                         <MainIcon/>
