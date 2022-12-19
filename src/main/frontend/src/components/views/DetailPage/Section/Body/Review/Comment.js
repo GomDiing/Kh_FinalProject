@@ -224,7 +224,7 @@ const Comment = ({
     setDeleting(false);
   };    
   
-  const acuseReport = () => {
+  const accuseReport = () => {
     setReport(true);
   }
   
