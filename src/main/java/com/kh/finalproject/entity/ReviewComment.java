@@ -6,6 +6,7 @@ import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
 import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,13 +42,13 @@ public class ReviewComment extends BaseTimeEntity {
     @Column(name = "review_comment_content", nullable = false)
     private String content;
 
-    @Column(name = "review_comment_group", nullable = false)
+    @Column(name = "review_comment_group") //null 수정
     private Long group;
 
     @Column(name = "review_comment_layer", nullable = false)
     private Integer layer;
 
-    @Column(name = "review_comment_order", nullable = false)
+    @Column(name = "review_comment_order") //null 수정
     private Integer order;
 
     @Column(name = "review_comment_status", nullable = false)
@@ -77,34 +78,37 @@ public class ReviewComment extends BaseTimeEntity {
     }
 
     /*공연 후기 작성(댓글 형식)(회원 index,상품코드, content, 평점, 그룹, layer, order  */
-    public ReviewComment createReviewComment(Member member,Product product, String content, Integer rate){
+    public ReviewComment createReviewComment(Member member,Product product, String content, String title, Integer rate){
+        this.title = title;
         this.content = content;
         this.rate = rate;
         this.status = ReviewCommentStatus.ACTIVE;
         this.accuseCount = 0;
+        this.like =0;
         this.group = 0L;
         this.layer = 0;
-        this.order = 0;
+        this.order = 0; //지금 안넣어도 됨
 
         this.product = product;
-        product.getCode();
+        product.getReviewCommentList().add(this);
 
         this.member = member;
         member.getReviewCommentList().add(this);
         return this;
     }
-    public ReviewComment changeLayer(Integer layer, Integer order){
-        this.layer =layer +1;
-        this.order = order +1;
-        return this;
-    }
 
-    /*대댓글 작성(진행중)*/
-    public ReviewComment createAddReviewComment(Member member, Product product, String content, Integer rate){
+
+    /*대댓글 작성*/
+    public ReviewComment createAddReviewComment(Member member, Product product, String content){
+        this.group = 0L; //프론트에서 그룹 index보내줘야함
+        this.layer = 1;
         this.content = content;
-        this.rate = rate;
-        this.group = 0L;
-        this.layer = layer++;
+        this.status = ReviewCommentStatus.ACTIVE;
+        this.accuseCount =0;
+        this.order= -1;
+
+        this.product = product;
+        product.getReviewCommentList().add(this);
 
         this.member = member;
         member.getReviewCommentList().add(this);
@@ -121,9 +125,24 @@ public class ReviewComment extends BaseTimeEntity {
     }
 
     /*공연 후기 삭제 => 상태값 변경*/
-    public ReviewComment changeReviewCommentStatus(RemoveReviewCommentDTO removeReviewCommentDTO){
+    public ReviewComment changeReviewCommentStatus(){
         this.status = ReviewCommentStatus.DELETE;
         return this;
+    }
+
+    public void updateGroupAndOrder(Long group, Integer order) {
+        this.group = group;
+        this.order = order;
+    }
+
+    public void updateOrder(Integer order) {
+        this.order = order;
+    }
+    public void updateLayer(Integer layer){
+        this.layer = layer;
+    }
+    public void updateGroup(Long group){
+        this.group = group;
     }
 
 }

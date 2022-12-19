@@ -327,7 +327,7 @@ public class MemberServiceImpl implements MemberService {
 
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
-        List<Member> findMemberList = memberRepository.findAllByMemberAccuseCountGreaterThan(4)
+        List<Member> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 신고횟수가 5개 이상인 회원이 없습니다"));
 
         for (Member member : findMemberList) {

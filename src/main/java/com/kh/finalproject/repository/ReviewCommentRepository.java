@@ -1,6 +1,6 @@
 package com.kh.finalproject.repository;
 
-import com.kh.finalproject.entity.Notice;
+import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +26,8 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     @Query(nativeQuery = true,
     value = "select * from review_comment")
     List<ReviewComment> selectAll(Pageable size);
+
+    List<ReviewComment> findAllByProduct(Product product);
 
 
     /*review 수정 시 게시글 index 번호로 조회 후 수정*/
