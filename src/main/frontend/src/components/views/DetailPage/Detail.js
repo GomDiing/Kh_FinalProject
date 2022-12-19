@@ -135,7 +135,7 @@ function Detail() {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
           console.log(res.data.results);
-          console.log(res.data.results.compact_list);
+          // console.log(res.data.results.compact_list);
           setComList(res.data.results.compact_list);
           setSeat(res.data.results.seat_price_list);
           setStat(res.data.results.statistics_list);
@@ -150,7 +150,7 @@ function Detail() {
     };
     getData();
   }, [pCode]);
-  console.log(cast);
+  // console.log(cast);
 
   return (
     <DWrap>
