@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void validateDuplicateByEmail(String email) {
 
-        Optional<Member> findEmail = memberRepository.findByEmail(email);
+        Optional<Member> findEmail = memberRepository.findByEmailAndStatusNot(email, MemberStatus.UNREGISTER);
 
         //중복 이메일 존재 시 예외 처리
         if (findEmail.isPresent()) {

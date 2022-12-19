@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.security.Provider;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +34,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    회원 고유 인덱스로 찾기
     Optional<Member> findByIndex(Long index);
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByEmailAndStatusNot(String email, MemberStatus status);
 
     Optional<Member> findByNameAndEmailAndStatusNotAndProviderType(String name, String email, MemberStatus status, MemberProviderType provider);
 
