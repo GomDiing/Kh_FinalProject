@@ -28,6 +28,8 @@ public class MemberDTO {
     private String createTime;
     private String unregisterTime;
     private Integer memberAccuseCount;
+    private String zipcode;
+    private Integer MemberAccuseCount;
 
     /**
      * 전체 일반 회원 조회 Entity -> DTO
@@ -54,6 +56,10 @@ public class MemberDTO {
             this.detail = "null";
         }
         else this.detail = address.getDetail();
+        if (Objects.isNull(address.getZipcode())){
+            this.zipcode = "null";
+        }
+        else this.zipcode = address.getZipcode();
         this.memberRoleType = member.getRole().getRole();
         this.memberStatus = member.getStatus().getStatus();
         this.createTime=member.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -61,6 +67,7 @@ public class MemberDTO {
             this.unregisterTime = "null";
         }
         else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.memberAccuseCount = member.getMemberAccuseCount();
         this.memberAccuseCount = member.getMemberAccuseCount();
 
         return this;

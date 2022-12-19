@@ -299,7 +299,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateTotalMemberInChart(Integer count) {
-
     }
 
     @Override

@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import { Table } from 'react-bootstrap';
 import { useNavigate} from "react-router-dom";
 import AdminApi from '../../../../../api/AdminApi';
 
@@ -31,7 +33,6 @@ const QnaModal = (props) => {
 }
 
     const { open, close, header } = props;
-
     return (
         <div className={open ? 'openModal modal' : 'modal'}>
             {open && 
@@ -43,11 +44,24 @@ const QnaModal = (props) => {
                         </button>
                     </header>
                     <main>
-                    <div>작성자</div>
-                    <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply}/>
+                    <Table>
+                  <tr>
+                    <th>제목</th>
+                    <td>{props.content}</td>
+                  </tr>
+                  <tr>
+                    <th>문의 내용</th>
+                    <td>{props.index}</td>
+                  </tr>
+                  <tr>
+                    <th>문의 답장</th>
+                    <td>{props.index}</td>
+                  </tr>
+                </Table>
+                    {/* <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply}/> */}
                     </main>
                     <footer>
-                        <button className='submit' onClick={onClickReply}>Submit</button>
+                        {/* <button className='submit' onClick={onClickReply}>Submit</button> */}
                         <button className='close' onClick={close}>close</button>
                     </footer>
                 </section>

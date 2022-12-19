@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("/api/accuse")
 public class AccuseController {
     private final AccuseService accuseService;
 
     /**
      * 리뷰 신고하기
      */
-    @PostMapping("/accuse/{index}")
+    @PostMapping("/{index}")
     public ResponseEntity<DefaultResponse<Object>> createAccuse(@PathVariable Long index,
                                                @RequestBody CreateAccuseDTO createAccuseDTO) {
         //후기 index 랑 유저 정보 service 넘겨주기

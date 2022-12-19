@@ -97,10 +97,11 @@ const QWrap = styled.div`
     }
 }
 .qna-replybox{
-    width: 100%;
-    height: 400px;
+    width: 95%;
+    height: 300px;
     border-radius: 10px;
     resize: none;
+    padding: 10px;
 }
 `
 
@@ -130,7 +131,6 @@ const QnaModal = (props) => {
         }
     }
 }
-
     const { open, close, header, index } = props;
 
     return (
@@ -145,9 +145,8 @@ const QnaModal = (props) => {
                         </button>
                     </header>
                     <main>
-                    <div>작성자</div>
                     {props.children}
-                    <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply}/>
+                    <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply} placeholder="답장하기"/>
                     </main>
                     <footer>
                         <button className='submit' onClick={onClickReply}>Submit</button>

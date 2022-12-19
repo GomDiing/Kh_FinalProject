@@ -50,7 +50,7 @@ const postCodeStyle = {
 
 const InfoUpdate = () => {
   // 테스트용
-  const [id, setId] = useState('asdf1234');
+  const [id, setId] = useState('test456');
 
   const [inputId, setInputId] = useState('');
   const [inputPwd, setInputPwd] = useState('');
@@ -65,7 +65,6 @@ const InfoUpdate = () => {
     const [road, setRoad] = useState("");
     // 지번 주소
     const [jibun, setJibun] = useState("");
-
     // 우편 번호
     const [postCode, setPostCode] = useState("");
 
@@ -80,14 +79,19 @@ const InfoUpdate = () => {
             setInputEmail(res.data.results.email);
             setFullAddress(res.data.results.road);
             setAddress(res.data.results.detail);
+            setRoad(res.data.results.road);
+            setJibun(res.data.results.jibun);
+            setPostCode(res.data.results.zipcode);
             console.log(res.data);
+
           }
         } catch (e) {
           console.log(e);
         }
       }; getInfo();
     }, []);
-    
+    console.log(fullAddress);
+    console.log(inputName);
 
   const onChangePwd = e => setInputPwd(e.target.value);
   const onChangeName = e => setInputName(e.target.value);
@@ -122,10 +126,10 @@ const InfoUpdate = () => {
   console.log(address);
   console.log(postCode);
 
-  const onClickChange = async () => {
+  const onClickChange = async (e) => {
     try {
-      const res = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode);
-      if(res.data.statusCode === 200) {
+      const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode);
+      if(response.data.statusCode === 200) {
       alert("회원정보 변경 완료");
     } Navigate('/Mypage');
     } catch (e) {
@@ -147,7 +151,7 @@ const InfoUpdate = () => {
         <label>이메일</label>
           <input type='email' value={inputEmail} onChange={onChangeEmail} />
         <label>주소</label>
-          <input type='address' readOnly placeholder={fullAddress} value={fullAddress}/><span><button onClick={onOpen}>주소 검색</button></span>
+          <input type='address' readOnly value={fullAddress}/><span><button onClick={onOpen}>주소 검색</button></span>
           <div id='popupDom'>
             {isOpen && (
               <div>

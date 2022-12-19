@@ -23,7 +23,7 @@ public interface AccuseService {
     /**
      * 신고 처리 메서드
      * 관리자가 신고된 내용을 처리, 신고 사유를 반드시 기입
-     * (5번 이상 신고당하면 블랙리스트 목록으로 이동)
+     * (5번 이상 신고당하면 블랙리스트 목록으로 이동) => memberEntity에 accuseCount 추가 해서 memberController 쪽에서 처리했습니다.
      */
 //    void process(ProcessAccuseDTO processAccuseDTO);
 

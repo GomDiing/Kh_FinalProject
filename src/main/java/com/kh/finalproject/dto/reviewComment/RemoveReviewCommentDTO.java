@@ -7,4 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class RemoveReviewCommentDTO {
+    private Long index;
+    private Long memberIndex;
+    private String content;
+    private Integer like;
+    private Integer rate;
+    private String reviewCommentStatus;
 }

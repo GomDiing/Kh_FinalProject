@@ -2,6 +2,7 @@ package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.entity.ReviewComment;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -13,6 +14,9 @@ public interface ReviewCommentService {
      * 후기/댓글 생성 메서드
      */
     void create(CreateReviewCommentDTO createReviewCommentDTO);
+
+    /*후기/댓글 대댓글 생성 메서드*/
+    void reCreate(CreateReviewCommentDTO createReviewCommentDTO);
 
     /**
      * 후기/댓글 삭제 메서드
@@ -48,5 +52,5 @@ public interface ReviewCommentService {
     /**
      * 후기/댓글 전체 조회 메서드
      */
-    List<ReviewCommentDTO> searchAll();
+    List<ReviewCommentDTO> searchAll(Pageable pageSize);
 }

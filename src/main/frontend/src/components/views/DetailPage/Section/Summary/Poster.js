@@ -28,7 +28,7 @@ const PosterStyle = styled.div `
 
 // 상세페이지 상단 포스터
 function Poster(props) {
-    const item_name = '태양의서커스 <뉴 알레그리아>';
+    // const item_name = '태양의서커스 <뉴 알레그리아>';
 
     // 찜하기
     const [isWishAdd, setIsWishAdd] = useState(false);
@@ -62,11 +62,11 @@ function Poster(props) {
 
     return (
         <PosterStyle>
-        <h3 className='summary-top'>{item_name}</h3>
+        <h3 className='summary-top'>{props.title}</h3>
             <div className='summary-body'>
                 <div className='poster-box' style={{margin: '0'}}>
                     <div className='posterConta'>
-                        <img className='poster-box-top' src='test.gif' alt='포스터 이미지'/>
+                        <img className='poster-box-top' src={props.image} alt='포스터 이미지'/>
                             <div className='poster-box-bottom'>
                                 <div>
                                     <Rate allowHalf value={value} onChange={handleChange} style={{ fontSize: '1.8rem'}}/>

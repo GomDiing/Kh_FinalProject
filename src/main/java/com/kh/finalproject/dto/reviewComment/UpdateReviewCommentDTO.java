@@ -7,4 +7,9 @@ import lombok.Getter;
  */
 @Getter
 public class UpdateReviewCommentDTO {
+    private Long index;
+    private Long memberIndex;
+    private String memberId;
+    private String content;
+    private Integer rate;
 }

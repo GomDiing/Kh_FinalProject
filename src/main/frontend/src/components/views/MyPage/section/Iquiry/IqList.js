@@ -1,63 +1,29 @@
 import React from 'react';
 import { useState,useEffect } from "react";
 import styled from "styled-components";
-import { Table, Divider } from 'antd';
+import { Table, Divider,Pagination} from 'antd';
 import { useNavigate } from 'react-router-dom';
 import MemberApi from '../../../../../api/MemberApi';
 import IqModal from '../../../../views/MyPage/section/Iquiry/IqModal'
-
-const Body = () => (
-  <Style>
-    <div>
-      <div>
-          <table>
-            <thead>
-              <tr>
-                <th>상품 이름</th>
-                <th>상품 수량</th>
-                <th>상품 총 가격</th>
-                <th>결제 수단</th>
-                <th>결제 상태</th>
-                <th>결제 완료 시간</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-    </div>
-  </Style>
-);
 
 
 
 function IqList() {
   //  리액트 페이지네이션 변수 
   const [qnaList, setQnaList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(7); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
+  const [modalText, setModalText] = useState('');
+
 
   const [index, setIndex] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const open = () => setModalOpen(true);
   const close = () => setModalOpen(false);
   const navigate = useNavigate();
-  const cancelClick = () => navigate('/paycancel');
 
   const columns = [
-    {
-        title: '사용자',
-        dataIndex: 'id',
-    },
     {
       title: '문의유형',
       dataIndex: 'category',
@@ -67,7 +33,7 @@ function IqList() {
         dataIndex: 'content',
     },
     {
-        title: '관람일',
+        title: '문의 날짜',
         dataIndex: 'createTime',
     },
     {
@@ -75,47 +41,45 @@ function IqList() {
         dataIndex: 'qnaStatus',
     },
     {
-        title: '상태',
+        title: '답장',
         dataIndex: 'modal',
         key: 'modal',
         render: () => <button onClick={()=>{setModalOpen(true)}}>답장</button>
     }
 ];
-// const data = [
-//     {
-//         key: '1',
-//         Rdate: '2022.11.28',
-//         Rnum: 'T2200902901R1',
-//         name: '태양의서커스〈뉴 알레그리아〉',
-//         date: '2022.11.30',
-//         count: '1매',
-//         detail: <button onClick={open}>상세보기</button>
-//     },                                  
-// ];
-  /** 공지 목록을 가져오는 useEffect */
+
+  /** qna 목록을 가져오는 useEffect */
   useEffect(() => {
-    const noticeData = async()=> {
+    const qnaData = async()=> {
       try {
-        const response = await MemberApi.myQnalist(currentPage, pageSize);
-          setQnaList([...qnaList, ...response.data.qnaDTOList]);
-          console.log(response.data.qnaDTOList[0].index);
-          setIndex(response.data.qnaDTOList[0].index);
+        const res = await MemberApi.myQnalist(currentPage, pageSize);
+        if(res.data.statusCode === 200){
+          setQnaList([...qnaList, ...res.data.results.qnaDTOList]);
+          console.log(res.data.results.qnaDTOList[0].index);
+          setIndex(res.data.qnaDTOList[0].index);
           // 페이징 시작
-          setTotalCount(response.data.totalResults); 
+          setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
-          setCurrentPage(response.data.page);
+          setCurrentPage(res.data.results.page);
+        }
     }catch (e) {
         console.log(e);
       }
     };
-    noticeData();
+    qnaData();
   }, [currentPage]); // currentpage 값이 바뀌면 렌더링 되도록 
 console.log(qnaList);
   return(
     <>
-    {modalOpen && <IqModal open={open} cancel={cancelClick} close={close} index={index}/>}
     <Divider>문의 내역</Divider>
-    <Table columns={columns} dataSource={qnaList} size="middle" pagination={currentPage} />
+    {modalOpen && <IqModal open={open} close={close} index={index}/>}
+    <Table columns={columns} dataSource={qnaList} size="middle"/>
+    <Pagination className="d-flex justify-content-center"
+    total={totalCount}  //총 데이터 갯수
+    current={currentPage} 
+    pageSize={pageSize}
+    onChange={(page) => {setCurrentPage(page); setQnaList([]);}} //숫자 누르면 해당 페이지로 이동
+   />
     </>
   );
 }

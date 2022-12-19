@@ -1,10 +1,8 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
-import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -39,7 +37,7 @@ public class MemberController {
     /**
      * 전체 블랙리스트 회원 조회
      */
-    @GetMapping("/memberblacklist")
+    @GetMapping("/blacklist")
     public ResponseEntity<Object> blackList(Pageable pageable){
         PagingMemberDTO searchMemberList = memberService.searchAllBlackMember(pageable);
         log.info("searchMemberList = {}", searchMemberList.getMemberDTOList().get(0).getName());
@@ -47,9 +45,9 @@ public class MemberController {
     }
 
     /**
-     * 블랙리스트 회원 탈퇴
+     * 블랙리스트 회원 탈퇴(체크박스)
      */
-    @PostMapping("/notice/delete/member/check")
+    @PostMapping("/delete/checkbox")
     public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@RequestBody MemberCheckListDTO memberCheckListDTO){
         List<CheckMemberDTO> checkMemberList = memberCheckListDTO.getMemberDTOCheckList();
         log.info("checkMemberList = {}", checkMemberList.toString());
@@ -94,6 +92,7 @@ public class MemberController {
     /**
      * find password by id and name and email success
      */
+
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 

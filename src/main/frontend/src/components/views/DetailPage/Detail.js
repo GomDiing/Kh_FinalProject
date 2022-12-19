@@ -8,6 +8,7 @@ import MainHeader from '../MainHeader/MainHeader';
 import Footer from '../Footer/Footer';
 import styled from 'styled-components';
 import { BsArrowUpCircle } from 'react-icons/bs';
+import DetailApi from '../../../api/DetailApi';
 const { Content, Sider } = Layout;
 
 const DWrap = styled.div`
@@ -86,7 +87,11 @@ function Detail() {
   const price = 150000;
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
+  const [pCode, setPcode] = useState(22009226);
+  const [comList, setComList] = useState([]);
+
   
+  // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
     if(ScrollY > 100) {
@@ -115,6 +120,24 @@ function Detail() {
     }
   })
 
+  useEffect(() => {
+    const getData = async()=> {
+      try {
+        const res = await DetailApi.getDetail(pCode);
+        if(res.data.statusCode === 200){
+          console.log(res.data.results);
+          console.log(res.data.results.compact_list);
+          setComList(res.data.results.compact_list);
+        } else{
+          alert("데이터 조회가 실패.")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <DWrap>
       <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
@@ -122,15 +145,13 @@ function Detail() {
         </button>
       <MainHeader/>
       <Layout style={{width: '80%', height: '100%' ,margin:'0 auto', backgroundColor: 'white'}}>
-
         <Content >
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
-            <Content className='posterCon' style={{border:'1px solid black'}}>
-              <Poster/>
+            <Content className='posterCon'>
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} />
             </Content>
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
-
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
               <Info/>
@@ -141,7 +162,6 @@ function Detail() {
               <TCalendar item_name={item_name} price={price}/>
             </Sider>
           </Layout>
-
 
           <Content>
               <DBody/>

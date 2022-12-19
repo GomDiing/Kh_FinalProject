@@ -36,6 +36,7 @@ public class QnAServiceImpl implements QnAService {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
         Member member = findOne.get(); // repository list로 쓰고 싶은데 optional findbyid 이미 쓰면 list findbyId 못쓰는지?
+        log.info("아이디 일치하는지", member);
 //        qna 생성
         QnA writeQna = new QnA().createQnA(member, createQnADTO.getTitle(), createQnADTO.getCategory(), createQnADTO.getContent());
         qnARepository.save(writeQna);

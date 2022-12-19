@@ -4,6 +4,8 @@ import { useState, useEffect} from "react";
 import { Link, useNavigate,useParams} from "react-router-dom";
 import AdminApi from "../../../../api/AdminApi";
 import { Pagination } from "antd";
+import Table from 'react-bootstrap/Table';
+
 
 const NoticeList=(props)=>{
   const [loading, setLoading] = useState(false);
@@ -12,7 +14,7 @@ const NoticeList=(props)=>{
 
   //  리액트 페이지네이션 변수 
   const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(7); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(12); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -77,7 +79,6 @@ const NoticeList=(props)=>{
     if(checkItems.length<1){
       alert("체크박스 한개 이상 체크해주세요");
       navigate(0);
-      // navigate('/admin/noticeList')
     } else{
       console.log(checkItems);
       const res = await AdminApi.noticeCheck(checkItems);
@@ -97,7 +98,7 @@ const NoticeList=(props)=>{
         <NoticeBlock>
         <TopBar name="공지사항 관리"/>
           <div className="notice-list-container">
-          <table>
+          <Table striped bordered hover>
                 <thead>
                   <tr>
                   <th width = "50px">
@@ -119,13 +120,13 @@ const NoticeList=(props)=>{
                   checked={checkItems.includes(index) ? true : false} />
                   </td>
                     <td>{index}</td>
-                    <td><Link to={`/admin/noticeDetail/${index}`}>{title}</Link></td>
+                    <td><Link to={`/admin/noticeDetail/${index}`} style={{ textDecoration: 'none' }}>{title}</Link></td>
                     <td>관리자</td>
                     <td>{createTime}</td>
                 </tr>
                 ))}
                 </tbody>
-              </table>
+            </Table>
             </div>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
@@ -149,15 +150,11 @@ const NoticeBlock=styled.div`
     width: 70vw;
     margin : 10px;
     display: flex;
-    border: 1px solid black;
     height: 60%;
     flex-direction: column;
     text-align: center;
-    padding: 3rem;
   }
-table,th,td {
-  border: 1px solid black;
-}
+
     .buttonWrap{
         text-align: center;
         justify-content: center;
@@ -166,7 +163,7 @@ table,th,td {
       border: none;
       margin: 15px 0;
       margin: 20px 10px;
-      background-color: #f5f5f5;
+      background-color: #92A9BD;
       border-radius: 5px;
       width: 150px;
       height: 50px;

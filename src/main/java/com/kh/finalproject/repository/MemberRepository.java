@@ -27,7 +27,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Integer> changeStatusMember(@Param("index") Long index, @Param("status") MemberStatus status);
 
     Optional<Member> findById(String id);
-//    List<Member> findById(String id);
+
+//    회원 고유 인덱스로 찾기
+    Optional<Member> findByIndex(Long index);
 
     Optional<Member> findByEmail(String email);
 
