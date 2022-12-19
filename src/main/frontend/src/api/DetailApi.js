@@ -13,6 +13,12 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
     },
-    
-  }
-  export default DetailApi;
+    // 상품 상세 가져오기
+    getDetail : async function(pCode) {
+    const param = {
+        code: pCode
+    }
+    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, param, HEADER);
+    }
+}
+export default DetailApi;
