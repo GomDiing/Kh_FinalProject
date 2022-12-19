@@ -98,7 +98,8 @@ function Detail() {
   const [stat, setStat] = useState([]);
   const [cast, setCast] = useState([]);
   const [key, setKey] = useState('info');
-
+  const [dateList, setDateList] = useState('');
+  const [open, setOpen] = useState(false);
   
   // 최상단 스크롤
   const handleFollow = () => {
@@ -135,11 +136,13 @@ function Detail() {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
           console.log(res.data.results);
-          console.log(res.data.results.compact_list);
+          // console.log(res.data.results.compact_list);
           setComList(res.data.results.compact_list);
           setSeat(res.data.results.seat_price_list);
           setStat(res.data.results.statistics_list);
           setCast(res.data.results.info_casting);
+          setDateList(res.data.results.calendar_list[0]);
+          setOpen(true);
           // setContent(res.data.results.compact_list.detail_poster_url);
         } else {
           alert("데이터 조회가 실패.")
@@ -150,7 +153,7 @@ function Detail() {
     };
     getData();
   }, [pCode]);
-  console.log(cast);
+  // console.log(cast);
 
   return (
     <DWrap>
@@ -175,12 +178,12 @@ function Detail() {
             </div>
 
             <Sider className="detailSiderContainer" width={310} >
-              <TCalendar item_name={item_name} price={price}/>
+              {open && <TCalendar dateList={dateList} item_name={item_name} price={price}/>}
             </Sider>
           </Layout>
 
           <Content>
-              <div style={{width: '70%', height: '100rem'}}>
+              <div style={{width: '70%'}}>
               <Tabs
                 id="controlled-tab-example"
                 activeKey={key}
