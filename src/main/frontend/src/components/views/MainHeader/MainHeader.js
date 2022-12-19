@@ -93,28 +93,16 @@ const HeaderContainer = styled.div`
         margin-left: 10px;
         cursor: pointer;
     }
-    .optionItem:hover{
-        
-    }
     width: 100%;
     background-color: #f5f5f5;
     `;
-const LoginTag = styled.div`
-    ul{
-        margin: 0;
-    }
-    a{
-        display: inline-block;
-        margin: 0 10px;     
-    }
-`    
 const MainHeader = () =>{
 
-    const[categoryvalue,setcategoryvalue] = useState("");
+    const[searchText,SetSearchText] = useState("");
 
     const onClickValue = (e) =>{
         const val = e.target.value
-        setcategoryvalue(val);
+        SetSearchText(val);
     }
     // console.log(categoryvalue);
 
@@ -124,8 +112,6 @@ const MainHeader = () =>{
             <HeaderContainer>
                 <Navbar expand="lg">
                 <Container fluid>
-                    {/* <Navbar.Brand><Link to = "/"><img className="Logo" src="images/TCat.jpg" alt=""/></Link></Navbar.Brand> */}
-                    {/* 자꾸 상단 로고 엑박이 떠서 바꿔놨습니다~! */}
                     <Navbar.Brand><Link to = "/"><img className="Logo" src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=""/></Link></Navbar.Brand>
 
                     <Navbar.Toggle aria-controls="navbarScroll" />
@@ -138,12 +124,6 @@ const MainHeader = () =>{
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link>
                         <Link to = "/detail" className = "HeaderMenu">상세</Link>
                     </Nav>
-                    {/* title={categoryvalue} */}
-                        {/* <NavDropdown className="HederCategory" title="카테고리"  id="navbarScrollingDropdown">
-                                <li className="optionItem" value="작품명">작품명</li>
-                                <li className="optionItem" value="배우명">배우명</li>
-                                <li className="optionItem" value="감독명">감독명</li>
-                            </NavDropdown> */}
                     <Form className="d-flex">
                         <Form.Control onChange={onClickValue} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
                         <Button className="SearchBtn" variant="outline-success"><a href="/search">Search</a></Button>
