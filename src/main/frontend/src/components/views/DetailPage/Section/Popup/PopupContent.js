@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
@@ -81,14 +81,15 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, date, cancelday, index } = props;
+  const { title, seat, date, cancelday, index, code } = props;
   
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [stuValue, setStuValue] = useState(0);
     const [douValue, setDouValue] = useState(0);
     const [eveValue, setEveValue] = useState(0);
-    const [seatList, setSeatList] = useState('');
+    // 좌석 리스트
+    const [seatList, setSeatList] = useState([]);
     // 티켓 * 수량 = 총 티켓 금액
     const [ticket, setTicket] = useState(0);
     // 비과세 = 총 티켓 금액의 5%
@@ -269,7 +270,7 @@ function PopupContent (props) {
       <MyInfo seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />
       </>
     }
-    {index === 3 && <FinalModal seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />}
+    {index === 3 && <FinalModal seat={seatList} code={code} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />}
     </>
   );
 
@@ -281,8 +282,8 @@ function PopupContent (props) {
 }
 
   const FinalModal = props => {
-    const { seat, cancelday, title, date, value, ticket, tax, total } = props;
-    PayReady(title, total, tax, value);
+    const { seat, cancelday, title, date, value, ticket, tax, total, code } = props;
+    PayReady(title, total, tax, value, code, seat);
     const payUrl = window.localStorage.getItem('url');
 
     return(
@@ -298,6 +299,8 @@ function PopupContent (props) {
 
   const MyInfo = props => {
     
+    const [open, setOpen] = useState(false);
+    const onTogle = () => setOpen(!open);
     const { date, ticket, tax, total, seat, cancelday } = props;
     return(
       <div>
@@ -326,7 +329,13 @@ function PopupContent (props) {
             <th>취소 기한</th>
             <td>{cancelday}까지</td>
             <th className="sh">취소 수수료</th>
-            <td>티켓금액의 0~30%</td>
+            <td>티켓 금액의 0 ~ 30% <small onClick={onTogle}><strong><u>상세 보기</u></strong></small>
+              {open && <>
+              <br /><small>공연기간 1주일 전까지는 수수료가 없습니다.</small>
+              <br /><small>공연기간 1주일 이내로 남았을 경우 수수료가 10% 발생합니다</small>
+              <br /><small>공연 당일 취소에 경우 수수료가 15% 발생합니다</small>
+              </>}
+            </td>
           </tr>
           <tr>
             <th>총 결제금액</th>

@@ -94,17 +94,16 @@ function TCalendar (props) {
     const [index, setIndex] = useState(1);
     const plusIndex = () => setIndex(index+1);
     const minusIndex = () => setIndex(index-1);
+    console.log(date.getDate());
     
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
-
     // 1일 전
-    const cancelday = '공연기간이 1주일이 남지 않을 때 취소할 경우 수수료과 부과됩니다. ' + moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
+    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString() + ' 공연 시작 1시간 전';
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
         setModalOpen(false);
         setIndex(1);
     }
-    console.log(price);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
@@ -155,7 +154,7 @@ function TCalendar (props) {
                       </>
                       }
                       {/* 2회차 정보가 들어오면 할 예정 */}
-                      {reserve_turn > 1 &&
+                      {reserve_turn === 2 &&
                       <button className='button no' type='button'>2회 20:00</button>
                       }
                         </div>
@@ -165,7 +164,7 @@ function TCalendar (props) {
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
                     body={<PopupContent date={selectDay} cancelday={cancelday} 
-                    seat={seat} title={title} index={index} />}/>}
+                    seat={seat} title={title} index={index} code={code} />}/>}
                 </div>
             </Styleside>
         </SideWrap>
