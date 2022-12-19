@@ -54,7 +54,7 @@ public class ReviewComment extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ReviewCommentStatus status;
 
-    @Column(name = "review_comment_accuse_count")
+    @Column(name = "review_comment_accuse_count" ,nullable = false)
     private Integer accuseCount;
 
     @OneToMany(mappedBy = "reviewComment")
@@ -76,11 +76,12 @@ public class ReviewComment extends BaseTimeEntity {
         this.accuseCount++;
     }
 
-    /*공연 후기 작성(댓글 형식)(회원 index, */
+    /*공연 후기 작성(댓글 형식)(회원 index,상품코드, content, 평점, 그룹, layer, order  */
     public ReviewComment createReviewComment(Member member,Product product, String content, Integer rate){
         this.content = content;
         this.rate = rate;
         this.status = ReviewCommentStatus.ACTIVE;
+        this.accuseCount = 0;
         this.group = 0L;
         this.layer = 0;
         this.order = 0;
@@ -97,6 +98,7 @@ public class ReviewComment extends BaseTimeEntity {
         this.order = order +1;
         return this;
     }
+
     /*대댓글 작성(진행중)*/
     public ReviewComment createAddReviewComment(Member member, Product product, String content, Integer rate){
         this.content = content;

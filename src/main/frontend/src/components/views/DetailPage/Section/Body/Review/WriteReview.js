@@ -228,7 +228,6 @@ function WriteReview(props) {
     }
 }
 
-
   return (
 <WModal>
     <div className={open ? 'openModal modal' : 'modal'}>
@@ -247,12 +246,10 @@ function WriteReview(props) {
                 <textarea
                   className="comment-input"
                   placeholder="댓글을 작성해 보세요."
-                  // value={replyingToUser + comment}
-                  value={content}
+                  value={replyingToUser + comment}
+                  // value={content}
                   onChange={(e) => {
-                    setComment(
-                      e.target.value.replace(replyingTo ? `@${replyingTo}, ` : "", "")
-                    );
+                    setComment(e.target.value.replace(replyingTo ? `@${replyingTo}, ` : "", ""));
                   }}
                 />
               </div>
@@ -260,12 +257,12 @@ function WriteReview(props) {
           </main>
           <footer>
             <div className="btn-container">
-            <button className="add-btn" onClick={onClickSubmit}>
-                {buttonValue}
-              </button>
-              {/* <button className="add-btn" onClick={clickHandler}>
+            {/* <button className="add-btn" onClick={onClickSubmit}>
                 {buttonValue}
               </button> */}
+              <button className="add-btn" onClick={clickHandler}>
+                {buttonValue}
+              </button>
               <button className="cancel-btn" onClick={close}>
                   취소
               </button>

@@ -22,5 +22,21 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/delete", HEADER)
     },
-  }
-  export default DetailApi;
+    // 후기 신고하기
+    accuseComment : async function(reviewIndex){
+        // const params = {
+        //     index : index,
+        //     memberIndex : memberIndex
+        // }
+        return await axios.post(TCAT_DOMAIN+`/api/accuse/${(reviewIndex)}`, HEADER)
+    },
+
+    // 상품 상세 가져오기
+    getDetail : async function(pCode) {
+    const param = {
+        code: pCode
+    }
+    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, param, HEADER);
+    }
+}
+export default DetailApi;

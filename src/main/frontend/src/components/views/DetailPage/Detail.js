@@ -3,11 +3,17 @@ import {Layout} from 'antd';
 import TCalendar from './Section/Side/TCalendar'
 import Poster from './Section/Summary/Poster';
 import Info from './Section/Summary/Info';
-import DBody from './Section/Body/DBody';
 import MainHeader from '../MainHeader/MainHeader';
 import Footer from '../Footer/Footer';
 import styled from 'styled-components';
 import { BsArrowUpCircle } from 'react-icons/bs';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import DetailApi from '../../../api/DetailApi';
+import Contents from './Section/Body/Contents';
+import GridCards from '../Cards/GridCards';
+import Reviews from './Section/Body/Reviews';
+
 const { Content, Sider } = Layout;
 
 const DWrap = styled.div`
@@ -86,7 +92,15 @@ function Detail() {
   const price = 150000;
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
+  const [pCode, setPcode] = useState(22009226);
+  const [comList, setComList] = useState([]);
+  const [seat, setSeat] = useState([]);
+  const [stat, setStat] = useState([]);
+  const [cast, setCast] = useState([]);
+  const [key, setKey] = useState('info');
+
   
+  // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
     if(ScrollY > 100) {
@@ -115,6 +129,29 @@ function Detail() {
     }
   })
 
+  useEffect(() => {
+    const getData = async()=> {
+      try {
+        const res = await DetailApi.getDetail(pCode);
+        if(res.data.statusCode === 200){
+          console.log(res.data.results);
+          console.log(res.data.results.compact_list);
+          setComList(res.data.results.compact_list);
+          setSeat(res.data.results.seat_price_list);
+          setStat(res.data.results.statistics_list);
+          setCast(res.data.results.info_casting);
+          // setContent(res.data.results.compact_list.detail_poster_url);
+        } else {
+          alert("데이터 조회가 실패.")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, [pCode]);
+  console.log(cast);
+
   return (
     <DWrap>
       <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
@@ -122,18 +159,18 @@ function Detail() {
         </button>
       <MainHeader/>
       <Layout style={{width: '80%', height: '100%' ,margin:'0 auto', backgroundColor: 'white'}}>
-
         <Content >
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
             <Content className='posterCon'>
-              <Poster/>
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage}/>
             </Content>
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
-
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
-              <Info/>
+              <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
+              time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
+              seat={seat} />
             </Content>
             </div>
 
@@ -142,9 +179,30 @@ function Detail() {
             </Sider>
           </Layout>
 
-
           <Content>
-              <DBody/>
+              <div style={{width: '70%', height: '100rem'}}>
+              <Tabs
+                id="controlled-tab-example"
+                activeKey={key}
+                onSelect={(k) => setKey(k)}
+                className="mb-3"
+                style={{fontSize: '16px'}}
+                >
+                <Tab eventKey="info" title="공연정보">
+                <Contents image={comList.detail_poster_url} stat={stat}/>
+                </Tab>
+                <Tab eventKey="cast" title="캐스팅 정보">
+                {cast && cast.map((cast, id) => (
+                <React.Fragment key={id}>
+                <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
+                </React.Fragment>
+                ))}
+                </Tab>
+                <Tab eventKey="profile" title="관람후기">
+                <Reviews/>
+                </Tab>
+              </Tabs>
+              </div>
           </Content>
         </Content>
         <Footer/>

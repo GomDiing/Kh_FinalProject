@@ -47,7 +47,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Product product = findProduct.get();
         log.info("일치하는 공연명이 있습니다.", product);
 
-        ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product, createReviewCommentDTO.getContent(),
+        ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product,createReviewCommentDTO.getContent(),
                  createReviewCommentDTO.getRate());
         reviewCommentRepository.save(writeReviewComment);
         return;
@@ -137,9 +137,9 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-    public List<ReviewCommentDTO> allComment(Long index) {
+    public List<ReviewCommentDTO> allComment(String code) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByIndex(index);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.findByProduct(code);
 
         for(ReviewComment e : reviewCommentList){
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);

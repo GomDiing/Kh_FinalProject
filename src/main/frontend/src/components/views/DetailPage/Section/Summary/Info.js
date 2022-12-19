@@ -49,7 +49,7 @@ const InfoStyle = styled.div`
 `;
 
 // 상세페이지 상단 공연 정보
-function Info() {
+function Info(props) {
     const [modalOpen, setModalOpen] = useState(false);
 
     const openModal = () =>{
@@ -67,7 +67,7 @@ function Info() {
                     <strong className="infoLabel">장소</strong>
                 <span className="infoDesc">
                     <span className="infoBtn" data-popup="info-place" role="button" onClick={openModal}>
-                    대성 디큐브아트센터<CaretRightOutlined/>
+                    {props.loc}<CaretRightOutlined/>
                     </span>
                 </span>
                 </li>
@@ -76,14 +76,14 @@ function Info() {
                 <li className="infoItem">
                     <strong className="infoLabel">공연기간</strong>
                     <span span='true' className="infoDesc">
-                    <span className="infoText">2022.10.05 ~2023.02.26</span>
+                    <span className="infoText">{props.start} ~ {props.end}</span>
                 </span>
                 </li>
                 <br/>
 
                 <li className="infoItem"><strong className="infoLabel">공연시간</strong>
                     <span className="infoDesc">
-                        <span className="infoText">160분(인터미션 15분 포함)</span>
+                        <span className="infoText">{props.time}(인터미션 {props.break}분 포함)</span>
                     </span>
                 </li>
                 <br/>
@@ -91,7 +91,7 @@ function Info() {
                 <li className="infoItem">
                     <strong className="infoLabel">관람연령</strong>
                     <span className="infoDesc">
-                        <span className="infoText">8세이상 관람가능</span>
+                        <span className="infoText">{props.age}세이상 관람가능</span>
                     </span>
                 </li>
                 <br/>
@@ -101,30 +101,14 @@ function Info() {
                 <li className="infoItem infoPrice">
                     <strong className="infoLabel">가격</strong>
                     <div className="infoDesc">
-                        <ul className="infoPriceList" style={{listStyle: 'none'}}>
-                            <li className="infoPriceItem is-largePrice">
-                            </li>
+                        {props.seat && props.seat.map((seats, index) => (
+                        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
                             <li className="infoPriceItem">
-                                <span className="name">VIP석</span>
-                                <span className="price">150,000원</span>
-                            </li> <br />
-                            <li className="infoPriceItem">
-                                <span className="name">OP석</span>
-                                <span className="price">140,000원</span>
-                            </li> <br />
-                            <li className="infoPriceItem">
-                                <span className="name">R석</span>
-                                <span className="priceA">130,000원</span>
-                            </li> <br />
-                            <li className="infoPriceItem">
-                                <span className="name">S석</span>
-                                <span className="priceA">100,000원</span>
-                            </li> <br />
-                            <li className="infoPriceItem">
-                                <span className="name">A석</span>
-                                <span className="priceA">70,000원</span>
+                                <span className="name">{seats.seat}</span>
+                                <span className="price">{seats.price}</span>
                             </li> <br />
                         </ul>
+                        ))}
                     </div>
                 </li>
             </ul>
