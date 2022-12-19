@@ -65,7 +65,7 @@ const Styleside = styled.div`
  */
 function TCalendar (props) {
 
-    const { item_name, price, dateList } = props;
+    const {cast, reserve, dim, code, title, seat, price, dateList } = props;
     // str -> date type convert
     function parseDate(dateList) {
         let y = dateList.substr(0,4);
@@ -73,6 +73,7 @@ function TCalendar (props) {
         let d = dateList.substr(8,2);
         return new Date(y,m-1,d);
     }
+    console.log(dim);
     // 첫 예매 가능한 날짜
     const first_reserve_day = parseDate(dateList.date);
     // 회차 정보 0이면 상시 상품
@@ -94,18 +95,16 @@ function TCalendar (props) {
     const plusIndex = () => setIndex(index+1);
     const minusIndex = () => setIndex(index-1);
     
-    let tat = date;
-    const tas = moment(tat);
-    // 현재 일
-    const today = tas.format('YYYY-MM-DD');
-    // 7일 전
-    const cancelday = moment(tat, 'YYYY-MM-DD').subtract(7, 'day')._d.toLocaleDateString();
+    const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
 
+    // 1일 전
+    const cancelday = '공연기간이 1주일이 남지 않을 때 취소할 경우 수수료과 부과됩니다. ' + moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
         setModalOpen(false);
         setIndex(1);
     }
+    console.log(price);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
@@ -127,31 +126,32 @@ function TCalendar (props) {
                     <h4 className='side-header'>회차</h4>
                     <div className='side-content'>
                       {/* 1회차 정보 상시 상품은 안보임. */}
-                      {reserve_turn === 1 &&
-                      <>
-                      <div>
+                    {reserve_turn === 1 &&
+                    <>
+                    <div>
                         <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                      </div>
-                      {seatList && seatList.map(seat => {
+                    </div>
+                    {seatList && seatList.map(seat => {
                         return(
-                          <>
+                        <>
                             <div style={{display : 'inline'}} key={seat.index}>
-                              <span>{seat.seat} {seat.remain_quantity} / </span>
+                            <span>{seat.seat} {seat.remain_quantity} / </span>
                             </div>
-                          </>
+                        </>
                         );
-                      })}
-                      <hr />
-                      <h4 className='side-header'>캐스팅</h4>
-                      {castingList && castingList.map((cast) => {
+                    })}
+                    <hr />
+                    <h4 className='side-header'>캐스팅</h4>
+                    {cast && castingList && castingList.map((cast) => {
                         return(
-                          <>
+                        <>
                             <div style={{display: 'inline'}} key={seatList.index}>
-                              <span>{cast}, </span>
+                            <span>{cast}, </span>
                             </div>
-                          </>
+                        </>
                         );
                       })}
+                      {!cast && <div>캐스팅 정보가 없습니다.</div>}
                       </>
                       }
                       {/* 2회차 정보가 들어오면 할 예정 */}
@@ -161,7 +161,11 @@ function TCalendar (props) {
                         </div>
                         <p />
                     <button className='pay-button' onClick={openModal}>예매하기</button>
-                    {modalOpen && <PayPopup plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal} header={<PopupHeader index={index}/>} body={<PopupContent date={today} item_name={item_name} cancelday={cancelday} price={price} index={index} />}/>}
+                    {modalOpen && <PayPopup 
+                    plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
+                    header={<PopupHeader index={index}/>}
+                    body={<PopupContent date={selectDay} cancelday={cancelday} 
+                    seat={seat} title={title} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

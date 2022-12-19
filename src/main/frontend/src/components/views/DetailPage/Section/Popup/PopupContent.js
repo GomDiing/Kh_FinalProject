@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
@@ -20,15 +20,26 @@ const BodyStyle = styled.div`
     border: 1px solid black;  
     width: 400px;
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .seat-container .name {
+    color: rebeccapurple;
   }
   li{
     display: inline-block;
     margin-top: 10px;
   }
-  .price-info {
-    float: right;
-    margin-right: 150px;        
+  .price {
     margin-top: 10px; 
+    margin-left: 12px;
+    padding: 12px;
+    margin: 0 auto;
+  }
+  .check-box {
+    margin: 0 auto;
   }
   .seat {
     float: left;
@@ -70,12 +81,14 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { item_name, price, date, cancelday, index } = props;
+  const { title, seat, date, cancelday, index } = props;
   
+    const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [stuValue, setStuValue] = useState(0);
     const [douValue, setDouValue] = useState(0);
     const [eveValue, setEveValue] = useState(0);
+    const [seatList, setSeatList] = useState('');
     // 티켓 * 수량 = 총 티켓 금액
     const [ticket, setTicket] = useState(0);
     // 비과세 = 총 티켓 금액의 5%
@@ -89,14 +102,14 @@ function PopupContent (props) {
     // 신규 오픈 티켓 금액
     const openEvent = price - (price / 20);
     /**
-     * 
      * Ticekt Quantity !Duplicate Accept
      */
     const changeValue = e => {
       const name = e.target.name;
       let values,tickets, totals, taxs = 0;
       values = Number(e.target.value);
-      if(name === 'basic') {
+      switch(name) {
+        case 'basic':
           setValue(values);
           setDouValue(0);
           setEveValue(0);
@@ -107,7 +120,8 @@ function PopupContent (props) {
           setTax(taxs);
           totals = tickets + taxs;
           setTotal(totals);
-        } else if(name === 'student') {
+          break;
+        case 'student':
           setStuValue(values);
           setValue(0);
           setDouValue(0);
@@ -118,7 +132,8 @@ function PopupContent (props) {
           setTax(taxs);
           totals = tickets + taxs;
           setTotal(totals);
-        } else if(name === 'double') {
+          break;
+        case 'double':
           setDouValue(values);
           setValue(0);
           setEveValue(0);
@@ -129,7 +144,8 @@ function PopupContent (props) {
           setTax(taxs);
           totals = tickets + taxs;
           setTotal(totals);
-        } else if(name === 'event') {
+          break;
+        case 'event':
           setEveValue(values);
           setValue(0);
           setDouValue(0);
@@ -140,36 +156,31 @@ function PopupContent (props) {
           setTax(taxs);
           totals = tickets + taxs;
           setTotal(totals);
-        }
+          break;
+        default:
+          alert('오류');
       }
+    }
 
   const BodyReturn = () => (
     <>
     {index === 1 &&
     <div>
-      <h2>좌석 선택</h2>
+      <h2>좌석 선택 <h6><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></h6></h2>
       <div className='seat-container'>
-        <ul>
-          <span className='seat seat-vip'/>
-            <li>VIP석 0석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-r'/>
-            <li>R석 5석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-s'/>
-            <li>S석 28석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
-          <span className='seat seat-a'/>
-            <li>A석 94석</li>
-          <span className='price-info'>{price}원</span>
-            <br />
+      {seat && seat.map((seats, index) => (
+        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
+          <li className="infoPriceItem">
+            <div onClick={() => setSeatList(seats.seat)}>
+              <span className="name">{seats.seat}</span>
+              <span className="price">{seats.price} <input className={'check' + index} type='checkbox' onClick={() => setPrice(seats.price)} /></span>
+            </div>
+          </li> <br />
         </ul>
+      ))}
       </div>
         <hr />
-        <MyInfo item_name={item_name} date={date} cancelday={cancelday} />
+        <MyInfo seat={seatList} price={price} title={title} date={date} cancelday={cancelday} />
     </div>
     }
     {index === 2 &&
@@ -191,6 +202,8 @@ function PopupContent (props) {
                 <option>{1}</option>
                 <option>{2}</option>
                 <option>{3}</option>
+                <option>{4}</option>
+                <option>{5}</option>
               </select>
               <span>수량</span>
             </td>
@@ -205,6 +218,8 @@ function PopupContent (props) {
                 <option>{1}</option>
                 <option>{2}</option>
                 <option>{3}</option>
+                <option>{4}</option>
+                <option>{5}</option>
               </select>
               <span>수량</span>
             </td>
@@ -218,6 +233,8 @@ function PopupContent (props) {
                 <option>{1}</option>
                 <option>{2}</option>
                 <option>{3}</option>
+                <option>{4}</option>
+                <option>{5}</option>
               </select>
               <span>수량</span>
             </td>
@@ -231,6 +248,8 @@ function PopupContent (props) {
                 <option>{1}</option>
                 <option>{2}</option>
                 <option>{3}</option>
+                <option>{4}</option>
+                <option>{5}</option>
               </select>
               <span>수량</span>
             </td>
@@ -247,10 +266,10 @@ function PopupContent (props) {
         <li>동일 상품에 대해서 회차, 좌석 가격, 결제 등 일부 변경을 원하시는 경우, 기존 예매 건을 취소하시고 재예매 하셔야 합니다.
         단, 취소 시점에 따라 예매수수료가 환불 되지 않으며, 취소 수수료가 부과될 수 있습니다.</li>
       </div>
-      <MyInfo cancelday={cancelday} item_name={item_name} date={date} value={value} ticket={ticket} tax={tax} total={total} />
+      <MyInfo seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />
       </>
     }
-    {index === 3 && <FinalModal cancelday={cancelday} item_name={item_name} date={date} value={value} ticket={ticket} tax={tax} total={total} />}
+    {index === 3 && <FinalModal seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />}
     </>
   );
 
@@ -262,26 +281,24 @@ function PopupContent (props) {
 }
 
   const FinalModal = props => {
-    const { cancelday, item_name, date, value, ticket, tax, total } = props;
-    PayReady(item_name, total, tax, value);
+    const { seat, cancelday, title, date, value, ticket, tax, total } = props;
+    PayReady(title, total, tax, value);
     const payUrl = window.localStorage.getItem('url');
-    console.log(total, value, tax);
 
-    
     return(
       <div>
-      <div>
-          <MyInfo cancelday={cancelday} item_name={item_name} date={date} value={value} ticket={ticket} tax={tax} total={total} />
+        <div>
+          <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
           <a href={payUrl}><button className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
-      </div>
+        </div>
     </div>
     );
   }
 
   const MyInfo = props => {
     
-    const { item_name, date, ticket, tax, total,  cancelday } = props;
+    const { date, ticket, tax, total, seat, cancelday } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -289,13 +306,13 @@ function PopupContent (props) {
           <tbody>
           <tr>
             <th>제목</th>
-            <td>{item_name}</td>
+            <td>{props.title}</td>
             <th className="sh">일시</th>
             <td>{date}</td>
           </tr>
           <tr>
             <th>선택 좌석</th>
-            <td>현 좌석</td>
+            <td>{seat}</td>
             <th className="sh">티켓 금액</th>
             <td>{ticket}</td>
           </tr>
