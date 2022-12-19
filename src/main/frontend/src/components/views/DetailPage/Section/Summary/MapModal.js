@@ -11,10 +11,10 @@ const MapModalBodyContainer = styled.div`
 
 const MapModalBody = (props) =>{
     const [loactionObj, setLocationObj] = useState(props.dloc);
-    console.log(props.loc2);
+    console.log(props.dloc);
 
     const getLocation = () => {
-        axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${props.loc2}`, {
+        axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${loactionObj}`, {
             headers: { Authorization: `eea39e4715c0bc716e82b502b5976243` },
         })
             .then(res => {
@@ -32,12 +32,12 @@ const MapModalBody = (props) =>{
     useEffect(() => {
         var container = document.getElementById('map');
         var options = {
-            center: new kakao.maps.LatLng(37.31123213275, 126.83214503891676),
+            center: new kakao.maps.LatLng(loactionObj.locationX, loactionObj.locationY),
             level: 3
         };
     
         var map = new kakao.maps.Map(container, options,);
-        var markerPosition = new kakao.maps.LatLng(37.31769736304275, 126.83974503891676);
+        var markerPosition = new kakao.maps.LatLng(loactionObj.locationX, loactionObj.locationY);
         var marker = new kakao.maps.Marker({
             title: '미정',
             position: markerPosition,

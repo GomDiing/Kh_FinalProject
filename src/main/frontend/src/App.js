@@ -21,7 +21,7 @@ function App() {
       <Route path='/MyPage/*' element={<MyPage/>}/>
       <Route path='/login' element={<Login />} />
       <Route path='/sign' element={<Sign />} />
-      <Route path="/detail" element={<Detail />} />
+      <Route exact path="/detail/:code" element={<Detail />} />
       {/* 지민 추가했습니다.. */}
       <Route path="/payready" element={<PayReady />} />
       <Route path="/payresult" element={<PayResult />} />

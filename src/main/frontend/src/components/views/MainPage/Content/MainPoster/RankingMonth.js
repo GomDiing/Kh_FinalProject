@@ -91,6 +91,7 @@ const HWrap = styled.div`
     display: hidden;
 }
 `
+
     const categories = [
         {
             name : 'MUSICAL',
@@ -110,9 +111,10 @@ const HWrap = styled.div`
         }
     ]
 
-const RankingWeek = () =>{
+const RankingMonth = () =>{
     const [category , setCategory] = useState('MUSICAL');
     const [ItemData , setItemData] = useState([]);
+
     const onSelect = (e) =>{
         setCategory(e)
     }
@@ -120,7 +122,7 @@ const RankingWeek = () =>{
     useEffect(() => {
         const PosterAsunc = async() =>{
             try{
-                const res = await MainApi.rankingWeek(category, 10);
+                const res = await MainApi.rankingMonth(category, 10);
                 if(res.data.statusCode === 200){
                     setItemData(res.data.results)
                 }
@@ -130,11 +132,11 @@ const RankingWeek = () =>{
         }
         PosterAsunc();
     }, [category])
-        return(
+    return(
             <>
                 <PosterCategoryContainer>
                     <div className="PosterTitle">
-                        <h2>주간랭킹</h2>
+                        <h2>월간랭킹</h2>
                     {categories.map(c=>(
                         <li 
                             key={c.name}
@@ -150,18 +152,18 @@ const RankingWeek = () =>{
                     <ul>
                         {ItemData.map((ItemData , index)=>(
                             <li key={index} >
-                                <a href={`/detail/${ItemData.code}`} >
-                                <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                                <p>{ItemData.product.title}</p>
-                                </a>
-                            </li>
+                            <a href={`/detail/${ItemData.code}`} >
+                            <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                            <p>{ItemData.product.title}</p>
+                            </a>
+                        </li>
                         ))}
                     </ul>
-                    </PosterImgContainer>
+                        </PosterImgContainer>
                     </HorizontalScroll>
                 </HWrap>
             </>
     )
 }
-export default RankingWeek;
+export default RankingMonth;
 

@@ -13,6 +13,7 @@ import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
 import Reviews from './Section/Body/Reviews';
+import { useParams } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 
@@ -90,9 +91,10 @@ background-color: #f5f5f5;
 function Detail() {
   const item_name = '태양의서커스 <뉴 알레그리아>';
   const price = 150000;
+  const {code} = useParams();
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
-  const [pCode, setPcode] = useState(22014842);
+  const [pCode, setPcode] = useState('');
   const [ckList, setCkList] = useState([]);
   const [comList, setComList] = useState([]);
   const [seat, setSeat] = useState([]);
@@ -131,6 +133,7 @@ function Detail() {
   })
 
   useEffect(() => {
+    setPcode(code);
     const getData = async()=> {
       try {
         const res = await DetailApi.getDetail(pCode);
