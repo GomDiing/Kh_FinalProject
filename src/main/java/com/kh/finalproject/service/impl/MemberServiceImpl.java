@@ -1,9 +1,9 @@
 package com.kh.finalproject.service.impl;
 
-import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
@@ -17,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-
-import static com.kh.finalproject.entity.enumurate.MemberStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +32,15 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public void signup(SignupDTO signupDto) {
+    public void signupByHome(SignupDTO signupDto) {
 
         unregisterCheck();
 
         // DTO -> ENTITY 변환
-        Member signMember = new Member().toEntity(signupDto);
+        Member signMember = new Member().toEntity(signupDto, MemberProviderType.HOME);
 
         // 해당 하는 아이디의 정보를 가져옴 재가입일 수도 있기 때문에 아이디 중복처리는 아직.
-        Optional<Member> findId = memberRepository.findById(signMember.getId());
+        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(signMember.getId(), MemberStatus.UNREGISTER, MemberProviderType.HOME);
 
         // 아이디가 있다면 그 회원의 상태가 블랙리스트 또는 영구탈퇴라면 재가입 방지.
         if(findId.isPresent()) {
@@ -74,12 +71,12 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public void editMemberInfo(EditMemberInfoDTO memberInfoDTO) {
+    public void editMemberInfoByHome(EditMemberInfoDTO memberInfoDTO) {
 
         unregisterCheck();
 
         //주어진 ID로 회원 조회
-        Member findMember = memberRepository.findById(memberInfoDTO.getId())
+        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //주어진 회원과 연결된 주소 조회
@@ -103,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
 
         unregisterCheck();
 
-        Optional<Member> findId = memberRepository.findById(id);
+        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, MemberProviderType.HOME);
 
         if(findId.isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLI_MEMBER_ID);
@@ -131,8 +128,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberDTO searchById(String id) {
-
-        Member findId = memberRepository.findById(id)
+        //홈에서 가입 회원이고 완전 탈퇴된 회원 제외
+        Member findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         Address memberAddress = addressRepository.findByMember(findId);
@@ -149,7 +146,7 @@ public class MemberServiceImpl implements MemberService {
 
         unregisterCheck();
 
-        Member findNameAndEmail = memberRepository.findByNameAndEmail(name, email)
+        Member findNameAndEmail = memberRepository.findByNameAndEmailAndStatusNotAndProviderType(name, email, MemberStatus.UNREGISTER, MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.DUPLI_EMAIL_NAME));
 
         Map<String, String> memberId = new LinkedHashMap<>();
@@ -170,7 +167,7 @@ public class MemberServiceImpl implements MemberService {
 
         unregisterCheck();
 
-        Member findIdNameEmail = memberRepository.findByIdAndNameAndEmail(id, name, email)
+        Member findIdNameEmail = memberRepository.findByIdAndNameAndEmailAndStatusNotAndProviderType(id, name, email, MemberStatus.UNREGISTER, MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_MATCH_ID_EMAIL_NAME));
 
         Map<String, String> memberPassword = new LinkedHashMap<>();
@@ -193,7 +190,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         // 아이디 패스워드로 조회 성공하면
-        Member findMember = memberRepository.findByIdAndPassword(deleteMemberDTO.getId(), deleteMemberDTO.getPassword())
+        Member findMember = memberRepository.findByIdAndPasswordAndProviderType(deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
 
         // 조회한 회원의 정보를 DELETE 업데이트 !!
@@ -327,7 +324,7 @@ public class MemberServiceImpl implements MemberService {
 
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
-        List<Member> findMemberList = memberRepository.findAllByMemberAccuseCountGreaterThan(4)
+        List<Member> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 신고횟수가 5개 이상인 회원이 없습니다"));
 
         for (Member member : findMemberList) {
