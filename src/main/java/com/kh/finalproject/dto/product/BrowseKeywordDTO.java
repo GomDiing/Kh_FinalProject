@@ -9,34 +9,37 @@ import lombok.Getter;
  */
 @Getter
 public class BrowseKeywordDTO {
-    private ProductCategory productCategory;
+
+    private String code;
+    private ProductCategory category;
     private String title;
-    private String thumbPosterUrl;
+    private String poster_url;
     private String location;
-    private String periodStart;
-    private String periodEnd;
+    private String period_start;
+    private String period_end;
     private Integer age;
-    private Boolean ageIsKorean;
-    private Integer timeMin;
-    private Integer timeBreak;
+    private Boolean age_is_korean;
+    private Integer time_min;
+    private Integer time_break;
 
     public BrowseKeywordDTO toDTO (Product product) {
-        this.productCategory = product.getCategory();
+        this.code = product.getCode();
+        this.category = product.getCategory();
         this.title = product.getTitle();
-        this.thumbPosterUrl = product.getThumbPosterUrl();
+        this.poster_url = product.getThumbPosterUrl();
         this.location = product.getLocation();
-        this.periodStart = product.getPeriodStart();
+        this.period_start = product.getPeriodStart();
 
         if(product.getPeriodEnd() == null) {
-            this.periodEnd = "당일 공연";
+            this.period_end = "당일 공연";
         } else {
-            this.periodEnd = product.getPeriodEnd();
+            this.period_end = product.getPeriodEnd();
         }
 
         this.age = product.getAge();
-        this.ageIsKorean = product.getAgeIsKorean();
-        this.timeMin = product.getTimeMin();
-        this.timeBreak = product.getTimeBreak();
+        this.age_is_korean = product.getAgeIsKorean();
+        this.time_min = product.getTimeMin();
+        this.time_break = product.getTimeBreak();
 
         return this;
     }
