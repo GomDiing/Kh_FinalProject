@@ -108,6 +108,8 @@ function TCalendar (props) {
         setModalOpen(false);
         setIndex(1);
     }
+
+    console.log(props.seat[0].price);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>

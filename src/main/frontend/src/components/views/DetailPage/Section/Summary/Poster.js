@@ -6,6 +6,8 @@ import WishBt from './WishBt';
 const PosterStyle = styled.div `
 .summary-top {
     text-align: center;
+    word-wrap: break-word;
+    max-width: 500px;
 }
 .posterConta {
     text-align: center;

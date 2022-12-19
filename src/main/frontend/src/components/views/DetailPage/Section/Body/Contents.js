@@ -5,8 +5,7 @@ import {ManOutlined, WomanOutlined } from '@ant-design/icons';
 // 공연 정보
 function Contents(props) {
 
-  console.log(props.stat);
-
+  // console.log(props.stat);
   const data = [
     {
       // index: props.stat.product_code,
@@ -18,7 +17,7 @@ function Contents(props) {
     },
   ]
   return (
-    <div className='contentsWrap'>
+    <div className='contentsWrap' style={{marginLeft: '2rem', marginTop: '1.5rem'}}>
     <div className='main'>
       <img src={props.image} alt=''></img>
     </div>
@@ -31,8 +30,8 @@ function Contents(props) {
         width: 300,
       }}
     >
-      <p><ManOutlined />{props.stat.male}</p>
-      <p><WomanOutlined />{props.stat.female}</p>
+      <p><ManOutlined />: {props.stat.male}</p>
+      <p><WomanOutlined />: {props.stat.female}</p>
 
     </Card>
 
