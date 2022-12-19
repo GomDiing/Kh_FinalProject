@@ -28,12 +28,11 @@ public class ReviewCommentImpl implements ReviewCommentService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-
-    @Transactional
     /*공연 후기 작성*/
+    @Transactional
     @Override
     public void create(CreateReviewCommentDTO createReviewCommentDTO) {
-    /*공연 후기 작성 시 회원 아이디로 회원 조회*/
+        /*공연 후기 작성 시 회원 아이디로 회원 조회*/
         Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
         if(findOne.isEmpty()){
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
@@ -48,15 +47,16 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Product product = findProduct.get();
         log.info("일치하는 공연명이 있습니다.", product);
 
+        /*작성 후 save*/
         ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product, createReviewCommentDTO.getTitle(),createReviewCommentDTO.getContent(),
-                 createReviewCommentDTO.getRate());
+                createReviewCommentDTO.getRate());
         reviewCommentRepository.save(writeReviewComment);
 
         List<ReviewComment> findAllReview = reviewCommentRepository.findAllByProduct(product);
 
         Long group = 0L;
         for (ReviewComment reviewComment : findAllReview) {
-            if (reviewComment.getIndex() > group) {
+            if (reviewComment.getIndex() > group) {  //부모 그룹값보다 작성된 후기글 값이 더 크면 똑같이
                 group = reviewComment.getIndex();
             }
         }
@@ -71,7 +71,8 @@ public class ReviewCommentImpl implements ReviewCommentService {
         return;
 
     }
-    /*후기 대댓글 작성(미구현)*/
+
+    /*후기 대댓글 작성*/
     @Override
     @Transactional
     public void reCreate(CreateReviewCommentDTO createReviewCommentDTO){
@@ -93,7 +94,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member,product, createReviewCommentDTO.getContent());
         reviewCommentRepository.save(rewriteReviewComment);
 
-        /*해당 상품에 작성된 후기 가져오기*/
+        /*해당 상품에 작성된 모든 후기 가져오기*/
         List<ReviewComment> findAllReview = reviewCommentRepository.findAllByProduct(product);
         Collections.sort(findAllReview, new ListComparator()); //순서 정렬
 
@@ -107,12 +108,10 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Long parentGroup = createReviewCommentDTO.getGroup(); //후기 그룹
         Integer parentLayer = createReviewCommentDTO.getLayer(); // 후기 layer
 
-//        List<ReviewComment> findCommentList = new ArrayList<>();
 
         for (ReviewComment reviewComment : findAllReview) {
             if (Objects.equals(reviewComment.getGroup(), parentGroup)) { // 후기 그룹 값이랑 그룹 값이 같은거 가져오기 => 총 몇개 댓글 달린지 유추
                 reCount++;
-//                findCommentList.add(reviewComment);
                 reGroup = parentGroup;
             }
             reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
@@ -124,13 +123,11 @@ public class ReviewCommentImpl implements ReviewCommentService {
             if (reviewComment.getOrder() > lastOrder) {
                 reviewComment.updateOrder(reviewComment.getOrder() + 1);
             }
-//            reviewComment.updateOrder(lastOrder + 1);
         }
         findAllReview.get(findAllReview.size() -1).updateOrder(lastOrder + 1);
-
     }
 
-    /*후기 댓글 삭제하기(status 상태 변화 안됨)*/
+    /*후기 댓글 삭제하기(status 상태 변화)*/
     @Override
     @Transactional
     public void remove(RemoveReviewCommentDTO removeReviewCommentDTO) {
@@ -141,14 +138,11 @@ public class ReviewCommentImpl implements ReviewCommentService {
         }
         Member member = findOne.get();
         log.info("일치하는 아이디가 있습니다.", member);
-        Integer layer = removeReviewCommentDTO.getLayer();
-        Long group = removeReviewCommentDTO.getGroup();
 
-//        글 조회
+        // optional 예외처리 필수-> 앞에 optional 빼줌
         ReviewComment findReview = reviewCommentRepository.findById(removeReviewCommentDTO.getIndex())
                 .orElseThrow(() -> new IllegalArgumentException("조회된 글이 없습니다."));
-
-        findReview.changeReviewCommentStatus();
+        findReview.changeReviewCommentStatus(); // 작성글 index 찾아서 status 값 바꿔주기
     }
 
     /*후기 댓글 수정하기*/
@@ -194,9 +188,9 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-    public List<ReviewCommentDTO> allComment(String code) {
+    public List<ReviewCommentDTO> allComment(String productCode) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.findByProduct(code);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCode(productCode);
 
         for(ReviewComment e : reviewCommentList){
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);

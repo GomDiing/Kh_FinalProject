@@ -32,7 +32,7 @@ public class ReviewCommentDTO {
         this.group = reviewComment.getGroup();
         this.layer = reviewComment.getLayer();
         this.order = reviewComment.getOrder();
-        this.reviewCommentStatus = reviewComment.getStatus().getStatus();
+        this.reviewCommentStatus = reviewComment.getStatus().ACTIVE.getStatus();
         this.accuseCount = reviewComment.getAccuseCount();
         this.productCode = reviewComment.getProduct().getCode();
 

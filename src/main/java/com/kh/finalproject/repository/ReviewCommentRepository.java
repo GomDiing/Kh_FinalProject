@@ -27,7 +27,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     value = "select * from review_comment")
     List<ReviewComment> selectAll(Pageable size);
 
-    List<ReviewComment> findAllByProduct(Product product);
+    List<ReviewComment> findAllByProduct(Product productCode);
 
 
     /*review 수정 시 게시글 index 번호로 조회 후 수정*/
@@ -38,7 +38,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 
-    List<ReviewComment> findByProduct(String code);
+    List<ReviewComment> findAllByProductCode(String code);
 
 
 }
