@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { storage } from "./Tool/Firebase";
 import {ref, uploadBytes, listAll, getDownloadURL,deleteObject, getStorage, uploadString} from "firebase/storage";
 import {v4, v4 as uuidv4} from "uuid";
+import { useNavigate } from "react-router-dom";
 // import { ref, uploadString, getDownloadURL, deleteObject } from "@firebase/storage";
 
 
@@ -15,13 +16,17 @@ const Banner=()=>{
     const[image, setImage] = useState("");
     // 사진 업로드 하고 담는 값
 
+    // const StudyWrite = (studyObj) => {
         const [attachment, setAttachment] = useState("");
         const [imageList, setImageList] =useState([]);
+        const Navigate = useNavigate();
+        // const [isRander , setIsRander] = useState(false);
+        
         let attachmentUrl = "";
         //사진 첨부 없이 텍스트만 트윗하고 싶을 때도 있으므로 기본 값을 ""로 해야한다.
         //트윗할 때 텍스트만 입력시 이미지 url ""로 비워두기 위함
 
-        const onChangeImg = (e) => {
+        const onChangeImg = (e) => {                    
             const {
             target: { files },
             } = e;
@@ -52,12 +57,15 @@ const Banner=()=>{
                 console.log(attachmentUrl);
                 getDownloadURL(response.ref).then((url)=>{
                     setImageList((prev)=>[...prev,url])
-            })
-        }
+                    alert("업로드 성공");
+                    setAttachment(null);
+                })
+            }
     };
     
-        const imageListReg=ref(storage,"image/");
-        useEffect(()=>{
+    useEffect(()=>{
+            const imageListReg=ref(storage,"image/");
+            // setImageList([]);
             listAll(imageListReg).then((response)=>{
                 console.log(response);
                 response.items.forEach((item)=>{
@@ -66,40 +74,54 @@ const Banner=()=>{
                     })
                 })
             })
+            console.log("useEffect !!!")
         },[])
-
+        
+        const onSelecet = (e) =>{
+            setAttachment(e)
+            console.log(attachment)
+        }
+        
         const onDelete = async () => {
-            console.log(attachmentUrl);
-            const urlRef = ref(storage, attachmentUrl);
+            const urlRef = ref(storage, attachment);
             try {
-                if (attachmentUrl !== "") {
+                if (attachment !== "") {
                     await deleteObject(urlRef);
                     console.log("삭제성공");
-                    alert("삭제 성공")
+                    alert("삭제 성공");
+                    Navigate(0);
                 }
             } catch (error) {
                 window.alert("이미지를 삭제하는 데 실패했습니다!");
                 console.log("삭제실패");
             }
         }
-    
+       
     return(
         <BannerBlock>
-        <NavBar name="광고/배너 관리"/>
-        <div className="banner-Container">
-        </div>
-        <input type="file" onChange={onChangeImg}/>
-        {attachment && (
-            <div>
-                <img src={attachment} width="30px" height="30px" alt=""/>
-            </div>
-            )}
-            <button onClick={onSubmit}> 업로드하기</button>
-            <button onClick={onDelete}>삭제하기</button>
-            {imageList.map((url) => (<ul>
-            <li><img src={url} alt=""/>
-            </li></ul>
+            <div className="BannerContainer">
+            <NavBar className="BannerNav" name="광고/배너 관리"/>
+                <div className="SelectBox">
+                    <input type="file" onChange={onChangeImg}/>
+                    <div>
+                        <button onClick={onSubmit}> 업로드하기</button>
+                        <button onClick={onDelete}>삭제하기</button>
+                    </div>
+                </div>
+                <div className="BannerContent">
+
+                <div className="SelectItem">
+
+            {attachment && (
+                    <img src={attachment} alt=""/>
+                    )}
+                </div>
+            {imageList.map((url) => (
+                <ul>
+                    <li><img src={url} alt="" onClick={()=>{onSelecet(url)}}/></li>
+                </ul>
         ))} 
+        
         {/* <button className="uploadAd">배너 등록하기</button>
         <h3>이미지 미리보기</h3> */}
 
@@ -114,15 +136,59 @@ const Banner=()=>{
         ))} 
 
         {/* </div> */}
-        
+        </div>
+        </div>
         </BannerBlock>
     );
 }
 export default Banner;
 
 const BannerBlock=styled.div`
-    margin:0 auto;
+    width: 100%;
+    /* border: 1px solid black; */
+    .BannerContainer{
+        width: 80%;
+        margin: 0 auto;
+    }
+    .BannerContent{
+        padding:20px;
+        border: 1px solid black;
+    }
+
+    button{
+        border: 1px solid black;
+        margin: 0px 10px;
+    }
+    input{
+        margin: 0px 10px;
+    }
+    .SelectBox{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid black;
+        border-bottom: 0px;
+        height:40px;
+
+    }
+    .SelectItem{
+        width: 60%;
+        border: 1px solid black;
+        min-height: 300px;
+        margin: 20px auto;
+    }
+    img{
+        cursor: pointer;
+        width: 100%;
+        height: 300px;
+    }
+    li {
+        margin: 20px;
+        list-style: none;
+    }
+    /* width: 100%;
     box-sizing: border-box;
+    border: 1px solid black;
   .banner-container {
     width: 100vw;
     margin : 10px;
@@ -148,4 +214,7 @@ const BannerBlock=styled.div`
         height: 200px;
         margin: 10px;
     }
+    .ItemList{
+        display: flex;
+    } */
 `;

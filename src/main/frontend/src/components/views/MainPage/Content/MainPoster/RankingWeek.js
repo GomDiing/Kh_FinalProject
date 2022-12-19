@@ -146,7 +146,6 @@ const posterInfo = [
 const RankingWeek = () =>{
     const [category , setCategory] = useState('MUSICAL');
     const size = 10;
-    
     const onSelect = (e) =>{
         setCategory(e)
     }
@@ -155,7 +154,9 @@ const RankingWeek = () =>{
     useEffect(() => {
         const PosterAsunc = async() =>{
             try{
-                const res = await MainApi.rankingWeek(category , size);
+                // console.log(category)
+                const res = await MainApi.rankingWeek(category, size);
+                console.log(res.data);
                 
             }catch(e){
                 console.log(e);

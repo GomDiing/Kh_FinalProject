@@ -55,7 +55,7 @@ function Poster(props) {
 
 
     // 별점
-    const [value, setValue] = useState(3);
+    const [value, setValue] = useState(props.rate);
     function handleChange(value) {
         setValue(value);
     }

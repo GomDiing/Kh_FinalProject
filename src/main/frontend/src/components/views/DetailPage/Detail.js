@@ -3,12 +3,15 @@ import {Layout} from 'antd';
 import TCalendar from './Section/Side/TCalendar'
 import Poster from './Section/Summary/Poster';
 import Info from './Section/Summary/Info';
-import DBody from './Section/Body/DBody';
 import MainHeader from '../MainHeader/MainHeader';
 import Footer from '../Footer/Footer';
 import styled from 'styled-components';
 import { BsArrowUpCircle } from 'react-icons/bs';
 import DetailApi from '../../../api/DetailApi';
+import Contents from './Section/Body/Contents';
+import GridCards from '../Cards/GridCards';
+import Reviews from './Section/Body/Reviews';
+
 const { Content, Sider } = Layout;
 
 const DWrap = styled.div`
@@ -89,6 +92,10 @@ function Detail() {
   const [BtnStatus, setBtnStatus] = useState(false);
   const [pCode, setPcode] = useState(22009226);
   const [comList, setComList] = useState([]);
+  const [seat, setSeat] = useState([]);
+  const [stat, setStat] = useState([]);
+  const [cast, setCast] = useState([]);
+  const [key, setKey] = useState('info');
   const [dateList, setDateList] = useState('');
   
   useEffect(() => {
@@ -137,6 +144,29 @@ function Detail() {
       window.removeEventListener('scroll', handleFollow)
     }
   })
+
+  useEffect(() => {
+    const getData = async()=> {
+      try {
+        const res = await DetailApi.getDetail(pCode);
+        if(res.data.statusCode === 200){
+          console.log(res.data.results);
+          console.log(res.data.results.compact_list);
+          setComList(res.data.results.compact_list);
+          setSeat(res.data.results.seat_price_list);
+          setStat(res.data.results.statistics_list);
+          setCast(res.data.results.info_casting);
+          // setContent(res.data.results.compact_list.detail_poster_url);
+        } else {
+          alert("데이터 조회가 실패.")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, [pCode]);
+  console.log(cast);
 
   return (
     <DWrap>
