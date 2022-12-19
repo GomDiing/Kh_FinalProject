@@ -64,8 +64,16 @@ const Styleside = styled.div`
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
+    const {cast, reserve, dim, code, title, seat, dateList } = props;
 
-    const {cast, reserve, dim, code, title, seat, price, dateList } = props;
+    // 예약 가능한 날짜
+    const [selet, setselet] = useState(dim);
+    const [disDate, SetDisDate] = useState('');
+
+
+    
+
+
     // str -> date type convert
     function parseDate(dateList) {
         let y = dateList.substr(0,4);
@@ -94,17 +102,25 @@ function TCalendar (props) {
     const [index, setIndex] = useState(1);
     const plusIndex = () => setIndex(index+1);
     const minusIndex = () => setIndex(index-1);
+    // console.log(date.getDate());
     
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
-
     // 1일 전
-    const cancelday = '공연기간이 1주일이 남지 않을 때 취소할 경우 수수료과 부과됩니다. ' + moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
+    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString() + ' 공연 시작 1시간 전';
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
         setModalOpen(false);
         setIndex(1);
     }
-    console.log(price);
+    // 23 24 25 27 28 29 30 31
+    const noreserve = () => {
+        if(!date.includes(dim)) {
+            SetDisDate(date.getDate());
+            alert("예매 가능한 날짜가 아닙니다.")
+        }
+    }
+
+    console.log(props.seat[0].price);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
@@ -113,6 +129,8 @@ function TCalendar (props) {
             formatDay={(locale, date) => date.toLocaleString("en", {day: "2-digit"})}
             // 예메 가능한 첫 날짜 집어넣음
             minDate={first_reserve_day}
+            onClickDay={noreserve}
+            tileDisabled={({date}) => date.getDate() === 26}
             />
             </div>
             <div className='text-center'>
@@ -150,14 +168,14 @@ function TCalendar (props) {
                             </div>
                         </>
                         );
-                      })}
-                      {!cast && <div>캐스팅 정보가 없습니다.</div>}
-                      </>
-                      }
-                      {/* 2회차 정보가 들어오면 할 예정 */}
-                      {reserve_turn > 1 &&
-                      <button className='button no' type='button'>2회 20:00</button>
-                      }
+                    })}
+                    {!cast && <div>캐스팅 정보가 없습니다.</div>}
+                    </>
+                    }
+                    {/* 2회차 정보가 들어오면 할 예정 */}
+                    {reserve_turn === 2 &&
+                    <button className='button no' type='button'>2회 20:00</button>
+                    }
                         </div>
                         <p />
                     <button className='pay-button' onClick={openModal}>예매하기</button>
@@ -165,7 +183,7 @@ function TCalendar (props) {
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
                     body={<PopupContent date={selectDay} cancelday={cancelday} 
-                    seat={seat} title={title} index={index} />}/>}
+                    seat={seat} title={title} index={index} code={code} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

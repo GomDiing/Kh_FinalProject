@@ -35,6 +35,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIndex(Long index);
 
     Optional<Member> findByEmailAndStatusNot(String email, MemberStatus status);
+    Optional<Member> findByEmailAndStatusNotAndProviderTypeNot(String email, MemberStatus status, MemberProviderType providerType);
 
     Optional<Member> findByNameAndEmailAndStatusNotAndProviderType(String name, String email, MemberStatus status, MemberProviderType provider);
 

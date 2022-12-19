@@ -13,6 +13,7 @@ import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
 import Reviews from './Section/Body/Reviews';
+import { useParams } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 
@@ -90,14 +91,11 @@ background-color: #f5f5f5;
 function Detail() {
   const item_name = '태양의서커스 <뉴 알레그리아>';
   const price = 150000;
+  const {code} = useParams();
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
-<<<<<<< HEAD
   const [pCode, setPcode] = useState('');
-=======
-  const [pCode, setPcode] = useState(22009226);
   const [ckList, setCkList] = useState([]);
->>>>>>> 5408a823441ffaf058cd62f8e1a1824c010a0b6b
   const [comList, setComList] = useState([]);
   const [seat, setSeat] = useState([]);
   const [stat, setStat] = useState([]);
@@ -105,6 +103,7 @@ function Detail() {
   const [key, setKey] = useState('info');
   const [dateList, setDateList] = useState('');
   const [open, setOpen] = useState(false);
+  const [castInfo, setCastInfo] = useState(false);
   
   // 최상단 스크롤
   const handleFollow = () => {
@@ -134,7 +133,6 @@ function Detail() {
   })
 
   useEffect(() => {
-    const code = window.localStorage.getItem("code")
     setPcode(code);
     const getData = async()=> {
       try {
@@ -143,9 +141,7 @@ function Detail() {
           console.log(res.data.results);
           // checkList 특정 요소의 유무 판단
           setCkList(res.data.results.check_list);
-          if(res.data.results.check_list.is_info_casting === false) {
-            
-          } else 
+          setCastInfo(res.data.results.check_list.is_info_casting);
           // comList 상세 상품에 표기할 정보 모음
           setComList(res.data.results.compact_list);
           // 좌석/가격 정보
@@ -168,8 +164,6 @@ function Detail() {
     };
     getData();
   }, [pCode]);
-  console.log(ckList);
-
   
 
   return (
@@ -190,7 +184,7 @@ function Detail() {
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
               <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
               time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
-              seat={seat} />
+              kage={ckList.is_age_korean} seat={seat} loc2={comList.detail_location}/>
             </Content>
             </div>
 
@@ -199,34 +193,36 @@ function Detail() {
               cast={ckList.is_info_casting} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
           </Layout>
+          <br/>
 
-          <Content>
-              <div style={{width: '70%'}}>
-              <Tabs
-                id="controlled-tab-example"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}
-                className="mb-3"
-                style={{fontSize: '16px'}}
-                >
-                <Tab eventKey="info" title="공연정보">
-                <Contents image={comList.detail_poster_url} stat={stat}/>
-                </Tab>
-                <Tab eventKey="cast" title="캐스팅 정보">
-                
-                <h2>캐스팅 정보가 없습니다.</h2>
-                {cast && cast.map((cast, id) => (
-                <React.Fragment key={id}>
-                <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
-                </React.Fragment>
-                ))}
-                </Tab>
-                <Tab eventKey="profile" title="관람후기">
-                <Reviews/>
-                </Tab>
-              </Tabs>
-              </div>
-          </Content>
+        <Content>
+          <div style={{width: '70%'}}>
+          <Tabs
+            id="controlled-tab-example"
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            className="mb-3"
+            style={{fontSize: '16px'}}
+            >
+            <Tab eventKey="info" title="공연정보">
+            <Contents image={comList.detail_poster_url} stat={stat}/>
+            </Tab>
+            <Tab eventKey="cast" title="캐스팅 정보">
+            {castInfo === false ? <h2 style={{margin: '2rem'}}>캐스팅 정보가 없습니다.</h2> : 
+            <>
+            {cast && cast.map((cast, id) => (
+            <React.Fragment key={id}>
+            <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
+            </React.Fragment>
+            ))}</>
+            }
+            </Tab>
+            <Tab eventKey="profile" title="관람후기">
+            <Reviews/>
+            </Tab>
+          </Tabs>
+          </div>
+        </Content>
         </Content>
         <Footer/>
       </Layout>

@@ -34,6 +34,10 @@ public enum CustomErrorCode {
 
     EMPTY_RESERVE_TIME_CASTING(StatusCode.BAD_REQUEST, "RTC001", "조회한 시간별 예매 정보가 없습니다"),
 
+    ERROR_KAKAO_LOGIN(StatusCode.BAD_REQUEST, "SOCIAL02", "카카오 API가 실패했습니다"),
+
+    ERROR_SOCIAL_LOGIN(StatusCode.BAD_REQUEST, "SOCIAL01", "소셜 로그인이 실패했습니다"),
+
 
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),
     NOT_MATCH_ID(StatusCode.BAD_REQUEST, "J004", "비밀번호가 일치하지 않습니다"),

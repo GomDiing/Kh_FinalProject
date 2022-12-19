@@ -51,6 +51,9 @@ const InfoStyle = styled.div`
 // 상세페이지 상단 공연 정보
 function Info(props) {
     const [modalOpen, setModalOpen] = useState(false);
+    const [kage, setKage] = useState(props.kage);
+    const [inter, setInter] = useState(props.break);
+    const [openR, setopenR] = useState(props.end);
 
     const openModal = () =>{
         setModalOpen(true)
@@ -58,7 +61,7 @@ function Info(props) {
     const closeModal = () =>{
         setModalOpen(false)
     }
-
+    console.log(props.loc2);
     return (
         <InfoStyle>
         <div>
@@ -76,14 +79,19 @@ function Info(props) {
                 <li className="infoItem">
                     <strong className="infoLabel">공연기간</strong>
                     <span span='true' className="infoDesc">
+                    {openR === 'OPENRUN' ? 
+                    <span className="infoText">{props.start} ~ 오픈런</span> :
                     <span className="infoText">{props.start} ~ {props.end}</span>
+                    }
                 </span>
                 </li>
                 <br/>
 
                 <li className="infoItem"><strong className="infoLabel">공연시간</strong>
                     <span className="infoDesc">
-                        <span className="infoText">{props.time}(인터미션 {props.break}분 포함)</span>
+                        {inter !== 0 ? <span className="infoText">{props.time}(인터미션 {inter}분 포함)</span> :
+                        <span className="infoText">{props.time}분</span>
+                        }
                     </span>
                 </li>
                 <br/>
@@ -91,7 +99,9 @@ function Info(props) {
                 <li className="infoItem">
                     <strong className="infoLabel">관람연령</strong>
                     <span className="infoDesc">
-                        <span className="infoText">{props.age}세이상 관람가능</span>
+                        {kage === true ? <span className="infoText">{props.age}세이상 관람가능</span> :
+                        <span className="infoText">만 {props.age}세이상 관람가능</span>
+                        }
                     </span>
                 </li>
                 <br/>
@@ -113,7 +123,7 @@ function Info(props) {
                 </li>
             </ul>
         </div>
-        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody/>}</div></Modal>
+        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody dloc={props.loc2}/>}</div></Modal>
         </InfoStyle>
     )
 }
