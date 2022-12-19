@@ -19,7 +19,7 @@ public class ReviewCommentDTO {
     private Integer order;
     private String reviewCommentStatus;
     private Integer accuseCount;
-    private String productTitle;
+    private String productCode;
 
     /*관리자페이지 Dashboard에서 리뷰 조회용*/
     public ReviewCommentDTO toDTO(ReviewComment reviewComment){
@@ -34,7 +34,7 @@ public class ReviewCommentDTO {
         this.order = reviewComment.getOrder();
         this.reviewCommentStatus = reviewComment.getStatus().getStatus();
         this.accuseCount = reviewComment.getAccuseCount();
-        this.productTitle = reviewComment.getProduct().getTitle();
+        this.productCode = reviewComment.getProduct().getCode();
 
         return  this;
     }

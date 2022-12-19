@@ -50,7 +50,10 @@ public interface ReviewCommentService {
     ReviewCommentDTO searchByProduct(Long index);
 
     /**
-     * 후기/댓글 전체 조회 메서드
+     * 후기/댓글 전체 조회 메서드(관리자용 페이징)
      */
     List<ReviewCommentDTO> searchAll(Pageable pageSize);
+
+    /*후기 댓글 전체 메서드*/
+    List<ReviewCommentDTO> allComment(String productCode);
 }

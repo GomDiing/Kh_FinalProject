@@ -3,25 +3,26 @@ package com.kh.finalproject.service.impl;
 import com.kh.finalproject.dto.accuse.AccuseDTO;
 import com.kh.finalproject.dto.accuse.CancelAccuseDTO;
 import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
-import com.kh.finalproject.dto.accuse.ProcessAccuseDTO;
 
 import com.kh.finalproject.entity.Accuse;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AccuseRepository;
 import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.repository.ReviewCommentRepository;
-import com.kh.finalproject.response.DefaultErrorResponse;
 import com.kh.finalproject.service.AccuseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Struct;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -48,9 +49,9 @@ public class AccuseServiceImpl implements AccuseService {
         //조회한 회원, 후기가 없다면 예외 처리
         ReviewComment reviewComment = reviewCommentRepository.findById(reviewCommentIndex)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_REVIEW_COMMENT));
-        Member findVictimMember = memberRepository.findByEmail(vitimEmail)
+        Member findVictimMember = memberRepository.findByEmailAndStatusNot(vitimEmail, MemberStatus.UNREGISTER)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-        Member findSuspectMember = memberRepository.findByEmail(suspectEmail)
+        Member findSuspectMember = memberRepository.findByEmailAndStatusNot(suspectEmail, MemberStatus.UNREGISTER)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //중복 신고 방지
@@ -59,10 +60,13 @@ public class AccuseServiceImpl implements AccuseService {
             findSuspectMember.addMemberAccuseCount();
             Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
             accuseRepository.save(saveAccuse);
+
+            /*query did not return a unique result: 11 : 조회 결과 11인데 class optional 받게되서, list로 받아야 함  */
         }
 
         //중복 신고가 된 경우
         else throw new CustomException(CustomErrorCode.OVERLAP_REVIEW_COMMENT);
+        return;
     }
 
     /**

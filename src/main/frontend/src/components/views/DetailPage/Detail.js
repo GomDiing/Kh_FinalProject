@@ -138,7 +138,7 @@ function Detail() {
       try {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
-          // console.log(res.data.results);
+          console.log(res.data.results);
           // checkList 특정 요소의 유무 판단
           setCkList(res.data.results.check_list);
           setCastInfo(res.data.results.check_list.is_info_casting);
