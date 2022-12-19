@@ -89,8 +89,26 @@ function Detail() {
   const [BtnStatus, setBtnStatus] = useState(false);
   const [pCode, setPcode] = useState(22009226);
   const [comList, setComList] = useState([]);
-
+  const [dateList, setDateList] = useState('');
   
+  useEffect(() => {
+    const getData = async()=> {
+      try {
+        const res = await DetailApi.getDetail(pCode);
+        if(res.data.statusCode === 200){
+          console.log(res.data.results);
+          setComList(res.data.results.compact_list);
+          setDateList(res.data.results.calendar_list[0]);
+        } else{
+          alert("데이터 조회가 실패.")
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
   // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
@@ -120,24 +138,6 @@ function Detail() {
     }
   })
 
-  useEffect(() => {
-    const getData = async()=> {
-      try {
-        const res = await DetailApi.getDetail(pCode);
-        if(res.data.statusCode === 200){
-          console.log(res.data.results);
-          console.log(res.data.results.compact_list);
-          setComList(res.data.results.compact_list);
-        } else{
-          alert("데이터 조회가 실패.")
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getData();
-  }, []);
-
   return (
     <DWrap>
       <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
@@ -159,7 +159,7 @@ function Detail() {
             </div>
 
             <Sider className="detailSiderContainer" width={310} >
-              <TCalendar item_name={item_name} price={price}/>
+              <TCalendar dateList={dateList} item_name={item_name} price={price}/>
             </Sider>
           </Layout>
 
