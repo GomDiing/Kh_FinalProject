@@ -12,7 +12,7 @@ const MainApi={
       //   category : category,
       //   size : size
       // }
-      return await axios.get(TCAT_DOMAIN + '/ranking/week?category=' +category +'&size=' + size,HEADER);
+      return await axios.get(TCAT_DOMAIN + '/ranking/week?category=' + category +'&size=' + size,HEADER);
     },
 }
 export default MainApi;
