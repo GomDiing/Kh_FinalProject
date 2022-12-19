@@ -7,6 +7,8 @@ import MainHeader from '../MainHeader/MainHeader';
 import Footer from '../Footer/Footer';
 import styled from 'styled-components';
 import { BsArrowUpCircle } from 'react-icons/bs';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
@@ -96,26 +98,8 @@ function Detail() {
   const [stat, setStat] = useState([]);
   const [cast, setCast] = useState([]);
   const [key, setKey] = useState('info');
-  const [dateList, setDateList] = useState('');
+  const [dateList, setDateList] = [];
   
-  useEffect(() => {
-    const getData = async()=> {
-      try {
-        const res = await DetailApi.getDetail(pCode);
-        if(res.data.statusCode === 200){
-          console.log(res.data.results);
-          setComList(res.data.results.compact_list);
-          setDateList(res.data.results.calendar_list[0]);
-        } else{
-          alert("데이터 조회가 실패.")
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getData();
-  }, []);
-
   // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
@@ -151,11 +135,12 @@ function Detail() {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
           console.log(res.data.results);
-          console.log(res.data.results.compact_list);
+          // console.log(res.data.results.compact_list);
           setComList(res.data.results.compact_list);
           setSeat(res.data.results.seat_price_list);
           setStat(res.data.results.statistics_list);
           setCast(res.data.results.info_casting);
+          setDateList(res.data.results.calendar_list[0]);
           // setContent(res.data.results.compact_list.detail_poster_url);
         } else {
           alert("데이터 조회가 실패.")
@@ -166,7 +151,7 @@ function Detail() {
     };
     getData();
   }, [pCode]);
-  console.log(cast);
+  // console.log(cast);
 
   return (
     <DWrap>
@@ -179,22 +164,46 @@ function Detail() {
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
             <Content className='posterCon'>
-              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} />
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage}/>
             </Content>
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
-              <Info/>
+              <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
+              time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
+              seat={seat} />
             </Content>
             </div>
 
             <Sider className="detailSiderContainer" width={310} >
-              <TCalendar dateList={dateList} item_name={item_name} price={price}/>
+              <TCalendar item_name={item_name} price={price}/>
             </Sider>
           </Layout>
 
           <Content>
-              <DBody/>
+              <div style={{width: '70%', height: '100rem'}}>
+              <Tabs
+                id="controlled-tab-example"
+                activeKey={key}
+                onSelect={(k) => setKey(k)}
+                className="mb-3"
+                style={{fontSize: '16px'}}
+                >
+                <Tab eventKey="info" title="공연정보">
+                <Contents image={comList.detail_poster_url} stat={stat}/>
+                </Tab>
+                <Tab eventKey="cast" title="캐스팅 정보">
+                {cast && cast.map((cast, id) => (
+                <React.Fragment key={id}>
+                <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
+                </React.Fragment>
+                ))}
+                </Tab>
+                <Tab eventKey="profile" title="관람후기">
+                <Reviews/>
+                </Tab>
+              </Tabs>
+              </div>
           </Content>
         </Content>
         <Footer/>
