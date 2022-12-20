@@ -53,23 +53,23 @@ public class AccuseServiceImpl implements AccuseService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //중복 신고 방지
-        if (isNotAccuse(findSuspectMember, reviewComment)) {
-            reviewComment.addAccuseCount();
-            findSuspectMember.addMemberAccuseCount();
-            Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
+        if (isNotAccuse(findVictimMember, reviewComment)) { //신고자가 해당리뷰에 신고한적 없으면
+            reviewComment.addAccuseCount(); // 해당 리뷰 count +1
+            findSuspectMember.addMemberAccuseCount(); // 신고당한사람(작성자) 카운트 + 1
+            Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment, createAccuseDTO.getReason());
             accuseRepository.save(saveAccuse);
         }
         //중복 신고가 된 경우
         else throw new CustomException(CustomErrorCode.OVERLAP_REVIEW_COMMENT);
+
         return;
     }
-
     /**
-     * 신고한 회원이(suspect) 동일 리뷰 중복 신고 여부 확인
+     * 신고한 회원이(victim) 동일 리뷰 중복 신고 여부 확인
      */
-    public Boolean isNotAccuse(Member findSuspectMember,
+    public Boolean isNotAccuse(Member findVictimMember,
                                ReviewComment reviewComment) {
-        return accuseRepository.findByMemberSuspectAndReviewComment(findSuspectMember, reviewComment)
+        return accuseRepository.findByMemberVictimAndReviewComment(findVictimMember, reviewComment)
                 .isEmpty();
     }
 

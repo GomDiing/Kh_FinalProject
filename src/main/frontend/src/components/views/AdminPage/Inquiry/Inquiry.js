@@ -57,11 +57,13 @@ const Inquiry=(props)=>{
   // const temp = qnaList[5];
   // console.log(temp.reply);
   // console.log(qnaList.reply);
+  // const reply = `${qnaList[5].reply}`;
  
 
   return(
     <InquiryBlock>
         <TopBar name="큐앤에이 관리"/>
+        {/* <p>{qnaList[5].qnaStatus}</p> */}
           <div className="admin-qnalist-container">
           <Table striped bordered hover>
                 <thead>

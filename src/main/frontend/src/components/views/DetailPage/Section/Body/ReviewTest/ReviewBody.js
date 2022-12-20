@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
 import DetailApi from "../../../../../../api/DetailApi";
-
+import { Rate } from "antd";
+import { AlertOutlined } from "@ant-design/icons";
 
 
 const ReviewBody=()=>{
     const [reviewList, setReviewList] = useState('');
-    let productCode = 17000544;
+  
+    let productCode = 17000544; //테스트용
+    let memberIndex = 1; //테스트용
 
      /** 공지 목록을 가져오는 useEffect */
   useEffect(() => {
@@ -30,19 +34,26 @@ const ReviewBody=()=>{
     };
     reviewData();
   }, []); 
+
+  const onClickAccuse=async()=>{
+
+  }
   
     return(
         <>
         {reviewList&&reviewList.map(({index,memberId,title,like,rate,content,group,accuseCount,productCode})=>(
         <div key={memberId}>
+          <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1rem'}}
+        onClick={onClickAccuse}/>
         <Form.Label >{memberId}</Form.Label>
         <Form.Label>{title}</Form.Label>
         <Form.Label>{title}</Form.Label>
         <Form.Label>{rate}</Form.Label>
         <Form.Label>{like}</Form.Label>
+        <div>왜 안들와</div>
         </div>
         ))}
-        {/* <Form.Control type="text"/> */}
+        <Form.Control type="text"/>
         </>
     )
 }

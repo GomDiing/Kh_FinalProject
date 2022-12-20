@@ -7,6 +7,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_JOIN_MEMBER = "회원가입 성공";
     public static final String SUCCESS_SEARCH_CHART = "관리자 차트 조회 성공";
     public static final String SUCCESS_CREATE_ACCUSE = "리뷰 신고 성공";
+    public static final String SUCCESS_CHANGE_TO_BLACKLIST = "신고 누적 5회 회원 블랙리스트 회원 변환 성공";
     public static final String SUCCESS_BLACKLIST_TO_UNREGISTER = "블랙리스트 회원 탈퇴 성공";
     public static final String SUCCESS_SEARCH_NOTICELIST = "공지사항 목록 조회 성공";
     public static final String SUCCESS_CREATE_NOTICE = "공지사항 작성 성공";

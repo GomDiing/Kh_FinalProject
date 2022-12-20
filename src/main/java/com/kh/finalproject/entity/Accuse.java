@@ -43,13 +43,14 @@ public class Accuse extends BaseTimeEntity {
     private ReviewComment reviewComment;
 
 //    신고할때 신고자, 피해자, 리뷰index
-    public Accuse createAccuse(Member memberSuspect,Member memberVictim,ReviewComment reviewComment){
+    public Accuse createAccuse(Member memberSuspect,Member memberVictim,ReviewComment reviewComment,String reason){
         this.memberSuspect = memberSuspect;
         memberSuspect.getAccuseListSuspectList().add(this);
         this.memberVictim = memberVictim;
         memberVictim.getAccuseListVictimList().add(this);
         this.reviewComment = reviewComment;
         this.status = AccuseStatus.WAIT;
+        this.reason = reason;
         return this;
     }
 
