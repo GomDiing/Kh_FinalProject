@@ -1,6 +1,7 @@
 package com.kh.finalproject.dto.member;
 
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ public class SigninResponseDTO {
     private String detail;
     private String zipcode;
     private Integer point;
+    private MemberStatus status;
 
 
     public SigninResponseDTO toDTO(Member member) {
@@ -24,6 +26,7 @@ public class SigninResponseDTO {
         this.jibun = member.getAddress().getJibun();
         this.detail = member.getAddress().getDetail();
         this.zipcode = member.getAddress().getZipcode();
+        this.status = member.getStatus();
 
         return this;
     }

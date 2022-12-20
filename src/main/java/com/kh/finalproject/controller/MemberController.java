@@ -3,6 +3,9 @@ package com.kh.finalproject.controller;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -95,6 +98,9 @@ public class MemberController {
 
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
+
+        if (findPwdMemberDTO.getProviderType() != MemberProviderType.HOME)
+            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
 
         Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
 

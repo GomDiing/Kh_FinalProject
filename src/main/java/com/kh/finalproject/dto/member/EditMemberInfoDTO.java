@@ -2,6 +2,7 @@ package com.kh.finalproject.dto.member;
 
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ public class EditMemberInfoDTO {
 
     @NotNull(message = "아이디는 필수 입력 값")
     private String id;
-//    @NotNull(message = "비밀번호는 필수 입력 값")
+    @NotNull(message = "비밀번호는 필수 입력 값")
     private String password;
     @NotNull(message = "이름은 필수 입력 값")
     private String name;
@@ -28,4 +29,6 @@ public class EditMemberInfoDTO {
     private String detail;
     @NotNull(message = "우편번호 필수 입력 값")
     private String zipcode;
+    @NotNull(message = "회원 가입 주체는 필수 값")
+    private MemberProviderType providerType;
 }
