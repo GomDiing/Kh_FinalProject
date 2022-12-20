@@ -130,6 +130,7 @@ const RankingWeek = () =>{
         }
         PosterAsunc();
     }, [category])
+    console.log(ItemData)
         return(
             <>
                 <PosterCategoryContainer>

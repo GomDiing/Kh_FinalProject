@@ -1,12 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import styled from "styled-components";
 import MainApi from "../../../../api/MainApi";
-import Footer from "../../Footer/Footer";
-import MainHeader from "../MainHeader";
+import Footer from "../../Footer/Footer"
+import MainHeader from "../MainHeader"
 
+const NoresultContainer = styled.div`
+    width: 100%;
+    img{
+        width: 300px;
+        height: 250px;
+        margin-top: 150px;
+    }
+    .Content{
+        display: block;
+        .item{
+            display: flex;
+            justify-content: center;
+            p{
+                font-size: 23px;
+                margin-top: 20px;
+            }
+        }
+    }
+`
 const SearchContainer = styled.div`
     width: 100%;
     min-width: 930px;
+    min-height: 83vh;
+    margin-bottom: 80px;
     .Content{
         margin: 0 auto;
         margin-top: 40px;
@@ -65,147 +86,88 @@ const SearchContainer = styled.div`
                 display: block;
             }
         }
-    
+
 `
-const rankings = [
-    {
-        name : 'rankingWeek',
-        text : '주간랭킹',
-    },
-    {
-        name : 'rankingMonth',
-        text : '월간랭킹',
-    },
-    {
-        name : 'rankingClose',
-        text : '종료임박',
-    },
-    
-]
-
-const categories = [
-    {
-        name : 'MUSICAL',
-        text : '뮤지컬'
-    },
-    {
-        name : 'CLASSIC',
-        text : '클래식 / 무용'
-    },
-    {
-        name : 'DRAMA',
-        text : '연극'
-    },
-    {
-        name : 'EXHIBITION',
-        text : '전시회'
-    }
-]
-// 해더 클릭시, 페이지 이동후 , 해더가 작동하지 않음
-const SearchResult = () => {
-    const [ranking , setRanking] = useState('rankingWeek');
-    const [selectRanking , setSelectRanking] = useState('주간랭킹');
-    const [category , setCategory] = useState(window.localStorage.getItem("category"));
-    const [selectCategory, setSelectCategory] = useState(window.localStorage.getItem("categoryName"));
-    const [SearchData , setSearchData] = useState('');
+const Search = () =>{
+    const text = window.localStorage.getItem("searchText")
+    const [SearchData, setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
-
-    // 화면에 선택한 랭킹 , 카테고리 보여주기위한 함수
-    const clickRanking = (e ,a) =>{
-        setRanking(e);
-        setSelectRanking(a);
-    }
-    const clickCategory = (e ,a) =>{
-        setCategory(e);
-        setSelectCategory(a);
-    }
-
-    // 선택한 카테고리별 or 랭킹별 useEffect
     useEffect(() => {
         const SearchAsync = async() =>{
             try{
-                if(ranking === 'rankingWeek'){
-                    const res = await MainApi.rankingWeek(category, 20);
-                    if(res.data.statusCode === 200){
-                        console.log("주간랭킹")
-                        setSearchData(res.data.results)
-                    }
-                }else if (ranking === 'rankingMonth'){
-                    const res = await MainApi.rankingMonth(category, 20);
-                    if(res.data.statusCode === 200){
-                        console.log("월간랭킹")
-                        setSearchData(res.data.results)
-                    }
-                }else if(ranking === 'rankingClose'){
-                    const res = await MainApi.rankingClose(category, 20);
-                    if(res.data.statusCode === 200){
-                        console.log("종료임박")
-                        setSearchData(res.data.results)
-                    }
-                }else console.log("실패")
+                const res = await MainApi.mainsearch(text)
+                if(res.data.statusCode === 200){
+                    console.log("성공")
+                    setSearchData(res.data.results);
+                    setIsFinish(true);
+                }
             }catch(e){
-                console.log(e);
+                console.log(e)
             }
-            setIsFinish(true)
         }
-        setIsFinish(false);
         SearchAsync();
-    },[selectRanking,category])
+        setIsFinish(false);
+    },[])
+    console.log(SearchData)
 
     return(
-        // 버튼영역
+        <>
         <SearchContainer>
             <MainHeader/>
-            <div className="Content">
-                <h2>{selectCategory} {selectRanking}</h2>
-                <div className="ItemButtonContainer">
-                    <div className="ButtonContainer">
-                        {rankings.map (c =>(
-                            <button onClick={()=>{clickRanking(c.name ,c.text)}}>{c.text}</button>
-                        ))}
-                    </div>            
-                    <div className="ButtonContainer">
-                        {categories.map(c =>(
-                            <button onClick={()=>{clickCategory(c.name ,c.text)}}>{c.text}</button>
-                        ))}
-                    </div>
-                </div>
-                
 
-            {/* 아이탬영역 */}
-                <div className="InfoContainer">
-                    <table>
-                        <tr>
-                            <th></th>
-                            <th>상품명</th>
-                            <th>장소</th>
-                            <th>기간</th>
-                        </tr>
-                        {isFinish && SearchData.map((SearchData , index)=>(
-                        <tr key={index}>
-                            <td className="imgContainer"><img src={SearchData.product.poster_url}></img></td>
-                            <td className="titleContainer">{SearchData.product.title}</td>
-                            <td className="addrContainer">{SearchData.product.location}</td>
-                            <td className="dayContainer">
-                            {/* 당일공연 체크 */}
-                            {SearchData.product.period_end === '당일 공연' ? 
-                            <>{SearchData.product.period_end}</>
-                            :
-                            <>
-                                <>{SearchData.product.period_start}</>
-                                <br/>~<br/>
-                                <>{SearchData.product.period_end}</>
-                            </>    
-                        }
-                            </td>
-                        </tr>
-                            ))}
-                    </table>
-                </div>
-            </div>
-            <Footer/>
+            {isFinish && SearchData.length === 0 ?
+                <>
+                    <NoresultContainer>
+                        {/* 검색결과 없는경우 */}
+                        <div className="Content">    
+                            <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'}></img></div>
+                            <div className="item"><p>검색 결과가 없습니다.</p></div>
+                        </div>
+                    </NoresultContainer>
+                </>
+                :
+                <>
+                    <div className="Content">
+                        <h2>{text} 검색결과</h2>
+                    </div>
+                    <div className="InfoContainer">
+                        <table>
+                            <tr>
+                                <th></th>
+                                <th>상품명</th>
+                                <th>장소</th>
+                                <th>기간</th>
+                            </tr>
+                            {/* 검색결과 있는경우 */}
+                            {isFinish && SearchData.map((SearchData , index)=>(
+                            <tr key={index}>
+                                <td className="imgContainer"><img src={SearchData.poster_url}></img></td>
+                                <td className="titleContainer">{SearchData.title}</td>
+                                <td className="addrContainer">{SearchData.location}</td>
+                                <td className="dayContainer">
+
+                                {/* 당일공연 조건부랜더링 */}
+                                {SearchData.period_end === '당일 공연' ? 
+                                <>{SearchData.period_end}</>
+                                :
+                                <>
+                                    <>{SearchData.period_start}</>
+                                    <br/>~<br/>
+                                    <>{SearchData.period_end}</>
+                                </>    
+                            }
+                                </td>
+                            </tr>
+                                ))}
+                        </table>
+                    </div>
+                </>
+    }
+                
         </SearchContainer>
+            <Footer/>
+        </>
     )
 }
 
-export default SearchResult;
+export default Search
