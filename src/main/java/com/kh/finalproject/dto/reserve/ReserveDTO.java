@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 예매 DTO
@@ -48,8 +49,12 @@ public class ReserveDTO {
         this.discount = reserve.getDiscount();
         this.finalAmount = reserve.getFinalAmount();
         this.status = reserve.getStatus();
-        this.refund = reserve.getRefund().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        this.cancel = reserve.getCancel().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        if (!Objects.isNull(reserve.getRefund())) {
+            this.refund = reserve.getRefund().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        }
+        if (!Objects.isNull(reserve.getCancel())) {
+            this.cancel = reserve.getCancel().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        }
 
         return this;
     }
