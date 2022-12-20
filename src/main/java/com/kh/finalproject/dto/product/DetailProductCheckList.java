@@ -24,6 +24,9 @@ public class DetailProductCheckList {
     @JsonProperty("is_next_reserve")
     private Boolean isNextMonthProductExist;
 
+    @JsonProperty("is_last_reserve")
+    private Boolean isLastMonthProductExist;
+
     @JsonProperty("reserve_day_in_month")
     List<Integer> findReserveTimeDayListInMonth = new ArrayList<>();
 
@@ -36,6 +39,7 @@ public class DetailProductCheckList {
         this.isInfoCasting = product.getIsInfoCasting();
         this.isInfoTimeCasting = product.getIsInfoTimeCasting();
         this.isNextMonthProductExist = calendarReserveInfoVO.getIsNextMonthProductExist();
+        this.isLastMonthProductExist = calendarReserveInfoVO.getIsLastMonthProductExist();
         this.findReserveTimeDayListInMonth = calendarReserveInfoVO.getReserveTimeDayListInMonth();
 
         return this;

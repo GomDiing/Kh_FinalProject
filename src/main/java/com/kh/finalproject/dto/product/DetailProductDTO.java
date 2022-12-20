@@ -3,6 +3,7 @@ package com.kh.finalproject.dto.product;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.dto.casting.CastingDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeCastingDTO;
 import com.kh.finalproject.dto.seatPrice.SeatPriceDTO;
@@ -19,6 +20,7 @@ import java.util.List;
 public class DetailProductDTO {
     @JsonProperty("check_list")
     DetailProductCheckList detailProductCheckList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("compact_list")
     DetailProductCompactDTO detailProductCompactDTO;
 
@@ -30,9 +32,11 @@ public class DetailProductDTO {
     private List<CastingDTO> castingDTOList = new ArrayList<>();
 
     @JsonProperty("statistics_list")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private StatisticsDTO statisticsDTO;
 
     @JsonProperty("seat_price_list")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     List<SeatPriceDTO> seatPriceDTOList;
 
 //    @JsonProperty("info_time_casting")
@@ -72,6 +76,18 @@ public class DetailProductDTO {
         this.castingDTOList = castingDTOList;
         this.statisticsDTO = statisticsDTO;
         this.seatPriceDTOList =seatPriceDTOList;
+
+        return this;
+    }
+
+    public DetailProductDTO toDTO(DetailProductCheckList detailProductCheckList,
+                                  List<DetailProductReserveTimeSetDTO> detailProductReserveTimeSetDTOList) {
+        this.detailProductCheckList = detailProductCheckList;
+        this.detailProductCompactDTO = null;
+        this.detailProductReserveTimeSetDTOList = detailProductReserveTimeSetDTOList;
+        this.castingDTOList = null;
+        this.statisticsDTO = null;
+        this.seatPriceDTOList = null;
 
         return this;
     }

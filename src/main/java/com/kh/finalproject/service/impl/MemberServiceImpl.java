@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public void signupByHome(SignupDTO signupDto) {
+    public void signup(SignupDTO signupDto) {
 
         unregisterCheck();
 
@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
         Member signMember = new Member().toEntity(signupDto, MemberProviderType.HOME);
 
         // 해당 하는 아이디의 정보를 가져옴 재가입일 수도 있기 때문에 아이디 중복처리는 아직.
-        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(signMember.getId(), MemberStatus.UNREGISTER, MemberProviderType.HOME);
+        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(signMember.getId(), MemberStatus.UNREGISTER, signMember.getProviderType());
 
         // 아이디가 있다면 그 회원의 상태가 블랙리스트 또는 영구탈퇴라면 재가입 방지.
         if(findId.isPresent()) {
@@ -342,5 +342,27 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return memberDTOList;
+    }
+
+    @Override
+    public SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO) {
+        //홈페이지 가입 회원일 시
+        if (signinRequestDTO.getProviderType() == MemberProviderType.HOME) {
+            //비밀번호 없으면 예외 처리
+            if (Objects.isNull(signinRequestDTO.getPassword())) {
+                throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
+            }
+             Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(), signinRequestDTO.getPassword(), MemberProviderType.HOME)
+                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            return new SigninResponseDTO().toDTO(findMember);
+        } else {
+            //이메일 정보가 없으면 예외 처리
+            if (Objects.isNull(signinRequestDTO.getEmail())) {
+                throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
+            }
+            Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), signinRequestDTO.getProviderType())
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            return new SigninResponseDTO().toDTO(findMember);
+        }
     }
 }

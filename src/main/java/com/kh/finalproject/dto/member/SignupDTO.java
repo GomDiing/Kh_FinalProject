@@ -2,6 +2,7 @@ package com.kh.finalproject.dto.member;
 
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -12,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class SignupDTO {
 
-    @NotNull(message = "아이디는 필수 입력 값")
     private String id;
-    @NotNull(message = "비밀번호는 필수 입력 값")
+//    @NotNull(message = "비밀번호는 필수 입력 값")
+//    소셜 로그인때문에 제외
     private String password;
     @NotNull(message =  "이름은 필수 입력 값")
     private String name;
@@ -28,6 +29,8 @@ public class SignupDTO {
     private String detail;
     @NotNull(message =  "우편번호 필수 입력 값")
     private String zipcode;
+    @NotNull(message = "서비스 제공자는 필수값")
+    private MemberProviderType providerType;
 
     // 아이디를 입력 받으면 그에 맞는 회원 조회
     public SignupDTO toDTO(Member member, Address address) {
@@ -35,6 +38,7 @@ public class SignupDTO {
         this.password = member.getPassword();
         this.email = member.getEmail();
         this.name = member.getName();
+        this.providerType = member.getProviderType();
         this.jibun = address.getJibun();
         this.detail = address.getDetail();
         this.road = address.getRoad();

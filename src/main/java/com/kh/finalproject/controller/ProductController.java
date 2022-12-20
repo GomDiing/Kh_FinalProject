@@ -4,6 +4,9 @@ import com.kh.finalproject.dto.product.BrowseKeywordDTO;
 import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.ProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
+import com.kh.finalproject.dto.reservetime.SearchReserveList;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -30,6 +33,23 @@ public class ProductController {
     public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code) {
         DetailProductDTO detailProductDTO = productService.detailProductPage(code);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCT_DETAIL, detailProductDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("{code}/list/{year}/{month}")
+    public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
+                                                                     @PathVariable Integer year,
+                                                                     @PathVariable Integer month) {
+        DetailProductDTO detailProductDTO = productService.reserveCalendarList(code, year, month);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("{code}/{year}/{month}/{day}")
+    public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
+                                                                     @PathVariable Integer year,
+                                                                     @PathVariable Integer month,
+                                                                     @PathVariable Integer day) {
+        List<DetailProductReserveTimeDTO> detailProductReserveTimeDTOList = productService.reserveCalendarDay(code, year, month, day);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductReserveTimeDTOList), HttpStatus.OK);
     }
 
     /*관리자 페이지에서 전시글 관리용*/

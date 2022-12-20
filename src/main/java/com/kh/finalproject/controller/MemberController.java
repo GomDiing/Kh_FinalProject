@@ -62,7 +62,7 @@ public class MemberController {
     @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
 
-        memberService.signupByHome(signupDTO);
+        memberService.signup(signupDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER, true), HttpStatus.OK);
     }
@@ -125,8 +125,18 @@ public class MemberController {
 
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
     @PostMapping("/accuse/process")
-    public ResponseEntity changeBlacklistByCount(){
+    public ResponseEntity changeBlacklistByCount() {
         List<MemberDTO> members = memberService.updateStatusByCount();
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    /**
+     * 로그인 컨트롤러
+     */
+    @PostMapping("/signin")
+    public ResponseEntity<Object> signin(SigninRequestDTO signinRequestDTO) {
+        SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);
     }
 }
