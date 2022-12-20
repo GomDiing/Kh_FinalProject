@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.product.BrowseKeywordDTO;
 import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -45,8 +46,8 @@ public class ProductController {
                                                                      @PathVariable Integer year,
                                                                      @PathVariable Integer month,
                                                                      @PathVariable Integer day) {
-        List<DetailProductReserveTimeDTO> detailProductReserveTimeDTOList = productService.reserveCalendarDay(code, year, month, day);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductReserveTimeDTOList), HttpStatus.OK);
+        DetailProductReserveTimeSetDTO detailProductReserveTimeSetDTO = productService.reserveCalendarDay(code, year, month, day);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductReserveTimeSetDTO), HttpStatus.OK);
     }
 
     /*관리자 페이지에서 전시글 관리용*/

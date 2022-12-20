@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.product.BrowseKeywordDTO;
 import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -30,5 +31,5 @@ public interface ProductService {
 
     DetailProductDTO reserveCalendarMonth(String productCode, Integer year, Integer month);
 
-    List<DetailProductReserveTimeDTO> reserveCalendarDay(String productCode, Integer year, Integer month, Integer day);
+    DetailProductReserveTimeSetDTO reserveCalendarDay(String productCode, Integer year, Integer month, Integer day);
 }

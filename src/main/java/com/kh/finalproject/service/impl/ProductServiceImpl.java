@@ -169,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
         return new DetailProductDTO().toDTO(detailProductCheckList, reserveTimeSetDTOList);
     }
 
-    public List<DetailProductReserveTimeDTO> reserveCalendarDay(String productCode, Integer year, Integer month, Integer day) {
+    public DetailProductReserveTimeSetDTO reserveCalendarDay(String productCode, Integer year, Integer month, Integer day) {
 
         //상품 조회, 없다면 예외 처리
         Product findProduct = productRepository.findByCode(productCode)
@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
         //캘린더에 좌석/가격 정보 추가
         processTimeSeatPrice(detailProductReserveTimeDTOList, seatPriceDTOList);
 
-        return detailProductReserveTimeDTOList;
+        return new DetailProductReserveTimeSetDTO().toDTO(detailProductReserveTimeDTOList);
     }
 
     /**
