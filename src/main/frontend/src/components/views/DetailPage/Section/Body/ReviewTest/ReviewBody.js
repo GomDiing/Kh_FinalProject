@@ -6,17 +6,21 @@ import DetailApi from "../../../../../../api/DetailApi";
 
 
 const ReviewBody=()=>{
-    const [reviewList, setReviewList] = useState([]);
+    const [reviewList, setReviewList] = useState('');
     let productCode = 17000544;
 
      /** 공지 목록을 가져오는 useEffect */
   useEffect(() => {
     const reviewData = async()=>{
+      console.log("콘솔 왜 안찍히냐");
       try {
         const res = await DetailApi.allReviewComment(productCode);
         if(res.data.statusCode === 200){
-          setReviewList([...reviewList, ...res.data.results]);
-          console.log(res.data.results);
+          // setReviewList([...reviewList, ...res.data.results]);
+          console.log(res.data.message);
+          setReviewList(res.data.results);
+          
+          console.log("후기 값 : " + res.data.results);
         }else{
           alert("리스트 조회가 안됩니다.")
       } 
@@ -26,10 +30,11 @@ const ReviewBody=()=>{
     };
     reviewData();
   }, []); 
+  
     return(
         <>
-        {reviewList.map(({index,memberId,title,like,rate,content,group,accuseCount,productCode})=>(
-        <div>
+        {reviewList&&reviewList.map(({index,memberId,title,like,rate,content,group,accuseCount,productCode})=>(
+        <div key={memberId}>
         <Form.Label >{memberId}</Form.Label>
         <Form.Label>{title}</Form.Label>
         <Form.Label>{title}</Form.Label>
@@ -37,8 +42,7 @@ const ReviewBody=()=>{
         <Form.Label>{like}</Form.Label>
         </div>
         ))}
-
-        <Form.Control type="text"/>
+        {/* <Form.Control type="text"/> */}
         </>
     )
 }

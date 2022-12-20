@@ -74,23 +74,20 @@ const NoticeList=()=>{
     return <div>로딩 중...</div>;
   }
 
-  const onClickDelete=async(e)=>{
-    if(checkItems.length<1){
-      alert("체크박스 한개 이상 체크해주세요")
-      navigate(0);
-    } else{
-      console.log(checkItems);
-      const res = await AdminApi.noticeCheck(checkItems);
-      console.log(res.results);
-      alert("해당 공지가 삭제되었습니다.");
-      try{
-        console.log("통신넘어가나? :" + res.results);
+  const onClickDelete=async()=>{
+    try {
+      if(checkItems.length<1){
+        alert("체크박스 한개 이상 체크해주세요")
         navigate(0);
-      }catch(e){
-        console.log(e);
+      } else{
+        const res = await AdminApi.noticeCheck(checkItems);
+        console.log(checkItems);
+        alert("공지가 삭제되었습니다.")
       }
-    } 
-    setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
+      navigate(0);
+  } catch (e) {
+    console.log("catch 에러 : " + e);
+  }
   };
 
     return(

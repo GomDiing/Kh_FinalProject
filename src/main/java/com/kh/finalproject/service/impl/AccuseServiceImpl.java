@@ -38,10 +38,11 @@ public class AccuseServiceImpl implements AccuseService {
      * 신고 생성 메서드
      */
     @Override
+    @Transactional
     public void create(CreateAccuseDTO createAccuseDTO, Long reviewCommentIndex) {
         // 회원 Email 추출 후 회원, 후기 DB 조회
-        String vitimEmail = createAccuseDTO.getMemberEmailVictim();
-        String suspectEmail = createAccuseDTO.getMemberEmailSuspect();
+        String vitimEmail = createAccuseDTO.getMemberEmailVictim(); //신고한사람
+        String suspectEmail = createAccuseDTO.getMemberEmailSuspect();//신고당한 사람(글쓴 사람)
 
         //조회한 회원, 후기가 없다면 예외 처리
         ReviewComment reviewComment = reviewCommentRepository.findById(reviewCommentIndex)
@@ -52,30 +53,25 @@ public class AccuseServiceImpl implements AccuseService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //중복 신고 방지
-        if (isNotAccuse(findVictimMember, reviewComment)) {
+        if (isNotAccuse(findSuspectMember, reviewComment)) {
             reviewComment.addAccuseCount();
             findSuspectMember.addMemberAccuseCount();
             Accuse saveAccuse = new Accuse().createAccuse(findSuspectMember, findVictimMember, reviewComment);
             accuseRepository.save(saveAccuse);
-
-            /*query did not return a unique result: 11 : 조회 결과 11인데 class optional 받게되서, list로 받아야 함  */
         }
-
         //중복 신고가 된 경우
         else throw new CustomException(CustomErrorCode.OVERLAP_REVIEW_COMMENT);
         return;
     }
 
     /**
-     * 신고한 회원이 동일 리뷰 중복 신고 여부 확인
+     * 신고한 회원이(suspect) 동일 리뷰 중복 신고 여부 확인
      */
-    public Boolean isNotAccuse(Member findVictimMember,
+    public Boolean isNotAccuse(Member findSuspectMember,
                                ReviewComment reviewComment) {
-
-        return accuseRepository.findByMemberSuspectAndReviewComment(findVictimMember, reviewComment)
+        return accuseRepository.findByMemberSuspectAndReviewComment(findSuspectMember, reviewComment)
                 .isEmpty();
     }
-
 
     @Override
     public List<AccuseDTO> searchAll() {

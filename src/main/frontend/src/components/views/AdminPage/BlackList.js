@@ -72,7 +72,6 @@ const BlackList=()=>{
     } else{
       console.log(checkItems);
       const res = await AdminApi.deleteMemberAdmin(checkItems);
-      console.log(res.results);
       alert("선택하신 회원이 탈퇴되었습니다.");
       try{
         console.log("통신넘어가나? :" + res.results);

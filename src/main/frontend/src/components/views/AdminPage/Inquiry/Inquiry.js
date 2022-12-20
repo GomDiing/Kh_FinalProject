@@ -43,11 +43,21 @@ const Inquiry=(props)=>{
     qnaData();
   }, [currentPage, pageSize]);
 
-  const onChangeStatus=(props)=>{ //  응답 완료된거 답장 안보내고 싶은데 어떻게 하냐......
-    if(props.qnaStatus === "응답 완료"){
-      setModalOpen(false);
-    }
+  const onChangeStatus=()=>{ //  응답 완료된거 답장 안보내고 싶은데 어떻게 하냐......
+    
   }
+  // const replyStatus = qnaList.reply;
+  // console.log("status 값" + qnaList.data.results.qnaDTOList.title);
+  // console.log("데이터 값 : " + setQnaList);
+
+  // JSON.stringify
+  console.log(qnaList[5]);
+  // let items = Object.values(qnaList[5]);
+  // console.log(items);
+  // const temp = qnaList[5];
+  // console.log(temp.reply);
+  // console.log(qnaList.reply);
+ 
 
   return(
     <InquiryBlock>
@@ -79,7 +89,7 @@ const Inquiry=(props)=>{
                   ))}
                   </tbody>
             </Table>
-            {props.reply === null ?
+            {props.title === '응답 완료' ?
               <QnaModal open={modalOpen} close={closeModal} index={qIndex} header="문의 답장하기">
               <Table>
                 <tr style={{height : "40px"}}>

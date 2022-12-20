@@ -28,10 +28,10 @@ public class Accuse extends BaseTimeEntity {
     @JoinColumn(name = "member_index_victim", nullable = false)
     private Member memberVictim;
 
-    @Column(name = "accuse_reason", nullable = false)
+    @Column(name = "accuse_reason",nullable = false)
     private String reason;
-
-    @Column(name = "accuse_process", nullable = false)
+//, nullable = false
+    @Column(name = "accuse_process")
     private String process;
 
     @Column(name = "accuse_status", nullable = false)
