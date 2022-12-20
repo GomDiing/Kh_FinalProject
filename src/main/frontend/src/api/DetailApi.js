@@ -60,10 +60,7 @@ const DetailApi={
 
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
-    const param = {
-        code: pCode
-    }
-    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, param, HEADER);
+    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     }
 }
 export default DetailApi;

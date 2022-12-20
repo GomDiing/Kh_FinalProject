@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,5 +29,11 @@ public class ChartController {
     public ResponseEntity<DefaultResponse<Object>> getChart(){
         List<ChartDTO> chartDTOList = chartService.searchByIndex();
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_CHART, chartDTOList), HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/chart/{count}")
+    public ResponseEntity<DefaultResponse<Object>> getChartList(@PathVariable Integer count) {
+        List<ChartDTO> chartDTOList = chartService.searchChartList(count);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", chartDTOList), HttpStatus.OK);
     }
 }

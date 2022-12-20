@@ -1,6 +1,7 @@
 import { Card } from 'antd';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {ManOutlined, WomanOutlined } from '@ant-design/icons';
+import { FcBusinessman } from "react-icons/fc";
 
 // 공연 정보
 function Contents(props) {
@@ -21,28 +22,24 @@ function Contents(props) {
     <div className='main'>
       <img src={props.image} alt=''></img>
     </div>
-    <div className='stat'>
-      <h3>예매자 통게</h3>
+    <br/>
+      <h3>예매자 통계</h3>
+    <div className='stat' >
       <Card
       title="성별"
       bordered={false}
-      style={{
-        width: 300,
-      }}
-    >
+      >
+        <FcBusinessman/>
       <p><ManOutlined />: {props.stat.male}</p>
       <p><WomanOutlined />: {props.stat.female}</p>
-
     </Card>
 
         <h3 className="chartTitle">연령</h3>
-        <ResponsiveContainer minWidth={250} aspect={4/1}>
+        <ResponsiveContainer aspect={4/1}>
         <BarChart
-          width={500}
-          height={300}
           data={data}
           margin={{
-            top: 10,
+            // top: 10,
             // right: 30,
             // left: 20,
             // bottom: 5,
@@ -50,18 +47,17 @@ function Contents(props) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="index"/>
-          <YAxis />
+          <YAxis yAxisId="left"/>
           <Tooltip />
           <Legend />
-          <Bar dataKey="10" fill="skyblue" />
-          <Bar dataKey="20" fill="olive" />
-          <Bar dataKey="30" fill="orange" />
-          <Bar dataKey="40" fill="silver" />
-          <Bar dataKey="50" fill="gold" />
+          <Bar yAxisId="left" dataKey="10" fill="skyblue" />
+          <Bar yAxisId="left" dataKey="20" fill="olive" />
+          <Bar yAxisId="left" dataKey="30" fill="orange" />
+          <Bar yAxisId="left" dataKey="40" fill="silver" />
+          <Bar yAxisId="left" dataKey="50" fill="gold" />
         </BarChart>
       </ResponsiveContainer>
       </div>
-
     </div>
   )
 }

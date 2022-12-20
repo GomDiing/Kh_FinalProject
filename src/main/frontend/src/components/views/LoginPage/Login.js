@@ -320,7 +320,7 @@ const IdStyle = styled.div`
           
           console.log(response.data);
           const data = {
-            // userIndex : dispatch(response.data.results.),
+            userIndex : response.data.results.index,
             userId : response.data.results.id,
             userPoint : response.data.results.point
           }

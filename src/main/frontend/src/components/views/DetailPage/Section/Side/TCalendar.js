@@ -65,7 +65,7 @@ const Styleside = styled.div`
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
-    const {cast, reserve, dim, code, title, seat, dateList } = props;
+    const {cast, reserve, dim, code, userInfo, title, seat, dateList } = props;
 
     // 받아온 예약 가능한 날짜(dim)를 select에 담음
     const [select, setSelect] = useState(dim);
@@ -174,8 +174,8 @@ function TCalendar (props) {
                     {modalOpen && <PayPopup 
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
-                    body={<PopupContent date={selectDay} cancelday={cancelday} 
-                    seat={seat} seatList={seatList} title={title} index={index} code={code} />}/>}
+                    body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
+                    seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

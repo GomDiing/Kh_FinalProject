@@ -15,6 +15,7 @@ import GridCards from '../Cards/GridCards';
 import Reviews from './Section/Body/Reviews';
 import { useParams } from 'react-router-dom';
 import NowLoading from '../../../util/Loading';
+import { useSelector } from 'react-redux';
 
 const { Content, Sider } = Layout;
 
@@ -52,11 +53,14 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 660px;
+  height: auto;
   position: fixed; 
   left: 70%;
-  top: 6.5rem;
-  bottom: 0;
+  /* top: 6.5rem; */
+  /* bottom: 0; */
+  bottom: 100px;
+  padding-bottom: 40px;
+
 }
 .ItemContainer2{
   width: 100%;
@@ -105,6 +109,9 @@ function Detail() {
   const [open, setOpen] = useState(false);
   const [castInfo, setCastInfo] = useState(false);
   
+  // 로그인 유저 정보를 리덕스에서 가져옴
+  const userInfo = useSelector((state) => state.user.info)
+    
   // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
@@ -185,15 +192,15 @@ function Detail() {
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
-              <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
+              <Info loc={comList.location} start={comList.period_start} end={comList.period_end}
               time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
               kage={ckList.is_age_korean} seat={seat} loc2={comList.detail_location}/>
             </Content>
             </div>
 
-            <Sider className="detailSiderContainer" width={310} >
-              {open && <TCalendar dateList={dateList} title={comList.title} code={comList.code}
-              cast={ckList.is_info_casting} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
+            <Sider className="detailSiderContainer" width={310}>
+              {open && <TCalendar userInfo={userInfo} dateList={dateList} title={comList.title} code={comList.code}
+              cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
           </Layout>
           <br/>
