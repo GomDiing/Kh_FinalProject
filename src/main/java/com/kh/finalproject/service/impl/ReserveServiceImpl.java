@@ -2,6 +2,7 @@ package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.reserve.*;
 import com.kh.finalproject.entity.*;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +49,7 @@ public class ReserveServiceImpl implements ReserveService {
         //예매 정보
         ReserveTime reserveTime = reserveDetail.getReserveTime();
 
+        //좌석 정보
         String seatInfo = reserveDetail.getSeatPrice().getSeat();
 
         //상품 조회
@@ -69,8 +73,8 @@ public class ReserveServiceImpl implements ReserveService {
         Long cumuAmount = 0L;
         Long cumuDiscount = 0L;
 
+        //예매 아이디 생성 및 중복 방지
         for (int i = 1; i <= paymentReserveDTO.getQuantity(); i++) {
-            //예매 아이디 생성 및 중복 방지
             String reserveId;
             do {
                 String randomIdKey = UUID.randomUUID().toString().substring(0, 5);
@@ -110,14 +114,21 @@ public class ReserveServiceImpl implements ReserveService {
         int nowMonth = LocalDateTime.now().getMonthValue();
 
         //관리자 차트 이름 생성
-        String charId = nowYear + "/" + nowMonth;
+        String charId;
+        if (nowMonth < 10) charId = nowYear + "/0" + nowMonth;
+        else charId = nowYear + "/" + nowMonth;
+
+        LocalDateTime todayTime = LocalDateTime.now();
+        LocalDateTime beforeMonthTime = todayTime.minusMonths(0);
+        beforeMonthTime = LocalDateTime.of(beforeMonthTime.getYear(), beforeMonthTime.getMonth(), beforeMonthTime.with(lastDayOfMonth()).getDayOfMonth(), 23, 59, 59);
 
         //현재 개월의 차트 존재 유무
         boolean isChartExist = chartRepository.findById(charId).isPresent();
 
         //현재 월의 차트 정보가 없다면
         if (!isChartExist) {
-            chartService.createCharList();
+            //차트 생성
+            processCreateChart(charId, beforeMonthTime);
         }
 
         //현재 월의 차트 정보가 있다면
@@ -128,6 +139,46 @@ public class ReserveServiceImpl implements ReserveService {
 
             //해당 차트 정보 갱신
             chart.updateChart(cumuAmount, cumuDiscount, (long) paymentReserveDTO.getQuantity());
+        }
+    }
+
+    public void processCreateChart(String charId, LocalDateTime beforeMonthTime) {
+
+        //지난 거래내역 존재하는지 확인
+        boolean isReserveExist = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
+                .isEmpty();
+
+        //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
+        log.info("debug!!! beforMonthTime = {}", beforeMonthTime);
+        Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
+
+        //거래내역이 존재하지 않다면
+        if (isReserveExist) {
+            //현재 회원수만 기록한 관리자 차트 생성 및 저장
+            Chart chart = new Chart().toEntity(charId, 0L, 0L, 0L, (long) memberCount, 0L);
+            chartRepository.save(chart);
+        }
+        //거래내역이 존재한다면
+        else {
+            //이전 모든 거래내역 조회
+            List<Reserve> findAllReserveListBefore = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
+
+            Long cumuAmount = 0L;
+            Long cumuDiscount = 0L;
+            Long finalAmount = 0L;
+            Long totalMember = (long) memberCount;
+            Long totalReserve = (long) findAllReserveListBefore.size();
+
+            for (Reserve reserve : findAllReserveListBefore) {
+                cumuAmount += reserve.getAmount();
+                cumuDiscount += reserve.getDiscount();
+                finalAmount += reserve.getAmount() - reserve.getDiscount();
+            }
+
+            //차트 생성 및 저장
+            Chart chart = new Chart().toEntity(charId, cumuAmount, cumuDiscount, finalAmount, totalMember, totalReserve);
+            chartRepository.save(chart);
         }
     }
 
