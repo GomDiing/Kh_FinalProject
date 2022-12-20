@@ -18,6 +18,7 @@ const Styleside = styled.div`
         text-align: center;
         font-size: 14px;
     }
+
     .side-content {
         padding: 0 1.5rem;
         text-align: center;
@@ -66,13 +67,8 @@ const Styleside = styled.div`
 function TCalendar (props) {
     const {cast, reserve, dim, code, title, seat, dateList } = props;
 
-    // 예약 가능한 날짜
-    const [selet, setselet] = useState(dim);
-    const [disDate, SetDisDate] = useState('');
-
-
-    
-
+    // 받아온 예약 가능한 날짜(dim)를 select에 담음
+    const [select, setSelect] = useState(dim);
 
     // str -> date type convert
     function parseDate(dateList) {
@@ -81,7 +77,7 @@ function TCalendar (props) {
         let d = dateList.substr(8,2);
         return new Date(y,m-1,d);
     }
-    console.log(dim);
+
     // 첫 예매 가능한 날짜
     const first_reserve_day = parseDate(dateList.date);
     // 회차 정보 0이면 상시 상품
@@ -102,7 +98,7 @@ function TCalendar (props) {
     const [index, setIndex] = useState(1);
     const plusIndex = () => setIndex(index+1);
     const minusIndex = () => setIndex(index-1);
-    // console.log(date.getDate());
+
     
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
@@ -112,25 +108,21 @@ function TCalendar (props) {
         setModalOpen(false);
         setIndex(1);
     }
-    // 23 24 25 27 28 29 30 31
-    const noreserve = () => {
-        if(!date.includes(dim)) {
-            SetDisDate(date.getDate());
-            alert("예매 가능한 날짜가 아닙니다.")
-        }
-    }
 
-    console.log(props.seat[0].price);
+    console.log(select);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
-            formatDay={(locale, date) => date.toLocaleString("en", {day: "2-digit"})}
-            // 예메 가능한 첫 날짜 집어넣음
+            formatDay={(locale, date) => moment(date).format("DD")}
+            showNeighboringMonth={false}
+            // 예매 가능한 첫 날짜 집어넣음
             minDate={first_reserve_day}
-            onClickDay={noreserve}
-            tileDisabled={({date}) => date.getDate() === 26}
+            tileDisabled={({date, view}) => {
+                if (!select.find((x) => moment(x).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD"))) {
+                return true;
+            }}}
             />
             </div>
             <div className='text-center'>
@@ -183,7 +175,7 @@ function TCalendar (props) {
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
                     body={<PopupContent date={selectDay} cancelday={cancelday} 
-                    seat={seat} title={title} index={index} code={code} />}/>}
+                    seat={seat} seatList={seatList} title={title} index={index} code={code} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

@@ -13,17 +13,16 @@ const InfoStyle = styled.div`
     }
     .infoDesc {
         margin-top: 1rem;
-        margin-left: 2rem;
+        margin-left: 1.5rem;
+    }
+    .name {
+        width: 110px;
     }
     .price {
         color: #ED4037;
         margin-left: 1.5rem;
         font-weight: bold;
-    }
-    .priceA {
-        color: #ED4037;
-        margin-left: 2.25rem;
-        font-weight: bold;
+        width: 60px;
     }
     .info {
         padding: 0 0 0 32px;
@@ -43,8 +42,9 @@ const InfoStyle = styled.div`
     }
     @media (max-width: 1225px) {
     .infoPriceList {
-        margin-left: 2rem;
+        margin-left: 1rem;
     }
+
 }
 `;
 
@@ -112,12 +112,15 @@ function Info(props) {
                     <strong className="infoLabel">가격</strong>
                     <div className="infoDesc">
                         {props.seat && props.seat.map((seats, index) => (
-                        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
-                            <li className="infoPriceItem">
-                                <span className="name">{seats.seat}</span>
-                                <span className="price">{seats.price}</span>
-                            </li> <br />
-                        </ul>
+                                <table className="infoPriceList" key={index}>
+                                <tbody>
+                                    <tr >
+                                        <td className="name">{seats.seat}</td>
+                                        <td className="price">{seats.price}</td>
+                                    </tr>
+                                    <br/>
+                                </tbody>
+                                </table>
                         ))}
                     </div>
                 </li>
