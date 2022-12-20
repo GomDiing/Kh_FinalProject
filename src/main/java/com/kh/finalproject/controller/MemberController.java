@@ -62,7 +62,7 @@ public class MemberController {
     @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
 
-        memberService.signup(signupDTO);
+        memberService.signupByHome(signupDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER, true), HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class MemberController {
     @PostMapping("/info-update")
     public ResponseEntity<DefaultResponse<Object>> updateMember(@Validated @RequestBody EditMemberInfoDTO editMemberInfoDTO) {
 
-        memberService.editMemberInfo(editMemberInfoDTO);
+        memberService.editMemberInfoByHome(editMemberInfoDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
     }

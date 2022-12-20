@@ -13,4 +13,7 @@ public class RemoveReviewCommentDTO {
     private Integer like;
     private Integer rate;
     private String reviewCommentStatus;
+    private Integer layer;
+    private Long group;
+    private Integer order;
 }

@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.reviewComment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,6 @@ public class CreateReviewCommentDTO {
     private Integer layer;
     private Integer order;
     private String reviewCommentStatus;
-    private Integer accuseCount;
-    private String code;
-    private String createTime;
+    @JsonProperty("code")
+    private String productCode;
 }

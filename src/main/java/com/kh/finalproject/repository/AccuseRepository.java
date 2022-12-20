@@ -19,17 +19,4 @@ public interface AccuseRepository extends JpaRepository<Accuse, Long> {
     //신고자랑 리뷰글 인자로 받아서 신고 한 적 있는지 확인 용
     Optional<Accuse> findByMemberSuspectAndReviewComment(Member member, ReviewComment reviewComment);
 
-//    @Modifying
-//    @Query(nativeQuery = true,
-//            value = "UPDATE" +
-//                    "member m INNER JOIN reviewComment r" +
-//                    "ON m.member_id = r.member_id" +
-//                    "SET" +
-//                    "m.member_status=:#{#paramMember.status.BLACKLIST}"+
-//                    "where r.accuse_Count>=5")
-//    Long changeAccuseStatus(
-//            @Param("paramMember") Member member);
-
-//    Accuse changeAccuseStatus(Integer accuseCount);
-
 }

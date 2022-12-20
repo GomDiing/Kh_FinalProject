@@ -2,6 +2,7 @@ package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
@@ -56,6 +57,10 @@ public class Member extends BaseTimeEntity {
     @Timestamp
     private LocalDateTime unregister;
 
+    @Column(name = "member_provider_type")
+    @Enumerated(EnumType.STRING)
+    private MemberProviderType providerType;
+
     @OneToOne(mappedBy = "member")
     private Address address;
 
@@ -80,9 +85,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<KakaoPay> kakaoPayList = new ArrayList<>();
+
     // nullable 하면 회원가입이 안대서 지웠습니다.
     @Column(name = "member_accuse_count")
-    private Integer memberAccuseCount;
+    private Integer accuseCount;
 
 
     /**
@@ -110,7 +118,7 @@ public class Member extends BaseTimeEntity {
     /**
      * @param signupDTO
      */
-    public Member toEntity(SignupDTO signupDTO) {
+    public Member toEntity(SignupDTO signupDTO, MemberProviderType providerType) {
         this.id = signupDTO.getId();
         this.password = signupDTO.getPassword();
         this.name = signupDTO.getName();
@@ -118,7 +126,8 @@ public class Member extends BaseTimeEntity {
         this.role = MemberRoleType.ROLE_USER;
         this.point = 0;
         this.status = MemberStatus.ACTIVE;
-        this.memberAccuseCount = 0;
+        this.accuseCount = 0;
+        this.providerType = providerType;
 
         return this;
     }
@@ -174,6 +183,7 @@ public class Member extends BaseTimeEntity {
         this.role = MemberRoleType.ROLE_USER;
         this.point = 0;
         this.status = MemberStatus.ACTIVE;
+        this.accuseCount = 0;
 
         return this;
     }
@@ -191,7 +201,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public void addMemberAccuseCount() {
-        this.memberAccuseCount++;
+        this.accuseCount++;
     }
 
     public void updateBlackByCount() {

@@ -1,7 +1,6 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
-import com.kh.finalproject.entity.Member;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -17,12 +16,17 @@ public interface MemberService {
     /**
      * 회원 가입 메서드
      */
-    void signup(SignupDTO signupDto);
+    void signupByHome(SignupDTO signupDto);
 
     /**
      * 아이디로 회원 조회
      */
     MemberDTO searchById(String id);
+
+    /**
+     * 이메일로 회원 조회 (소셜 로그인)
+     */
+    Boolean searchByEmailSocialLogin(String email);
 
     /**
      * 회원 이름과 이메일로 아이디 찾기
@@ -98,7 +102,7 @@ public interface MemberService {
     /**
      * 회원 정보 수정 메서드
      */
-    void editMemberInfo(EditMemberInfoDTO editMemberInfoDTO);
+    void editMemberInfoByHome(EditMemberInfoDTO editMemberInfoDTO);
 
     /**
      * 회원 상태 탈퇴 변환 메서드

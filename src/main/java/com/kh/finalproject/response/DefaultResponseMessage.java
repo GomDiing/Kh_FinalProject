@@ -19,6 +19,9 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_SEARCH_STATIC = "예매자 통계 조회 성공";
     public static final String SUCCESS_SEARCH_PRODUCTLIST = "상품 전체 목록 조회 성공";
     public static final String SUCCESS_SEARCH_PRODUCT_DETAIL = "상품 상세 조회 성공";
+
+    public static final String ERROR_SOCIAL_LOGIN = "소셜 로그인 실패";
+    public static final String SUCCESS_KAKAO_SIGNUP = "카카오 회원가입 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";
     public static final String SUCCESS_SEARCH_PASSWORD = "비밀번호 조회 성공";
     public static final String SUCCESS_SEARCH_ID = "아이디 조회 성공";
@@ -39,6 +42,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_MOVIE_UPCOMING = "곧 개봉예정 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_SEARCH = "영화 검색이 완료되었습니다";
     public static final String SUCCESS_MOVIE_INQUIRE = "영화 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_REVIEW = "전체 리뷰 조회가 완료되었습니다";
     public static final String SUCCESS_ADD_REVIEW = "리뷰 추가가 완료되었습니다";
     public static final String SUCCESS_DELETE_REVIEW = "리뷰 삭제가 완료되었습니다"; //추가
     public static final String SUCCESS_UPDATE_REVIEW = "리뷰 수정이 완료되었습니다"; //추가

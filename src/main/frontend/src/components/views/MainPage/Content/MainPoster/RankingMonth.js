@@ -119,10 +119,6 @@ const RankingMonth = () =>{
         setCategory(e)
     }
 
-    const ItemCode = (e) =>{
-        window.localStorage.setItem("code",e);
-    }
-
     useEffect(() => {
         const PosterAsync = async() =>{
             try{
@@ -156,10 +152,12 @@ const RankingMonth = () =>{
                         <PosterImgContainer>
                     <ul>
                         {ItemData.map((ItemData , index)=>(
-                            <Link to = "/detail"><li key={index} onClick={()=>ItemCode(ItemData.code)}>
-                                <img src={ItemData.product.poster_url} alt="이미지오류"/>
-                                <p>{ItemData.product.title}</p>
-                            </li></Link>
+                            <li key={index} >
+                            <a href={`/detail/${ItemData.code}`} >
+                            <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                            <p>{ItemData.product.title}</p>
+                            </a>
+                        </li>
                         ))}
                     </ul>
                         </PosterImgContainer>

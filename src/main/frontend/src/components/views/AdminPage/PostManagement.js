@@ -95,12 +95,12 @@ const PostManagement=()=>{
           <Table striped bordered hover>
                 <thead>
                   <tr>
-                  <th>
+                  <th width = "40px">
                     <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
                     // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                     checked={checkItems.length === list.length ? true : false} />
                     </th>
-                    <th width = "80px">카테고리</th>
+                    <th width = "150px">카테고리</th>
                     <th>전시명</th>
                     <th>전시기간</th>
                   </tr>
