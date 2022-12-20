@@ -6,7 +6,7 @@ import lombok.Getter;
  * 예매 환불 DTO
  */
 @Getter
-public class RefundReserveDTO {
+public class RefundReserveCancelDTO {
     //환불 금액(총 환불 금액)
     private Integer amount;
     //환불 포인트 금액(할인 금액)
@@ -19,7 +19,7 @@ public class RefundReserveDTO {
     //카카오페이 TID
     private String kakaoTID;
 
-    public RefundReserveDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method, String kakaoTID) {
+    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method, String kakaoTID) {
         this.amount = amount;
         this.discount = discount;
         this.finalAmount = finalAmount;
@@ -29,7 +29,7 @@ public class RefundReserveDTO {
         return this;
     }
 
-    public RefundReserveDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method) {
+    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method) {
         this.amount = amount;
         this.discount = discount;
         this.finalAmount = finalAmount;

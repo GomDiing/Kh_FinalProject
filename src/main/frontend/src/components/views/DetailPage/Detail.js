@@ -53,7 +53,7 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 660px;
+  height: 740px;
   position: fixed; 
   left: 70%;
   top: 6.5rem;
@@ -195,7 +195,7 @@ function Detail() {
             </Content>
             </div>
 
-            <Sider className="detailSiderContainer" width={310} >
+            <Sider className="detailSiderContainer" width={310}>
               {open && <TCalendar userInfo={userInfo} dateList={dateList} title={comList.title} code={comList.code}
               cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
