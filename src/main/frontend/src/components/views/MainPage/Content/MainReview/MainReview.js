@@ -83,7 +83,7 @@ const MainReview = () =>{
         setIsFinish(false)
     },[])
 
-    console.log(reviewItem);
+    // console.log(reviewItem);
 
     return(
         <MainReviewContainer>
