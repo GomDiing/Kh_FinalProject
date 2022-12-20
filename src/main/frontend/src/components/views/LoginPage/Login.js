@@ -285,6 +285,7 @@ const IdStyle = styled.div`
 
     const [message, setMessage] = useState('');
     const [color, setColor] = useState('');
+    const [type, setType] = useState('ACTIVE');
 
     const LoginModalBody = () => {
       return(
@@ -292,6 +293,17 @@ const IdStyle = styled.div`
           <small style={{fontWeight: 'bold', color : color}}>{message}</small>
         </div>
       );
+    }
+    const onClickDeleteCancel = async () => {
+      const response = await MemberApi.deleteCancel(inputId, inputPwd);
+      if(response.data.statusCode === 200) {
+        alert('탈퇴신청이 정상 취소 되었습니다.');
+        setOpen(false);
+        navigate('/');
+      } else {
+        console.log('error...');
+        alert('이미 탈퇴신청이 완료..');
+      }
     }
 
     const providerType = "HOME";
@@ -306,13 +318,14 @@ const IdStyle = styled.div`
               navigate('/');
               break;
             case "DELETE" :
-              setMessage('탈퇴신청을 하신 회원입니다 다시 처리를 취소하려면 확인을 누르시면 됩니다.');
               setColor('green');
+              setMessage('탈퇴신청을 하신 회원입니다 다시 처리를 취소하려면 확인을 누르시면 됩니다.');
               setOpen(true);
+              setType('DELETE');
               break;
             case "UNREGISTER" :
-              setMessage('회원님은 탈퇴하신지 1주일이 지나 영구탈퇴가 됐습니다.');
               setColor('silver');
+              setMessage('회원님은 탈퇴하신지 1주일이 지나 영구탈퇴가 되었습니다.');
               setOpen(true);
               break;
             case "BLACKLIST" :
@@ -386,7 +399,7 @@ const IdStyle = styled.div`
             </div>
           </div>
         </LoginWrap>
-        {open && <FindModal open={onOpen} close={onClose} body={<LoginModalBody />} />}
+        {open && <FindModal open={onOpen} deleteCancel={onClickDeleteCancel} close={onClose} type={type} body={<LoginModalBody />} />}
         {modalOpen &&<FindModalList topics={topics} />}
     </>
     );

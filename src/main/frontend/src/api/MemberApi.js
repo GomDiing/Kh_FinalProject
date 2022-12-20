@@ -83,6 +83,14 @@ const MemberApi = {
       providerType : providerType
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/signin", loginObj, HEADER);
+  },
+  // 복구
+  deleteCancel : async function(id, password) {
+    const cancelObj = {
+      id : id,
+      password : password
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/delete/cancel", cancelObj, HEADER);
   }
 }
 export default MemberApi;
