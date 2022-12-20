@@ -383,6 +383,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteCancelMember(DeleteCancelDTO deleteCancelDTO) {
+        unregisterCheck();
         // DELETE 상태인 회원만 조회
         Member deleteMember = memberRepository.findByIdAndPasswordAndStatus(deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));

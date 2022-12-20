@@ -83,6 +83,7 @@ const BodyStyle = styled.div`
 function PopupContent (props) {
   const { title, seat, date, cancelday, index, code } = props;
   
+  console.log(seat);
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [stuValue, setStuValue] = useState(0);
@@ -102,9 +103,18 @@ function PopupContent (props) {
     const double = price - (price / 20);
     // 신규 오픈 티켓 금액
     const openEvent = price - (price / 20);
+    
     /**
-     * Ticekt Quantity !Duplicate Accept
+     * Ticekt Discount !Duplicate Accept
      */
+    const totalPayChange = (tickets, values, taxs, totals, price) => {
+      tickets = values * price;
+      setTicket(tickets);
+      taxs = Math.floor(tickets / 20);
+      setTax(taxs);
+      totals = tickets + taxs;
+      setTotal(totals);
+    }
     const changeValue = e => {
       const name = e.target.name;
       let values,tickets, totals, taxs = 0;
@@ -115,48 +125,28 @@ function PopupContent (props) {
           setDouValue(0);
           setEveValue(0);
           setStuValue(0);
-          tickets = values * price;
-          setTicket(tickets);
-          taxs = Math.floor(tickets / 20);
-          setTax(taxs);
-          totals = tickets + taxs;
-          setTotal(totals);
+          totalPayChange(tickets, values, taxs, totals, price);
           break;
         case 'student':
           setStuValue(values);
           setValue(0);
           setDouValue(0);
           setEveValue(0);
-          tickets = values * student;
-          setTicket(tickets);
-          taxs = Math.floor(tickets / 20);
-          setTax(taxs);
-          totals = tickets + taxs;
-          setTotal(totals);
+          totalPayChange(tickets, values, taxs, totals, student);
           break;
         case 'double':
           setDouValue(values);
           setValue(0);
           setEveValue(0);
           setStuValue(0);
-          tickets = values * double;    
-          setTicket(tickets);
-          taxs = Math.floor(tickets / 20);
-          setTax(taxs);
-          totals = tickets + taxs;
-          setTotal(totals);
+          totalPayChange(tickets, values, taxs, totals, double);
           break;
         case 'event':
           setEveValue(values);
           setValue(0);
           setDouValue(0);
           setStuValue(0);
-          tickets = values * openEvent;
-          setTicket(tickets);
-          taxs = Math.floor(tickets / 20);
-          setTax(taxs);
-          totals = tickets + taxs;
-          setTotal(totals);
+          totalPayChange(tickets, values, taxs, totals, openEvent);
           break;
         default:
           alert('오류');
