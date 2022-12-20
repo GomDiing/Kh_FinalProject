@@ -24,7 +24,6 @@ const BlackList=()=>{
     if (checked) {
       setCheckItems(prev => [...prev, obj]);
       console.log(obj); // 선택한 db 값 
-      console.log(obj.index);
     } else {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       setCheckItems(checkItems.filter((el) => el !== obj));
@@ -106,7 +105,7 @@ const BlackList=()=>{
                 </thead>
                 <tbody>
                 {memberList.map(({index,id,name,email,createTime,memberAccuseCount}) => (
-                <tr>
+                <tr key={index}>
                   <td><input type='checkbox' name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked, index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />

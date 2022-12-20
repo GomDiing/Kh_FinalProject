@@ -40,7 +40,7 @@ public class ReviewCommentController {
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
     }
 
-    /*공연 후기 대댓글 작성(미구현)*/
+    /*공연 후기 대댓글 작성*/
     @PostMapping("/add")
     public ResponseEntity<Object> addReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
         reviewCommentService.reCreate(createReviewCommentDTO);

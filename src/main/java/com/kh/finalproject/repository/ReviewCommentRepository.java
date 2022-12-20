@@ -1,5 +1,6 @@
 package com.kh.finalproject.repository;
 
+import com.kh.finalproject.dto.reviewComment.ReviewCommentDTO;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
@@ -23,9 +24,12 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     @Query("UPDATE Member n SET n.status = :status where n.index = :index")
     Optional<Integer> changeStatusMember(@Param("index") Long index, @Param("status") MemberStatus status);
 
-    @Query(nativeQuery = true,
-    value = "select * from review_comment")
-    List<ReviewComment> selectAll(Pageable size);
+//    @Query(nativeQuery = true,
+//    value = "select * from review_comment")
+//    List<ReviewComment> selectAll(Pageable size);
+
+    /*후기 최근글 조회할때 부모 댓글만 볼 수 있게 layer=0*/
+    List<ReviewComment> searchAllByLayer(Integer layer,Pageable size);
 
     List<ReviewComment> findAllByProduct(Product productCode);
 

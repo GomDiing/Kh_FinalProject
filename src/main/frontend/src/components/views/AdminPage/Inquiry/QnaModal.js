@@ -106,6 +106,8 @@ const QWrap = styled.div`
 `
 
 const QnaModal = (props) => {
+    const [disabled, setDisabled] = useState(true);
+
     const navigate = useNavigate();
     const [inputReply, setInputReply] = useState("");
 
@@ -123,7 +125,7 @@ const QnaModal = (props) => {
         if(res.data.statusCode === 200) {
             alert('문의가 정상 전송 되었습니다.');
             close(true);
-            navigate('/admin/inquiry')
+            navigate(0);
             
         } else {
             alert('문의 전송이 실패 하였습니다.');
