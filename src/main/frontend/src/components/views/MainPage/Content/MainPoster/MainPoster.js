@@ -5,8 +5,8 @@ import RankingWeek from "./RankingWeek";
 
 const PosterContainer = styled.div`
     width: 50%;
-    /* margin: 0 10px; */
-    align-items: center;
+    padding : 0 15px;
+    height: 400px;
     display: inline-block;
     /* border: solid 1px black; */
     @media (max-width : 1440px){

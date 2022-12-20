@@ -1,13 +1,37 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components";
-import Footer from "../../Footer/Footer";
-import MainHeader from "../MainHeader";
+import MainApi from "../../../../api/MainApi";
+import Footer from "../../Footer/Footer"
+import MainHeader from "../MainHeader"
 
+const NoresultContainer = styled.div`
+    width: 100%;
+    img{
+        width: 300px;
+        height: 250px;
+        margin-top: 150px;
+    }
+    .Content{
+        display: block;
+        .item{
+            display: flex;
+            justify-content: center;
+            p{
+                font-size: 23px;
+                margin-top: 20px;
+            }
+        }
+    }
+`
 const SearchContainer = styled.div`
     width: 100%;
-
+    min-width: 930px;
+    min-height: 83vh;
+    margin-bottom: 80px;
     .Content{
-        /* border: 1px solid black; */
         margin: 0 auto;
+        margin-top: 40px;
+        margin-bottom: 80px;
         width: 80%;
     }
     hr{
@@ -16,9 +40,7 @@ const SearchContainer = styled.div`
     }
 
     .InfoContainer{
-        /* background-color: #f5f5f5; */
-        /* margin: 40px auto; */
-        /* padding: 40px 0 ; */
+        margin-top: 40px;
         table{
             background-color: white;
             margin : 0px auto;
@@ -35,9 +57,6 @@ const SearchContainer = styled.div`
         }
         th ,tr,td{
             border-bottom: 2px solid #f5f5f5;
-            /* height: 40px; */
-            /* width: 25%; */
-            /* border: 1px solid black; */
         }
         img{
             width: 160px;
@@ -46,23 +65,12 @@ const SearchContainer = styled.div`
         .imgContainer{
             width: 160px;
         }
-        /* .titleContainer{
-
-        }
-        <td className="imgContainer"><img src={c.img}></img></td>
-                            <td className="titleContainer">{c.name}</td>
-                            <td className="addrContainer">{c.addr}</td>
-                            <td className="dayContainer" */
     }
     .ButtonContainer{
-        margin: 20px 0;
         display: flex;
         justify-content: center;
-        background-color: #f5f5f5;
-        border-top-left-radius : 20px;
-        border-top-right-radius: 20px;
             button{
-                margin: 20px;
+                margin: 10px 20px;
                 width: 30%;
                 height: 50px;
                 font-size: 20px;
@@ -74,91 +82,92 @@ const SearchContainer = styled.div`
                 background-color: #86868b;
                 color: white;
             }
+            .ItemButtonContainer{
+                display: block;
+            }
         }
-    
+
 `
-const posterInfo = [
-    {
-        id : "1",
-        name : '1번작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
-    },
-    {
-        id : "2",
-        name : '2번 작품은 조금 길어진 제목',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22014586_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
-    },
-    {
-        id : "3",
-        name : '3번 작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22009029_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
-    },
-    {
-        id : "4",
-        name : '4번작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
-    },
-]
-const SearchResult = () => {
+const Search = () =>{
+    const text = window.localStorage.getItem("searchText")
+    const [SearchData, setSearchData] = useState('');
+    const [isFinish , setIsFinish] = useState(false);
+    useEffect(() => {
+        const SearchAsync = async() =>{
+            try{
+                const res = await MainApi.mainsearch(text)
+                if(res.data.statusCode === 200){
+                    console.log("성공")
+                    setSearchData(res.data.results);
+                    setIsFinish(true);
+                }
+            }catch(e){
+                console.log(e)
+            }
+        }
+        SearchAsync();
+        setIsFinish(false);
+    },[])
+    console.log(SearchData)
+
     return(
+        <>
         <SearchContainer>
             <MainHeader/>
-            <div className="Content">
-                <div className="ButtonContainer">
-                    <button>주간랭킹</button>
-                    <button>월간랭킹</button>
-                    <button>종료임박</button>
-                    {/* <hr/> */}
-                </div>
 
+            {isFinish && SearchData.length === 0 ?
+                <>
+                    <NoresultContainer>
+                        {/* 검색결과 없는경우 */}
+                        <div className="Content">    
+                            <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'}></img></div>
+                            <div className="item"><p>검색 결과가 없습니다.</p></div>
+                        </div>
+                    </NoresultContainer>
+                </>
+                :
+                <>
+                    <div className="Content">
+                        <h2>{text} 검색결과</h2>
+                    </div>
+                    <div className="InfoContainer">
+                        <table>
+                            <tr>
+                                <th></th>
+                                <th>상품명</th>
+                                <th>장소</th>
+                                <th>기간</th>
+                            </tr>
+                            {/* 검색결과 있는경우 */}
+                            {isFinish && SearchData.map((SearchData , index)=>(
+                            <tr key={index}>
+                                <td className="imgContainer"><img src={SearchData.poster_url}></img></td>
+                                <td className="titleContainer">{SearchData.title}</td>
+                                <td className="addrContainer">{SearchData.location}</td>
+                                <td className="dayContainer">
+
+                                {/* 당일공연 조건부랜더링 */}
+                                {SearchData.period_end === '당일 공연' ? 
+                                <>{SearchData.period_end}</>
+                                :
+                                <>
+                                    <>{SearchData.period_start}</>
+                                    <br/>~<br/>
+                                    <>{SearchData.period_end}</>
+                                </>    
+                            }
+                                </td>
+                            </tr>
+                                ))}
+                        </table>
+                    </div>
+                </>
+    }
                 
-                <div className="InfoContainer">
-                    <table>
-                        <tr>
-                            <th></th>
-                            <th>상품명</th>
-                            <th>장소</th>
-                            <th>기간</th>
-                        </tr>
-                        {posterInfo.map(c=>(
-                        <tr>
-                            <td className="imgContainer"><img src={c.img}></img></td>
-                            <td className="titleContainer">{c.name}</td>
-                            <td className="addrContainer">{c.addr}</td>
-                            <td className="dayContainer">
-                                {c.start}
-                                <br/>~<br/>
-                                {c.end}
-                            </td>
-                        </tr>
-                        ))}
-                    </table>
-                </div>
-
-                {/* <ul>
-                    {posterInfo.map(c=>(
-                        <li key={c.id} >
-                            <img src={c.img} alt=""/>
-                            <p>{c.name}</p>
-                        </li>
-                    ))}
-                </ul> */}
-            </div>
-            <Footer/>
         </SearchContainer>
+            <Footer/>
+        </>
     )
 }
 
-export default SearchResult;
+export default Search

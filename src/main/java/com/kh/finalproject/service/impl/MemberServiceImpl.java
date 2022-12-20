@@ -352,17 +352,27 @@ public class MemberServiceImpl implements MemberService {
             if (Objects.isNull(signinRequestDTO.getPassword())) {
                 throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
             }
-             Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(), signinRequestDTO.getPassword(), MemberProviderType.HOME)
+            //회원 조회
+            Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(), signinRequestDTO.getPassword(), MemberProviderType.HOME)
                      .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            //영구 정지 회원일 경우
+            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
+                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
+            }
             return new SigninResponseDTO().toDTO(findMember);
-        //소셜 로그인 가입 회언일 시
+        //소셜 로그인 가입 회원일 시
         } else {
             //이메일 정보가 없으면 예외 처리
             if (Objects.isNull(signinRequestDTO.getEmail())) {
                 throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
             }
+            //회원 조회
             Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), MemberProviderType.valueOf(signinRequestDTO.getProviderType()))
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            //영구 정지 회원일 경우
+            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
+                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
+            }
             return new SigninResponseDTO().toDTO(findMember);
         }
     }

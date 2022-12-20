@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.reserve.PaymentReserveDTO;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
@@ -58,4 +59,19 @@ public class Reserve extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<KakaoPay> kakaoPayList = new ArrayList<>();
+
+    public Reserve toEntity(String id, ReserveTime reserveTime, String seat, PaymentReserveDTO paymentReserveDTO) {
+        this.id = id;
+        //예매 정보 연관관계
+        this.reserveTime = reserveTime;
+        reserveTime.getReserveList().add(this);
+        this.seat = seat;
+        this.method = paymentReserveDTO.getMethod();
+        this.amount = paymentReserveDTO.getAmount();
+        this.discount = paymentReserveDTO.getPoint();
+        this.finalAmount = paymentReserveDTO.getAmount() - paymentReserveDTO.getPoint();
+        this.status = ReserveStatus.PAYMENT;
+
+        return this;
+    }
 }
