@@ -47,6 +47,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<List<Member>> findAllByStatusAndUnregisterAfter(MemberStatus status, LocalDateTime time);
 
+    Optional<Member> findByIdAndPassword(String id, String password);
+
+    Optional<Member> findByEmailAndProviderType(String email, MemberProviderType providerType);
+
     @Query(nativeQuery = true,
     value = "select DATE_ADD(update_time, INTERVAL 7 DAY) from member where member_index = :member_index"
     )

@@ -13,6 +13,8 @@ public interface ReserveTimeRepository extends JpaRepository<ReserveTime, Long> 
 
     Optional<List<ReserveTime>> findAllByProductAndTimeAfter(Product product, LocalDateTime first);
 
+    Optional<List<ReserveTime>> findAllByProductAndTimeBefore(Product product, LocalDateTime last);
+
     Optional<ReserveTime> findFirstByProductAndTimeAfter(Product product, LocalDateTime first);
 
 }

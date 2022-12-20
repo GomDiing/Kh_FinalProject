@@ -16,7 +16,7 @@ public interface MemberService {
     /**
      * 회원 가입 메서드
      */
-    void signupByHome(SignupDTO signupDto);
+    void signup(SignupDTO signupDto);
 
     /**
      * 아이디로 회원 조회
@@ -115,4 +115,6 @@ public interface MemberService {
     void unregisterCheck();
     /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
     List<MemberDTO> updateStatusByCount();
+
+    SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO);
 }

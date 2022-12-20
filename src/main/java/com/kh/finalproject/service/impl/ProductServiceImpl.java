@@ -8,6 +8,7 @@ import com.kh.finalproject.dto.reserveTimeSeatPrice.ReserveTimeSeatPriceDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeCastingDTO;
+import com.kh.finalproject.dto.reservetime.SearchReserveList;
 import com.kh.finalproject.dto.seatPrice.SeatPriceDTO;
 import com.kh.finalproject.dto.statistics.StatisticsDTO;
 import com.kh.finalproject.entity.*;
@@ -78,6 +79,8 @@ public class ProductServiceImpl implements ProductService {
         return pagingProductDTO;
     }
 
+
+
     @Override
     public DetailProductDTO detailProductPage(String productCode) {
         //상품 조회, 없다면 예외 처리
@@ -100,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
         //예매 가능 리스트, 익월 예매 가능 여부, 예매 시간 담을 VO
         CalendarReserveInfoVO calendarReserveInfoVO;
         //예매 정보 및 달력 로직
-        calendarReserveInfoVO = processCalendarReserveInfo(findProduct, isLimit);
+        calendarReserveInfoVO = processCalendarReserveInfo(findProduct, isLimit, 0, 0);
         //예매 집합 생성 및 예매 정보 연결
         List<DetailProductReserveTimeSetDTO> reserveTimeSetDTOList
                 = createReserveSet(calendarReserveInfoVO.getReserveTimeListFirstList());
@@ -130,6 +133,67 @@ public class ProductServiceImpl implements ProductService {
         else
             return new DetailProductDTO().toDTO(detailProductCheckList, detailProductCompactDTO, reserveTimeSetDTOList,
                     castingInfoVO.getCastingDTOList(), statisticsDTO, seatPriceDTOList);
+    }
+
+    /**
+     * 달력 월 단위 이동 서비스
+     * @param productCode: 조회 상품 코드
+     * @param year: 조회 상품 연도
+     * @param month: 조회 상품 월
+     * @return 조회한 월 내에 예매 가능 일자 리스트와 첫번째로 예매 가능한 날의 인덱스 및 좌석 정보가 출력
+     */
+    @Override
+    public DetailProductDTO reserveCalendarList(String productCode, Integer year, Integer month) {
+        //상품 조회, 없다면 예외 처리
+        Product findProduct = productRepository.findByCode(productCode)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
+
+        //좌석/가격 리스트 조회 및 Entity -> DTO 리스트
+        List<SeatPriceDTO> seatPriceDTOList = createSeatPriceDTOList(findProduct);
+
+        //상시 혹은 한정 상품 여부 판단
+        Boolean isLimit = isLimitOrAlways(findProduct);
+
+        //예매 정보 및 달력 로직
+        CalendarReserveInfoVO calendarReserveInfoVO = processCalendarReserveInfo(findProduct, isLimit, year, month);
+        //예매 집합 생성 및 예매 정보 연결
+        List<DetailProductReserveTimeSetDTO> reserveTimeSetDTOList
+                = createReserveSet(calendarReserveInfoVO.getReserveTimeListFirstList());
+
+        processTimeSeatPrice(calendarReserveInfoVO.getReserveTimeListFirstList(), seatPriceDTOList);
+
+        DetailProductCheckList detailProductCheckList = new DetailProductCheckList().toDTO(findProduct, calendarReserveInfoVO, isLimit);
+
+//        return new SearchReserveList().updateReserveTime(reserveTimeSetDTOList, calendarReserveInfoVO.getReserveTimeDayListInMonth());
+
+        return new DetailProductDTO().toDTO(detailProductCheckList, reserveTimeSetDTOList);
+    }
+
+    public List<DetailProductReserveTimeDTO> reserveCalendarDay(String productCode, Integer year, Integer month, Integer day) {
+
+        //상품 조회, 없다면 예외 처리
+        Product findProduct = productRepository.findByCode(productCode)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
+
+        LocalDateTime firstPotionOfDay = LocalDateTime.of(year, month, day, 0, 0);
+        LocalDateTime lastPositionOfDay = LocalDateTime.of(year, month, day, 23, 59);
+
+        //첫 예매 날짜 월의 첫 날짜에서 마지막 날짜 사이 예매 정보 조회
+        //즉, 월 내 예매 정보 추출
+        List<ReserveTime> findReserveTimeWithinDay = reserveTimeRepository.findAllByProductAndTimeBetween(findProduct, firstPotionOfDay, lastPositionOfDay)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
+
+        //예매 정보 리스트 초기화
+        List<DetailProductReserveTimeDTO> detailProductReserveTimeDTOList = new ArrayList<>();
+
+        //월 내 예매 정보 Entity 리스트 -> DTO 리스트
+        //첫 예매 가능 월 내 예매 가능 날짜 리스트 추가
+        for (ReserveTime reserveTime : findReserveTimeWithinDay) {
+            DetailProductReserveTimeDTO reserveTimeDTO = new DetailProductReserveTimeDTO().toDTO(reserveTime);
+            detailProductReserveTimeDTOList.add(reserveTimeDTO);
+        }
+
+        return detailProductReserveTimeDTOList;
     }
 
     /**
@@ -186,9 +250,16 @@ public class ProductServiceImpl implements ProductService {
      * 첫 예매 월 내 모든 예매 정보 조회
      * 첫 예매 월 이후 예매 정보 존재 여부 판단
      */
-    private CalendarReserveInfoVO processCalendarReserveInfo(Product findProduct, Boolean isLimit) {
+    private CalendarReserveInfoVO processCalendarReserveInfo(Product findProduct, Boolean isLimit, Integer year, Integer month) {
+        LocalDateTime nowTime;
+        if (year == 0 && month == 0) {
+            nowTime = LocalDateTime.now();
+        }
+        else {
+            nowTime = LocalDateTime.of(year, month, 1, 0, 0);
+        }
         //첫 예매 정보 조회, 없다면 예외 처리
-        ReserveTime findFirstReserveTime = reserveTimeRepository.findFirstByProductAndTimeAfter(findProduct, LocalDateTime.now())
+        ReserveTime findFirstReserveTime = reserveTimeRepository.findFirstByProductAndTimeAfter(findProduct, nowTime)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
 
         //첫 예매 정보 Entity -> DTO
@@ -200,7 +271,7 @@ public class ProductServiceImpl implements ProductService {
         //상시 상품일 경우
         if (!isLimit) {
             detailProductReserveTimeDTOList.add(reserveTimeFirstDTO);
-            return new CalendarReserveInfoVO().toVO(false, reserveTimeFirstDTO, detailProductReserveTimeDTOList);
+            return new CalendarReserveInfoVO().toVO(false, false, reserveTimeFirstDTO, detailProductReserveTimeDTOList);
         }
 
         //첫 예매 가능 월 내 예매 가능 날짜 리스트
@@ -209,10 +280,8 @@ public class ProductServiceImpl implements ProductService {
         LocalDateTime now = LocalDateTime.now();
         //첫 예매 날짜
         LocalDateTime firstTime = findFirstReserveTime.getTime();
-        //첫 예매 가능 월의 다음 달 1일 날짜
-        LocalDateTime firstPositionOfNextMonth = LocalDateTime.of(firstTime.with(firstDayOfNextMonth()).getYear(), firstTime.with(firstDayOfNextMonth()).getDayOfMonth(), 1, 0, 0);
 
-        // ***** 월 내의 예매 정보 추출 로직 *****
+        // ***** 이번달 예매 정보 추출 로직 *****
         //첫 예매 날짜 월의 예매 가능 첫 날짜
         //첫 예매 날짜의 월이 현재 월의 이후면 시(hour)과 일(minute)을 0으로 설정
         LocalDateTime firstPositionOfMonth = LocalDateTime.of(firstTime.getYear(), firstTime.getMonth(), firstTime.getDayOfMonth(), 0, 0);
@@ -224,6 +293,7 @@ public class ProductServiceImpl implements ProductService {
                 firstPositionOfMonth = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
             }
         }
+
         //첫 예매 날짜 월의 첫 날짜에서 마지막 날짜 사이 예매 정보 조회
         //즉, 월 내 예매 정보 추출
         List<ReserveTime> findReserveTimeWithinMonth = reserveTimeRepository.findAllByProductAndTimeBetween(findProduct, firstPositionOfMonth, lastPositionOfMonth)
@@ -240,16 +310,29 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
+        //첫 예매 가능 월의 다음 달 1일 날짜
+        LocalDateTime firstPositionOfNextMonth = LocalDateTime.of(firstTime.with(firstDayOfNextMonth()).getYear(), firstTime.with(firstDayOfNextMonth()).getDayOfMonth(), 1, 0, 0);
+
         //첫 예매 월 이후 예매 정보 존재 여부
         Boolean isNextMonthProductExist = reserveTimeRepository.findAllByProductAndTimeAfter(findProduct, firstPositionOfNextMonth)
                 .isPresent();
+
+        // ***** 지난달 예매 날짜 설정 로직 *****
+        LocalDateTime firstPositionOfLastMonth = null;
+
+        //지난달 첫번째 날짜 (첫 예매 날짜가 1월이라면)
+        if (firstTime.getMonthValue() == 1) firstPositionOfLastMonth = LocalDateTime.of(firstTime.getYear() - 1, 12, 1, 0, 0);
+        else firstPositionOfLastMonth = LocalDateTime.of(firstTime.getYear(), firstTime.getMonthValue() - 1, 1, 0, 0);
+        LocalDateTime lastPositionOfLastMonth = LocalDateTime.of(firstPositionOfLastMonth.getYear(), firstPositionOfLastMonth.getMonth(), firstPositionOfLastMonth.with(lastDayOfMonth()).getDayOfMonth(), 23, 59);
+
+        Boolean isLastMonthProductExist = reserveTimeRepository.findAllByProductAndTimeBefore(findProduct, lastPositionOfLastMonth).isPresent();
 
         DetailProductReserveTimeDTO reserveTimeFirstDTOInMonth = detailProductReserveTimeDTOList.get(0);
         List<DetailProductReserveTimeDTO> detailProductReserveTimeFirstDTOList = new ArrayList<>();
         detailProductReserveTimeFirstDTOList.add(reserveTimeFirstDTOInMonth);
 
 //        return new CalendarReserveInfoVO().toVO(reserveTimeDayListInMonth, isNextMonthProductExist, reserveTimeFirstDTOInMonth, detailProductReserveTimeDTOList);
-        return new CalendarReserveInfoVO().toVO(reserveTimeDayListInMonth, isNextMonthProductExist, reserveTimeFirstDTOInMonth, detailProductReserveTimeFirstDTOList);
+        return new CalendarReserveInfoVO().toVO(reserveTimeDayListInMonth, isNextMonthProductExist, isLastMonthProductExist, reserveTimeFirstDTOInMonth, detailProductReserveTimeFirstDTOList);
     }
 
     /**
