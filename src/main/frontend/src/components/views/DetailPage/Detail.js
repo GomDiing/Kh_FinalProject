@@ -228,7 +228,7 @@ function Detail() {
             }
             </Tab>
             <Tab eventKey="profile" title="관람후기">
-            <Reviews/>
+            {/* <Reviews/> */}
             </Tab>
           </Tabs>
           </div>

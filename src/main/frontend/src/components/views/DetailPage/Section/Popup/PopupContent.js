@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
@@ -91,6 +92,7 @@ function PopupContent (props) {
   console.log(seatIndexList);
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
+    const [type, setType] = useState('');
     const [stuValue, setStuValue] = useState(0);
     const [douValue, setDouValue] = useState(0);
     const [eveValue, setEveValue] = useState(0);
@@ -136,6 +138,7 @@ function PopupContent (props) {
           setDouValue(0);
           setEveValue(0);
           setStuValue(0);
+          setType('basic');
           totalPayChange(tickets, values, taxs, totals, price);
           break;
         case 'student':
@@ -143,24 +146,39 @@ function PopupContent (props) {
           setValue(0);
           setDouValue(0);
           setEveValue(0);
+          setType('student');
           totalPayChange(tickets, values, taxs, totals, student);
           break;
-        case 'double':
-          setDouValue(values);
-          setValue(0);
-          setEveValue(0);
-          setStuValue(0);
-          totalPayChange(tickets, values, taxs, totals, double);
-          break;
-        case 'event':
-          setEveValue(values);
-          setValue(0);
-          setDouValue(0);
-          setStuValue(0);
-          totalPayChange(tickets, values, taxs, totals, openEvent);
+          case 'double':
+            setDouValue(values);
+            setValue(0);
+            setEveValue(0);
+            setStuValue(0);
+            setType('double');
+            totalPayChange(tickets, values, taxs, totals, double);
+            break;
+            case 'event':
+              setEveValue(values);
+              setValue(0);
+              setDouValue(0);
+              setStuValue(0);
+              setType('event');
+            totalPayChange(tickets, values, taxs, totals, openEvent);
           break;
         default:
           alert('오류');
+      }
+    }
+
+    const valueSelect = () => {
+      if(type === 'basic') {
+        return value;
+      } else if(type === 'student') {
+        return stuValue;
+      } else if(type === 'double') {
+        return douValue;
+      } else if(type === 'event') {
+        return eveValue;
       }
     }
 
@@ -279,7 +297,7 @@ function PopupContent (props) {
     }
     {index === 3 && <FinalModal
       seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
-      title={title} date={date} value={value} ticket={ticket}
+      title={title} date={date} value={valueSelect()} ticket={ticket}
        price={selectPrice} tax={tax} total={total} userInfo={userInfo} />}
     </>
   );
@@ -301,7 +319,8 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
+          <Link to={'/payready'}>카카오페이 가자</Link>
+          {/* <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a> */}
         </div>
     </div>
     );
