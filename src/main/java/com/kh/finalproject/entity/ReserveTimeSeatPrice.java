@@ -31,5 +31,9 @@ public class ReserveTimeSeatPrice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_price_index", nullable = false)
     private SeatPrice seatPrice;
+
+    public void minusQuantity(Integer quantity) {
+        this.remainQuantity -= quantity;
+    }
 }
 

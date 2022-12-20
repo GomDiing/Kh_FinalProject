@@ -11,7 +11,7 @@ public interface ReserveService {
     /**
      * 예매 결제 메서드
      */
-    void payment(PaymentReserveDTO paymentReserveDTO);
+    void createReserve(PaymentReserveDTO paymentReserveDTO);
 
     /**
      * 예매 환불 메서드
