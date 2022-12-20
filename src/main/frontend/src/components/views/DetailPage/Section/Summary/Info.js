@@ -1,5 +1,5 @@
 import { CaretRightOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from '../../../../../util/Modal/Modal';
 import MapModalBody from './MapModal';
@@ -51,7 +51,7 @@ const InfoStyle = styled.div`
 // 상세페이지 상단 공연 정보
 function Info(props) {
     const [modalOpen, setModalOpen] = useState(false);
-    const [kage, setKage] = useState(props.kage);
+    const [kAge, setKage] = useState(props.kage);
     const [inter, setInter] = useState(props.break);
     const [openR, setopenR] = useState(props.end);
 
@@ -61,7 +61,12 @@ function Info(props) {
     const closeModal = () =>{
         setModalOpen(false)
     }
-    console.log(props.loc2);
+    useEffect(() => {
+        setKage(props.kage);
+        setInter(props.break);
+        setopenR(props.end);
+    },[props.kage, props.break, props.end])
+
     return (
         <InfoStyle>
         <div>
@@ -79,7 +84,7 @@ function Info(props) {
                 <li className="infoItem">
                     <strong className="infoLabel">공연기간</strong>
                     <span span='true' className="infoDesc">
-                    {openR === 'OPENRUN' ? 
+                    {openR === "OPENRUN" ? 
                     <span className="infoText">{props.start} ~ 오픈런</span> :
                     <span className="infoText">{props.start} ~ {props.end}</span>
                     }
@@ -89,8 +94,8 @@ function Info(props) {
 
                 <li className="infoItem"><strong className="infoLabel">공연시간</strong>
                     <span className="infoDesc">
-                        {inter !== 0 ? <span className="infoText">{props.time}(인터미션 {inter}분 포함)</span> :
-                        <span className="infoText">{props.time}분</span>
+                        {inter === 0 ? <span className="infoText">{props.time}분</span> :
+                        <span className="infoText">{props.time}(인터미션 {inter}분 포함)</span>
                         }
                     </span>
                 </li>
@@ -99,7 +104,7 @@ function Info(props) {
                 <li className="infoItem">
                     <strong className="infoLabel">관람연령</strong>
                     <span className="infoDesc">
-                        {kage === true ? <span className="infoText">{props.age}세이상 관람가능</span> :
+                        {kAge === true ? <span className="infoText">{props.age}세이상 관람가능</span> :
                         <span className="infoText">만 {props.age}세이상 관람가능</span>
                         }
                     </span>
@@ -118,7 +123,6 @@ function Info(props) {
                                         <td className="name">{seats.seat}</td>
                                         <td className="price">{seats.price}</td>
                                     </tr>
-                                    <br/>
                                 </tbody>
                                 </table>
                         ))}

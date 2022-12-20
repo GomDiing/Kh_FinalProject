@@ -27,13 +27,13 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("{code}")
+    @GetMapping("/{code}")
     public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code) {
         DetailProductDTO detailProductDTO = productService.detailProductPage(code);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCT_DETAIL, detailProductDTO), HttpStatus.OK);
     }
 
-    @GetMapping("{code}/{year}/{month}")
+    @GetMapping("/{code}/{year}/{month}")
     public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
                                                                      @PathVariable Integer year,
                                                                      @PathVariable Integer month) {
@@ -41,7 +41,7 @@ public class ProductController {
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductDTO), HttpStatus.OK);
     }
 
-    @GetMapping("{code}/{year}/{month}/{day}")
+    @GetMapping("/{code}/{year}/{month}/{day}")
     public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
                                                                      @PathVariable Integer year,
                                                                      @PathVariable Integer month,
