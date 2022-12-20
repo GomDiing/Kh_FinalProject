@@ -15,13 +15,13 @@ import java.util.List;
 @Getter
 public class CalendarReserveInfoVO {
     //    Boolean isLimit;
-    List<Integer> reserveTimeDayListInMonth = new ArrayList<>();
+    List<String> reserveTimeDayListInMonth = new ArrayList<>();
     Boolean isNextMonthProductExist;
     Boolean isLastMonthProductExist;
     DetailProductReserveTimeDTO reserveTimeFirst;
     List<DetailProductReserveTimeDTO> reserveTimeListFirstList = new ArrayList<>();
 
-    public CalendarReserveInfoVO toVO(List<Integer> reserveTimeDayListInMonth,
+    public CalendarReserveInfoVO toVO(List<String> reserveTimeDayListInMonth,
                                       Boolean isNextMonthProductExist, Boolean isLastMonthProductExist,
                                       DetailProductReserveTimeDTO reserveTimeFirst,
                                       List<DetailProductReserveTimeDTO> reserveTimeListMonth) {

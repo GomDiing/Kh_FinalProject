@@ -243,13 +243,19 @@ function Sign() {
     try {
       const memberRegister = await MemberApi.signup(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
       if(memberRegister.data.statusCode === 200) {
-      alert("<Tcat에 회원가입 해주신 것을 진심으로 감사드립니다>");
+        alert("<Tcat에 회원가입 해주신 것을 진심으로 감사드립니다>");
+        Navigate('/login');
       }
-     Navigate('/login');
     } catch (e) {
+      console.log(e);
       console.log("connection fail...");
     }
   }
+  const onKeyPress = e => {
+    if(e.key === "Enter") {
+        onClickSign();
+    }
+ }
 
 
   return (
@@ -332,7 +338,7 @@ function Sign() {
               </div>  
               <div className='inputContainer'>
                 <input type='text' readOnly placeholder='선택된 주소' value={fullAddress}  />
-                <input type='text' value={address} onChange={onChangeAddress} placeholder='상세 주소 입력'/>
+                <input type='text' value={address} onChange={onChangeAddress} onKeyPress={onKeyPress} placeholder='상세 주소 입력'/>
               </div>
               </div>
           </div>

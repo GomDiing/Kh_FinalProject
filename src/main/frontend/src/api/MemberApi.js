@@ -3,6 +3,7 @@ const HEADER = 'application/json';
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const MemberApi = {
+  // 홈페이지 회원가입
   signup : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode) {
     const signMember = {
       id : inputId,
@@ -12,7 +13,8 @@ const MemberApi = {
       road : road,
       jibun : jibun,
       detail : address,
-      zipcode : postCode
+      zipcode : postCode,
+      providerType : "HOME"
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   },
@@ -73,5 +75,14 @@ const MemberApi = {
   changeBlack : async function(){
     return await axios.get(TCAT_DOMAIN+ "/api/mebmer/accuse/process", HEADER)
   },
+  // 로그인
+  login : async function(id, password, providerType) {
+    const loginObj = {
+      id : id,
+      password : password,
+      providerType : providerType
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/signin", loginObj, HEADER);
+  }
 }
 export default MemberApi;

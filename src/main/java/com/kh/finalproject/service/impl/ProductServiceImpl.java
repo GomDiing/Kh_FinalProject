@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -290,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         //첫 예매 가능 월 내 예매 가능 날짜 리스트
-        List<Integer> reserveTimeDayListInMonth = new ArrayList<>();
+        List<String> reserveTimeDayListInMonth = new ArrayList<>();
         //현 날짜
         LocalDateTime now = LocalDateTime.now();
         //첫 예매 날짜
@@ -319,9 +320,12 @@ public class ProductServiceImpl implements ProductService {
         for (ReserveTime reserveTime : findReserveTimeWithinMonth) {
             DetailProductReserveTimeDTO reserveTimeDTO = new DetailProductReserveTimeDTO().toDTO(reserveTime);
             detailProductReserveTimeDTOList.add(reserveTimeDTO);
+            String yearDayMonth = reserveTime.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             //예매 가능 날짜 리스트 추가 및 중복 제외
-            if (!reserveTimeDayListInMonth.contains(reserveTimeDTO.getTime().getDayOfMonth())) {
-                reserveTimeDayListInMonth.add(reserveTimeDTO.getTime().getDayOfMonth());
+//            if (!reserveTimeDayListInMonth.contains(reserveTimeDTO.getTime().getDayOfMonth())) {
+            if (!reserveTimeDayListInMonth.contains(yearDayMonth)) {
+//                reserveTimeDayListInMonth.add(reserveTimeDTO.getTime().getDayOfMonth());
+                reserveTimeDayListInMonth.add(yearDayMonth);
             }
         }
 
