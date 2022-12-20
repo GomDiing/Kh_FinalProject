@@ -28,7 +28,7 @@ public class DetailProductCheckList {
     private Boolean isLastMonthProductExist;
 
     @JsonProperty("reserve_day_in_month")
-    List<Integer> findReserveTimeDayListInMonth = new ArrayList<>();
+    List<String> findReserveTimeDayListInMonth = new ArrayList<>();
 
     /**
      * 한정 상품일 경우
