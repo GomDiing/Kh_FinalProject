@@ -7,7 +7,7 @@ import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
 
 
-const NoticeList=(props)=>{
+const NoticeList=()=>{
   const [loading, setLoading] = useState(false);
   const params = useParams().index;
   const navigate = useNavigate();
@@ -59,7 +59,6 @@ const NoticeList=(props)=>{
           setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
           setCurrentPage(res.data.results.page);
-
         }else{
           alert("리스트 조회가 안됩니다.")
       } 
@@ -75,17 +74,17 @@ const NoticeList=(props)=>{
     return <div>로딩 중...</div>;
   }
 
-  const onClickDelete=async()=>{
+  const onClickDelete=async(e)=>{
     if(checkItems.length<1){
-      alert("체크박스 한개 이상 체크해주세요");
+      alert("체크박스 한개 이상 체크해주세요")
       navigate(0);
     } else{
       console.log(checkItems);
       const res = await AdminApi.noticeCheck(checkItems);
-      console.log(res.data);
-      alert("선택하신 공지사항이 삭제되었습니다.");
+      console.log(res.results);
+      alert("해당 공지가 삭제되었습니다.");
       try{
-        console.log("통신넘어가나? :" + res.data);
+        console.log("통신넘어가나? :" + res.results);
         navigate(0);
       }catch(e){
         console.log(e);
@@ -114,7 +113,7 @@ const NoticeList=(props)=>{
                 </thead>
                 <tbody>
                   {noticeList.map(({index,title,createTime}) => (
-                  <tr>
+                  <tr key={index}>
                   <td><input type='checkbox'  name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked,index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />

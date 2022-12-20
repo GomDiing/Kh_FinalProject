@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -143,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
      * @return 조회한 월 내에 예매 가능 일자 리스트와 첫번째로 예매 가능한 날의 인덱스 및 좌석 정보가 출력
      */
     @Override
-    public DetailProductDTO reserveCalendarList(String productCode, Integer year, Integer month) {
+    public DetailProductDTO reserveCalendarMonth(String productCode, Integer year, Integer month) {
         //상품 조회, 없다면 예외 처리
         Product findProduct = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
@@ -169,11 +170,15 @@ public class ProductServiceImpl implements ProductService {
         return new DetailProductDTO().toDTO(detailProductCheckList, reserveTimeSetDTOList);
     }
 
-    public List<DetailProductReserveTimeDTO> reserveCalendarDay(String productCode, Integer year, Integer month, Integer day) {
+    public DetailProductReserveTimeSetDTO reserveCalendarDay(String productCode, Integer year, Integer month, Integer day) {
 
         //상품 조회, 없다면 예외 처리
         Product findProduct = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
+
+        //좌석/가격 리스트 조회 및 Entity -> DTO 리스트
+        List<SeatPriceDTO> seatPriceDTOList = createSeatPriceDTOList(findProduct);
+        log.info("seatPriceDTOList = {}", seatPriceDTOList);
 
         LocalDateTime firstPotionOfDay = LocalDateTime.of(year, month, day, 0, 0);
         LocalDateTime lastPositionOfDay = LocalDateTime.of(year, month, day, 23, 59);
@@ -193,7 +198,18 @@ public class ProductServiceImpl implements ProductService {
             detailProductReserveTimeDTOList.add(reserveTimeDTO);
         }
 
-        return detailProductReserveTimeDTOList;
+        //캐스팅 리스트, 시간별 예매 캐스팅 리스트 담을 VO
+        CastingInfoVO castingInfoVO = null;
+        //캐스팅 정보 및 시간별 캐스팅 정보 처리 로직
+        //캐스팅 정보가 있으면 캐스팅 정보 조회
+        if (findProduct.getIsInfoCasting()) {
+            castingInfoVO = createCastingInfo(findProduct, detailProductReserveTimeDTOList);
+        }
+
+        //캘린더에 좌석/가격 정보 추가
+        processTimeSeatPrice(detailProductReserveTimeDTOList, seatPriceDTOList);
+
+        return new DetailProductReserveTimeSetDTO().toDTO(detailProductReserveTimeDTOList);
     }
 
     /**
@@ -275,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         //첫 예매 가능 월 내 예매 가능 날짜 리스트
-        List<Integer> reserveTimeDayListInMonth = new ArrayList<>();
+        List<String> reserveTimeDayListInMonth = new ArrayList<>();
         //현 날짜
         LocalDateTime now = LocalDateTime.now();
         //첫 예매 날짜
@@ -304,9 +320,12 @@ public class ProductServiceImpl implements ProductService {
         for (ReserveTime reserveTime : findReserveTimeWithinMonth) {
             DetailProductReserveTimeDTO reserveTimeDTO = new DetailProductReserveTimeDTO().toDTO(reserveTime);
             detailProductReserveTimeDTOList.add(reserveTimeDTO);
+            String yearDayMonth = reserveTime.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             //예매 가능 날짜 리스트 추가 및 중복 제외
-            if (!reserveTimeDayListInMonth.contains(reserveTimeDTO.getTime().getDayOfMonth())) {
-                reserveTimeDayListInMonth.add(reserveTimeDTO.getTime().getDayOfMonth());
+//            if (!reserveTimeDayListInMonth.contains(reserveTimeDTO.getTime().getDayOfMonth())) {
+            if (!reserveTimeDayListInMonth.contains(yearDayMonth)) {
+//                reserveTimeDayListInMonth.add(reserveTimeDTO.getTime().getDayOfMonth());
+                reserveTimeDayListInMonth.add(yearDayMonth);
             }
         }
 

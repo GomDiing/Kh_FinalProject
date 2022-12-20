@@ -35,7 +35,7 @@ public class QnADTO {
         this.qnaStatus=qna.getStatus().getDescription();
         this.reply = qna.getReply();
 //        this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        this.createTime = qna.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createTime = qna.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
 
         return this;
     }

@@ -37,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         // DTO -> ENTITY 변환
-        Member signMember = new Member().toEntity(signupDto, MemberProviderType.HOME);
+        Member signMember = new Member().toEntity(signupDto, MemberProviderType.valueOf(signupDto.getProviderType()));
 
         // 해당 하는 아이디의 정보를 가져옴 재가입일 수도 있기 때문에 아이디 중복처리는 아직.
         Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(signMember.getId(), MemberStatus.UNREGISTER, signMember.getProviderType());
@@ -52,10 +52,10 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 그 다음 절차에 따라 아이디 중복 확인
-        validateDuplicateById(signupDto.getId());
+        validateDuplicateById(signupDto.getId(), MemberProviderType.valueOf( signupDto.getProviderType()));
 
         //이메일 중복 확인
-        validateDuplicateByEmail(signupDto.getEmail());
+        validateDuplicateByEmail(signupDto.getEmail(), MemberProviderType.valueOf( signupDto.getProviderType()));
 
         //회원 가입
         Member saveMember = memberRepository.save(signMember);
@@ -76,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         //주어진 ID로 회원 조회
-        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.HOME)
+        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(memberInfoDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //주어진 회원과 연결된 주소 조회
@@ -96,11 +96,11 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     @Override
-    public void validateDuplicateById(String id) {
+    public void validateDuplicateById(String id, MemberProviderType providerType) {
 
         unregisterCheck();
 
-        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, MemberProviderType.HOME);
+        Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, providerType);
 
         if(findId.isPresent()) {
             throw new CustomException(CustomErrorCode.DUPLI_MEMBER_ID);
@@ -112,9 +112,9 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
-    public void validateDuplicateByEmail(String email) {
+    public void validateDuplicateByEmail(String email, MemberProviderType providerType) {
 
-        Optional<Member> findEmail = memberRepository.findByEmailAndStatusNot(email, MemberStatus.UNREGISTER);
+        Optional<Member> findEmail = memberRepository.findByEmailAndStatusNotAndProviderType(email, MemberStatus.UNREGISTER, providerType);
 
         //중복 이메일 존재 시 예외 처리
         if (findEmail.isPresent()) {
@@ -199,7 +199,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         // 아이디 패스워드로 조회 성공하면
-        Member findMember = memberRepository.findByIdAndPasswordAndProviderType(deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberProviderType.HOME)
+        Member findMember = memberRepository.findByIdAndPasswordAndProviderType(deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
 
         // 조회한 회원의 정보를 DELETE 업데이트 !!
@@ -340,29 +340,53 @@ public class MemberServiceImpl implements MemberService {
             member.updateBlackByCount();
             memberDTOList.add(new MemberDTO().toDTOByCount(member));
         }
-
         return memberDTOList;
     }
 
     @Override
     public SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO) {
+        log.info("signinRequestDTO.getProviderType() = {}", signinRequestDTO.getProviderType());
         //홈페이지 가입 회원일 시
-        if (signinRequestDTO.getProviderType() == MemberProviderType.HOME) {
+        if (signinRequestDTO.getProviderType().equals(MemberProviderType.HOME.name())) {
             //비밀번호 없으면 예외 처리
             if (Objects.isNull(signinRequestDTO.getPassword())) {
                 throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
             }
-             Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(), signinRequestDTO.getPassword(), MemberProviderType.HOME)
+            //회원 조회
+            Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(), signinRequestDTO.getPassword(), MemberProviderType.HOME)
                      .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            //영구 정지 회원일 경우
+            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
+                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
+            }
             return new SigninResponseDTO().toDTO(findMember);
+        //소셜 로그인 가입 회원일 시
         } else {
             //이메일 정보가 없으면 예외 처리
             if (Objects.isNull(signinRequestDTO.getEmail())) {
                 throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
             }
-            Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), signinRequestDTO.getProviderType())
+            //회원 조회
+            Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), MemberProviderType.valueOf(signinRequestDTO.getProviderType()))
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            //영구 정지 회원일 경우
+            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
+                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
+            }
             return new SigninResponseDTO().toDTO(findMember);
         }
+    }
+
+    /**
+     * 회원탈퇴 신청 1주일이 지나지 않은 회원 복구 메서드
+     */
+    @Override
+    @Transactional
+    public void deleteCancelMember(DeleteCancelDTO deleteCancelDTO) {
+        // DELETE 상태인 회원만 조회
+        Member deleteMember = memberRepository.findByIdAndPasswordAndStatus(deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+        // ACTIVE 변경
+        deleteMember.deleteCancel(deleteCancelDTO);
     }
 }

@@ -5,10 +5,11 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class SigninRequestDTO {
+public class DeleteCancelDTO {
+
+    @NotNull(message = "아이디는 필수 입력 값")
     private String id;
+
+    @NotNull(message = "비밀번호는 필수 입력 값")
     private String password;
-    private String email;
-    @NotNull(message = "providerType은 필수입니다")
-    private String providerType;
 }

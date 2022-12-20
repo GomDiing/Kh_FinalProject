@@ -3,6 +3,9 @@ package com.kh.finalproject.controller;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -96,6 +99,9 @@ public class MemberController {
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 
+        if (MemberProviderType.valueOf(findPwdMemberDTO.getProviderType()) != MemberProviderType.HOME)
+            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
+
         Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
@@ -134,9 +140,20 @@ public class MemberController {
      * 로그인 컨트롤러
      */
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(SigninRequestDTO signinRequestDTO) {
+    public ResponseEntity<Object> signin(@RequestBody SigninRequestDTO signinRequestDTO) {
         SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);
+    }
+
+    /**
+     * 회원탈퇴 1주일 지나기 전에 복구
+     */
+    @PostMapping("/delete/cancel")
+    public ResponseEntity<DefaultResponse> deleteCancel(@Validated @RequestBody DeleteCancelDTO deleteCancelDTO) {
+
+        memberService.deleteCancelMember(deleteCancelDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_CANCEL, deleteCancelDTO), HttpStatus.OK);
     }
 }

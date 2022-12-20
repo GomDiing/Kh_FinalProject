@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ChartRepository extends JpaRepository<Chart, Long> {
+public interface ChartRepository extends JpaRepository<Chart, String> {
 
     /*월별 매출 조회
     * @param year*/
