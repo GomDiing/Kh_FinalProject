@@ -56,6 +56,8 @@ public class ChartServiceImpl implements ChartService {
 //        int nowYear = now.getYear();
 //        int nowMonth = now.getDayOfMonth();
 
+        //최근 3개월간 차트 생성 및 저장
+        //차트가 있다면 생략
         for (int i = 0; i < 3; i++) {
             LocalDateTime todayTime = LocalDateTime.now();
             LocalDateTime beforeMonthTime = todayTime.minusMonths(i);
@@ -73,8 +75,8 @@ public class ChartServiceImpl implements ChartService {
             boolean isReserveExist = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
                     .isEmpty();
 
-            //UNREGISTER 상태가 아닌 회원 리스트 조회
-            Integer memberCount = memberRepository.countAllByStatusNot(MemberStatus.UNREGISTER);
+            //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
+            Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
 
             //거래내역이 존재하지 않다면
             if (isReserveExist) {

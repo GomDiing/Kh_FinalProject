@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -130,8 +131,9 @@ public class ReserveServiceImpl implements ReserveService {
         }
     }
 
+    @Transactional
     @Override
-    public RefundReserveDTO refund(String reserveId) {
+    public RefundReserveCancelDTO refundCancel(String reserveId, ReserveStatus status) {
         //예매ID와 결제 완료된 상태인 예매 조회
         Reserve reserve = reserveRepository.findByIdAndStatus(reserveId, ReserveStatus.PAYMENT)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
@@ -141,7 +143,7 @@ public class ReserveServiceImpl implements ReserveService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_RESERVE_TIME_SEAT_PRICE));
 
         //상태 변경 및 환불 시간 갱신
-        reserve.updateStatus(ReserveStatus.REFUND);
+        reserve.updateStatus(status);
         reserve.updateRefundTime(LocalDateTime.now());
 
         //수량 증가 (단일 환불임으로 1만 증가)
@@ -152,20 +154,25 @@ public class ReserveServiceImpl implements ReserveService {
             KakaoPay kakaoPay = kakaoPayRepository.findByReserve(reserve)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_KAKAO_TID));
 
-            return new RefundReserveDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod(), kakaoPay.getKakaoTID());
+            return new RefundReserveCancelDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod(), kakaoPay.getKakaoTID());
         }
 
-        return new RefundReserveDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod());
+        return new RefundReserveCancelDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod());
     }
 
     @Override
-    public void cancel(CancelReserveDTO cancelReserveDTO) {
+    public List<ReserveDTO> searchAllByMember(Long memberIndex) {
+        Member findMember = memberRepository.findById(memberIndex)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
-    }
+        List<ReserveDTO> reserveDTOList = new ArrayList<>();
 
-    @Override
-    public ReserveDTO searchByMember(Long memberIndex) {
-        return null;
+        for (MemberReserve memberReserve : findMember.getMemberReserveList()) {
+
+            reserveDTOList.add(new ReserveDTO().toDTO(memberReserve.getReserve()));
+        }
+
+        return reserveDTOList;
     }
 
     @Override
