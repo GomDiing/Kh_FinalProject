@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // 초기값
 const initialState = {
     info : {
-        // userIndex : '',
+        userIndex : '',
         userId : '',
         userPoint : '',
     }
