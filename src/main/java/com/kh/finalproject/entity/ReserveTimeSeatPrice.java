@@ -35,5 +35,9 @@ public class ReserveTimeSeatPrice {
     public void minusQuantity(Integer quantity) {
         this.remainQuantity -= quantity;
     }
+
+    public void addQuantity(Integer quantity) {
+        this.remainQuantity += quantity;
+    }
 }
 

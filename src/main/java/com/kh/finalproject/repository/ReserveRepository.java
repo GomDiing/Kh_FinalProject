@@ -14,4 +14,6 @@ public interface ReserveRepository extends JpaRepository<Reserve, String> {
 
     Optional<List<Reserve>> findAllByCreateTimeBeforeAndStatus(LocalDateTime now, ReserveStatus status);
     Optional<List<Reserve>> findAllByCreateTimeBefore(LocalDateTime now);
+
+    Optional<Reserve> findByIdAndStatus(String id, ReserveStatus status);
 }

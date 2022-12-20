@@ -2,6 +2,7 @@ package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.reserve.*;
 import com.kh.finalproject.entity.*;
+import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.*;
@@ -44,8 +45,7 @@ public class ReserveServiceImpl implements ReserveService {
         //예매 정보
         ReserveTime reserveTime = reserveDetail.getReserveTime();
 
-        //좌석 정보
-        String reserveSeat = reserveDetail.getSeatPrice().getSeat();
+        String seatInfo = reserveDetail.getSeatPrice().getSeat();
 
         //상품 조회
         Product reserveProduct = productRepository.findByReserveTimeListContaining(reserveTime)
@@ -85,7 +85,7 @@ public class ReserveServiceImpl implements ReserveService {
             cumuDiscount += paymentReserveDTO.getPoint();
 
             //예매 엔티티 생성 및 저장
-            Reserve reserve = new Reserve().toEntity(reserveId, reserveTime, reserveSeat, paymentReserveDTO);
+            Reserve reserve = new Reserve().toEntity(reserveId, reserveTime, seatInfo, reserveDetail.getIndex(), paymentReserveDTO);
             reserveRepository.save(reserve);
 
             //카카오페이일 경우
@@ -123,7 +123,7 @@ public class ReserveServiceImpl implements ReserveService {
         else {
             //차트 조회
             Chart chart = chartRepository.findById(charId)
-                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_CHART));
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
 
             //해당 차트 정보 갱신
             chart.updateChart(cumuAmount, cumuDiscount, (long) paymentReserveDTO.getQuantity());
@@ -131,8 +131,31 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public void refund(RefundReserveDTO refundReserveDTO) {
+    public RefundReserveDTO refund(String reserveId) {
+        //예매ID와 결제 완료된 상태인 예매 조회
+        Reserve reserve = reserveRepository.findByIdAndStatus(reserveId, ReserveStatus.PAYMENT)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
 
+        //해당 회원이 예매했던 상세 좌석/가격 정보 조회
+        ReserveTimeSeatPrice reserveTimeSeatPrice = reserveTimeSeatPriceRepository.findById(reserve.getReserveTimeSeatPriceIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_RESERVE_TIME_SEAT_PRICE));
+
+        //상태 변경 및 환불 시간 갱신
+        reserve.updateStatus(ReserveStatus.REFUND);
+        reserve.updateRefundTime(LocalDateTime.now());
+
+        //수량 증가 (단일 환불임으로 1만 증가)
+        reserveTimeSeatPrice.addQuantity(1);
+
+        //결제 수단이 카카오페이인 경우
+        if (reserve.getMethod().equals("KAKAOPAY")) {
+            KakaoPay kakaoPay = kakaoPayRepository.findByReserve(reserve)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_KAKAO_TID));
+
+            return new RefundReserveDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod(), kakaoPay.getKakaoTID());
+        }
+
+        return new RefundReserveDTO().toDTO(reserve.getAmount(), reserve.getDiscount(), reserve.getFinalAmount(), reserve.getMethod());
     }
 
     @Override

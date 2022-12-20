@@ -15,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +86,7 @@ public class ChartServiceImpl implements ChartService {
             else {
                 //이전 모든 거래내역 조회
                 List<Reserve> findAllReserveListBefore = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
-                        .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_CHART));
+                        .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
 
                 Long cumuAmount = 0L;
                 Long cumuDiscount = 0L;
