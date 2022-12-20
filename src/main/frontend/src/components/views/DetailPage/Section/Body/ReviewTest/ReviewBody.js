@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 
 const ReviewBody=(props)=>{
     const [Reviews, setReviews] = useState(props.reviewList);
-    // const [productCode, setProductCode] = useState(props.code);
 
     useEffect(() => {
       setReviews(props.reviewList);
@@ -19,9 +18,9 @@ const ReviewBody=(props)=>{
         <Form.Label>{content}</Form.Label>
         <Form.Label>{rate}</Form.Label>
         <Form.Label>{like}</Form.Label>
+        <div>들어가져요ㅋㅋ</div>
         </div>
         ))}
-
         <Form.Control type="text"/>
         </>
     )

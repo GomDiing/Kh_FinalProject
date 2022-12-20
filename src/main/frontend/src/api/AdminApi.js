@@ -26,7 +26,7 @@ const AdminApi={
     },
 
     // (체크박스) 공지사항 삭제
-    noticeCheck : async function(arrItems){
+    noticeCheck :async function(arrItems){
         const arrKeys = [];
         for(var i=0; i<arrItems.length; i++){
             arrKeys.push({"index":arrItems[i]});
@@ -34,7 +34,7 @@ const AdminApi={
         const params = {
             checkDTOList: arrKeys
         };
-        return await axios.post(TCAT_DOMAIN +"/api/notice/delete/checkbox",params, "application/json");
+        return await axios.post(TCAT_DOMAIN + "/api/notice/delete/checkbox",params, "application/json");
     },
     // 공지사항 수정
     noticeEdit : async function(inputTitle, inputDetail, index){

@@ -8,5 +8,7 @@ import java.util.List;
 public interface ChartService {
     List<ChartDTO> searchByIndex();
 
-    void createCharList();
+    void createCharList(Integer listCount);
+
+    List<ChartDTO> searchChartList(Integer listCount);
 }
