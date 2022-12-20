@@ -177,7 +177,8 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Override
     public List<ReviewCommentDTO> searchAll(Pageable pageSize) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.selectAll(pageSize);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayer(0,pageSize);
+//                .selectAll(pageSize);
 
         for (ReviewComment e : reviewCommentList) {
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);

@@ -113,7 +113,7 @@ const NoticeList=()=>{
                 </thead>
                 <tbody>
                   {noticeList.map(({index,title,createTime}) => (
-                  <tr>
+                  <tr key={index}>
                   <td><input type='checkbox'  name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked,index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />

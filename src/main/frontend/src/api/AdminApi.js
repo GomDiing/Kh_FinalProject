@@ -90,7 +90,7 @@ const AdminApi={
 
     // 최신 공연 후기 글 4개 조회(메인페이지 화면 같이 씀)
     recentReview : async function(){
-        return await axios.get(TCAT_DOMAIN + "/api/review/dashboard", HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/dashboard?sort=index,desc`, HEADER)
     },
     // 전시 전체 글 조회(관리자페이지용, 페이징)
     exhibitionList : async function(currentPage ,setPageSize){
