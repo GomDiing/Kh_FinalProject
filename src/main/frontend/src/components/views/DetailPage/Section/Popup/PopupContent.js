@@ -81,7 +81,7 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, userInfo, seatIndexList, date, cancelday, index, code } = props;
+  const { title, seat, userInfo, seatIndexList, date, cancelday, index } = props;
   
   // 회원 정보
   console.log(userInfo);
@@ -278,9 +278,9 @@ function PopupContent (props) {
       </>
     }
     {index === 3 && <FinalModal
-      seatNumber={seatNumber} seat={seatList} code={code}
-      cancelday={cancelday} title={title} date={date} value={value}
-      ticket={ticket} price={selectPrice} tax={tax} total={total} userInfo={userInfo} />}
+      seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
+      title={title} date={date} value={value} ticket={ticket}
+       price={selectPrice} tax={tax} total={total} userInfo={userInfo} />}
     </>
   );
 
@@ -292,8 +292,8 @@ function PopupContent (props) {
 }
 
   const FinalModal = props => {
-    const { seatNumber, seat, cancelday, title, date, value, ticket, tax, total, code, userInfo, price } = props;
-    PayReady(title, total, tax, value, code, seatNumber, userInfo, price);
+    const { seatNumber, seat, cancelday, title, date, value, ticket, tax, total, userInfo, price } = props;
+    PayReady(title, total, tax, value, seatNumber, userInfo, price);
     const payUrl = window.localStorage.getItem('url');
 
     return(
@@ -301,7 +301,7 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <a href={payUrl}><button className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
+          <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
         </div>
     </div>
     );

@@ -175,7 +175,7 @@ function TCalendar (props) {
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
                     body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
-                    seat={seat} seatIndexList={seatList} title={title} index={index} code={code} />}/>}
+                    seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

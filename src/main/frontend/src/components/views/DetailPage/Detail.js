@@ -189,7 +189,7 @@ function Detail() {
             {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
-              <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
+              <Info loc={comList.location} start={comList.period_start} end={comList.period_end}
               time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
               kage={ckList.is_age_korean} seat={seat} loc2={comList.detail_location}/>
             </Content>
