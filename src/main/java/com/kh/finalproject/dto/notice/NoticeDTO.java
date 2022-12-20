@@ -26,7 +26,7 @@ public class NoticeDTO {
         this.index = notice.getIndex();
         this.title = notice.getTitle();
         this.content = notice.getContent();
-        this.createTime = notice.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createTime = notice.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         return this;
     }
 }

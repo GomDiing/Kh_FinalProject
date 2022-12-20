@@ -1,5 +1,6 @@
 package com.kh.finalproject.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,11 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
     //생성시간
     @CreatedDate
-    protected LocalDateTime create_time;
+    @JsonProperty("create_time")
+    protected LocalDateTime createTime;
 
     //수정시간
     @LastModifiedDate
-    protected  LocalDateTime update_time;
+    @JsonProperty("update_time")
+    protected  LocalDateTime updateTime;
 }

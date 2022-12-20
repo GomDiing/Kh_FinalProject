@@ -6,8 +6,8 @@ import QnaModal from "./QnaModal";
 import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
 
-
-const Inquiry=()=>{
+// 관리자페이지 qna
+const Inquiry=(props)=>{
   const [qnaList, setQnaList] = useState([]);
   const [pageSize, setPageSize] = useState(10); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
@@ -43,6 +43,12 @@ const Inquiry=()=>{
     qnaData();
   }, [currentPage, pageSize]);
 
+  const onChangeStatus=(props)=>{ //  응답 완료된거 답장 안보내고 싶은데 어떻게 하냐......
+    if(props.qnaStatus === "응답 완료"){
+      setModalOpen(false);
+    }
+  }
+
   return(
     <InquiryBlock>
         <TopBar name="큐앤에이 관리"/>
@@ -66,29 +72,41 @@ const Inquiry=()=>{
                     <td>{qnaList.id}</td>
                     <td>{qnaList.createTime}</td>
                     <td>{qnaList.qnaStatus}</td>
-                    <td><button onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
+                    <td><button onChange={onChangeStatus} onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
                       {modalOpen && <QnaModal setModalOpen={setModalOpen} />}
                     </td>
                   </tr>
                   ))}
                   </tbody>
             </Table>
+            {props.reply === null ?
+              <QnaModal open={modalOpen} close={closeModal} index={qIndex} header="문의 답장하기">
+              <Table>
+                <tr style={{height : "40px"}}>
+                  <th>작성자</th>
+                  <td>{modalText.id}</td>
+                </tr>
+              </Table>
+            </QnaModal> 
+            :
               <QnaModal open={modalOpen} close={closeModal} index={qIndex} header="문의 답장하기">
                 <Table>
-                  <tr>
+                  <tr style={{height : "40px"}}>
                     <th>작성자</th>
                     <td>{modalText.id}</td>
                   </tr>
-                  <tr>
+                  <tr style={{height : "40px", fontWeight : "100px"}}>
                     <th>제목</th>
                     <td>{modalText.title}</td>
                   </tr>
-                  <tr>
-                    <th>문의 내용</th>
+                  <tr style={{height : "60px"}}>
+                    <th style={{width : "150px"}}>문의 내용</th>
                     <td>{modalText.content}</td>
                   </tr>
                 </Table>
               </QnaModal>
+          }
+
             </div>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수

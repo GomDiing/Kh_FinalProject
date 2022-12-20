@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components"
+import AdminApi from "../../../../../api/AdminApi"
 
 const MainReviewContainer = styled.div`
     width: 100%;
@@ -58,43 +60,43 @@ const MainReviewContainer = styled.div`
         }
 }
 `
-const Review =[
-    {
-        id : "1",
-        title : "첫번째 후기 제목입니다.첫번째 후기 제목입니다.첫번째 후기 제목입니다.첫번째 후기 제목입니다.",
-        contents : "재미있습니다."
-    },
-    {   
-        id : "2",
-        title : "첫번째 후기 제목입니다.",
-        contents : "재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다재미있습니다"
-    },
-    {
-        id : "3",
-        title : "첫번째 후기 제목입니다.",
-        contents : "재미있습니다."
-    },
-    {
-        id : "4",
-        title : "첫번째 후기 제목입니다.",
-        contents : "재미있습니다"
-    },
-]
 
 const MainReview = () =>{
-    
+    const [reviewItem,setReviewItem] = useState('');
+    const [isFinish , setIsFinish] = useState(false);
+
+
+    // undifind 때문에 setIsFinish사용
+    useEffect(() => {
+        const ReviewAsync = async() =>{
+            try{
+                const res = await AdminApi.recentReview();
+                if(res.data.statusCode === 200){
+                    setReviewItem(res.data.results)
+                    setIsFinish(true);
+                }
+            }catch(e){
+                console.log(e)
+            }
+        }
+        ReviewAsync();
+        setIsFinish(false)
+    },[])
+
+    console.log(reviewItem);
+
     return(
         <MainReviewContainer>
             <div className="TitleBox">
             <h2>관람 후기</h2>
             </div>
             <div className="ReviewBox">
-            {Review.map (c => (
-                <li className="MainReviewContents" key={c.id}>
-                    <p className="minititle">{c.title}</p>
+            {isFinish && reviewItem.map ((reviewItem , index) => (
+                <li className="MainReviewContents" key={index}>
+                    <p className="minititle">{reviewItem.title}</p>
                 <hr></hr>
                 <div className="ReviewContents">
-                    <p className="con">{c.contents}</p>
+                    <p className="con">{reviewItem.content}</p>
                 </div>
             </li>
             ))}

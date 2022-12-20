@@ -107,7 +107,7 @@ const PostManagement=()=>{
                 </thead>
                 <tbody>
                   {list.map(({code,title,productCategory,periodStart,periodEnd}) => (
-                  <tr>
+                  <tr key={code}>
                   <td><input type='checkbox' name={`select-${code}`} onChange={(e) => handleSingleCheck(e.target.checked, code)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(code) ? true : false} />

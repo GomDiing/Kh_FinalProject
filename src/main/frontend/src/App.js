@@ -8,7 +8,8 @@ import MyPage from "./components/views/MyPage/MyPage";
 import ResultFalse from "./components/KakaoPay/ResultFalse";
 import { PayCancel, PayReady, PayResult } from "./components/KakaoPay/PayReady";
 import Agree from "./components/views/SignPage/Agree";
-import SearchResult from "./components/views/MainHeader/Search/Search";
+import CategorySearch from "./components/views/MainHeader/Search/CategorySearch";
+import Search from "./components/views/MainHeader/Search/Search";
 
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
     <>
     <Routes>
       <Route path='/' element={<MainPage/>}/>
-      <Route path="/search" element={<SearchResult/>}/>
+      <Route path="/categorySearch" element={<CategorySearch/>}/>
+      <Route path="/search" element={<Search/>}/>
       <Route path='/admin/*' element={<AdminPage/>}/>
       <Route path='/MyPage/*' element={<MyPage/>}/>
       <Route path='/login' element={<Login />} />
