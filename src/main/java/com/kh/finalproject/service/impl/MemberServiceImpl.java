@@ -326,19 +326,19 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    /*신고누적 5회인 회원 블랙리스트로 전환*/
     @Override
     @Transactional
     public List<MemberDTO> updateStatusByCount() {
         unregisterCheck();
 
-        List<MemberDTO> memberDTOList = new ArrayList<>();
-
         List<Member> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4)
                 .orElseThrow(() -> new IllegalArgumentException("조회된 신고횟수가 5개 이상인 회원이 없습니다"));
 
+        List<MemberDTO> memberDTOList = new ArrayList<>();
         for (Member member : findMemberList) {
-            member.updateBlackByCount();
             memberDTOList.add(new MemberDTO().toDTOByCount(member));
+            member.updateBlackByCount();
         }
         return memberDTOList;
     }

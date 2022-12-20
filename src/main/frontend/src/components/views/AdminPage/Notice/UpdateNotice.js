@@ -18,10 +18,7 @@ const UpdateNotice=()=>{
   const onClickSubmit =async()=> {
     console.log("클릭 찍히는지");
     console.log("param: " + params)
-    console.log("inputTitle: " + inputTitle)
-    console.log("inputDetail: " + inputDetail)
     const res = await AdminApi.noticeEdit(inputTitle,inputDetail,params);
-    console.log("여기는 안찍힘");
     if(res.data === true){
         console.log("공지사항 수정 완료");
         alert("공지사항이 수정되었습니다.")

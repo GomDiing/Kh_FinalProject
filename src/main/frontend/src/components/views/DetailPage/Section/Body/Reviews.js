@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Comment from "./Review/Comment";
-import WriteReview from "./Review/WriteReview";
 import ReviewBody from "./ReviewTest/ReviewBody";
+import WriteReview from "./ReviewTest/WriteReview";
 
 const Review = styled.div`
     /* min-height: 100vh; */
@@ -16,7 +16,6 @@ const Review = styled.div`
 
 const Reviews = () => {
     const [modalOpen, setModalOpen] = useState(false);
-
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
         setModalOpen(false);
@@ -107,11 +106,12 @@ const Reviews = () => {
     return (
     <div>
         <div>
-    <button onClick={openModal}>관람후기</button>
-            {modalOpen && <WriteReview open={openModal} close={closeModal} buttonValue={"등록"} addComments={addComments} />}
+    {/* <button onClick={openModal}>관람후기</button>
+            {modalOpen && <WriteReview open={openModal} close={closeModal} buttonValue={"등록"} addComments={addComments} />} */}
     {/* <WriteReview/> */}
     </div>
     <br/>
+    <WriteReview/>
     <ReviewBody/>
     {/* <Review>
         {comments.map((comment) => (
