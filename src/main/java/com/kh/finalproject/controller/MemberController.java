@@ -99,7 +99,7 @@ public class MemberController {
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 
-        if (findPwdMemberDTO.getProviderType() != MemberProviderType.HOME)
+        if (MemberProviderType.valueOf(findPwdMemberDTO.getProviderType()) != MemberProviderType.HOME)
             throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
 
         Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
@@ -140,7 +140,7 @@ public class MemberController {
      * 로그인 컨트롤러
      */
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(SigninRequestDTO signinRequestDTO) {
+    public ResponseEntity<Object> signin(@RequestBody SigninRequestDTO signinRequestDTO) {
         SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);

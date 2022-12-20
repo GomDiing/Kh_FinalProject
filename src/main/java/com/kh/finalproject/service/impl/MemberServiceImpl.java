@@ -37,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         // DTO -> ENTITY 변환
-        Member signMember = new Member().toEntity(signupDto, signupDto.getProviderType());
+        Member signMember = new Member().toEntity(signupDto, MemberProviderType.valueOf(signupDto.getProviderType()));
 
         // 해당 하는 아이디의 정보를 가져옴 재가입일 수도 있기 때문에 아이디 중복처리는 아직.
         Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(signMember.getId(), MemberStatus.UNREGISTER, signMember.getProviderType());
@@ -52,10 +52,10 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 그 다음 절차에 따라 아이디 중복 확인
-        validateDuplicateById(signupDto.getId(), signupDto.getProviderType());
+        validateDuplicateById(signupDto.getId(), MemberProviderType.valueOf( signupDto.getProviderType()));
 
         //이메일 중복 확인
-        validateDuplicateByEmail(signupDto.getEmail(), signupDto.getProviderType());
+        validateDuplicateByEmail(signupDto.getEmail(), MemberProviderType.valueOf( signupDto.getProviderType()));
 
         //회원 가입
         Member saveMember = memberRepository.save(signMember);
@@ -76,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         //주어진 ID로 회원 조회
-        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, memberInfoDTO.getProviderType())
+        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(memberInfoDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //주어진 회원과 연결된 주소 조회
@@ -199,7 +199,7 @@ public class MemberServiceImpl implements MemberService {
         unregisterCheck();
 
         // 아이디 패스워드로 조회 성공하면
-        Member findMember = memberRepository.findByIdAndPasswordAndProviderType(deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), deleteMemberDTO.getProviderType())
+        Member findMember = memberRepository.findByIdAndPasswordAndProviderType(deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
 
         // 조회한 회원의 정보를 DELETE 업데이트 !!
@@ -346,8 +346,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO) {
+        log.info("signinRequestDTO.getProviderType() = {}", signinRequestDTO.getProviderType());
         //홈페이지 가입 회원일 시
-        if (signinRequestDTO.getProviderType() == MemberProviderType.HOME) {
+        if (signinRequestDTO.getProviderType().equals(MemberProviderType.HOME.name())) {
             //비밀번호 없으면 예외 처리
             if (Objects.isNull(signinRequestDTO.getPassword())) {
                 throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
@@ -361,7 +362,7 @@ public class MemberServiceImpl implements MemberService {
             if (Objects.isNull(signinRequestDTO.getEmail())) {
                 throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
             }
-            Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), signinRequestDTO.getProviderType())
+            Member findMember = memberRepository.findByEmailAndProviderType(signinRequestDTO.getEmail(), MemberProviderType.valueOf(signinRequestDTO.getProviderType()))
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
             return new SigninResponseDTO().toDTO(findMember);
         }
