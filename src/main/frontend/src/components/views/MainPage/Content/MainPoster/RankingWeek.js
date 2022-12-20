@@ -9,7 +9,7 @@ const PosterImgContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
+    /* padding: 20px 0; */
     /* border: solid 1px black; */
     
     img{

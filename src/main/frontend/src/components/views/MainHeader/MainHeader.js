@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const HeaderContainer = styled.div`
@@ -99,10 +99,15 @@ const HeaderContainer = styled.div`
 const MainHeader = () =>{
 
     const[searchText,SetSearchText] = useState("");
+    const Navigate = useNavigate();
 
     const onClickValue = (e) =>{
         const val = e.target.value
         SetSearchText(val);
+    }
+    const clickCategory = (e ,a) =>{
+        window.localStorage.setItem("category" , e)
+        window.localStorage.setItem("categoryName" , a)
     }
     // console.log(categoryvalue);
 
@@ -117,10 +122,10 @@ const MainHeader = () =>{
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0"navbarScroll>
-                        <Link to = "/search" className = "HeaderMenu">뮤지컬</Link>
-                        <Link to = "/search" className = "HeaderMenu">클래식/무용</Link>
-                        <Link to = "/search" className = "HeaderMenu">연극</Link>
-                        <Link to = "/search" className = "HeaderMenu">전시회</Link>
+                        <Link to = "/search" className = "HeaderMenu" onClick={()=>{clickCategory('MUSICAL' ,"뮤지컬")}}>뮤지컬</Link>
+                        <Link to = "/search" className = "HeaderMenu" onClick={()=>{clickCategory('CLASSIC' , "클래식/무용")}}>클래식/무용</Link>
+                        <Link to = "/search" className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</Link>
+                        <Link to = "/search" className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</Link>
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link>
                         <Link to = "/detail" className = "HeaderMenu">상세</Link>
                     </Nav>

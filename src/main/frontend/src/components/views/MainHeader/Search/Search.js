@@ -1,13 +1,16 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer";
 import MainHeader from "../MainHeader";
 
 const SearchContainer = styled.div`
     width: 100%;
-
+    min-width: 930px;
     .Content{
-        /* border: 1px solid black; */
         margin: 0 auto;
+        margin-top: 40px;
+        margin-bottom: 80px;
         width: 80%;
     }
     hr{
@@ -16,9 +19,7 @@ const SearchContainer = styled.div`
     }
 
     .InfoContainer{
-        /* background-color: #f5f5f5; */
-        /* margin: 40px auto; */
-        /* padding: 40px 0 ; */
+        margin-top: 40px;
         table{
             background-color: white;
             margin : 0px auto;
@@ -35,9 +36,6 @@ const SearchContainer = styled.div`
         }
         th ,tr,td{
             border-bottom: 2px solid #f5f5f5;
-            /* height: 40px; */
-            /* width: 25%; */
-            /* border: 1px solid black; */
         }
         img{
             width: 160px;
@@ -46,23 +44,12 @@ const SearchContainer = styled.div`
         .imgContainer{
             width: 160px;
         }
-        /* .titleContainer{
-
-        }
-        <td className="imgContainer"><img src={c.img}></img></td>
-                            <td className="titleContainer">{c.name}</td>
-                            <td className="addrContainer">{c.addr}</td>
-                            <td className="dayContainer" */
     }
     .ButtonContainer{
-        margin: 20px 0;
         display: flex;
         justify-content: center;
-        background-color: #f5f5f5;
-        border-top-left-radius : 20px;
-        border-top-right-radius: 20px;
             button{
-                margin: 20px;
+                margin: 10px 20px;
                 width: 30%;
                 height: 50px;
                 font-size: 20px;
@@ -74,56 +61,118 @@ const SearchContainer = styled.div`
                 background-color: #86868b;
                 color: white;
             }
+            .ItemButtonContainer{
+                display: block;
+            }
         }
     
 `
-const posterInfo = [
+const rankings = [
     {
-        id : "1",
-        name : '1번작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
+        name : 'rankingWeek',
+        text : '주간랭킹',
     },
     {
-        id : "2",
-        name : '2번 작품은 조금 길어진 제목',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22014586_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
+        name : 'rankingMonth',
+        text : '월간랭킹',
     },
     {
-        id : "3",
-        name : '3번 작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22009029_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
+        name : 'rankingClose',
+        text : '종료임박',
     },
-    {
-        id : "4",
-        name : '4번작품',
-        img : 'http://ticketimage.interpark.com/rz/image/play/goods/poster/22/22012184_p_s.jpg',
-        addr : "우리집우리집우리집우리집우리집우리집",
-        start : "2022-12-16",
-        end : '2022-12-16'
-    },
+    
 ]
+
+const categories = [
+    {
+        name : 'MUSICAL',
+        text : '뮤지컬'
+    },
+    {
+        name : 'CLASSIC',
+        text : '클래식 / 무용'
+    },
+    {
+        name : 'DRAMA',
+        text : '연극'
+    },
+    {
+        name : 'EXHIBITION',
+        text : '전시회'
+    }
+]
+// 해더 클릭시, 페이지 이동후 , 해더가 작동하지 않음
 const SearchResult = () => {
+    const [ranking , setRanking] = useState('rankingWeek');
+    const [selectRanking , setSelectRanking] = useState('주간랭킹');
+    const [category , setCategory] = useState(window.localStorage.getItem("category"));
+    const [selectCategory, setSelectCategory] = useState(window.localStorage.getItem("categoryName"));
+    const [SearchData , setSearchData] = useState('');
+    const [isFinish , setIsFinish] = useState(false);
+
+    // 화면에 선택한 랭킹 , 카테고리 보여주기위한 함수
+    const clickRanking = (e ,a) =>{
+        setRanking(e);
+        setSelectRanking(a);
+    }
+    const clickCategory = (e ,a) =>{
+        setCategory(e);
+        setSelectCategory(a);
+    }
+
+    // 선택한 카테고리별 or 랭킹별 useEffect
+    useEffect(() => {
+        const SearchAsync = async() =>{
+            try{
+                if(ranking === 'rankingWeek'){
+                    const res = await MainApi.rankingWeek(category, 20);
+                    if(res.data.statusCode === 200){
+                        console.log("주간랭킹")
+                        setSearchData(res.data.results)
+                    }
+                }else if (ranking === 'rankingMonth'){
+                    const res = await MainApi.rankingMonth(category, 20);
+                    if(res.data.statusCode === 200){
+                        console.log("월간랭킹")
+                        setSearchData(res.data.results)
+                    }
+                }else if(ranking === 'rankingClose'){
+                    const res = await MainApi.rankingClose(category, 20);
+                    if(res.data.statusCode === 200){
+                        console.log("종료임박")
+                        setSearchData(res.data.results)
+                    }
+                }else console.log("실패")
+            }catch(e){
+                console.log(e);
+            }
+            setIsFinish(true)
+        }
+        setIsFinish(false);
+        SearchAsync();
+    },[selectRanking,category])
+
     return(
+        // 버튼영역
         <SearchContainer>
             <MainHeader/>
             <div className="Content">
-                <div className="ButtonContainer">
-                    <button>주간랭킹</button>
-                    <button>월간랭킹</button>
-                    <button>종료임박</button>
-                    {/* <hr/> */}
+                <h2>{selectCategory} {selectRanking}</h2>
+                <div className="ItemButtonContainer">
+                    <div className="ButtonContainer">
+                        {rankings.map (c =>(
+                            <button onClick={()=>{clickRanking(c.name ,c.text)}}>{c.text}</button>
+                        ))}
+                    </div>            
+                    <div className="ButtonContainer">
+                        {categories.map(c =>(
+                            <button onClick={()=>{clickCategory(c.name ,c.text)}}>{c.text}</button>
+                        ))}
+                    </div>
                 </div>
-
                 
+
+            {/* 아이탬영역 */}
                 <div className="InfoContainer">
                     <table>
                         <tr>
@@ -132,29 +181,27 @@ const SearchResult = () => {
                             <th>장소</th>
                             <th>기간</th>
                         </tr>
-                        {posterInfo.map(c=>(
-                        <tr>
-                            <td className="imgContainer"><img src={c.img}></img></td>
-                            <td className="titleContainer">{c.name}</td>
-                            <td className="addrContainer">{c.addr}</td>
+                        {isFinish && SearchData.map((SearchData , index)=>(
+                        <tr key={index}>
+                            <td className="imgContainer"><img src={SearchData.product.poster_url}></img></td>
+                            <td className="titleContainer">{SearchData.product.title}</td>
+                            <td className="addrContainer">{SearchData.product.location}</td>
                             <td className="dayContainer">
-                                {c.start}
+                            {/* 당일공연 체크 */}
+                            {SearchData.product.period_end === '당일 공연' ? 
+                            <>{SearchData.product.period_end}</>
+                            :
+                            <>
+                                <>{SearchData.product.period_start}</>
                                 <br/>~<br/>
-                                {c.end}
+                                <>{SearchData.product.period_end}</>
+                            </>    
+                        }
                             </td>
                         </tr>
-                        ))}
+                            ))}
                     </table>
                 </div>
-
-                {/* <ul>
-                    {posterInfo.map(c=>(
-                        <li key={c.id} >
-                            <img src={c.img} alt=""/>
-                            <p>{c.name}</p>
-                        </li>
-                    ))}
-                </ul> */}
             </div>
             <Footer/>
         </SearchContainer>
