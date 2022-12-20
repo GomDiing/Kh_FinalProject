@@ -20,7 +20,7 @@ public interface NoticeRepository extends JpaRepository <Notice,Long> {
 
 //    공지사항 index로 제목 내용 수정
     @Modifying
-    @Query("UPDATE Notice n SET n.title = :#{#paramNotice.title},n.content = :#{#paramNotice.content},n.update_time = :updateTime where n.index = :#{#paramNotice.index}")
+    @Query("UPDATE Notice n SET n.title = :#{#paramNotice.title},n.content = :#{#paramNotice.content},n.updateTime = :updateTime where n.index = :#{#paramNotice.index}")
     Integer updateNotice(@Param("paramNotice") Notice notice, @Param("updateTime")LocalDateTime now);
 
 //    체크박스로 삭제상태 변환 /(상세페이지 삭제 버튼 누르면 상태변환)

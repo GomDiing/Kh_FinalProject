@@ -8,6 +8,7 @@ import javax.persistence.Column;
 
 @Getter
 public class SigninResponseDTO {
+    private Long index;
     private String id;
     private String name;
     private String road;
@@ -19,6 +20,7 @@ public class SigninResponseDTO {
 
 
     public SigninResponseDTO toDTO(Member member) {
+        this.index = member.getIndex();
         this.id = member.getId();
         this.name = member.getName();
         this.point = member.getPoint();

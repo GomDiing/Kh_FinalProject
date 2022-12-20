@@ -1,10 +1,7 @@
 package com.kh.finalproject.repository;
 
-import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.Product;
-import com.kh.finalproject.entity.enumurate.MemberStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.kh.finalproject.entity.ReserveTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findAllByCode(String code);
 
     List<Product> findByTitleContaining(String title);
+
+    Optional<Product> findByReserveTimeListContaining(ReserveTime reserveTime);
 
 }
 

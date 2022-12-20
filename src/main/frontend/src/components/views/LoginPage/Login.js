@@ -4,6 +4,9 @@ import { KAKAO_AUTH_URL } from '../../Config';
 import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
 import { Link, useNavigate } from 'react-router-dom';
+import PayPopup from '../DetailPage/Section/Popup/PayPopup';
+import { useDispatch } from 'react-redux';
+import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const LoginWrap = styled.div`
   width: 100%;
@@ -256,6 +259,11 @@ const IdStyle = styled.div`
     const [login, setLogin] = useState(false);
     const navigate = useNavigate();
 
+      // 모달 띄우기
+    const [open, setOpen] = useState(false);
+    const onOpen = () => setOpen(true);
+    const onClose = () => setOpen(false);
+
     const onChangeId = e => setInputId(e.target.value);
     const onChangePwd = e => setInputPwd(e.target.value);
 
@@ -276,22 +284,81 @@ const IdStyle = styled.div`
             </>
         );
     }
+
+    const [message, setMessage] = useState('');
+    const [color, setColor] = useState('');
+    const [type, setType] = useState('ACTIVE');
+
+    // 리덕스 dispatch 리덕스에 값을 저장할때 사용
+    const dispatch = useDispatch('');
+
+    const LoginModalBody = () => {
+      return(
+        <div>
+          <small style={{fontWeight: 'bold', color : color}}>{message}</small>
+        </div>
+      );
+    }
+    const onClickDeleteCancel = async () => {
+      const response = await MemberApi.deleteCancel(inputId, inputPwd);
+      if(response.data.statusCode === 200) {
+        alert('탈퇴신청이 정상 취소 되었습니다.');
+        setOpen(false);
+        navigate('/');
+      } else {
+        console.log('error...');
+        alert('이미 탈퇴신청이 완료..');
+      }
+    }
+
     const providerType = "HOME";
 
     const onClickLogin = async () => {
       try {
         const response = await MemberApi.login(inputId, inputPwd, providerType);
         if(response.data.statusCode === 200) {
-          navigate('/');
-          console.log('login test SUCCESS');
+          
+          console.log(response.data);
+          const data = {
+            // userIndex : dispatch(response.data.results.),
+            userId : response.data.results.id,
+            userPoint : response.data.results.point
+          }
+          dispatch(loginActions.setUserInfo({data}));
+          // 모달로 교체 예정
+
+          switch(response.data.results.status) {
+            case "ACTIVE" :
+              navigate('/');
+              break;
+            case "DELETE" :
+              setColor('green');
+              setMessage('탈퇴신청을 하신 회원입니다 다시 처리를 취소하려면 확인을 누르시면 됩니다.');
+              setOpen(true);
+              setType('DELETE');
+              break;
+            case "UNREGISTER" :
+              setColor('silver');
+              setMessage('회원님은 탈퇴하신지 1주일이 지나 영구탈퇴가 되었습니다.');
+              setOpen(true);
+              break;
+            case "BLACKLIST" :
+              setColor('red');
+              setMessage('당신은 이러이러한 이유로 인해 저희 사이트 블랙리스트 대상입니다.');
+              setOpen(true);
+              break;
+            default : 
+              alert('누구냐 넌..');
+              break;
+          }
         }
-        console.log(response);
       } catch(e) {
         setLogin(true);
         console.log(e);
         console.log('오류');
       }
     }
+
     const onKeyPress = e => {
       if(e.key === "Enter") {
           onClickLogin();
@@ -346,6 +413,7 @@ const IdStyle = styled.div`
             </div>
           </div>
         </LoginWrap>
+        {open && <FindModal open={onOpen} deleteCancel={onClickDeleteCancel} close={onClose} type={type} body={<LoginModalBody />} />}
         {modalOpen &&<FindModalList topics={topics} />}
     </>
     );

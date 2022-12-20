@@ -62,7 +62,7 @@ public class MemberDTO {
         else this.zipcode = address.getZipcode();
         this.memberRoleType = member.getRole().getRole();
         this.memberStatus = member.getStatus().getStatus();
-        this.createTime=member.getCreate_time().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createTime=member.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         if (Objects.isNull(member.getUnregister())){
             this.unregisterTime = "null";
         }

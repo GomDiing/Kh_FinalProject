@@ -36,7 +36,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     /*review 수정 시 게시글 index 번호로 조회 후 수정*/
     @Modifying
-    @Query("UPDATE ReviewComment r SET r.content = :#{#paramReviewComment.content},r.rate = :#{#paramReviewComment.rate},r.update_time = :updateTime " +
+    @Query("UPDATE ReviewComment r SET r.content = :#{#paramReviewComment.content},r.rate = :#{#paramReviewComment.rate},r.updateTime = :updateTime " +
             "where r.index = :#{#paramReviewComment.index}")
     Integer updateReviewComment(@Param("paramReviewComment") ReviewComment reviewComment, @Param("updateTime")LocalDateTime now);
 

@@ -28,6 +28,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_CHECK_PASSWORD = "비밀번호 확인 성공";
     public static final String SUCCESS_UPDATE_MEMBER = "회원정보 수정 성공";
     public static final String SUCCESS_DELETE = "회원탈퇴가 완료되었습니다";
+    public static final String SUCCESS_DELETE_CANCEL = "회원탈퇴 취소가 완료되었습니다";
     public static final String SUCCESS_MYPAGE = "회원 정보 조회가 완료되었습니다";
     public static final String SUCCESS_SEARCH_MEMBER_BY_ID = "아이디로 회원 정보 조회 완료";
     public static final String SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME = "이메일과 이름으로 회원 아이디 정보 조회 완료";

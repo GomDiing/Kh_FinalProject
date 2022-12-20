@@ -27,4 +27,14 @@ public class KakaoPay extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_id", nullable = false)
     private Reserve reserve;
+
+    public KakaoPay toEntity(String kakaoTID, Member member, Reserve reserve) {
+        this.kakaoTID = kakaoTID;
+        this.member = member;
+        member.getKakaoPayList().add(this);
+        this.reserve = reserve;
+        reserve.getKakaoPayList().add(this);
+
+        return this;
+    }
 }

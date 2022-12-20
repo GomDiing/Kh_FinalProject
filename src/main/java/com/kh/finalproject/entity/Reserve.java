@@ -1,6 +1,7 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.reserve.PaymentReserveDTO;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
@@ -26,8 +27,11 @@ public class Reserve extends BaseTimeEntity {
     @JoinColumn(name = "reserve_time_index", nullable = false)
     private ReserveTime reserveTime;
 
+    @Column(name = "reserve_time_seat_price_index", nullable = false)
+    private Long reserveTimeSeatPriceIndex;
+
     @Column(name = "reserve_seat", nullable = false)
-    private String seat;
+    private String reserveSeat;
 
     @Column(name = "reserve_payment_method", nullable = false)
     private String method;
@@ -58,4 +62,28 @@ public class Reserve extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<KakaoPay> kakaoPayList = new ArrayList<>();
+
+    public Reserve toEntity(String id, ReserveTime reserveTime, String reserveSeat, Long reserveTimeSeatPriceIndex, PaymentReserveDTO paymentReserveDTO) {
+        this.id = id;
+        //예매 정보 연관관계
+        this.reserveTime = reserveTime;
+        reserveTime.getReserveList().add(this);
+        this.reserveSeat = reserveSeat;
+        this.reserveTimeSeatPriceIndex = reserveTimeSeatPriceIndex;
+        this.method = paymentReserveDTO.getMethod();
+        this.amount = paymentReserveDTO.getAmount();
+        this.discount = paymentReserveDTO.getPoint();
+        this.finalAmount = paymentReserveDTO.getAmount() - paymentReserveDTO.getPoint();
+        this.status = ReserveStatus.PAYMENT;
+
+        return this;
+    }
+
+    public void updateStatus(ReserveStatus status) {
+        this.status = status;
+    }
+
+    public void updateRefundTime(LocalDateTime now) {
+        this.refund = now;
+    }
 }

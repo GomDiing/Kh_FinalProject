@@ -5,8 +5,8 @@ import Modal from "../../../../../util/Modal/Modal";
 import { useState } from "react";
 import AnswerModalBody from "./IconModal/ModalBody/AnswerModalBody";
 import IconModalHeader from "./IconModal/IconModalHeader";
-import AskModalBody from "./IconModal/ModalBody/AskModalBody";
 import NoticeModalBody from "./IconModal/ModalBody/NoticeModalBody";
+import CancelModalBody from "./IconModal/ModalBody/CancelModalBody";
 
 const MainIconContainer = styled.div`
     /* border: 1px solid black; */
@@ -76,7 +76,7 @@ const MainIcon = () => {
                 <p>예매내역</p>
             </div>
             <div className="IconContainer">
-                <DollarCircleOutlined className="MainIcon" />
+                <DollarCircleOutlined className="MainIcon" onClick={()=>{openModal(1)}}/>
                 <p>취소/환불</p>
             </div>
             <div className="IconContainer">
@@ -88,11 +88,11 @@ const MainIcon = () => {
                 <p>1:1문의</p>
             </div>
             <div className="IconContainer">
-                <NotificationOutlined className="MainIcon" onClick={()=>{openModal(5)}}/>
+                <NotificationOutlined className="MainIcon" onClick={()=>{openModal(2)}}/>
                 <p>공지사항</p>
             </div>
             <div className="IconContainer"> 
-                <QuestionCircleOutlined  className="MainIcon" onClick={()=>{openModal(6)}}/>
+                <QuestionCircleOutlined  className="MainIcon" onClick={()=>{openModal(3)}}/>
                 <p>자주묻는질문</p>
             </div>
 
@@ -103,10 +103,9 @@ const MainIcon = () => {
                 <h5>휴일</h5><span> AM 09:00 ~ PM 12:00</span>
             </div>
         </div>
-        
-        {selectModal === 4 && <Modal open={modalOpen} close={closeModal} submit = {true} header={<IconModalHeader title = "1:1문의"/>}><div>{<AskModalBody/>}</div></Modal>}
-        {selectModal === 5 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "공지사항"/>}><div>{<NoticeModalBody/>}</div></Modal>}
-        {selectModal === 6 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "자주묻는 질문"/>}><div>{<AnswerModalBody/>}</div></Modal>}
+        {selectModal === 1 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "취소/환불"/>}><div>{<CancelModalBody/>}</div></Modal>}
+        {selectModal === 2 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "공지사항"/>}><div>{<NoticeModalBody/>}</div></Modal>}
+        {selectModal === 3 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "자주묻는 질문"/>}><div>{<AnswerModalBody/>}</div></Modal>}
     </MainIconContainer>
     )
 }

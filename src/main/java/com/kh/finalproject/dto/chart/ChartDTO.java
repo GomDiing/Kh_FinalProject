@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChartDTO {
-    private Long index;
+    private String id;
     private Long cumuAmount;
     private Long cumuDiscount;
     private Long finalAmount;
@@ -15,7 +15,7 @@ public class ChartDTO {
     private Long totalReserve;
 
     public ChartDTO toDTO(Chart chart) {
-        this.index = chart.getIndex();
+        this.id = chart.getId();
         this.cumuAmount = chart.getCumuAmount();
         this.cumuDiscount = chart.getCumuDiscount();
         this.finalAmount = chart.getFinalAmount();

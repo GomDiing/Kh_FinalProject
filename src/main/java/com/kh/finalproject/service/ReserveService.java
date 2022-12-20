@@ -11,13 +11,13 @@ public interface ReserveService {
     /**
      * 예매 결제 메서드
      */
-    void payment(PaymentReserveDTO paymentReserveDTO);
+    void createReserve(PaymentReserveDTO paymentReserveDTO);
 
     /**
      * 예매 환불 메서드
      * 적절한 처리 후 상태 변경
      */
-    void refund(RefundReserveDTO refundReserveDTO);
+    RefundReserveDTO refund(String reserveId);
 
     /**
      * 예매 취소 메서드

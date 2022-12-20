@@ -9,7 +9,7 @@ const PosterImgContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
+    /* padding: 0px 30px; */
     /* border: solid 1px black; */
     
     img{
@@ -120,7 +120,7 @@ const RankingMonth = () =>{
     }
 
     useEffect(() => {
-        const PosterAsunc = async() =>{
+        const PosterAsync = async() =>{
             try{
                 const res = await MainApi.rankingMonth(category, 10);
                 if(res.data.statusCode === 200){
@@ -130,8 +130,9 @@ const RankingMonth = () =>{
                 console.log(e);
             }
         }
-        PosterAsunc();
+        PosterAsync();
     }, [category])
+    
     return(
             <>
                 <PosterCategoryContainer>

@@ -25,4 +25,13 @@ public class MemberReserve extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_id", nullable = false)
     private Reserve reserve;
+
+    public MemberReserve toEntity(Member member, Reserve reserve) {
+        this.member = member;
+        member.getMemberReserveList().add(this);
+        this.reserve = reserve;
+        reserve.getMemberReserveList().add(this);
+
+        return this;
+    }
 }

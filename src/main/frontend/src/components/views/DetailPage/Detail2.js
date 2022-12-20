@@ -135,6 +135,9 @@ function Detail() {
   useEffect(() => {
     setNowLoading(true);
     setPcode(code);
+    getData();
+  },[])
+
     const getData = async()=> {
       try {
         const res = await DetailApi.getDetail(pCode);
@@ -162,10 +165,10 @@ function Detail() {
       } catch (e) {
         console.log(e);
       }
+      setNowLoading(false);
+      getData();
     };
-    setNowLoading(false);
-    getData();
-  }, [pCode]);
+
   
 
   return (
