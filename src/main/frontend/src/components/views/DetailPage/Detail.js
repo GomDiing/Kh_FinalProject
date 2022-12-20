@@ -52,11 +52,14 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 740px;
+  height: auto;
   position: fixed; 
   left: 70%;
-  top: 6.5rem;
-  bottom: 0;
+  /* top: 6.5rem; */
+  /* bottom: 0; */
+  bottom: 100px;
+  padding-bottom: 40px;
+
 }
 .ItemContainer2{
   width: 100%;
