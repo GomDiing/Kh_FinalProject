@@ -34,10 +34,8 @@ const AdminApi={
         const params = {
             checkDTOList: arrKeys
         };
-        // debugger;
         return await axios.post(TCAT_DOMAIN +"/api/notice/delete/checkbox",params, "application/json");
     },
-
     // 공지사항 수정
     noticeEdit : async function(inputTitle, inputDetail, index){
         const editing = {
@@ -53,7 +51,7 @@ const AdminApi={
     },
     // 블랙리스트 회원 조회
     totalBlackMember : async function(currentPage ,setPageSize){
-        return await axios.get(TCAT_DOMAIN+`/api/member/blacklist?page=${(currentPage - 1)}&size=${setPageSize}&sort=memberAccuseCount,desc`, HEADER)
+        return await axios.get(TCAT_DOMAIN+`/api/member/blacklist?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
 
     // 체크박스로 회원 탈퇴(관리자)

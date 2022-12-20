@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Comment from "./Review/Comment";
 import WriteReview from "./Review/WriteReview";
+import ReviewBody from "./ReviewTest/ReviewBody";
 
 const Review = styled.div`
     /* min-height: 100vh; */
@@ -103,8 +104,6 @@ const Reviews = () => {
 
     updateComments(updatedComments);
     };
-
-
     return (
     <div>
         <div>
@@ -113,7 +112,8 @@ const Reviews = () => {
     {/* <WriteReview/> */}
     </div>
     <br/>
-    <Review>
+    <ReviewBody/>
+    {/* <Review>
         {comments.map((comment) => (
         <Comment
         key={comment.id}
@@ -124,7 +124,7 @@ const Reviews = () => {
         setDeleteModalState={setDeleteModalState}
         />
     ))}
-    </Review>
+    </Review> */}
     </div>
 
     );

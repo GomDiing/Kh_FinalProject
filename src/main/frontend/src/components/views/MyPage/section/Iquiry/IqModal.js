@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useNavigate} from "react-router-dom";
+import styled from 'styled-components';
 import AdminApi from '../../../../../api/AdminApi';
 
 
@@ -32,8 +32,10 @@ const QnaModal = (props) => {
     }
 }
 
-    const { open, close, header } = props;
+    const { open, close, header,content, title, reply } = props;
     return (
+        <QWrap>
+
         <div className={open ? 'openModal modal' : 'modal'}>
             {open && 
                 <section>
@@ -44,20 +46,22 @@ const QnaModal = (props) => {
                         </button>
                     </header>
                     <main>
-                    <Table>
+                    {props.children}
+
+                    {/* <Table>
                   <tr>
                     <th>제목</th>
-                    <td>{props.content}</td>
+                    <td>왜 안나오냐{title}</td>
                   </tr>
                   <tr>
                     <th>문의 내용</th>
-                    <td>{props.index}</td>
+                    <td>{content}</td>
                   </tr>
                   <tr>
                     <th>문의 답장</th>
-                    <td>{props.index}</td>
+                    <td>{reply}</td>
                   </tr>
-                </Table>
+                </Table> */}
                     {/* <textarea className='qna-replybox' value={inputReply} onChange={onChangeReply}/> */}
                     </main>
                     <footer>
@@ -67,6 +71,12 @@ const QnaModal = (props) => {
                 </section>
             }
         </div>
+        </QWrap>
+
     );
 };
 export default QnaModal;
+
+const QWrap=styled.div`
+
+`;

@@ -6,7 +6,7 @@ import QnaModal from "./QnaModal";
 import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
 
-
+// 관리자페이지 qna
 const Inquiry=()=>{
   const [qnaList, setQnaList] = useState([]);
   const [pageSize, setPageSize] = useState(10); // 한페이지에 몇개씩 있을건지
@@ -75,16 +75,16 @@ const Inquiry=()=>{
             </Table>
               <QnaModal open={modalOpen} close={closeModal} index={qIndex} header="문의 답장하기">
                 <Table>
-                  <tr>
+                  <tr style={{height : "40px"}}>
                     <th>작성자</th>
                     <td>{modalText.id}</td>
                   </tr>
-                  <tr>
+                  <tr style={{height : "40px", fontWeight : "100px"}}>
                     <th>제목</th>
                     <td>{modalText.title}</td>
                   </tr>
-                  <tr>
-                    <th>문의 내용</th>
+                  <tr style={{height : "60px"}}>
+                    <th style={{width : "150px"}}>문의 내용</th>
                     <td>{modalText.content}</td>
                   </tr>
                 </Table>

@@ -340,7 +340,6 @@ public class MemberServiceImpl implements MemberService {
             member.updateBlackByCount();
             memberDTOList.add(new MemberDTO().toDTOByCount(member));
         }
-
         return memberDTOList;
     }
 }
