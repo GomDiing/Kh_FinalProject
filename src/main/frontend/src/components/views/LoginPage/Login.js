@@ -5,6 +5,8 @@ import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
 import { Link, useNavigate } from 'react-router-dom';
 import PayPopup from '../DetailPage/Section/Popup/PayPopup';
+import { useDispatch } from 'react-redux';
+import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const LoginWrap = styled.div`
   width: 100%;
@@ -287,6 +289,9 @@ const IdStyle = styled.div`
     const [color, setColor] = useState('');
     const [type, setType] = useState('ACTIVE');
 
+    // 리덕스 dispatch 리덕스에 값을 저장할때 사용
+    const dispatch = useDispatch('');
+
     const LoginModalBody = () => {
       return(
         <div>
@@ -312,7 +317,16 @@ const IdStyle = styled.div`
       try {
         const response = await MemberApi.login(inputId, inputPwd, providerType);
         if(response.data.statusCode === 200) {
+          
+          console.log(response.data);
+          const data = {
+            // userIndex : dispatch(response.data.results.),
+            userId : response.data.results.id,
+            userPoint : response.data.results.point
+          }
+          dispatch(loginActions.setUserInfo({data}));
           // 모달로 교체 예정
+
           switch(response.data.results.status) {
             case "ACTIVE" :
               navigate('/');
