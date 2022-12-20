@@ -15,6 +15,7 @@ import GridCards from '../Cards/GridCards';
 import Reviews from './Section/Body/Reviews';
 import { useParams } from 'react-router-dom';
 import NowLoading from '../../../util/Loading';
+import { useSelector } from 'react-redux';
 
 const { Content, Sider } = Layout;
 
@@ -105,6 +106,9 @@ function Detail() {
   const [open, setOpen] = useState(false);
   const [castInfo, setCastInfo] = useState(false);
   
+  // 로그인 유저 정보를 리덕스에서 가져옴
+  const userInfo = useSelector((state) => state.user.info)
+    
   // 최상단 스크롤
   const handleFollow = () => {
     setScrollY(window.pageYOffset);
@@ -192,8 +196,8 @@ function Detail() {
             </div>
 
             <Sider className="detailSiderContainer" width={310} >
-              {open && <TCalendar dateList={dateList} title={comList.title} code={comList.code}
-              cast={ckList.is_info_casting} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
+              {open && <TCalendar userInfo={userInfo} dateList={dateList} title={comList.title} code={comList.code}
+              cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
           </Layout>
           <br/>

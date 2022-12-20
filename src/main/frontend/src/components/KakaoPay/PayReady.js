@@ -6,9 +6,19 @@ import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
 let totals, taxs = 0;
 
-const PayReady = (title, total, tax, value) => {
+// 회원 인덱스 OK
+// 좌석 인덱스 OK
+// 수량 OK
+// 개당 금액 OK
+// point OK
+// 총 금액 OK
+
+const PayReady = (title, total, tax, value, seatNumber, code, userInfo, price) => {
 	totals = total;
 	taxs = tax;
+    console.log(seatNumber);
+    console.log(code);
+    console.log(userInfo);
     let [data, setData] = useState({
     next_redirect_pc_url: "",
     tid: "",
@@ -28,7 +38,7 @@ const PayReady = (title, total, tax, value) => {
         // 상품 비과세
         tax_free_amount: tax,
         // 결제 성공 URL
-        approval_url: "http://localhost:8100/payresult",
+        approval_url: "http://localhost:3000/payresult",
         // 결제 실패 URL
         fail_url: "http://localhost:8100/resultfalse",
         // 결제 취소 URL
@@ -50,11 +60,8 @@ const PayReady = (title, total, tax, value) => {
             const {
                 data: { next_redirect_pc_url, tid },
             } = response;
-            console.log(next_redirect_pc_url);
-            console.log(tid);
             window.localStorage.setItem("tid", tid);
             window.localStorage.setItem('url', next_redirect_pc_url);
-
             setData({ next_redirect_pc_url, tid });
         }).catch(error => {
             console.log(error);
@@ -65,7 +72,7 @@ const PayReady = (title, total, tax, value) => {
 const PayResult = () => {
     const [modalOpen, setModalOpen] = useState(true);
     let search = window.location.search;
-    const [state, setState] = useState({
+    const data = {
         params: {
             cid: "TC0ONETIME",
             tid : window.localStorage.getItem("tid"),
@@ -75,7 +82,7 @@ const PayResult = () => {
             // 결제승인 요청을 인정하는 토큰
             pg_token: search.split("=")[1],
         }
-    });
+    };
     const navigate = useNavigate();
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
@@ -84,7 +91,7 @@ const PayResult = () => {
     }
     
     useEffect(() => {
-        const { params } = state;
+        const { params } = data;
         axios({
             url: "https://kapi.kakao.com/v1/payment/approve",
             method: "POST",
@@ -95,6 +102,9 @@ const PayResult = () => {
             params,
         }).then(response => {
             console.log(response);
+        }).catch(error => {
+            console.log('에러..');
+            console.log(error);
         });
     });
 
