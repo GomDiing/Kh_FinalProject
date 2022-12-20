@@ -34,6 +34,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    회원 고유 인덱스로 찾기
     Optional<Member> findByIndex(Long index);
 
+    Optional<Member> findByEmailAndStatusNotAndProviderType(String email, MemberStatus status, MemberProviderType providerType);
     Optional<Member> findByEmailAndStatusNot(String email, MemberStatus status);
     Optional<Member> findByEmailAndStatusNotAndProviderTypeNot(String email, MemberStatus status, MemberProviderType providerType);
 
@@ -46,6 +47,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByIdAndPasswordAndProviderType(String id, String password, MemberProviderType providerType);
 
     Optional<List<Member>> findAllByStatusAndUnregisterAfter(MemberStatus status, LocalDateTime time);
+
+    Optional<Member> findByIdAndPassword(String id, String password);
+
+    Optional<Member> findByEmailAndProviderType(String email, MemberProviderType providerType);
 
     @Query(nativeQuery = true,
     value = "select DATE_ADD(update_time, INTERVAL 7 DAY) from member where member_index = :member_index"

@@ -17,23 +17,29 @@ public class CalendarReserveInfoVO {
     //    Boolean isLimit;
     List<Integer> reserveTimeDayListInMonth = new ArrayList<>();
     Boolean isNextMonthProductExist;
+    Boolean isLastMonthProductExist;
     DetailProductReserveTimeDTO reserveTimeFirst;
     List<DetailProductReserveTimeDTO> reserveTimeListFirstList = new ArrayList<>();
 
-    public CalendarReserveInfoVO toVO(List<Integer> reserveTimeDayListInMonth, Boolean isNextMonthProductExist, DetailProductReserveTimeDTO reserveTimeFirst, List<DetailProductReserveTimeDTO> reserveTimeListMonth) {
+    public CalendarReserveInfoVO toVO(List<Integer> reserveTimeDayListInMonth,
+                                      Boolean isNextMonthProductExist, Boolean isLastMonthProductExist,
+                                      DetailProductReserveTimeDTO reserveTimeFirst,
+                                      List<DetailProductReserveTimeDTO> reserveTimeListMonth) {
         this.reserveTimeDayListInMonth = reserveTimeDayListInMonth;
 //        this.isLimit = isLimit;
         this.isNextMonthProductExist = isNextMonthProductExist;
+        this.isLastMonthProductExist = isLastMonthProductExist;
         this.reserveTimeFirst = reserveTimeFirst;
         this.reserveTimeListFirstList = reserveTimeListMonth;
 
         return this;
     }
 
-    public CalendarReserveInfoVO toVO(Boolean isNextMonthProductExist, DetailProductReserveTimeDTO reserveTimeFirst, List<DetailProductReserveTimeDTO> reserveTimeListMonth) {
+    public CalendarReserveInfoVO toVO(Boolean isNextMonthProductExist, Boolean isLastMonthProductExist, DetailProductReserveTimeDTO reserveTimeFirst, List<DetailProductReserveTimeDTO> reserveTimeListMonth) {
 //        this.findReserveTimeDayListInMonth = null;
 //        this.isLimit = isLimit;
         this.isNextMonthProductExist = isNextMonthProductExist;
+        this.isLastMonthProductExist = isLastMonthProductExist;
         this.reserveTimeFirst = reserveTimeFirst;
         this.reserveTimeListFirstList = reserveTimeListMonth;
 

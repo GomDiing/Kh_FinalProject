@@ -1,6 +1,7 @@
 package com.kh.finalproject.dto.member;
 
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -16,12 +17,15 @@ public class FindPwdMemberDTO {
     private String name;
     @NotNull(message = "이메일은 필수 입력 값")
     private String email;
+    @NotNull(message = "회원 주체는 필수값")
+    private MemberProviderType providerType;
 
     public FindPwdMemberDTO toDTO(Member member) {
         this.id = member.getId();
         this.password = member.getPassword();
         this.name = member.getName();
         this.email = member.getEmail();
+        this.providerType = member.getProviderType();
 
         return this;
     }

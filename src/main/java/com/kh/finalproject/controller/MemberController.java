@@ -3,6 +3,9 @@ package com.kh.finalproject.controller;
 import com.kh.finalproject.dto.member.CheckMemberDTO;
 import com.kh.finalproject.dto.member.MemberCheckListDTO;
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
+import com.kh.finalproject.exception.CustomErrorCode;
+import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -62,7 +65,7 @@ public class MemberController {
     @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
 
-        memberService.signupByHome(signupDTO);
+        memberService.signup(signupDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER, true), HttpStatus.OK);
     }
@@ -96,6 +99,9 @@ public class MemberController {
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 
+        if (findPwdMemberDTO.getProviderType() != MemberProviderType.HOME)
+            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
+
         Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
@@ -125,8 +131,18 @@ public class MemberController {
 
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
     @PostMapping("/accuse/process")
-    public ResponseEntity changeBlacklistByCount(){
+    public ResponseEntity changeBlacklistByCount() {
         List<MemberDTO> members = memberService.updateStatusByCount();
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    /**
+     * 로그인 컨트롤러
+     */
+    @PostMapping("/signin")
+    public ResponseEntity<Object> signin(SigninRequestDTO signinRequestDTO) {
+        SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);
     }
 }

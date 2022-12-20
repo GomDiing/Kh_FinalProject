@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.member.*;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface MemberService {
     /**
      * 회원 가입 메서드
      */
-    void signupByHome(SignupDTO signupDto);
+    void signup(SignupDTO signupDto);
 
     /**
      * 아이디로 회원 조회
@@ -53,12 +54,12 @@ public interface MemberService {
      * 중복 이메일 검증 메서드
      * 단, 완전 탈퇴 상태 회원의 이메일은 중복 검증에서 제외
      */
-    void validateDuplicateByEmail(String email);
+    void validateDuplicateByEmail(String email, MemberProviderType providerType);
 
     /**
      * 중복 아이디 검증 메서드
      */
-    void validateDuplicateById(String id);
+    void validateDuplicateById(String id, MemberProviderType providerType);
 
     /**
      * 회원 ID와 비밀번호로 회원 조회 메서드
@@ -115,4 +116,6 @@ public interface MemberService {
     void unregisterCheck();
     /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
     List<MemberDTO> updateStatusByCount();
+
+    SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO);
 }
