@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
      * @return 조회한 월 내에 예매 가능 일자 리스트와 첫번째로 예매 가능한 날의 인덱스 및 좌석 정보가 출력
      */
     @Override
-    public DetailProductDTO reserveCalendarList(String productCode, Integer year, Integer month) {
+    public DetailProductDTO reserveCalendarMonth(String productCode, Integer year, Integer month) {
         //상품 조회, 없다면 예외 처리
         Product findProduct = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
@@ -175,6 +175,10 @@ public class ProductServiceImpl implements ProductService {
         Product findProduct = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
 
+        //좌석/가격 리스트 조회 및 Entity -> DTO 리스트
+        List<SeatPriceDTO> seatPriceDTOList = createSeatPriceDTOList(findProduct);
+        log.info("seatPriceDTOList = {}", seatPriceDTOList);
+
         LocalDateTime firstPotionOfDay = LocalDateTime.of(year, month, day, 0, 0);
         LocalDateTime lastPositionOfDay = LocalDateTime.of(year, month, day, 23, 59);
 
@@ -192,6 +196,17 @@ public class ProductServiceImpl implements ProductService {
             DetailProductReserveTimeDTO reserveTimeDTO = new DetailProductReserveTimeDTO().toDTO(reserveTime);
             detailProductReserveTimeDTOList.add(reserveTimeDTO);
         }
+
+        //캐스팅 리스트, 시간별 예매 캐스팅 리스트 담을 VO
+        CastingInfoVO castingInfoVO = null;
+        //캐스팅 정보 및 시간별 캐스팅 정보 처리 로직
+        //캐스팅 정보가 있으면 캐스팅 정보 조회
+        if (findProduct.getIsInfoCasting()) {
+            castingInfoVO = createCastingInfo(findProduct, detailProductReserveTimeDTOList);
+        }
+
+        //캘린더에 좌석/가격 정보 추가
+        processTimeSeatPrice(detailProductReserveTimeDTOList, seatPriceDTOList);
 
         return detailProductReserveTimeDTOList;
     }
