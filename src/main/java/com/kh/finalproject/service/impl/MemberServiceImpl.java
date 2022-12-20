@@ -367,4 +367,17 @@ public class MemberServiceImpl implements MemberService {
             return new SigninResponseDTO().toDTO(findMember);
         }
     }
+
+    /**
+     * 회원탈퇴 신청 1주일이 지나지 않은 회원 복구 메서드
+     */
+    @Override
+    @Transactional
+    public void deleteCancelMember(DeleteCancelDTO deleteCancelDTO) {
+        // DELETE 상태인 회원만 조회
+        Member deleteMember = memberRepository.findByIdAndPasswordAndStatus(deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+        // ACTIVE 변경
+        deleteMember.deleteCancel(deleteCancelDTO);
+    }
 }

@@ -45,6 +45,10 @@ public interface MemberService {
     Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO);
 
     /**
+     * 회원탈퇴 하고 1주일이 지나지 않은 회원을 다시 ACTIVE 변환
+     */
+    void  deleteCancelMember(DeleteCancelDTO deleteCancelDTO);
+    /**
      * 회원 탈퇴 메서드(관리자 강제탈퇴)
      * 실제로 삭제되지 않고 상태 변환 후 탈퇴 시간 기록
      */

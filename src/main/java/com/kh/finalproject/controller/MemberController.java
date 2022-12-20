@@ -145,4 +145,15 @@ public class MemberController {
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);
     }
+
+    /**
+     * 회원탈퇴 1주일 지나기 전에 복구
+     */
+    @PostMapping("/delete/cancel")
+    public ResponseEntity<DefaultResponse> deleteCancel(@Validated @RequestBody DeleteCancelDTO deleteCancelDTO) {
+
+        memberService.deleteCancelMember(deleteCancelDTO);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_CANCEL, deleteCancelDTO), HttpStatus.OK);
+    }
 }

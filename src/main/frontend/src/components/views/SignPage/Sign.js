@@ -137,11 +137,8 @@ function Sign() {
 
   // 카카오주소 api
   const [isOpen, setIsOpen] = useState(false);
-
-  
   // 주소 
   let [fullAddress, setFullAddress] = useState("");
-
   // 도로명 주소
   const [road, setRoad] = useState("");
   // 지번 주소
