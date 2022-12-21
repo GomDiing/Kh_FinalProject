@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
+import { seatIndexAction } from "../../util/Redux/Slice/seatIndexSlice";
 import { ADMIN_KEY } from "../Config";
 import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
@@ -112,32 +113,28 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
             }));
             setIsTrue(true);
             window.localStorage.removeItem('url');
-            console.log(test);
-            console.log(response);
         }).catch(error => {
-            console.log('에러..');
             console.log(error);
         });
     }, []);
 
       useEffect(() => {
         const PayReadySubmit = async () => {
+          console.log(seatIndex);
           try {
             const response = await PayApi.payReady(user.userIndex, seatIndex, test.quantity, test.price, user.userPoint, test.method, test.tid, test.total);
             console.log(response);
-            window.localStorage.removeItem('tid');
+            if(response.data.statusCode === 200) {
+              window.localStorage.removeItem('tid');
+            }
           } catch (e) {
             window.localStorage.removeItem('tid');
-            console.log(seatIndex);
-            console.log(user);
-            console.log(user.userIndex);
-            console.log(user.userPoint);
             console.log(e);
             console.log('에러!!!');
           }
         }
         isTrue && PayReadySubmit();
-      }, [isTrue, seatIndex, test.method, test.price, test.quantity, test.tid, test.total, user]);
+      }, [isTrue, seatIndex, test, user]);
 
     const Body = () => {
         return(

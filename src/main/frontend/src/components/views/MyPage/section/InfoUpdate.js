@@ -4,6 +4,7 @@ import { DaumPostcodeEmbed } from "react-daum-postcode";
 import PopupDom from "../../SignPage/PopupDom";
 import { useNavigate } from "react-router-dom";
 import MemberApi from "../../../../api/MemberApi";
+import { useSelector } from "react-redux";
 
 
 const InfoStyle = styled.div`
@@ -49,8 +50,7 @@ const postCodeStyle = {
 };
 
 const InfoUpdate = () => {
-  // 테스트용
-  const [id, setId] = useState('test456');
+  const userInfo = useSelector((state) => state.user.info)
 
   const [inputId, setInputId] = useState('');
   const [inputPwd, setInputPwd] = useState('');
@@ -71,7 +71,7 @@ const InfoUpdate = () => {
     useEffect(() => {
       const getInfo = async() => {
         try {
-          const res = await MemberApi.searchId(id);
+          const res = await MemberApi.searchId(userInfo.userId);
           if(res.data.statusCode === 200) {
             setInputId(res.data.results.id);
             setInputPwd(res.data.results.pwd);

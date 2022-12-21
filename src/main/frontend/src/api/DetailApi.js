@@ -63,11 +63,15 @@ const DetailApi={
 
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
-    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
+        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자 
     getNextReserve : async function(pCode, year, month) {
-    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
+        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
+    },
+    // 다음 날 예매 가능 일자
+    getNextDateReserve : async function(pCode, year, month, day) {
+        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}/${(day)}`, HEADER);
     }
 }
 export default DetailApi;

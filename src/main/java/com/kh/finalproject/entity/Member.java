@@ -135,7 +135,7 @@ public class Member extends BaseTimeEntity {
     /**
      * @param deleteMemberDTO
      */
-    public Member changeMemberStatus(DeleteMemberDTO deleteMemberDTO) {
+    public Member changeMemberStatusToUnregister(DeleteMemberDTO deleteMemberDTO) {
         this.id = deleteMemberDTO.getId();
         this.password = deleteMemberDTO.getPassword();
         this.status = MemberStatus.DELETE;
@@ -144,7 +144,7 @@ public class Member extends BaseTimeEntity {
         return this;
     }
 
-    public Member changeMemberStatus() {
+    public Member changeMemberStatusToUnregister() {
         this.status = MemberStatus.UNREGISTER;
 
         return this;

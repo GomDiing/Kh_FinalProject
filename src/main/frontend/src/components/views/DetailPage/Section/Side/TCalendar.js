@@ -86,38 +86,42 @@ function TCalendar (props) {
     const minusIndex = () => setIndex(index-1);
 
     // 받아온 예약 가능한 날짜(dim)를 select에 담음
-    const [select, setSelect] = useState(dim);
-    const [select2, setSelect2] = useState([]);
+    const [select, setSelect] = useState([]);
     // 상품 코드
     const [pCode, setPcode] = useState(code);
-    const [year, setYear] = useState(2023);
-    const [month, setMonth] = useState(1);
+    const [year, setYear] = useState(new Date().getFullYear());
+    const [month, setMonth] = useState(new Date().getMonth() + 1);
 
     useEffect(() => {
-        setSelect(dim);
-        setPcode(code);
-    }, [dim, code])
+      setSelect(dim);
+      setPcode(code);
+    }, [code, dim]);
 
-    const changeReserveDate = async () => {
-        setMonth(month + 1);
-        try {
-        const res = await DetailApi.getNextReserve(pCode, year, month);
-        if(res.data.statusCode === 200) {
-            console.log(res.data.results.check_list.reserve_day_in_month);
-            // setSelect2([...select, ...select2])
-            setSelect2([...select, ...res.data.results.check_list.reserve_day_in_month]);
-        } else {
-            alert("벼락치기")
+    // 1번 딤이 스트링으로 들어옴 YYYY-MM-DD
+    // 2번 셀렉트 변수에 예매 가능한 날짜의 배열을 복사
+    useEffect(() => {
+      try {
+        const changeReserveMonth = async () => {
+          const res = await DetailApi.getNextReserve(pCode, year, month);
+          // 날짜가 바뀌면 값은 잘 찍힌다..
+          console.log(res);
+          if(res.data.statusCode === 200) {
+            setSelect([...res.data.results.check_list.reserve_day_in_month]);
+          } else {
+            console.log('error');
+            console.log(res);
+          }
         }
-        } catch (e) {
-            console.log(e)
-        } 
-        setSelect(select2);
-    };
+        changeReserveMonth();
+      } catch(e) {
+        console.log(e);
+      }
+    }, [month, pCode, year]);
 
-    console.log(month);
-    console.log(select);
-    console.log(select2);
+    const chagneReserveDay = async () => {
+        setYear(year - 1);
+        const response = await DetailApi.getNextDateReserve(pCode, year, month);
+    }
 
     const clickDay = () => {
         console.log(date.toLocaleString("kr", {year: "numeric", month:"2-digit", day: "numeric"}));
@@ -148,7 +152,7 @@ function TCalendar (props) {
     
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
-    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString() + ' 공연 시작 1시간 전';
+    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
         setModalOpen(false);
@@ -167,14 +171,18 @@ function TCalendar (props) {
             prev2Label={null}
             minDetail={month}
             onClickDay={clickDay}
-            onActiveStartDateChange={changeReserveDate}
+            onActiveStartDateChange={({ action, activeStartDate, view }) => {
+              setYear(activeStartDate.getFullYear());
+              setMonth(activeStartDate.getMonth() + 1);
+            }}
             // 예매 가능한 첫 날짜 집어넣음
-            // activeStartDate={(date) => moment(date).format("DD")}
             minDate={first_reserve_day}
             tileDisabled={({activeStartDate, date, view}) => {
-                if (!select.find((x) => moment(x).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD"))) {
-                return true;
-            }}}
+              if (!select.find((x) => moment(x).format('YYYY-MM-DD') === moment(date).format("YYYY-MM-DD"))) {
+                console.log(date.getDate());
+                return date.getDate();
+              }
+            }}
             />
             </div>
             <div className='text-center'>
@@ -184,51 +192,51 @@ function TCalendar (props) {
             <hr />
             </div>
             <Styleside>
-                <div className='side-container'>
-                    <h4 className='side-header'>회차</h4>
-                    <div className='side-content'>
-                      {/* 1회차 정보 상시 상품은 안보임. */}
-                    {reserve_turn === 1 &&
-                    <>
-                    <div>
-                        <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                    </div>
-                    {seatList && seatList.map(seat => {
-                        return(
-                        <>
-                            <div style={{display : 'inline'}} key={seat.index}>
-                            <span>{seat.seat} {seat.remain_quantity} / </span>
-                            </div>
-                        </>
-                        );
-                    })}
-                    <hr />
-                    <h4 className='side-header'>캐스팅</h4>
-                    {cast && castingList && castingList.map((cast) => {
-                        return(
-                        <>
-                            <div style={{display: 'inline'}} >
-                            <span>{cast}, </span>
-                            </div>
-                        </>
-                        );
-                    })}
-                    {!cast && <div>캐스팅 정보가 없습니다.</div>}
-                    </>
-                    }
-                    {/* 2회차 정보가 들어오면 할 예정 */}
-                    {reserve_turn === 2 &&
-                    <button className='button no' type='button'>2회 20:00</button>
-                    }
-                        </div>
-                        <p />
-                    <button className='pay-button' onClick={openModal}>예매하기</button>
-                    {modalOpen && <PayPopup 
-                    plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
-                    header={<PopupHeader index={index}/>}
-                    body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
-                    seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
+              <div className='side-container'>
+                <h4 className='side-header'>회차</h4>
+                <div className='side-content'>
+                  {/* 1회차 정보 상시 상품은 안보임. */}
+                {reserve_turn === 1 &&
+                <>
+                <div>
+                    <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
                 </div>
+                {seatList && seatList.map(seat => {
+                    return(
+                    <>
+                        <div style={{display : 'inline'}} key={seat.index}>
+                        <span>{seat.seat} {seat.remain_quantity} / </span>
+                        </div>
+                    </>
+                    );
+                })}
+                <hr />
+                <h4 className='side-header'>캐스팅</h4>
+                {cast && castingList && castingList.map((cast) => {
+                    return(
+                    <>
+                        <div style={{display: 'inline'}} >
+                        <span>{cast}, </span>
+                        </div>
+                    </>
+                    );
+                })}
+                {!cast && <div>캐스팅 정보가 없습니다.</div>}
+                </>
+                }
+                {/* 2회차 정보가 들어오면 할 예정 */}
+                {reserve_turn === 2 &&
+                <button className='button no' type='button'>2회 20:00</button>
+                }
+                    </div>
+                    <p />
+                <button className='pay-button' onClick={openModal}>예매하기</button>
+                {modalOpen && <PayPopup 
+                plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
+                header={<PopupHeader index={index}/>}
+                body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
+                seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
+              </div>
             </Styleside>
         </SideWrap>
     );
