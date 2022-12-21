@@ -1,6 +1,7 @@
 package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.product.BrowseKeywordDTO;
+import com.kh.finalproject.dto.product.BrowseKeywordPageDTO;
 import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
@@ -61,10 +62,10 @@ public class ProductController {
      * 상품 제목으로 검색 기능 추가로 메인에서 필요한 기능 있으면 구현 예정
      */
     @GetMapping("/search")
-    public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title) {
+    public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title, Pageable pageable) {
 
-        List<BrowseKeywordDTO> productDTOList = productService.browseByKeyword(title);
+        BrowseKeywordPageDTO browseKeywordPageDTO = productService.browseByKeyword(title, pageable);
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MOVIE_SEARCH, productDTOList), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MOVIE_SEARCH, browseKeywordPageDTO), HttpStatus.OK);
     }
 }
