@@ -16,7 +16,7 @@ function GridCards(props) {
     return (
         <div style={{display: 'inline-flex', marginTop: '1rem', marginLeft: '3rem', zIndex: '-1'}}>
         <div lg={6} md={8} xs={24}  style={{paddingBottom: '10px'}}>
-            <div style={{ position: 'relative' }}>
+            <div>
             {/* 렌더링 전 로딩중일시 보이게 */}
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
             <a href={props.url}><img style={{ width: '200px', height: '250px', border: '2px solid blue'}} src={props.image} onError={onErrorImg} alt=""/></a>

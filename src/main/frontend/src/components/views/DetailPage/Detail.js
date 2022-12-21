@@ -12,9 +12,10 @@ import Tabs from 'react-bootstrap/Tabs';
 import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
-import Reviews from './Section/Body/Reviews';
+// import Reviews from './Section/Body/Reviews';
 import { useParams } from 'react-router-dom';
-import NowLoading from '../../../util/Loading';
+import { useSelector } from 'react-redux';
+import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
 
 const { Content, Sider } = Layout;
 
@@ -52,11 +53,14 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: 660px;
+  height: auto;
   position: fixed; 
   left: 70%;
-  top: 6.5rem;
-  bottom: 0;
+  /* top: 6.5rem; */
+  /* bottom: 0; */
+  bottom: 100px;
+  padding-bottom: 40px;
+
 }
 .ItemContainer2{
   width: 100%;
@@ -77,6 +81,8 @@ background-color: #f5f5f5;
   .detailSiderContainer{
     left: 500px;
     position: sticky;
+    height: 720px;
+    
   }
 .info {
   margin-left: 4.8rem;
@@ -90,7 +96,6 @@ background-color: #f5f5f5;
 
 // 상세페이지
 function Detail() {
-  const [nowLoading, setNowLoading] = useState(false);
   const {code} = useParams();
   const [ScrollY, setScrollY] = useState(0);
   const [BtnStatus, setBtnStatus] = useState(false);
@@ -104,6 +109,61 @@ function Detail() {
   const [dateList, setDateList] = useState('');
   const [open, setOpen] = useState(false);
   const [castInfo, setCastInfo] = useState(false);
+  
+  // 로그인 유저 정보를 리덕스에서 가져옴
+  const userInfo = useSelector((state) => state.user.info)
+    
+  const [reviewList, setReviewList] = useState([]);
+
+  useEffect(() => {
+    setPcode(code);
+    const getData = async()=> {
+      try {
+        const res = await DetailApi.getDetail(pCode);
+        if(res.data.statusCode === 200){
+          console.log(res.data.results.compact_list.perf_time_break);
+          // checkList 특정 요소의 유무 판단
+          setCkList(res.data.results.check_list);
+          setCastInfo(res.data.results.check_list.is_info_casting);
+          // comList 상세 상품에 표기할 정보 모음
+          setComList(res.data.results.compact_list);
+          // 좌석/가격 정보
+          setSeat(res.data.results.seat_price_list);
+          // 통계 정보
+          setStat(res.data.results.statistics_list);
+          // 캐스팅 정보
+          setCast(res.data.results.info_casting);
+          // 예매 정보
+          setDateList(res.data.results.calendar_list[0]);
+          console.log(res.data.results.calendar_list);
+          setOpen(true);
+          // setContent(res.data.results.compact_list.detail_poster_url);
+        } else {
+          alert("데이터 조회가 실패.")
+          console.log("에러...");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, [pCode]);
+
+  useEffect(() => {
+    const reviewData = async() => {
+      try {
+        const res = await DetailApi.allReviewComment(pCode);
+        if(res.data.statusCode === 200) {
+          setReviewList(res.data.results);
+        } else {
+          alert("리스트 조회가 안됩니다.")
+        } 
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    reviewData();
+  }, [pCode]); 
   
   // 최상단 스크롤
   const handleFollow = () => {
@@ -131,46 +191,9 @@ function Detail() {
       window.removeEventListener('scroll', handleFollow)
     }
   })
-
-  useEffect(() => {
-    setNowLoading(true);
-    setPcode(code);
-    const getData = async()=> {
-      try {
-        const res = await DetailApi.getDetail(pCode);
-        if(res.data.statusCode === 200){
-          console.log(res.data.results);
-          // checkList 특정 요소의 유무 판단
-          setCkList(res.data.results.check_list);
-          setCastInfo(res.data.results.check_list.is_info_casting);
-          // comList 상세 상품에 표기할 정보 모음
-          setComList(res.data.results.compact_list);
-          // 좌석/가격 정보
-          setSeat(res.data.results.seat_price_list);
-          // 통계 정보
-          setStat(res.data.results.statistics_list);
-          // 캐스팅 정보
-          setCast(res.data.results.info_casting);
-          // 예매 정보
-          setDateList(res.data.results.calendar_list[0]);
-          console.log(res.data.results.calendar_list);
-          setOpen(true);
-          // setContent(res.data.results.compact_list.detail_poster_url);
-        } else {
-          alert("데이터 조회가 실패.")
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    setNowLoading(false);
-    getData();
-  }, [pCode]);
   
-
   return (
     <DWrap>
-      {nowLoading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
       <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
       <BsArrowUpCircle className='arrow'/>
         </button>
@@ -182,18 +205,17 @@ function Detail() {
             <Content className='posterCon'>
               <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage}/>
             </Content>
-            {/* <hr style={{backgroundColor: 'black', width: '1px', opacity: '0.6'}} /> */}
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
-              <Info loc={comList.location} start={comList.period_start} end={comList.period_end} 
+              <Info loc={comList.location} start={comList.period_start} end={comList.period_end}
               time={comList.perf_time_minutes} break={comList.perf_time_break} age={comList.age}
               kage={ckList.is_age_korean} seat={seat} loc2={comList.detail_location}/>
             </Content>
             </div>
 
-            <Sider className="detailSiderContainer" width={310} >
-              {open && <TCalendar dateList={dateList} title={comList.title} code={comList.code}
-              cast={ckList.is_info_casting} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
+            <Sider className="detailSiderContainer" width={310}>
+              {open && <TCalendar userInfo={userInfo} dateList={dateList} title={comList.title} code={comList.code}
+              cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
             </Sider>
           </Layout>
           <br/>
@@ -221,7 +243,7 @@ function Detail() {
             }
             </Tab>
             <Tab eventKey="profile" title="관람후기">
-            <Reviews/>
+            <ReviewBody reviewList={reviewList}/>
             </Tab>
           </Tabs>
           </div>

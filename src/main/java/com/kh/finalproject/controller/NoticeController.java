@@ -62,6 +62,6 @@ public class NoticeController {
         List<CheckDTO> noticeList = noticeDTOList.getCheckDTOList();
         log.info("noticeList = {}", noticeList.toString());
         noticeService.deleteCheckNotice(noticeList);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_NOTICE_BY_CHECKBOX), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_NOTICE_BY_CHECKBOX), HttpStatus.OK);
     }
 }

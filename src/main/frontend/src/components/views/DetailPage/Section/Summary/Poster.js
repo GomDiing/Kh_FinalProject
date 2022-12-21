@@ -40,13 +40,9 @@ function Poster(props) {
         setIsWishAdd(!isWishAdd)
     }
 
-    // useEffect(async () => {
-    //     const fetchData = async () => {
-    //         const res = await DetailApi.axios.getWish
-    //         if (res.data.type === 'liked') setLike(true)
-    //     }
-    //     fetchData()
-    // }, []);
+    useEffect(() => {
+        setValue(props.rate);
+    }, [props.rate])
 
     const wishHandler = async (e) => {
         wishAddHandler()
@@ -58,7 +54,7 @@ function Poster(props) {
 
     // 별점
     const [value, setValue] = useState(props.rate);
-    function handleChange(value) {
+    const handleChange = (value) => {
         setValue(value);
     }
 

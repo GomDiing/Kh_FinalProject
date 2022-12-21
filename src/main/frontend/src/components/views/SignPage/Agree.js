@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const AgreeStyle = styled.div`
   width: 100%;
-  height: 969px;
+  min-width: 930px;
   box-sizing: border-box;
   padding: 0;
   background-color: #d2d2d2;
@@ -15,8 +15,8 @@ const AgreeStyle = styled.div`
   }
   .agree-container {
     margin: 0 auto;
-    width: 50%;
-    height: 100%;
+    width: 70%;
+    min-height: 100vh;
     /* border: 1px solid black; */
     display: flex;
     justify-content: center;
@@ -68,6 +68,12 @@ const AgreeStyle = styled.div`
   textarea{
     opacity: 60%;
   }
+  
+  @media (max-width : 1200px){
+    .agree-container {
+      width: 100%;
+    }
+}
 `
 
 function Agree () {

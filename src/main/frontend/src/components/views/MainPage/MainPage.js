@@ -96,7 +96,7 @@ const MainPage = () =>{
                         
                         <MainPoster/>
                         <MainNotice/>
-                        <hr></hr>
+                        {/* <hr></hr> */}
                         <MainBanner/>
                         <RankingClose/>
 

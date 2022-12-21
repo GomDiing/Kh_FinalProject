@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import './calendar.css';
 import styled from 'styled-components';
@@ -65,13 +65,17 @@ const Styleside = styled.div`
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
-    const {cast, reserve, dim, code, title, seat, dateList } = props;
+    const {cast, reserve, dim, code, userInfo, title, seat, dateList } = props;
 
     // 받아온 예약 가능한 날짜(dim)를 select에 담음
     const [select, setSelect] = useState(dim);
 
+    useEffect(() => {
+        setSelect(dim);
+    }, [dim])
+
     // str -> date type convert
-    function parseDate(dateList) {
+    const parseDate = (dateList) => {
         let y = dateList.substr(0,4);
         let m = dateList.substr(5,2);
         let d = dateList.substr(8,2);
@@ -109,7 +113,6 @@ function TCalendar (props) {
         setIndex(1);
     }
 
-    console.log(select);
     return (
         <SideWrap>
             <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
@@ -119,7 +122,7 @@ function TCalendar (props) {
             showNeighboringMonth={false}
             // 예매 가능한 첫 날짜 집어넣음
             minDate={first_reserve_day}
-            tileDisabled={({date, view}) => {
+            tileDisabled={({date}) => {
                 if (!select.find((x) => moment(x).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD"))) {
                 return true;
             }}}
@@ -155,7 +158,7 @@ function TCalendar (props) {
                     {cast && castingList && castingList.map((cast) => {
                         return(
                         <>
-                            <div style={{display: 'inline'}} key={seatList.index}>
+                            <div style={{display: 'inline'}} >
                             <span>{cast}, </span>
                             </div>
                         </>
@@ -174,8 +177,8 @@ function TCalendar (props) {
                     {modalOpen && <PayPopup 
                     plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
                     header={<PopupHeader index={index}/>}
-                    body={<PopupContent date={selectDay} cancelday={cancelday} 
-                    seat={seat} seatList={seatList} title={title} index={index} code={code} />}/>}
+                    body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
+                    seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
                 </div>
             </Styleside>
         </SideWrap>

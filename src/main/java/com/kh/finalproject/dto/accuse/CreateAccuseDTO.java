@@ -14,4 +14,5 @@ import lombok.Setter;
 public class CreateAccuseDTO {
     private String memberEmailSuspect;
     private String memberEmailVictim;
+    private String reason;
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
@@ -81,16 +82,24 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, date, cancelday, index, code } = props;
+  const { title, seat, userInfo, seatIndexList, date, cancelday, index } = props;
   
+  // 회원 정보
+  console.log(userInfo);
+  // 좌석 별 가격
   console.log(seat);
+  // 좌석 인덱스가 담겨져있는 리스트
+  console.log(seatIndexList);
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
+    const [type, setType] = useState('');
     const [stuValue, setStuValue] = useState(0);
     const [douValue, setDouValue] = useState(0);
     const [eveValue, setEveValue] = useState(0);
+    // 좌석 선택한 인덱스
+    const [seatNumber, setSeatNumber] = useState('');
     // 좌석 리스트
-    const [seatList, setSeatList] = useState([]);
+    const [seatList, setSeatList] = useState('');
     // 티켓 * 수량 = 총 티켓 금액
     const [ticket, setTicket] = useState(0);
     // 비과세 = 총 티켓 금액의 5%
@@ -103,11 +112,15 @@ function PopupContent (props) {
     const double = price - (price / 20);
     // 신규 오픈 티켓 금액
     const openEvent = price - (price / 20);
+
+    const [selectPrice, setSelectPrice] = useState(0);
     
     /**
      * Ticekt Discount !Duplicate Accept
      */
     const totalPayChange = (tickets, values, taxs, totals, price) => {
+      // 선택한 종류의 가격 백에 보내기 위해 따로 저장
+      setSelectPrice(price);
       tickets = values * price;
       setTicket(tickets);
       taxs = Math.floor(tickets / 20);
@@ -125,6 +138,7 @@ function PopupContent (props) {
           setDouValue(0);
           setEveValue(0);
           setStuValue(0);
+          setType('basic');
           totalPayChange(tickets, values, taxs, totals, price);
           break;
         case 'student':
@@ -132,24 +146,39 @@ function PopupContent (props) {
           setValue(0);
           setDouValue(0);
           setEveValue(0);
+          setType('student');
           totalPayChange(tickets, values, taxs, totals, student);
           break;
-        case 'double':
-          setDouValue(values);
-          setValue(0);
-          setEveValue(0);
-          setStuValue(0);
-          totalPayChange(tickets, values, taxs, totals, double);
-          break;
-        case 'event':
-          setEveValue(values);
-          setValue(0);
-          setDouValue(0);
-          setStuValue(0);
-          totalPayChange(tickets, values, taxs, totals, openEvent);
+          case 'double':
+            setDouValue(values);
+            setValue(0);
+            setEveValue(0);
+            setStuValue(0);
+            setType('double');
+            totalPayChange(tickets, values, taxs, totals, double);
+            break;
+            case 'event':
+              setEveValue(values);
+              setValue(0);
+              setDouValue(0);
+              setStuValue(0);
+              setType('event');
+            totalPayChange(tickets, values, taxs, totals, openEvent);
           break;
         default:
           alert('오류');
+      }
+    }
+
+    const valueSelect = () => {
+      if(type === 'basic') {
+        return value;
+      } else if(type === 'student') {
+        return stuValue;
+      } else if(type === 'double') {
+        return douValue;
+      } else if(type === 'event') {
+        return eveValue;
       }
     }
 
@@ -162,7 +191,13 @@ function PopupContent (props) {
       {seat && seat.map((seats, index) => (
         <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
           <li className="infoPriceItem">
-            <div onClick={() => setSeatList(seats.seat)}>
+            <div onClick={() => {
+              setSeatList(seats.seat);
+              // 필터를 걸쳐 테스트를 통과한 것의 배열을 다시 만들어줌
+              const res = seatIndexList.filter(test => test.seat.includes(seats.seat));
+              // 만들어진 배열에서 필요한 값을 추출..
+              setSeatNumber(res[0].index);
+            }}>
               <span className="name">{seats.seat}</span>
               <span className="price">{seats.price} <input className={'check' + index} type='checkbox' onClick={() => setPrice(seats.price)} /></span>
             </div>
@@ -171,7 +206,7 @@ function PopupContent (props) {
       ))}
       </div>
         <hr />
-        <MyInfo seat={seatList} price={price} title={title} date={date} cancelday={cancelday} />
+        <MyInfo seat={seatList} index={index} price={price} title={title} date={date} cancelday={cancelday} />
     </div>
     }
     {index === 2 &&
@@ -260,7 +295,10 @@ function PopupContent (props) {
       <MyInfo seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />
       </>
     }
-    {index === 3 && <FinalModal seat={seatList} code={code} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />}
+    {index === 3 && <FinalModal
+      seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
+      title={title} date={date} value={valueSelect()} ticket={ticket}
+       price={selectPrice} tax={tax} total={total} userInfo={userInfo} />}
     </>
   );
 
@@ -272,8 +310,8 @@ function PopupContent (props) {
 }
 
   const FinalModal = props => {
-    const { seat, cancelday, title, date, value, ticket, tax, total, code } = props;
-    PayReady(title, total, tax, value, code, seat);
+    const { seatNumber, seat, cancelday, title, date, value, ticket, tax, total, userInfo, price } = props;
+    PayReady(title, total, tax, value, seatNumber, userInfo, price);
     const payUrl = window.localStorage.getItem('url');
 
     return(
@@ -281,7 +319,8 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <a href={payUrl}><button className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
+          <Link to={'/payready'}>카카오페이 가자</Link>
+          {/* <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a> */}
         </div>
     </div>
     );
@@ -291,7 +330,7 @@ function PopupContent (props) {
     
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);
-    const { date, ticket, tax, total, seat, cancelday } = props;
+    const { date, ticket, tax, total, price, index, seat, cancelday } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -307,7 +346,7 @@ function PopupContent (props) {
             <th>선택 좌석</th>
             <td>{seat}</td>
             <th className="sh">티켓 금액</th>
-            <td>{ticket}</td>
+            <td>{index === 1 ? price : ticket}</td>
           </tr>
           <tr>
             <th>비과세(5%)</th>
@@ -329,7 +368,7 @@ function PopupContent (props) {
           </tr>
           <tr>
             <th>총 결제금액</th>
-            <td>{total}</td>
+            <td>{index === 1 ? price : total}</td>
           </tr>
           </tbody>
         </table>

@@ -64,6 +64,7 @@ public class MemberController {
      */
     @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
+        memberService.updateStatusByCount();
 
         memberService.signup(signupDTO);
 
@@ -75,7 +76,7 @@ public class MemberController {
      */
     @PostMapping("/search-by-id")
     public ResponseEntity<DefaultResponse<Object>> searchMemberById(@Validated @RequestBody SearchByIdDTO searchByIdDTO) {
-
+        memberService.updateStatusByCount();
         MemberDTO memberList =  memberService.searchById(searchByIdDTO.getId());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_BY_ID, memberList), HttpStatus.OK);
@@ -133,7 +134,7 @@ public class MemberController {
     @PostMapping("/accuse/process")
     public ResponseEntity changeBlacklistByCount() {
         List<MemberDTO> members = memberService.updateStatusByCount();
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK,DefaultResponseMessage.SUCCESS_CHANGE_TO_BLACKLIST, members), HttpStatus.OK);
     }
 
     /**
