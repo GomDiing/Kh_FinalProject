@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import {UserOutlined} from "@ant-design/icons";
+// import {UserOutlined} from "@ant-design/icons";
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loginActions } from "../../../util/Redux/Slice/userSlice";
+import { RiLoginBoxLine , RiLogoutBoxLine } from "react-icons/ri";
 
 const HeaderContainer = styled.div`
     @media (max-width : 911px){
@@ -98,9 +100,10 @@ const HeaderContainer = styled.div`
     background-color: #f5f5f5;
     `;
 const MainHeader = () =>{
-    const Navigate =  useNavigate();
-    // 검색 텍스트
-    const onClickValue = (e) =>{
+    const dispatch = useDispatch('');
+    const Navigate = useNavigate();
+    // 텍스트 검색
+    const onChangeValue = (e) =>{
         const val = e.target.value
         window.localStorage.setItem("searchText" , val)        
     }
@@ -108,23 +111,28 @@ const MainHeader = () =>{
     const clickCategory = (e ,a) =>{
         window.localStorage.setItem("category" , e)
         window.localStorage.setItem("categoryName" , a)
-        Navigate('/categorySearch');
     }
     // 앤터키 누르면 검색
-    const EnterKeypress = (e) =>{
+    const EnterKeypress = () =>{
         if(window.event.keyCode === 13){
-            Navigate('/search')
+            Navigate("/search")
         }
     }
-    // console.log(categoryvalue);
 
+    // 로그아웃
+    const clickLogout = () =>{
+        const data = {
+            userIndex : undefined,
+            userId : undefined,
+            userPoint : undefined,
+        }
+        dispatch(loginActions.setUserInfo({data}));
+        alert('정상적으로 로그아웃 되었습니다.')
+    }
+    // 확인용
     const userInfo = useSelector((state) => state.user.info)
     console.log(userInfo);
-    
-    // useEffect(() =>{
-    //     if(userInfo)
-    // })
-
+    // console.log(categoryvalue);
 
     return(
         <>
@@ -132,23 +140,23 @@ const MainHeader = () =>{
                 <Navbar expand="lg">
                 <Container fluid>
                     <Navbar.Brand><Link to = "/"><img className="Logo" src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=""/></Link></Navbar.Brand>
-
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0"navbarScroll>
-                        <Link className = "HeaderMenu" onClick={()=>{clickCategory('MUSICAL' ,"뮤지컬")}}>뮤지컬</Link>
-                        <Link className = "HeaderMenu" onClick={()=>{clickCategory('CLASSIC' , "클래식/무용")}}>클래식/무용</Link>
-                        <Link className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</Link>
-                        <Link className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</Link>
+                        <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('MUSICAL' ,"뮤지컬")}}>뮤지컬</Link>
+                        <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('CLASSIC' , "클래식/무용")}}>클래식/무용</Link>
+                        <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</Link>
+                        <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</Link>
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link>
                     </Nav>
                     <Form className="d-flex">
-                        <Form.Control onChange={onClickValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
+                        <Form.Control onChange={onChangeValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
                         <Link to = "/search" ><Button className="SearchBtn" variant="outline-success">Search</Button></Link>
                         {userInfo.userIndex === undefined ? 
-                            <Link to = "/login"><UserOutlined className="User"/></Link>
+                            <Link to = "/login"><RiLoginBoxLine className="User"/></Link>
                             : 
-                            <Button className="SearchBtn" variant="outline-success">Logout</Button>}
+                            <Link><RiLogoutBoxLine className="User" onClick={clickLogout}/></Link>
+                            }
                         
                     </Form>    
                     </Navbar.Collapse>

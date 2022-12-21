@@ -6,7 +6,8 @@ import { Rate } from "antd";
 import DetailApi from "../../../../../../api/DetailApi";
 
 
-const WriteReview=()=>{
+const WriteReview=(props)=>{
+    
     const [rate, setRate] = useState('');
     const [inputTitle, setInputTitle] = useState('');
     const [inputContent, setInputContent] = useState('');
@@ -15,10 +16,12 @@ const WriteReview=()=>{
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
-    let productCode = 17000544; //테스트용
-    let memberIndex = 1; //테스트용
+    let memberIndex = 322; //테스트용
+    console.log("해당 공연 정보는?" + props.productCode);
+    console.log("해당 공연 정보는?" + props.code);
 
-    const onClickSubmit=async()=>{
+
+    const onClickSubmit=async(productCode)=>{
         const res = await DetailApi.sendComment(memberIndex,inputTitle, inputContent, rate, productCode);
         if(res.data.statusCode === 200){
           console.log("공지사항 작성 완료 후 목록으로 이동");

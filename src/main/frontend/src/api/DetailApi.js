@@ -5,7 +5,8 @@ const TCAT_DOMAIN = "http://localhost:8100"; //server path
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
     sendComment : async function(memberIndex,inputTitle, inputContent, rate, productCode){
-        console.log(rate,productCode);
+        console.log(memberIndex,inputTitle, inputContent, rate, productCode);
+        debugger;
         const params = {
             memberIndex : memberIndex,
             title : inputTitle,
@@ -15,13 +16,14 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
     },
-    // 대댓글
-    childComment : async function(memberIndex,group,content, code){
+    // 대댓글 작성(자식댓글)
+    childComment : async function(memberIndex,group,inputContent,productCode){
+        console.log("댓글 코드 " + productCode);
         const params = {
             memberIndex : memberIndex,
             group : group, // 부모댓글 group값 = 부모 댓글 고유 index 값
-            content : content,
-            code : code // 공연상품 code 값
+            content : inputContent,
+            code : productCode // 공연상품 code 값
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/add", params, HEADER);
     },
@@ -36,9 +38,10 @@ const DetailApi={
     },
 
     // 후기 삭제 
-    deleteComment : async function(index, memberIndex){
+    deleteComment : async function(commentIndex, memberIndex){
+        console.log("api 찍힌 값 : " + commentIndex, memberIndex);
         const params = {
-            index : index, // 후기(댓글) 고유 index 값 
+            index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/delete", params,HEADER)

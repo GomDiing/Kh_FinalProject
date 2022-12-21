@@ -36,6 +36,7 @@ out/
 **/src/test/resources/*.yml
 **/src/main/**/PostPreConstruct.java
 crawling
+**/yarn.lock
 
 ### NetBeans ###
 /nbproject/private/
