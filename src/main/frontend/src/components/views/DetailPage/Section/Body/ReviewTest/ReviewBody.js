@@ -1,4 +1,3 @@
-// import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -8,19 +7,26 @@ import ChildReview from "./ChildReview";
 import { AlertOutlined } from "@ant-design/icons";
 import DetailApi from "../../../../../../api/DetailApi";
 import AccuseModal from "./AccuseModal";
-import { async } from "q";
-
+import { useSelector } from 'react-redux';
 
 const ReviewBody=(props)=>{
+  // 로그인 유저 정보를 리덕스에서 가져옴
+  const userInfo = useSelector((state) => state.user.info)
+  const memberIndex = userInfo.userIndex;
+
   // const [index, setIndex] = useState('');
 
-    const [Reviews, setReviews] = useState(props.reviewList);
+    const [reviews, setReviews] = useState(props.reviewList);
+
+    console.log("그룹값 : " + reviews.group); //undefined
+    console.log("그룹값 : " + props.reviewList.group); //undefined
+    console.log("그룹값 : " + props.reviewList); //undefined
+
+
     // 댓글 보기 토글
     const [replyToggle, setReplyToggle] = useState(false);
     // const [replyToggle, setReplyToggle] = useState([]);
     console.log(props.reviewList.index);
-
-    let memberIndex = 322;
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -30,35 +36,20 @@ const ReviewBody=(props)=>{
     // 댓글 정보를 토글로 가렸다 보여주기
     const toggleReplyView = () => {
       setReplyToggle(!replyToggle)
-      // if(this.state[e.target.id] !== true){
-      //   this.setState(
-      //     {
-      //       [e.target.id] : true,
-      //     }
-      //   );
-      // }else{
-      //   this.setState(
-      //     {
-      //       [e.target.id] : false,
-      //     }
-      //   );
-      // }
   };
-
 
     useEffect(() => {
       setReviews(props.reviewList);
     }, [props.reviewList]);
 
-    const motherResult = Reviews.filter(item=>item.layer < 1);
-    const childResult = Reviews.filter(item=>item.layer > 0);
+    const motherResult = reviews.filter(item=>item.layer < 1);
+    const childResult = reviews.filter(item=>item.layer > 0);
     // const childResult = Reviews.filter(item=>item.layer > 0 && item.group===item.index);
 
     console.log(motherResult);
 
-
     const onClickDelete=async(index)=>{
-      const res = await DetailApi.deleteComment(index, memberIndex); //[0] 배열 표시 해주니까 값 들어감 
+      const res = await DetailApi.deleteComment(index, memberIndex);
       if(res.data.statusCode === 200){
         alert("댓글이 삭제되었습니다.")
       }
@@ -98,7 +89,9 @@ const ReviewBody=(props)=>{
           </Form>
           {replyToggle &&
           <div>
-            <ChildReview/>
+            {/* 그룹 리뷰 */}
+            <ChildReview group={reviews.group}/>
+
             {childResult.map(({index,memberId,content,group,productCode,createTime})=>(
         <div key={index}>
           <Form className="child-reply-container">
@@ -116,7 +109,6 @@ const ReviewBody=(props)=>{
         }
         </div>
         ))}
-        
         </ReviewBodyBlock>
     )
 }

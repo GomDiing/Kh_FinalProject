@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
 import WriteReview from './Section/Body/ReviewTest/WriteReview';
+import ChildReview from './Section/Body/ReviewTest/ChildReview';
 
 const { Content, Sider } = Layout;
 
@@ -242,8 +243,9 @@ function Detail() {
             }
             </Tab>
             <Tab eventKey="profile" title="관람후기">
-            <WriteReview/>
+            <WriteReview code={comList.code}/>
             <ReviewBody reviewList={reviewList}/>
+            <ChildReview reviewList={reviewList}/>
             </Tab>
           </Tabs>
           </div>
