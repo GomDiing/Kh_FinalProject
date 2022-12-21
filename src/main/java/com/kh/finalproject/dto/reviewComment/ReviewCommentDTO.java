@@ -3,6 +3,8 @@ package com.kh.finalproject.dto.reviewComment;
 import com.kh.finalproject.entity.ReviewComment;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 /**
  * 후기/댓글 DTO
  */
@@ -20,6 +22,7 @@ public class ReviewCommentDTO {
     private String reviewCommentStatus;
     private Integer accuseCount;
     private String productCode;
+    private String createTime;
 
     /*관리자페이지 Dashboard에서 리뷰 조회용*/
     public ReviewCommentDTO toDTO(ReviewComment reviewComment){
@@ -35,6 +38,7 @@ public class ReviewCommentDTO {
         this.reviewCommentStatus = reviewComment.getStatus().ACTIVE.getStatus();
         this.accuseCount = reviewComment.getAccuseCount();
         this.productCode = reviewComment.getProduct().getCode();
+        this.createTime = reviewComment.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
 
         return  this;
     }

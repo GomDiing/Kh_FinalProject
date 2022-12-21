@@ -2,6 +2,9 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import AdminApi from '../../../../../api/AdminApi'
 import { Rate } from "antd";
+import {HeartOutlined} from "@ant-design/icons/lib/icons";
+
+
 
 const RecentComment=()=>{
     const [reviewList, setReviewList] = useState('');
@@ -27,13 +30,19 @@ const RecentComment=()=>{
     return(
         <RecentWrap>
         <div className="comment-container">
-            {reviewList&&reviewList.map(({index,memberId, title, like, rate, content}) =>(
+            {reviewList&&reviewList.map(({index,memberId, title, like, rate, content,createTime}) =>(
             <div className="ReviewBox"  key={memberId}>
                 <li className="MainReviewContents">
                     <div className='review-top'>
                         <div className="minititle">{title}</div>
                         <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.3rem'}}/>
-                        <div className="mini-user">{memberId}</div>
+                        <div className="mini-user">{memberId} | </div>
+                        <div className="mini-time"> {createTime}</div>
+                        <button className='like-button' type='disabled'>
+                            <HeartOutlined color='red'/>
+                            <div className="mini-like" >{like}</div>
+                        </button>
+                        
                     </div>
                 <hr></hr>
                 <div className="ReviewContents">
@@ -87,5 +96,10 @@ li{
 }
 .mini-user{
     margin-right: 0;
+}
+.like-button{
+    border: none;
+    background-color: white;
+    display: flex;
 }
 `
