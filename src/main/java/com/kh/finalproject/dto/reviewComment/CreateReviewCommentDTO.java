@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 후기/댓글 생성 DTO
  */
@@ -14,7 +16,8 @@ public class CreateReviewCommentDTO {
     private Long memberIndex;
     private String memberId;
     private String title;
-    private Integer rate;
+    @NotNull(message = "평점은 필수 값 입니다")
+    private Float rate;
     private String content;
     private Long group;
     private Integer layer;

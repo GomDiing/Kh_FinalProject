@@ -37,7 +37,7 @@ public class ReviewComment extends BaseTimeEntity {
     private Integer like;
 
     @Column(name = "review_rate")
-    private Integer rate;
+    private Float rate;
 
     @Column(name = "review_comment_content", nullable = false)
     private String content;
@@ -78,7 +78,7 @@ public class ReviewComment extends BaseTimeEntity {
     }
 
     /*공연 후기 작성(댓글 형식)(회원 index,상품코드, content, 평점, 그룹, layer, order  */
-    public ReviewComment createReviewComment(Member member,Product product, String content, String title, Integer rate){
+    public ReviewComment createReviewComment(Member member,Product product, String content, String title, Float rate){
         this.title = title;
         this.content = content;
         this.rate = rate;

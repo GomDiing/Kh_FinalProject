@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 상품 테이블과 연결된 엔티티
@@ -70,6 +71,12 @@ public class Product {
     @Column(name = "product_rate_average", nullable = false)
     private Float rateAverage;
 
+    @Column(name = "product_rate_total")
+    private Float rateTotal;
+
+    @Column(name = "product_rate_count")
+    private Integer rateMemberCount;
+
     @OneToMany(mappedBy = "product")
     private List<Casting> castingList = new ArrayList<>();
 
@@ -100,4 +107,18 @@ public class Product {
 //    public void code(Statistics statistics) {
 //        this.statistics = statistics;
 //    }
+
+    /**
+     * 예매 관련 데이터가 null인지 확인하고
+     * 현재 데이터 0 초기화
+     */
+    public void updateRate(Float rateTotal) {
+        if (Objects.isNull(this.rateTotal)) {
+            this.rateTotal = (float) 0;
+            this.rateMemberCount = 0;
+        }
+        ++this.rateMemberCount;
+        this.rateTotal += rateTotal;
+        this.rateAverage = this.rateTotal / this.rateMemberCount;
+    }
 }
