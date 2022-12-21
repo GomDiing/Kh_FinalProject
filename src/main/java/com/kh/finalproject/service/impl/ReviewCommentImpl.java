@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.MemberRepository;
@@ -191,7 +192,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Override
     public List<ReviewCommentDTO> allComment(String productCode) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCode(productCode);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE);
 
         for(ReviewComment e : reviewCommentList){
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);

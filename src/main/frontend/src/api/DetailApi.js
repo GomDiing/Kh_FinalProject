@@ -5,7 +5,8 @@ const TCAT_DOMAIN = "http://localhost:8100"; //server path
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
     sendComment : async function(memberIndex,inputTitle, inputContent, rate, productCode){
-        console.log(rate,productCode);
+        console.log(memberIndex,inputTitle, inputContent, rate, productCode);
+        debugger;
         const params = {
             memberIndex : memberIndex,
             title : inputTitle,
@@ -37,9 +38,10 @@ const DetailApi={
     },
 
     // 후기 삭제 
-    deleteComment : async function(index, memberIndex){
+    deleteComment : async function(commentIndex, memberIndex){
+        console.log("api 찍힌 값 : " + commentIndex, memberIndex);
         const params = {
-            index : index, // 후기(댓글) 고유 index 값 
+            index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/delete", params,HEADER)
