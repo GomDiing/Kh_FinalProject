@@ -1,28 +1,87 @@
 // import styled from "styled-components";
-import Form from 'react-bootstrap/Form';
 import React, { useEffect, useState } from "react";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import styled from "styled-components";
+import { Rate } from "antd";
+import ChildReview from "./ChildReview";
+
+
 
 const ReviewBody=(props)=>{
     const [Reviews, setReviews] = useState(props.reviewList);
+    // 댓글 보기 토글
+    const [replyToggle, setReplyToggle] = useState(false);
+    // 댓글 정보를 토글로 가렸다 보여주기
+    const toggleReplyView = () => {
+      setReplyToggle(!replyToggle)
+  }
 
     useEffect(() => {
       setReviews(props.reviewList);
     }, [props.reviewList]);
 
+    const motherResult = Reviews.filter(item=>item.layer < 1);
+    const childResult = Reviews.filter(item=>item.layer > 0 && item.group===item.index);
+
+    console.log(childResult);
+
+
     return(
-        <>
-        {Reviews.map(({memberId, title, content, rate, like,group,accuseCount,productCode})=>(
+        <ReviewBodyBlock>
+        {motherResult.map(({memberId, title, content, rate, like,group,productCode})=>(
         <div>
-        <Form.Label >{memberId}</Form.Label>
-        <Form.Label>{title}</Form.Label>
-        <Form.Label>{content}</Form.Label>
-        <Form.Label>{rate}</Form.Label>
+        <Form>
+        <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.3rem'}}/>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label className="reply-title">{title}</Form.Label>
+        <Form.Label className="">{memberId}</Form.Label>
         <Form.Label>{like}</Form.Label>
-        <div>들어가져요ㅋㅋ</div>
+        </Form.Group>
+        <Form.Text className="reply-content">{content}</Form.Text>
+
+      {/* <Form.Group className="reply-mb-3" controlId="formBasicPassword">
+      <Form.Control type="text" placeholder="Write Comment" />
+      <Button variant="primary" type="submit">등록</Button>
+      </Form.Group> */}
+      </Form>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem'}}>
+          <Button style={{backgroundColor: '#FFD669', color: 'black'}} onClick={toggleReplyView}>더보기</Button></div>
+          {replyToggle &&
+          <div>
+            <ChildReview/>
+            {childResult.map(({memberId, title, content, rate, like,group,productCode})=>(
+        <div>
+          <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label className="reply-title">{content}</Form.Label>
+          </Form.Group>
+          </Form>
         </div>
         ))}
-        <Form.Control type="text"/>
-        </>
+          </div>
+            }
+
+            
+
+        </div>
+        ))}
+        
+        
+        </ReviewBodyBlock>
     )
 }
 export default ReviewBody;
+
+const ReviewBodyBlock = styled.div`
+.reply-mb-3{
+  display: flex;
+}
+.reply-title{
+  width: 90%;
+}
+.reply-content{
+  width: 500px;
+  height: 450px;
+}
+`;
