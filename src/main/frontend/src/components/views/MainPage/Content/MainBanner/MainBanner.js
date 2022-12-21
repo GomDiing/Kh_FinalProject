@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 
 const BannerContainer = styled.div`
     width: 100%;
-    height: 120px;
-
+    padding: 0 20px;
     .CarouselContainer{
         button,span{
             display: none;
@@ -16,10 +15,12 @@ const BannerContainer = styled.div`
     }
     img{
         width: 100%;
-        height: 120px;
+        height: 180px;
     }
     @media (max-width : 1024px){
-        height: 160px;
+        img{
+            height: 220px;
+        }
     }
 `
 

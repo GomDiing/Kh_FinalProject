@@ -80,7 +80,7 @@ public class Member extends BaseTimeEntity {
     private List<ReviewComment> reviewCommentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<MemberReserve> memberReserveList = new ArrayList<>();
+    private List<Reserve> reserveList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<WishProduct> wishProductList = new ArrayList<>();

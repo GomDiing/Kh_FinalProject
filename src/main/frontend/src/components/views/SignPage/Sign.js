@@ -7,11 +7,12 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const SignWrap = styled.div`
   width: 100%;
-  height: 120vh;
   background-color: #d2d2d2;
+  min-width: 930px;
   .signwrap{
+    min-height: 100vh;
     margin: 0 auto;
-    width: 50%;
+    width: 70%;
     background-color: #f5f5f5;
     height: 100%;
     display: flex;
@@ -104,6 +105,11 @@ const SignWrap = styled.div`
   }
   .reg-input {
     border: 1px solid red;
+  }
+  @media (max-width:1200px){
+    .signwrap{
+      width: 100%;
+    }
   }
 `
 

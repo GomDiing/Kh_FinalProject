@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
 const BodyStyle = styled.div`
@@ -114,6 +116,8 @@ function PopupContent (props) {
     const openEvent = price - (price / 20);
 
     const [selectPrice, setSelectPrice] = useState(0);
+
+    const dispatch = useDispatch();
     
     /**
      * Ticekt Discount !Duplicate Accept
@@ -197,6 +201,7 @@ function PopupContent (props) {
               const res = seatIndexList.filter(test => test.seat.includes(seats.seat));
               // 만들어진 배열에서 필요한 값을 추출..
               setSeatNumber(res[0].index);
+              dispatch(seatIndexAction.setSeatInfo(res[0].index));
             }}>
               <span className="name">{seats.seat}</span>
               <span className="price">{seats.price} <input className={'check' + index} type='checkbox' onClick={() => setPrice(seats.price)} /></span>
@@ -319,8 +324,8 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <Link to={'/payready'}>카카오페이 가자</Link>
-          {/* <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a> */}
+          {/* <Link to={'/payready'}>카카오페이 가자</Link> */}
+          <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
         </div>
     </div>
     );

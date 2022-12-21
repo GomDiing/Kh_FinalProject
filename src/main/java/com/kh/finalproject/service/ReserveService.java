@@ -31,7 +31,9 @@ public interface ReserveService {
     /**
      * 회원 인덱스로 예매 조회 메서드
      */
-    List<ReserveDTO> searchAllByMember(Long memberIndex);
+    List<SearchPaymentReserveDTO> searchAllPayment(Long memberIndex);
+
+    List<SearchRefundCancelReserveDTO> searchAllRefundCancel(Long memberIndex);
 
     /**
      * 예매 전체 조회 메서드

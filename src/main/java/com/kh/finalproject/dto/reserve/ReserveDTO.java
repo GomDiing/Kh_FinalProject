@@ -1,18 +1,10 @@
 package com.kh.finalproject.dto.reserve;
 
-import com.kh.finalproject.entity.KakaoPay;
-import com.kh.finalproject.entity.MemberReserve;
 import com.kh.finalproject.entity.Reserve;
-import com.kh.finalproject.entity.ReserveTime;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
-import jdk.jfr.Timestamp;
 import lombok.Getter;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,7 +12,10 @@ import java.util.Objects;
  */
 @Getter
 public class ReserveDTO {
-    private String id;
+    private Long index;
+
+    private String ticket;
+    private Integer count;
 
     private Long reserveTimeSeatPriceIndex;
 
@@ -41,7 +36,9 @@ public class ReserveDTO {
     private String cancel;
 
     public ReserveDTO toDTO(Reserve reserve) {
-        this.id = reserve.getId();
+        this.index = reserve.getIndex();
+        this.ticket = reserve.getTicket();
+        this.count = reserve.getCount();
         this.reserveTimeSeatPriceIndex = reserve.getReserveTimeSeatPriceIndex();
         this.reserveSeat = reserve.getReserveSeat();
         this.method = reserve.getMethod();
