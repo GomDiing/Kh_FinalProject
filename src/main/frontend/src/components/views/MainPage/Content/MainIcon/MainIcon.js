@@ -78,7 +78,6 @@ const MainIcon = () => {
         if(userInfo.userIndex){
             Navigate(e)
         }else {
-            console.log("flase")
             alert("로그인 후 이용해 주시길 바랍니다.")
         }
     }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer";
@@ -18,9 +19,9 @@ const SearchContainer = styled.div`
         padding: 0px;
     }
 
-    .InfoContainer{
-        margin-top: 40px;
+    /* .InfoContainer{ */
         table{
+            margin-top: 40px;
             background-color: white;
             margin : 0px auto;
             width: 100%;
@@ -37,6 +38,11 @@ const SearchContainer = styled.div`
         th ,tr,td{
             border-bottom: 2px solid #f5f5f5;
         }
+        tr:hover{
+            cursor: pointer;
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
         img{
             width: 160px;
             height: 190px;
@@ -44,7 +50,7 @@ const SearchContainer = styled.div`
         .imgContainer{
             width: 160px;
         }
-    }
+    /* } */
     .ButtonContainer{
         display: flex;
         justify-content: center;
@@ -110,6 +116,7 @@ const CategorySearch = () => {
     const [SearchData , setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
 
+    const Navigate = useNavigate();
     // 화면에 선택한 랭킹 , 카테고리 보여주기위한 함수
     const clickRanking = (e ,a) =>{
         setRanking(e);
@@ -119,7 +126,10 @@ const CategorySearch = () => {
         setCategory(e);
         setSelectCategory(a);
     }
-
+    // 아이탬 선택시 상세페이지 이동
+    const clickItem = (e) =>{
+        Navigate(`/detail/${e}`)
+    }
     // 선택한 카테고리별 or 랭킹별 useEffect
     useEffect(() => {
         const SearchAsync = async() =>{
@@ -151,7 +161,7 @@ const CategorySearch = () => {
         setIsFinish(false);
         SearchAsync();
     },[selectRanking,category])
-
+// console.log(SearchData);
     return(
         // 버튼영역
         <SearchContainer>
@@ -160,48 +170,44 @@ const CategorySearch = () => {
                 <h2>{selectCategory} {selectRanking}</h2>
                 <div className="ItemButtonContainer">
                     <div className="ButtonContainer">
-                        {rankings.map (c =>(
-                            <button onClick={()=>{clickRanking(c.name ,c.text)}}>{c.text}</button>
+                        {rankings.map ((rankings , index) =>(
+                            <button key={index} onClick={()=>{clickRanking(rankings.name ,rankings.text)}}>{rankings.text}</button>
                         ))}
                     </div>            
                     <div className="ButtonContainer">
-                        {categories.map(c =>(
-                            <button onClick={()=>{clickCategory(c.name ,c.text)}}>{c.text}</button>
+                        {categories.map((categories , index) =>(
+                            <button key={index} onClick={()=>{clickCategory(categories.name ,categories.text)}}>{categories.text}</button>
                         ))}
                     </div>
                 </div>
                 
 
             {/* 아이탬영역 */}
-                <div className="InfoContainer">
-                    <table>
-                        <tr>
-                            <th></th>
-                            <th>상품명</th>
-                            <th>장소</th>
-                            <th>기간</th>
-                        </tr>
-                        {isFinish && SearchData.map((SearchData , index)=>(
-                        <tr key={index}>
-                            <td className="imgContainer"><img src={SearchData.product.poster_url}></img></td>
-                            <td className="titleContainer">{SearchData.product.title}</td>
-                            <td className="addrContainer">{SearchData.product.location}</td>
-                            <td className="dayContainer">
-                            {/* 당일공연 체크 */}
-                            {SearchData.product.period_end === '당일 공연' ? 
+                <table>
+                    <th></th>
+                    <th>상품명</th>
+                    <th>장소</th>
+                    <th>기간</th>
+                    {isFinish && SearchData.map((SearchData , index)=>(
+                    <tr key={index} onClick={()=>{clickItem(SearchData.code)}}>
+                        <td className="imgContainer"><img src={SearchData.product.poster_url}></img></td>
+                        <td className="titleContainer">{SearchData.product.title}</td>
+                        <td className="addrContainer">{SearchData.product.location}</td>
+                        <td className="dayContainer">
+                        {/* 당일공연 체크 */}
+                        {SearchData.product.period_end === '당일 공연' ? 
+                        <>{SearchData.product.period_end}</>
+                        :
+                        <>
+                            <>{SearchData.product.period_start}</>
+                            <br/>~<br/>
                             <>{SearchData.product.period_end}</>
-                            :
-                            <>
-                                <>{SearchData.product.period_start}</>
-                                <br/>~<br/>
-                                <>{SearchData.product.period_end}</>
-                            </>    
-                        }
-                            </td>
-                        </tr>
-                            ))}
+                        </>    
+                    }
+                        </td>
+                    </tr>
+                        ))}
                     </table>
-                </div>
             </div>
             <Footer/>
         </SearchContainer>
