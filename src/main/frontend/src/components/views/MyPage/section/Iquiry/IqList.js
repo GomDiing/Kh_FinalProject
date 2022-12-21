@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import MemberApi from '../../../../../api/MemberApi';
 import IqModal from '../../../../views/MyPage/section/Iquiry/IqModal'
 import { Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 
 
@@ -23,6 +24,8 @@ const IqList=()=> {
   const open = () => setModalOpen(true);
   const close = () => setModalOpen(false);
   const navigate = useNavigate();
+
+  const userInfo = useSelector((state) => state.user.info)
 
 //   const columns = [
 //     {
@@ -53,7 +56,7 @@ const IqList=()=> {
   useEffect(() => {
     const qnaData = async()=> {
       try {
-        const res = await MemberApi.myQnalist(currentPage, pageSize);
+        const res = await MemberApi.myQnalist(userInfo.userIndex, currentPage, pageSize);
         if(res.data.statusCode === 200){
           setQnaList([...qnaList, ...res.data.results.qnaDTOList]);
           console.log(res.data.results.qnaDTOList[0].index);
@@ -99,7 +102,7 @@ console.log(qnaList);
         </tbody>
     </Table>
       </div>
-      <IqModal open={modalOpen} close={close} header="문의 답장하기">
+      <IqModal open={modalOpen} close={close} header="답변 확인">
         <Table>
           <tr className='reply-tr'>
             <th className='reply-th'>제목</th>
@@ -123,7 +126,7 @@ console.log(qnaList);
     current={currentPage} 
     pageSize={pageSize}
     onChange={(page) => {setCurrentPage(page); setQnaList([]);}} //숫자 누르면 해당 페이지로 이동
-   />
+    />
     </>
   );
 }

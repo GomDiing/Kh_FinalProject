@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../../util/Redux/Slice/userSlice";
 import { RiLoginBoxLine , RiLogoutBoxLine } from "react-icons/ri";
@@ -101,9 +101,9 @@ const HeaderContainer = styled.div`
     `;
 const MainHeader = () =>{
     const dispatch = useDispatch('');
-    
+    const Navigate = useNavigate();
     // 텍스트 검색
-    const onClickValue = (e) =>{
+    const onChangeValue = (e) =>{
         const val = e.target.value
         window.localStorage.setItem("searchText" , val)        
     }
@@ -114,8 +114,8 @@ const MainHeader = () =>{
     }
     // 앤터키 누르면 검색
     const EnterKeypress = () =>{
-        if(window.event.keyCode === "Enter"){
-            
+        if(window.event.keyCode === 13){
+            Navigate("/search")
         }
     }
 
@@ -150,7 +150,7 @@ const MainHeader = () =>{
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link>
                     </Nav>
                     <Form className="d-flex">
-                        <Form.Control onChange={onClickValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
+                        <Form.Control onChange={onChangeValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
                         <Link to = "/search" ><Button className="SearchBtn" variant="outline-success">Search</Button></Link>
                         {userInfo.userIndex === undefined ? 
                             <Link to = "/login"><RiLoginBoxLine className="User"/></Link>

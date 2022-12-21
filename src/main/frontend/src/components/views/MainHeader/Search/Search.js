@@ -111,17 +111,18 @@ const Search = () =>{
         const SearchAsync = async() =>{
             try{
                 const res = await MainApi.mainsearch(text)
+                console.log(res.data)
                 if(res.data.statusCode === 200){
                     console.log("성공")
-                    setSearchData(res.data.results);
+                    setSearchData(res.data.results.content);
                     setIsFinish(true);
                 }
             }catch(e){
                 console.log(e)
             }
         }
-        SearchAsync();
         setIsFinish(false);
+        SearchAsync();
     },[])
     
     const ClickItem = (e) =>{
@@ -134,8 +135,8 @@ const Search = () =>{
 
             {isFinish && SearchData.length === 0 ?
                 <>
-                    <NoresultContainer>
                         {/* 검색결과 없는경우 */}
+                    <NoresultContainer>
                         <div className="Content">    
                             <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'}></img></div>
                             <div className="item"><p>검색 결과가 없습니다.</p></div>
@@ -149,10 +150,10 @@ const Search = () =>{
                     </div>
                     <div className="InfoContainer">
                         <table>
-                            <th></th>
-                            <th>상품명</th>
-                            <th>장소</th>
-                            <th>기간</th>
+                                <th></th>
+                                <th>상품명</th>
+                                <th>장소</th>
+                                <th>기간</th>
                             {/* 검색결과 있는경우 */}
                             
                             {isFinish && SearchData.map((SearchData , index)=>(
