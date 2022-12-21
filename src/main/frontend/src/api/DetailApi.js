@@ -45,7 +45,7 @@ const DetailApi={
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?sort=index,desc`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(reviewIndex,victionEmail, suspectEmail,reason){
@@ -60,6 +60,15 @@ const DetailApi={
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
     return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
+    },
+    // 다음달 예매가능 일자 
+    getNextReserve : async function(code, year, month) {
+        // const params = {
+        //     code: code,
+        //     year: year,
+        //     month: month
+        // }
+    return await axios.get(TCAT_DOMAIN + `/api/product/${(code)}/${(year)}/${(month)}`, HEADER);
     }
 }
 export default DetailApi;

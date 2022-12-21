@@ -112,19 +112,7 @@ const Reviews = () => {
     </div>
     <br/>
     <WriteReview/>
-    <ReviewBody/>
-    {/* <Review>
-        {comments.map((comment) => (
-        <Comment
-        key={comment.id}
-        commentData={comment}
-        updateReplies={updateReplies}
-        editComment={editComment}
-        commentDelete={commentDelete}
-        setDeleteModalState={setDeleteModalState}
-        />
-    ))}
-    </Review> */}
+   
     </div>
 
     );

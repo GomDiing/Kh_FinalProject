@@ -16,6 +16,7 @@ import GridCards from '../Cards/GridCards';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
+import WriteReview from './Section/Body/ReviewTest/WriteReview';
 
 const { Content, Sider } = Layout;
 
@@ -149,6 +150,7 @@ function Detail() {
     getData();
   }, [pCode]);
 
+  // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
       try {
@@ -243,6 +245,7 @@ function Detail() {
             }
             </Tab>
             <Tab eventKey="profile" title="관람후기">
+            <WriteReview/>
             <ReviewBody reviewList={reviewList}/>
             </Tab>
           </Tabs>

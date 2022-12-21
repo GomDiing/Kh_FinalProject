@@ -1,7 +1,6 @@
 import { Card } from 'antd';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {ManOutlined, WomanOutlined } from '@ant-design/icons';
-import { FcBusinessman } from "react-icons/fc";
+import { FcBusinessman,FcBusinesswoman } from "react-icons/fc";
 
 // 공연 정보
 function Contents(props) {
@@ -24,17 +23,15 @@ function Contents(props) {
     </div>
     <br/>
       <h3>예매자 통계</h3>
-    <div className='stat' >
-      <Card
-      title="성별"
-      bordered={false}
-      >
-        <FcBusinessman/>
-      <p><ManOutlined />: {props.stat.male}</p>
-      <p><WomanOutlined />: {props.stat.female}</p>
+    <div className='stat' style={{zIndex: '100'}}>
+      <Card title="성별" bordered={false} style={{width: '600px'}}>
+      <span><FcBusinessman style={{fontSize : '150px'}}/><b style={{fontSize : '30px'}}> :  {props.stat.male}%</b></span>
+      <span><FcBusinesswoman style={{fontSize : '150px'}}/><b style={{fontSize : '30px'}}> :  {props.stat.female}%</b></span>
     </Card>
+    <br/>
 
         <h3 className="chartTitle">연령</h3>
+        <br/>
         <ResponsiveContainer aspect={4/1}>
         <BarChart
           data={data}

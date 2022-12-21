@@ -12,6 +12,11 @@ const SideWrap = styled.div`
         color: #006edc;
         font-size: medium;
     }
+    // a태그 속성제거 (모바일)
+    a {
+        color: black;
+        text-decoration: none;
+    }
 `
 const Styleside = styled.div`
     .side-header{
@@ -74,6 +79,10 @@ function TCalendar (props) {
         setSelect(dim);
     }, [dim])
 
+    const test = () => {
+        alert("asd");
+    }
+
     // str -> date type convert
     const parseDate = (dateList) => {
         let y = dateList.substr(0,4);
@@ -119,9 +128,16 @@ function TCalendar (props) {
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => moment(date).format("DD")}
-            showNeighboringMonth={false}
+            // showNeighboringMonth={false}
+            next2Label={null}
+            prev2Label={null}
+            onClickMonth={test}
+            minDetail='year'
+            
+
             // 예매 가능한 첫 날짜 집어넣음
-            minDate={first_reserve_day}
+            // activeStartDate={first_reserve_day}
+            // minDate={first_reserve_day}
             tileDisabled={({date}) => {
                 if (!select.find((x) => moment(x).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD"))) {
                 return true;
