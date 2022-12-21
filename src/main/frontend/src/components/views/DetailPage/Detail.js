@@ -203,7 +203,7 @@ function Detail() {
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
             <Content className='posterCon'>
-              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage}/>
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage} code={comList.code}/>
             </Content>
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
