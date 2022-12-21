@@ -319,8 +319,8 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <Link to={'/payready'}>카카오페이 가자</Link>
-          {/* <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a> */}
+          {/* <Link to={'/payready'}>카카오페이 가자</Link> */}
+          <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
         </div>
     </div>
     );

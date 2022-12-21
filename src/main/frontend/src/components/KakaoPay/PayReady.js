@@ -1,32 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
 import { ADMIN_KEY } from "../Config";
 import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
-// 회원 인덱스 OK
-// 좌석 인덱스 OK
-// 수량 OK
-// 개당 금액 OK
-// point OK
-// 총 금액 OK
-
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
-let taxs, totals, seatIndex, userIndex, prices, values, point = 0;
-userIndex = 32;
-point = 0;
 
 const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
-  
-  prices = price;
-  console.log('price : ', prices);
-  seatIndex = seatNumber;
-  console.log('seatIndex : ', seatIndex);
-  values = value;
-  console.log('value : ', values);
-  totals = total;
-  console.log('total : ', totals);
   let [data, setData] = useState({
   next_redirect_pc_url: "",
   tid: "",
@@ -65,28 +47,35 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
               },
               params,
       }).then(response => {
-          const {
-              data: { next_redirect_pc_url, tid },
-          } = response;
-          window.localStorage.setItem("tid", tid);
-          window.localStorage.setItem('url', next_redirect_pc_url);
-          setData({ next_redirect_pc_url, tid });
+        const {
+            data: { next_redirect_pc_url, tid },
+        } = response;
+        window.localStorage.setItem("tid", tid);
+        window.localStorage.setItem('url', next_redirect_pc_url);
+        setData({ next_redirect_pc_url, tid });
       }).catch(error => {
-          console.log(error);
+        console.log(error);
       });
-  });
-};
+  }, []);
+}
 
-const PayResult = () => {
-  console.log(totals);
-    const method = 'KAKAOPAY';
-    const tid = window.localStorage.getItem("tid");
+  const PayResult = () => {
+    const [isTrue, setIsTrue] = useState(false);
+    const user = useSelector((state) => state.user.info);
+    console.log(user);
+    const [test, setTest] = useState({
+      price : 0,
+      total : 0,
+      quantity : 0,
+      tid : window.localStorage.getItem('tid'),
+      method : ''
+    });
     const [modalOpen, setModalOpen] = useState(true);
     let search = window.location.search;
     const [data, setData] = useState({
         params: {
             cid: "TC0ONETIME",
-            tid : window.localStorage.getItem("tid"),
+            tid : test.tid,
             partner_order_id: "partner_order_id",
             // 가맹점 회원 id
             partner_user_id: "partner_user_id",
@@ -112,30 +101,42 @@ const PayResult = () => {
             },
             params,
         }).then(response => {
+            setTest((state) => ({
+              ...state,
+              price : response.data.amount.total / response.data.quantity,
+              total : response.data.amount.total,
+              quantity : response.data.quantity,
+              tid : response.data.tid,
+              method : response.data.payment_method_type
+            }));
+            setIsTrue(true);
+            console.log(test);
             console.log(response);
         }).catch(error => {
             console.log('에러..');
             console.log(error);
         });
-    });
+    }, []);
 
-    useEffect(() => {
-      const PayReadySubmit = async () => {
-        try {
-          const response = await PayApi.payReady(userIndex, seatIndex, values, prices, point, method, tid, totals);
-          console.log(response);
-          window.localStorage.removeItem("tid");
-        } catch (e) {
-          console.log(userIndex);
-          console.log(point);
-          console.log(seatIndex);
-          console.log(values);
-          console.log(e);
-          console.log('에러!!!');
+    let userIndex = 32;
+    let point = 0;
+    let seatIndex = 31;
+
+      useEffect(() => {
+        const PayReadySubmit = async () => {
+          try {
+            const response = await PayApi.payReady(userIndex, seatIndex, test.quantity, test.price, point, test.method, test.tid, test.total);
+            console.log(response);
+            window.localStorage.removeItem('tid');
+          } catch (e) {
+            window.localStorage.removeItem('tid');
+            console.log(userIndex);
+            console.log(e);
+            console.log('에러!!!');
+          }
         }
-      }
-      PayReadySubmit();
-    }, [])
+        isTrue && PayReadySubmit();
+      }, [isTrue, point, seatIndex, test.method, test.price, test.quantity, test.tid, test.total, userIndex]);
 
     const Body = () => {
         return(
@@ -152,8 +153,7 @@ const PayResult = () => {
             {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
         </div>
     );
-};
-
+  };
 
 const PayCancel = () => {
 	 // 취소는 나중에 구현
@@ -195,6 +195,6 @@ const PayCancel = () => {
             <Link to='/'>메인으로 돌아가기</Link>
         </div>
     );
-};
+  };
 
 export { PayReady, PayResult, PayCancel };
