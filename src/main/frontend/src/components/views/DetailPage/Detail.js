@@ -245,7 +245,7 @@ function Detail() {
             <Tab eventKey="profile" title="관람후기">
             <WriteReview code={comList.code}/>
             <ReviewBody reviewList={reviewList}/>
-            <ChildReview reviewList={reviewList}/>
+            {/* <ChildReview reviewList={reviewList}/> */}
             </Tab>
           </Tabs>
           </div>
