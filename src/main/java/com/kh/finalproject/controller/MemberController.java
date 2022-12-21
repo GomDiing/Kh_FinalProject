@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -54,6 +55,7 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@RequestBody MemberCheckListDTO memberCheckListDTO){
         List<CheckMemberDTO> checkMemberList = memberCheckListDTO.getMemberDTOCheckList();
         log.info("checkMemberList = {}", checkMemberList.toString());
+
         memberService.changeMemberStatusToUnregister(checkMemberList);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_BLACKLIST_TO_UNREGISTER), HttpStatus.OK);
@@ -64,11 +66,11 @@ public class MemberController {
      */
     @PostMapping("/sign")
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
         memberService.updateStatusByCount();
-
         memberService.signup(signupDTO);
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER, true), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER), HttpStatus.OK);
     }
 
     /**
@@ -100,10 +102,7 @@ public class MemberController {
     @PostMapping("/find-password")
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
 
-        if (MemberProviderType.valueOf(findPwdMemberDTO.getProviderType()) != MemberProviderType.HOME)
-            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
-
-        Map<String, String> password = memberService.findPassword(findPwdMemberDTO.getId(), findPwdMemberDTO.getName(), findPwdMemberDTO.getEmail());
+        Map<String, String> password = memberService.findPassword(findPwdMemberDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
     }
@@ -113,7 +112,7 @@ public class MemberController {
      */
     @PostMapping("/info-update")
     public ResponseEntity<DefaultResponse<Object>> updateMember(@Validated @RequestBody EditMemberInfoDTO editMemberInfoDTO) {
-
+        ///
         memberService.editMemberInfoByHome(editMemberInfoDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
@@ -132,8 +131,11 @@ public class MemberController {
 
     /*리뷰 신고 횟수 쌓이면 블랙리스트로 변환 되는거 */
     @PostMapping("/accuse/process")
-    public ResponseEntity changeBlacklistByCount() {
+    public ResponseEntity<DefaultResponse<Object>> changeBlacklistByCount() {
         List<MemberDTO> members = memberService.updateStatusByCount();
+        if (Objects.isNull(members)) {
+            throw new CustomException(CustomErrorCode.ERROR_MEMBER_ACCUSED_OVER_FIVE);
+        }
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK,DefaultResponseMessage.SUCCESS_CHANGE_TO_BLACKLIST, members), HttpStatus.OK);
     }
 

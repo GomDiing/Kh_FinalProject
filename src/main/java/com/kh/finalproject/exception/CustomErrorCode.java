@@ -26,6 +26,10 @@ public enum CustomErrorCode {
     NOT_MATCH_PROVIDER_TYPE(StatusCode.BAD_REQUEST, "M012", "회원 정보 주체가 올바르지 않습니다"),
     ERROR_POINT_INFO(StatusCode.BAD_REQUEST, "M013", "포인트 값이 잘못 설정되어있습니다"),
     ERROR_UNREGISTER(StatusCode.BAD_REQUEST, "M014", "영구정지 회원입니다"),
+    ERROR_MEMBER_ACCUSED_OVER_FIVE(StatusCode.BAD_REQUEST, "M015", "신고 횟수가 5회 이상 회원이 존재하지 않습니다"),
+    DUPLI_NAME(StatusCode.BAD_REQUEST, "M016", "이름으로 조회되는 회원이 있습니다"),
+    DELETE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M017", "삭제 신청 회원입니다"),
+    ACTIVE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M018", "현재 강비 회원입니다"),
 
     EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
     OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),

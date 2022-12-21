@@ -34,6 +34,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByIdAndStatusNotAndProviderType(String id, MemberStatus status, MemberProviderType providerType);
 
+    Optional<Member> findByIdAndProviderType(String id, MemberProviderType providerType);
+
 //    회원 고유 인덱스로 찾기
     Optional<Member> findByIndex(Long index);
 
@@ -47,9 +49,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<List<Member>> findAllByAccuseCountGreaterThan(Integer count);
 
-    Optional<Member> findByIdAndPasswordAndProviderType(String id, String password, MemberProviderType providerType);
+    Optional<Member> findByIdAndPasswordAndStatusNotAndProviderType(String id, String password, MemberStatus status, MemberProviderType providerType);
 
     Optional<List<Member>> findAllByStatusAndUnregisterAfter(MemberStatus status, LocalDateTime time);
+    Optional<List<Member>> findAllByStatus(MemberStatus status);
 
     Optional<Member> findByIdAndPassword(String id, String password);
     Optional<Member> findByIdAndPasswordAndStatus(String id, String password, MemberStatus status);
