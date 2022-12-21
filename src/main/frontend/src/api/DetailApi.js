@@ -65,13 +65,8 @@ const DetailApi={
     return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자 
-    getNextReserve : async function(code, year, month) {
-        // const params = {
-        //     code: code,
-        //     year: year,
-        //     month: month
-        // }
-    return await axios.get(TCAT_DOMAIN + `/api/product/${(code)}/${(year)}/${(month)}`, HEADER);
+    getNextReserve : async function(pCode, year, month) {
+    return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
     }
 }
 export default DetailApi;

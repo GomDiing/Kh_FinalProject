@@ -39,6 +39,9 @@ const MainContainer = styled.div`
     background: none;
     cursor: pointer;
     transition: opacity 0.3s ease-in;
+    text-decoration:none;
+    color : inherit;
+
 }
 .arrow {
     font-size: 50px;

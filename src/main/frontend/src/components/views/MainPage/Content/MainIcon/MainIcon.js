@@ -1,17 +1,18 @@
 import styled from "styled-components";
 import {QuestionCircleOutlined, ClockCircleOutlined, DollarCircleOutlined, UserOutlined, SendOutlined, NotificationOutlined,} from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../../../../util/Modal/Modal";
 import { useState } from "react";
 import AnswerModalBody from "./IconModal/ModalBody/AnswerModalBody";
 import IconModalHeader from "./IconModal/IconModalHeader";
 import NoticeModalBody from "./IconModal/ModalBody/NoticeModalBody";
 import CancelModalBody from "./IconModal/ModalBody/CancelModalBody";
+import { useSelector } from "react-redux";
 
 const MainIconContainer = styled.div`
     /* border: 1px solid black; */
     width: 100%;
-    margin: 30px 0;
+    margin: 40px 0;
     .IconAllContainer{
         margin: 0 20px;
         align-items: center;
@@ -30,6 +31,7 @@ const MainIconContainer = styled.div`
         margin: 0px;
         margin-top: 5px;
         color:#33333b;
+        cursor: pointer;
         /* min-width: 64px; */
     }
     h2{
@@ -59,6 +61,9 @@ const MainIconContainer = styled.div`
 const MainIcon = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectModal , setSelectModal] = useState(0);
+    const Navigate = useNavigate();
+
+    const userInfo = useSelector((state) => state.user.info)
 
     const openModal = (e) =>{
         setSelectModal(e)
@@ -67,12 +72,23 @@ const MainIcon = () => {
     const closeModal = () =>{
         setModalOpen(false)
     }
-    
+
+    // 로그인 / 비로그인 체크
+    const ClickItem = (e) =>{
+        if(userInfo.userIndex){
+            Navigate(e)
+        }else {
+            console.log("flase")
+            alert("로그인 후 이용해 주시길 바랍니다.")
+        }
+    }
+
     return(
     <MainIconContainer>
         <div className="IconAllContainer">
+
             <div className="IconContainer">
-                <Link to = "/MyPage/RList"><ClockCircleOutlined className="MainIcon" /></Link>
+                <ClockCircleOutlined className="MainIcon" onClick={()=>{ClickItem("/MyPage/RList")}} />
                 <p>예매내역</p>
             </div>
             <div className="IconContainer">
@@ -80,11 +96,11 @@ const MainIcon = () => {
                 <p>취소/환불</p>
             </div>
             <div className="IconContainer">
-                <Link to = "/MyPage/*"><UserOutlined className="MainIcon"/></Link>
+                <UserOutlined className="MainIcon" onClick={()=>{ClickItem("/MyPage/*")}}/>
                 <p>My Page</p>
             </div>
             <div className="IconContainer">
-                <Link to = '/MyPage/Contact'><SendOutlined className="MainIcon"/></Link>
+                <SendOutlined className="MainIcon" onClick={()=>{ClickItem('/MyPage/Contact')}}/>
                 <p>1:1문의</p>
             </div>
             <div className="IconContainer">

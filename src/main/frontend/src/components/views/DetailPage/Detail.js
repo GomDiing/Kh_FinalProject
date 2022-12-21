@@ -115,6 +115,7 @@ function Detail() {
   const userInfo = useSelector((state) => state.user.info)
     
   const [reviewList, setReviewList] = useState([]);
+  const [reviewList2, setReviewList2] = useState('');
 
   useEffect(() => {
     setPcode(code);
@@ -157,6 +158,7 @@ function Detail() {
         const res = await DetailApi.allReviewComment(pCode);
         if(res.data.statusCode === 200) {
           setReviewList(res.data.results);
+          setReviewList2(res.data.results.layer);
         } else {
           alert("리스트 조회가 안됩니다.")
         } 
@@ -166,6 +168,7 @@ function Detail() {
     };
     reviewData();
   }, [pCode]); 
+  console.log(reviewList2);
   
   // 최상단 스크롤
   const handleFollow = () => {
