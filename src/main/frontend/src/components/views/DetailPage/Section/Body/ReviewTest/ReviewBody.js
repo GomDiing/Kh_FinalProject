@@ -21,9 +21,15 @@ const ReviewBody=(props)=>{
       setReviews(props.reviewList);
     }, [props.reviewList]);
 
+    const motherResult = Reviews.filter(item=>item.layer < 1);
+    const childResult = Reviews.filter(item=>item.layer > 0 && item.group===item.index);
+
+    console.log(childResult);
+
+
     return(
         <ReviewBodyBlock>
-        {Reviews.map(({memberId, title, content, rate, like,group,productCode})=>(
+        {motherResult.map(({memberId, title, content, rate, like,group,productCode})=>(
         <div>
         <Form>
         <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.3rem'}}/>
@@ -41,15 +47,14 @@ const ReviewBody=(props)=>{
       </Form>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem'}}>
           <Button style={{backgroundColor: '#FFD669', color: 'black'}} onClick={toggleReplyView}>더보기</Button></div>
-
           {replyToggle &&
           <div>
             <ChildReview/>
-            {Reviews.map(({memberId, title, content, rate, like,group,productCode})=>(
+            {childResult.map(({memberId, title, content, rate, like,group,productCode})=>(
         <div>
           <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label className="reply-title">댓글창</Form.Label>
+          <Form.Label className="reply-title">{content}</Form.Label>
           </Form.Group>
           </Form>
         </div>
