@@ -13,75 +13,77 @@ import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 // 총 금액 OK
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
-let totals, taxs, prices, values, point = 0;
-let userIndex, seatIndex = null;
+let taxs, totals, seatIndex, userIndex, prices, values, point = 0;
+userIndex = 32;
+point = 0;
 
 const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
-    
-    values = value;
-	  totals = total;
-    prices = price;
-    userIndex = userInfo.userIndex;
-    point = userInfo.userPoint;
-    seatIndex = seatNumber;
-    
-    let [data, setData] = useState({
-    next_redirect_pc_url: "",
-    tid: "",
-    params: {
-        // 가맹점 코드
-        cid: "TC0ONETIME",
-        // 가맹점 주문번호
-        partner_order_id: "partner_order_id",
-        // 가맹점 회원 id
-        partner_user_id: "partner_user_id",
-        // 상품 이름
-        item_name: title,
-        // 상품 수량
-        quantity: value,
-        // 총 가격
-        total_amount: total,
-        // 상품 비과세
-        tax_free_amount: tax,
-        // 결제 성공 URL
-        approval_url: "http://localhost:3000/payresult",
-        // 결제 실패 URL
-        fail_url: "http://localhost:3000/resultfalse",
-        // 결제 취소 URL
-        cancel_url: "http://localhost:3000/resultfalse"
-		}
-    });
-    
-    useEffect(() => {
-        const { params } = data;
-        axios({
-            url: "https://kapi.kakao.com/v1/payment/ready",
-            method: "POST",
-            headers: {
-                Authorization: `KakaoAK ${ADMIN_KEY}`,
-                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-                },
-                params,
-        }).then(response => {
-            const {
-                data: { next_redirect_pc_url, tid },
-            } = response;
-            window.localStorage.setItem("tid", tid);
-            window.localStorage.setItem('url', next_redirect_pc_url);
-            setData({ next_redirect_pc_url, tid });
-        }).catch(error => {
-            console.log(error);
-        });
-    });
+  
+  prices = price;
+  console.log('price : ', prices);
+  seatIndex = seatNumber;
+  console.log('seatIndex : ', seatIndex);
+  values = value;
+  console.log('value : ', values);
+  totals = total;
+  console.log('total : ', totals);
+  let [data, setData] = useState({
+  next_redirect_pc_url: "",
+  tid: "",
+  params: {
+      // 가맹점 코드
+      cid: "TC0ONETIME",
+      // 가맹점 주문번호
+      partner_order_id: "partner_order_id",
+      // 가맹점 회원 id
+      partner_user_id: "partner_user_id",
+      // 상품 이름
+      item_name: title,
+      // 상품 수량
+      quantity: value,
+      // 총 가격
+      total_amount: total,
+      // 상품 비과세
+      tax_free_amount: tax,
+      // 결제 성공 URL
+      approval_url: "http://localhost:3000/payresult",
+      // 결제 실패 URL
+      fail_url: "http://localhost:3000/resultfalse",
+      // 결제 취소 URL
+      cancel_url: "http://localhost:3000/resultfalse"
+  }
+  });
+
+  useEffect(() => {
+      const { params } = data;
+      axios({
+          url: "https://kapi.kakao.com/v1/payment/ready",
+          method: "POST",
+          headers: {
+              Authorization: `KakaoAK ${ADMIN_KEY}`,
+              "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+              },
+              params,
+      }).then(response => {
+          const {
+              data: { next_redirect_pc_url, tid },
+          } = response;
+          window.localStorage.setItem("tid", tid);
+          window.localStorage.setItem('url', next_redirect_pc_url);
+          setData({ next_redirect_pc_url, tid });
+      }).catch(error => {
+          console.log(error);
+      });
+  });
 };
 
 const PayResult = () => {
-    const [result, setResult] = useState(false);
-    const [method, setMethod] = useState('');
-    const [tid, setTid] = useState('');
+  console.log(totals);
+    const method = 'KAKAOPAY';
+    const tid = window.localStorage.getItem("tid");
     const [modalOpen, setModalOpen] = useState(true);
     let search = window.location.search;
-    const data = {
+    const [data, setData] = useState({
         params: {
             cid: "TC0ONETIME",
             tid : window.localStorage.getItem("tid"),
@@ -91,8 +93,7 @@ const PayResult = () => {
             // 결제승인 요청을 인정하는 토큰
             pg_token: search.split("=")[1],
         }
-    };
-    setTid(window.localStorage.getItem("tid"));
+    });
     const navigate = useNavigate();
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
@@ -111,7 +112,6 @@ const PayResult = () => {
             },
             params,
         }).then(response => {
-            setResult(true);
             console.log(response);
         }).catch(error => {
             console.log('에러..');
@@ -119,16 +119,23 @@ const PayResult = () => {
         });
     });
 
-    setMethod("KAKAOAPY");
-    const PayReadySubmit = async () => {
-      const response = await PayApi.payReady(seatIndex, values, prices, point, method, tid, totals);
-      console.log(response);
-    }
-
-    if(result) {
+    useEffect(() => {
+      const PayReadySubmit = async () => {
+        try {
+          const response = await PayApi.payReady(userIndex, seatIndex, values, prices, point, method, tid, totals);
+          console.log(response);
+          window.localStorage.removeItem("tid");
+        } catch (e) {
+          console.log(userIndex);
+          console.log(point);
+          console.log(seatIndex);
+          console.log(values);
+          console.log(e);
+          console.log('에러!!!');
+        }
+      }
       PayReadySubmit();
-    }
-    
+    }, [])
 
     const Body = () => {
         return(

@@ -26,7 +26,7 @@ public class ReserveController {
     /**
      * 예매 컨트롤러
      */
-    @GetMapping("/payment")
+    @PostMapping("/payment")
     public ResponseEntity<DefaultResponse<Object>> paymentReserve(@RequestBody PaymentReserveDTO paymentReserveDTO){
 
         //예매 생성
