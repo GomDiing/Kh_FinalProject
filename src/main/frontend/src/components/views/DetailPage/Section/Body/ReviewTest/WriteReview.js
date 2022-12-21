@@ -28,22 +28,20 @@ const WriteReview=()=>{
       }
     return(
         <WriteReviewBlock>
-        <Form>
+        <Form className="write-review-container">
+        <Rate allowHalf className="star-rate" value={rate} style={{ fontSize: '2.3rem'}}
+        onChange = {onChangeRate}/>
         <Form.Group className="mb-2">
-        <Form.Label>제목</Form.Label>
         <Form.Control className="review-title" type="text" placeholder="Enter title" value={inputTitle} onChange={onChangeTitle}/>
-        <Rate allowHalf className="rate" value={rate} style={{ fontSize: '1.3rem'}}
-        onChange = {onChangeRate}
-        />
         </Form.Group>
         <Form.Group className="mb-3">
-        <Form.Label>관람후기</Form.Label>
-        <Form.Control type="text" placeholder="review" value={inputContent} onChange={onChangeContent}/>
+        <Form.Control className="review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
       </Form.Group>
-      <Button variant="primary" type="submit" onClick={onClickSubmit}>
+      <Button className="review-btn" variant="primary" type="submit" onClick={onClickSubmit}>
         후기 작성하기
       </Button>
     </Form>
+    <br/>
     </WriteReviewBlock>
 
     );
@@ -55,9 +53,18 @@ const WriteReviewBlock=styled.div`
 .mb-2{
     display: flex;
 }
-.review-title{
-    width: 500px;
-    margin: 0 20px ;
+.write-review-container{
+  width: 50vw;
+  margin: 0 20px ;
+}
+.review-content{
+  height: 250px;
+}
+.star-rate{
+  margin: 5px 0px;
+}
+.review-btn{
+  float: right;
 }
 
 `;
