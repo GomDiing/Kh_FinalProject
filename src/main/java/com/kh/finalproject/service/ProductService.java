@@ -16,7 +16,7 @@ public interface ProductService {
     /**
      * 상품 검색 메서드
      */
-    List<BrowseKeywordDTO> browseByKeyword(String keyword);
+    List<BrowseKeywordDTO> browseByKeyword(String keyword, Pageable pageable);
 
     /**
      * 상품 전체 조회 메서드

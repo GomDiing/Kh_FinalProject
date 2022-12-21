@@ -47,7 +47,7 @@ public enum CustomErrorCode {
     ERROR_SOCIAL_LOGIN(StatusCode.BAD_REQUEST, "SOCIAL01", "소셜 로그인이 실패했습니다"),
     ERROR_RESERVE_TIME_SEAT_PRICE(StatusCode.BAD_REQUEST, "RTSP01", "상세 예매 좌석 가격 조회가 실패했습니다"),
 
-    EMPTY_RESERVE(StatusCode.BAD_REQUEST, "R001", "거래 내역이 존재하지 않습니다"),
+    EMPTY_RESERVE(StatusCode.BAD_REQUEST, "R001", "예매 내역이 존재하지 않습니다"),
     EMPTY_CHART(StatusCode.BAD_REQUEST, "C001", "차트 내역이 존재하지 않습니다"),
 
     EMPTY_RESERVE_TIME_SEAT_PRICE(StatusCode.BAD_REQUEST, "RTSP001", "상세 예매 좌석 정보가 없습니다"),

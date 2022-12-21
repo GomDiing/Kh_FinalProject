@@ -2,7 +2,8 @@ package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.reserve.PaymentReserveDTO;
 import com.kh.finalproject.dto.reserve.RefundReserveCancelDTO;
-import com.kh.finalproject.dto.reserve.ReserveDTO;
+import com.kh.finalproject.dto.reserve.SearchPaymentReserveDTO;
+import com.kh.finalproject.dto.reserve.SearchRefundCancelReserveDTO;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.StatusCode;
@@ -36,36 +37,47 @@ public class ReserveController {
     }
 
     /**
-     * 환불 컨트롤러
+     * 환불 진행 컨트롤러
      */
-    @GetMapping("/refund/{id}")
-    public ResponseEntity<DefaultResponse<Object>> refundReserve(@PathVariable("id") String reserveId){
+    @GetMapping("/refund/{ticket}")
+    public ResponseEntity<DefaultResponse<Object>> refundReserve(@PathVariable String ticket){
 
         //예매 환불
-        RefundReserveCancelDTO refund = reserveService.refundCancel(reserveId, ReserveStatus.REFUND);
+        RefundReserveCancelDTO refund = reserveService.refundCancel(ticket, ReserveStatus.REFUND);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", refund), HttpStatus.OK);
     }
 
     /**
-     * 취소 컨트롤러
+     * 취소 진행 컨트롤러
      */
-    @GetMapping("/cancel/{id}")
-    public ResponseEntity<DefaultResponse<Object>> cancelReserve(@PathVariable("id") String reserveId){
+    @GetMapping("/cancel/{ticket}")
+    public ResponseEntity<DefaultResponse<Object>> cancelReserve(@PathVariable String ticket){
 
         //예매 취소
-        RefundReserveCancelDTO cancel = reserveService.refundCancel(reserveId, ReserveStatus.CANCEL);
+        RefundReserveCancelDTO cancel = reserveService.refundCancel(ticket, ReserveStatus.CANCEL);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", cancel), HttpStatus.OK);
     }
 
     /**
-     * 회원 인덱스로 전체 조회 컨트롤러
+     * 회원 전체 예매 내역 조회 컨트롤러
      */
-    @GetMapping("/list/{index}")
-    public ResponseEntity<DefaultResponse<Object>> findAllReserveByMemberIndex(@PathVariable("index") Long memberIndex) {
+    @GetMapping("/list/payment/{index}")
+    public ResponseEntity<DefaultResponse<Object>> findAllPaymentReserve(@PathVariable("index") Long memberIndex) {
 
-        List<ReserveDTO> reserveDTOList = reserveService.searchAllByMember(memberIndex);
+        List<SearchPaymentReserveDTO> reserveDTOList = reserveService.searchAllPayment(memberIndex);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", reserveDTOList), HttpStatus.OK);
+    }
+
+    /**
+     * 회원 전체 취소/환불 내역 조회 컨트롤러
+     */
+    @GetMapping("/list/refund-cancel/{index}")
+    public ResponseEntity<DefaultResponse<Object>> findAllRefundCancelReserve(@PathVariable("index") Long memberIndex) {
+
+        List<SearchRefundCancelReserveDTO> reserveDTOList = reserveService.searchAllRefundCancel(memberIndex);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", reserveDTOList), HttpStatus.OK);
     }

@@ -45,12 +45,13 @@ public class ProductServiceImpl implements ProductService {
     private final ReserveTimeCastingRepository reserveTimeCastingRepository;
     private final ReserveTimeSeatPriceRepository reserveTimeSeatPriceRepository;
     @Override
-    public List<BrowseKeywordDTO> browseByKeyword(String title) {
+    public List<BrowseKeywordDTO> browseByKeyword(String title, Pageable pageable) {
 
         List<BrowseKeywordDTO> browseKeywordDTOList = new ArrayList<>();
         // 영어 대소문자 구분 없이, 한글 다 검색 가능
         if(title.matches(".*[a-zA-Z0-9 ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
-            List<Product> productList = productRepository.findByTitleContaining(title);
+//            List<Product> productList = productRepository.findByTitleContaining(title);
+            Page<Product> productList = productRepository.browseByTitle(title, LocalDateTime.now(), pageable);
             for(Product product : productList) {
                 BrowseKeywordDTO browseKeywordDTO = new BrowseKeywordDTO().toDTO(product);
                 browseKeywordDTOList.add(browseKeywordDTO);
@@ -58,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new CustomException(CustomErrorCode.NOT_SEARCH_DATA);
         }
+//        new BrowseKeywordPageDTO().toDTO(productList, browseKeywordDTOList);
         return browseKeywordDTOList;
     }
 

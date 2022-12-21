@@ -61,9 +61,9 @@ public class ProductController {
      * 상품 제목으로 검색 기능 추가로 메인에서 필요한 기능 있으면 구현 예정
      */
     @GetMapping("/search")
-    public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title) {
+    public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title, Pageable pageable) {
 
-        List<BrowseKeywordDTO> productDTOList = productService.browseByKeyword(title);
+        List<BrowseKeywordDTO> productDTOList = productService.browseByKeyword(title, pageable);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_MOVIE_SEARCH, productDTOList), HttpStatus.OK);
     }
