@@ -11,7 +11,7 @@ import { BsArrowUpCircle } from "react-icons/bs";
 import MainPoster from "./Content/MainPoster/MainPoster";
 import RankingClose from "./Content/MainRankingClose/RankingClose";
 import MainReview from "./Content/MainReview/MainReview";
-import { useSelector } from "react-redux";
+
 
 const ItemContainer = styled.div`
     width: 80%;
@@ -86,9 +86,6 @@ const MainPage = () =>{
         }
     })
 
-    const userInfo = useSelector((state) => state.user.info)
-    console.log(userInfo);
-
     return(
         <MainContainer>
             <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
@@ -99,7 +96,7 @@ const MainPage = () =>{
                         
                         <MainPoster/>
                         <MainNotice/>
-                        <hr></hr>
+                        {/* <hr></hr> */}
                         <MainBanner/>
                         <RankingClose/>
 

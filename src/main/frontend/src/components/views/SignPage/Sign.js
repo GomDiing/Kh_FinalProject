@@ -7,11 +7,12 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const SignWrap = styled.div`
   width: 100%;
-  height: 120vh;
   background-color: #d2d2d2;
+  min-width: 930px;
   .signwrap{
+    min-height: 100vh;
     margin: 0 auto;
-    width: 50%;
+    width: 70%;
     background-color: #f5f5f5;
     height: 100%;
     display: flex;
@@ -104,6 +105,11 @@ const SignWrap = styled.div`
   }
   .reg-input {
     border: 1px solid red;
+  }
+  @media (max-width:1200px){
+    .signwrap{
+      width: 100%;
+    }
   }
 `
 
@@ -252,7 +258,7 @@ function Sign() {
     if(e.key === "Enter") {
         onClickSign();
     }
- }
+  }
 
 
   return (
@@ -335,13 +341,13 @@ function Sign() {
               </div>  
               <div className='inputContainer'>
                 <input type='text' readOnly placeholder='선택된 주소' value={fullAddress}  />
-                <input type='text' value={address} onChange={onChangeAddress} onKeyPress={onKeyPress} placeholder='상세 주소 입력'/>
+                <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
               </div>
               </div>
           </div>
           <div>
           </div>
-            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
+            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
           </div>
       </form>
     </div>

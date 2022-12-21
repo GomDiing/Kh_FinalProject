@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer"
@@ -28,10 +29,16 @@ const SearchContainer = styled.div`
     min-width: 930px;
     min-height: 83vh;
     margin-bottom: 80px;
+    .searchtext{
+        font-weight:bold;
+        font-size: 30px;
+    }
+    span{
+        font-size: 23px;
+
+    }
     .Content{
-        margin: 0 auto;
-        margin-top: 40px;
-        margin-bottom: 80px;
+        margin: 40px auto;
         width: 80%;
     }
     hr{
@@ -40,7 +47,8 @@ const SearchContainer = styled.div`
     }
 
     .InfoContainer{
-        margin-top: 40px;
+        width: 80%;
+        margin : 20px auto;
         table{
             background-color: white;
             margin : 0px auto;
@@ -54,6 +62,11 @@ const SearchContainer = styled.div`
         }
         td{
             height: 210px;
+            cursor: pointer;
+        }
+        tr:hover{
+            background-color: #f5f5f5;
+            font-weight: bold;
         }
         th ,tr,td{
             border-bottom: 2px solid #f5f5f5;
@@ -92,6 +105,8 @@ const Search = () =>{
     const text = window.localStorage.getItem("searchText")
     const [SearchData, setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
+    const Navigate = useNavigate();
+
     useEffect(() => {
         const SearchAsync = async() =>{
             try{
@@ -108,8 +123,10 @@ const Search = () =>{
         SearchAsync();
         setIsFinish(false);
     },[])
-    console.log(SearchData)
-
+    
+    const ClickItem = (e) =>{
+        Navigate(`/detail/${e}`)
+    }
     return(
         <>
         <SearchContainer>
@@ -128,35 +145,34 @@ const Search = () =>{
                 :
                 <>
                     <div className="Content">
-                        <h2>{text} 검색결과</h2>
+                        <span className="searchtext">{text}</span><span> 검색결과</span>
                     </div>
                     <div className="InfoContainer">
                         <table>
-                            <tr>
-                                <th></th>
-                                <th>상품명</th>
-                                <th>장소</th>
-                                <th>기간</th>
-                            </tr>
+                            <th></th>
+                            <th>상품명</th>
+                            <th>장소</th>
+                            <th>기간</th>
                             {/* 검색결과 있는경우 */}
+                            
                             {isFinish && SearchData.map((SearchData , index)=>(
-                            <tr key={index}>
-                                <td className="imgContainer"><img src={SearchData.poster_url}></img></td>
-                                <td className="titleContainer">{SearchData.title}</td>
-                                <td className="addrContainer">{SearchData.location}</td>
-                                <td className="dayContainer">
+                                <tr key={index} onClick={()=>ClickItem(SearchData.code)}>
+                                    <td className="imgContainer"><img src={SearchData.poster_url}></img></td>
+                                    <td className="titleContainer">{SearchData.title}</td>
+                                    <td className="addrContainer">{SearchData.location}</td>
+                                    <td className="dayContainer">
 
-                                {/* 당일공연 조건부랜더링 */}
-                                {SearchData.period_end === '당일 공연' ? 
-                                <>{SearchData.period_end}</>
-                                :
-                                <>
-                                    <>{SearchData.period_start}</>
-                                    <br/>~<br/>
+                                    {/* 당일공연 조건부랜더링 */}
+                                    {SearchData.period_end === '당일 공연' ? 
                                     <>{SearchData.period_end}</>
-                                </>    
-                            }
-                                </td>
+                                    :
+                                    <>
+                                        <>{SearchData.period_start}</>
+                                        <br/>~<br/>
+                                        <>{SearchData.period_end}</>
+                                    </>    
+                                }
+                                    </td>
                             </tr>
                                 ))}
                         </table>

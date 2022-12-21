@@ -10,13 +10,13 @@ import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const LoginWrap = styled.div`
   width: 100%;
-  height: 100vh;
+  min-width: 930px;
   background-color: #d2d2d2;
   .loginwrap{
+    min-height: 100vh;
     margin: 0 auto;
-    width: 50%;
+    width: 70%;
     background-color: #f5f5f5;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,7 +95,11 @@ const LoginWrap = styled.div`
     color: black;
     background-color : #86868b;
   }
-
+  @media (max-width : 1024px){
+    .loginwrap{
+      width: 100%;
+    }
+  }
 `
 const IdStyle = styled.div`
   .container {
@@ -326,9 +330,17 @@ const IdStyle = styled.div`
           }
           dispatch(loginActions.setUserInfo({data}));
           // 모달로 교체 예정
-
+          
           switch(response.data.results.status) {
             case "ACTIVE" :
+              
+            const data = {
+                userIndex : response.data.results.index,
+                userId : response.data.results.id,
+                userPoint : response.data.results.point
+              }
+              dispatch(loginActions.setUserInfo({data}));
+
               navigate('/');
               break;
             case "DELETE" :
