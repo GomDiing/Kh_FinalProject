@@ -24,4 +24,13 @@ public class WishProduct extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
+
+    public WishProduct toEntity(Member member, Product product) {
+        this.member = member;
+        member.getWishProductList().add(this);
+        this.product = product;
+        product.getWishProductList().add(this);
+
+        return this;
+    }
 }

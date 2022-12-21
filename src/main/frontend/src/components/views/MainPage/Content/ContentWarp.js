@@ -34,12 +34,9 @@ const ContentWarp = () =>{
     return(
         <BackContainer>
             <Carousel fade>            
-                {mainWrap.map(c=>(
-                <Carousel.Item>
-                    <img 
-                        key={c.name}
-                        src={c.img}
-                    alt=''></img>
+                {mainWrap.map((mainWrap , index)=>(
+                <Carousel.Item key={index}>
+                    <img src={mainWrap.img} alt=''></img>
                 </Carousel.Item>
                 ))}
             </Carousel>            

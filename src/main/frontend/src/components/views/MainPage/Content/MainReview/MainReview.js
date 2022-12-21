@@ -79,7 +79,7 @@ const MainReview = () =>{
         setIsFinish(false)
     },[])
 
-    console.log(reviewItem);
+    // console.log(reviewItem);
 
     return(
         <MainReviewContainer>
@@ -88,7 +88,7 @@ const MainReview = () =>{
             </div>
             <div className="ReviewBox">
                 {isFinish && reviewItem.map ((reviewItem , index) =>(
-                    <ul className="itemInfoContainer">
+                    <ul className="itemInfoContainer" key={index}>
                         <div style={{display :'flex'}}>
                         <img src={reviewItem.thumb_poster_url}></img>
                             <div >                        
@@ -100,7 +100,7 @@ const MainReview = () =>{
                                 </li>
                             </div>
                         </div>
-                        <li className="userInfo" key={index}>
+                        <li className="userInfo">
                             <span className="itemList">작성자 : {reviewItem.memberId}</span>
                             <span className="itemList">작성 시간 : {reviewItem.createTime}</span>
                             <span className="itemList">평점 :<Rate allowHalf disabled className="rate" value={reviewItem.rate}/></span>

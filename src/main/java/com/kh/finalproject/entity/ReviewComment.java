@@ -135,6 +135,14 @@ public class ReviewComment extends BaseTimeEntity {
         this.order = order;
     }
 
+    public void updateLike() {
+        if (Objects.isNull(this.like)) {
+            this.like = 0;
+        }
+
+        this.like += 1;
+    }
+
     public void updateOrder(Integer order) {
         this.order = order;
     }
