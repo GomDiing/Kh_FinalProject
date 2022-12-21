@@ -20,7 +20,7 @@ const ReviewBody=(props)=>{
     useEffect(() => {
       setReviews(props.reviewList);
     }, [props.reviewList]);
-
+    console.log(Reviews);
     return(
         <ReviewBodyBlock>
         {Reviews.map(({memberId, title, content, rate, like,group,productCode})=>(
@@ -45,11 +45,13 @@ const ReviewBody=(props)=>{
           {replyToggle &&
           <div>
             <ChildReview/>
-            {Reviews.map(({memberId, title, content, rate, like,group,productCode})=>(
-        <div>
+            {Reviews.map(({memberId, title, content, rate, like,group,productCode, layer})=>(
+        <div>{{layer} === 1 ?  <div>{memberId}</div> : null}
           <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label className="reply-title">댓글창</Form.Label>
+          <Form.Label>{memberId}</Form.Label>
+          
           </Form.Group>
           </Form>
         </div>
