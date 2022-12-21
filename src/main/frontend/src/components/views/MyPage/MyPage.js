@@ -11,6 +11,7 @@ import Footer from '../Footer/Footer';
 import InfoUpdate from './section/InfoUpdate';
 import styled from 'styled-components';
 import MemberApi from '../../../api/MemberApi';
+import { useSelector } from 'react-redux';
 
 const MyInfoStyle = styled.div`
   width: 100%;
@@ -42,6 +43,7 @@ const MyInfoStyle = styled.div`
     border-left: 2px solid black;
   }
   .description {
+    margin-top: 10px;
     margin-left: 1.5rem;
   }
   .point-box {
@@ -81,13 +83,12 @@ function MyPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [info, SetInfo] = useState('');
 
-  // 회원 정보 테스트
-  const [id, setId] = useState('asdqwe123');
+  const userInfo = useSelector((state) => state.user.info)
 
   useEffect(() => {
     const getInfo = async() => {
       try {
-        const res = await MemberApi.searchId(id);
+        const res = await MemberApi.searchId(userInfo.userId);
         if(res.data.statusCode === 200) {
           SetInfo(res.data.results);
           console.log(res.data);
@@ -96,7 +97,7 @@ function MyPage() {
         console.log(e);
       }
     }; getInfo();
-    }, []);
+    }, [userInfo.userId]);
 
     console.log(info);
 
