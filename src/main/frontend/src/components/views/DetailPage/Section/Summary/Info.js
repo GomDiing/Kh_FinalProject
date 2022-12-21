@@ -130,7 +130,7 @@ function Info(props) {
                 </li>
             </ul>
         </div>
-        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody dloc={props.loc2}/>}</div></Modal>
+        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody loc2={props.loc2}/>}</div></Modal>
         </InfoStyle>
     )
 }

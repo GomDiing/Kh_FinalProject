@@ -154,7 +154,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
   };
 
 const PayCancel = () => {
-	 // 취소는 나중에 구현
+    // 취소는 나중에 구현
     const[data, setData] = useState({
         next_redirect_pc_url : "",
         tid: "",

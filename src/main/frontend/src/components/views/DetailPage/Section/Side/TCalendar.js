@@ -172,16 +172,16 @@ function TCalendar (props) {
             minDetail={month}
             onClickDay={clickDay}
             onActiveStartDateChange={({ action, activeStartDate, view }) => {
-              setYear(activeStartDate.getFullYear());
-              setMonth(activeStartDate.getMonth() + 1);
+            setYear(activeStartDate.getFullYear());
+            setMonth(activeStartDate.getMonth() + 1);
             }}
             // 예매 가능한 첫 날짜 집어넣음
             minDate={first_reserve_day}
             tileDisabled={({activeStartDate, date, view}) => {
-              if (!select.find((x) => moment(x).format('YYYY-MM-DD') === moment(date).format("YYYY-MM-DD"))) {
+            if (!select.find((x) => moment(x).format('YYYY-MM-DD') === moment(date).format("YYYY-MM-DD"))) {
                 console.log(date.getDate());
                 return date.getDate();
-              }
+            }
             }}
             />
             </div>
@@ -192,7 +192,7 @@ function TCalendar (props) {
             <hr />
             </div>
             <Styleside>
-              <div className='side-container'>
+            <div className='side-container'>
                 <h4 className='side-header'>회차</h4>
                 <div className='side-content'>
                   {/* 1회차 정보 상시 상품은 안보임. */}
@@ -236,7 +236,7 @@ function TCalendar (props) {
                 header={<PopupHeader index={index}/>}
                 body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
                 seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
-              </div>
+            </div>
             </Styleside>
         </SideWrap>
     );
