@@ -6,6 +6,7 @@ import PayPopup from '../Popup/PayPopup';
 import PopupHeader from '../Popup/PopupHeader';
 import PopupContent from '../Popup/PopupContent';
 import moment from 'moment';
+import DetailApi from '../../../../../api/DetailApi';
 
 const SideWrap = styled.div`
     .select-date {
@@ -16,6 +17,14 @@ const SideWrap = styled.div`
     a {
         color: black;
         text-decoration: none;
+    }
+    .react-calendar__navigation {
+        button {
+            &:disabled {
+                background-color: white;
+                color: black;
+            }
+        }
     }
 `
 const Styleside = styled.div`
@@ -63,7 +72,6 @@ const Styleside = styled.div`
     .text-center {
         margin-bottom: 0;
     }
-
 `;
 
 /** 
@@ -71,17 +79,49 @@ const Styleside = styled.div`
  */
 function TCalendar (props) {
     const {cast, reserve, dim, code, userInfo, title, seat, dateList } = props;
+    const [date, setDate] = useState(new Date());
+    const [modalOpen, setModalOpen] = useState(false);
+    const [index, setIndex] = useState(1);
+    const plusIndex = () => setIndex(index+1);
+    const minusIndex = () => setIndex(index-1);
 
     // 받아온 예약 가능한 날짜(dim)를 select에 담음
     const [select, setSelect] = useState(dim);
+    const [select2, setSelect2] = useState([]);
+    // 상품 코드
+    const [pCode, setPcode] = useState(code);
+    const [year, setYear] = useState(2023);
+    const [month, setMonth] = useState(1);
 
     useEffect(() => {
         setSelect(dim);
-    }, [dim])
+        setPcode(code);
+    }, [dim, code])
 
-    const test = () => {
-        alert("asd");
-    }
+    const changeReserveDate = async () => {
+        setMonth(month + 1);
+        try {
+        const res = await DetailApi.getNextReserve(pCode, year, month);
+        if(res.data.statusCode === 200) {
+            console.log(res.data.results.check_list.reserve_day_in_month);
+            // setSelect2([...select, ...select2])
+            setSelect2([...select, ...res.data.results.check_list.reserve_day_in_month]);
+        } else {
+            alert("벼락치기")
+        }
+        } catch (e) {
+            console.log(e)
+        } 
+        setSelect(select2);
+    };
+
+    console.log(month);
+    console.log(select);
+    console.log(select2);
+
+    const clickDay = () => {
+        console.log(date.toLocaleString("kr", {year: "numeric", month:"2-digit", day: "numeric"}));
+    };
 
     // str -> date type convert
     const parseDate = (dateList) => {
@@ -105,13 +145,6 @@ function TCalendar (props) {
     const seatList = detail_info.reserve_seat_time;
     // 캐스팅 리스트
     const castingList = detail_info.compact_casting;
-
-    const [date, setDate] = useState(new Date());
-    const [modalOpen, setModalOpen] = useState(false);
-    const [index, setIndex] = useState(1);
-    const plusIndex = () => setIndex(index+1);
-    const minusIndex = () => setIndex(index-1);
-
     
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
@@ -128,17 +161,17 @@ function TCalendar (props) {
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => moment(date).format("DD")}
-            // showNeighboringMonth={false}
+            goToRangeStartOnSelect={false}
+            showNeighboringMonth={false}
             next2Label={null}
             prev2Label={null}
-            onClickMonth={test}
-            minDetail='year'
-            
-
+            minDetail={month}
+            onClickDay={clickDay}
+            onActiveStartDateChange={changeReserveDate}
             // 예매 가능한 첫 날짜 집어넣음
-            // activeStartDate={first_reserve_day}
-            // minDate={first_reserve_day}
-            tileDisabled={({date}) => {
+            // activeStartDate={(date) => moment(date).format("DD")}
+            minDate={first_reserve_day}
+            tileDisabled={({activeStartDate, date, view}) => {
                 if (!select.find((x) => moment(x).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD"))) {
                 return true;
             }}}

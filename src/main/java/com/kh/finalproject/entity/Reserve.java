@@ -20,8 +20,15 @@ import java.util.List;
 @Table(name = "reserve")
 public class Reserve extends BaseTimeEntity {
     @Id
-    @Column(name = "reserve_id")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reserve_index")
+    private Long index;
+
+    @Column(name = "reserve_ticket", nullable = false)
+    private String ticket;
+
+    @Column(name = "reserve_count", nullable = false)
+    private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_time_index", nullable = false)
@@ -57,18 +64,22 @@ public class Reserve extends BaseTimeEntity {
     @Timestamp
     private LocalDateTime cancel;
 
-    @OneToMany(mappedBy = "reserve")
-    private List<MemberReserve> memberReserveList = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_index", nullable = false)
+    private Member member;
 
     @OneToMany(mappedBy = "member")
     private List<KakaoPay> kakaoPayList = new ArrayList<>();
 
-    public Reserve toEntity(String id, ReserveTime reserveTime, String reserveSeat, Long reserveTimeSeatPriceIndex, PaymentReserveDTO paymentReserveDTO) {
-        this.id = id;
+    public Reserve toEntity(String ticket, Integer count, ReserveTime reserveTime, String reserveSeat, Long reserveTimeSeatPriceIndex, PaymentReserveDTO paymentReserveDTO, Member member) {
+        this.ticket = ticket;
         //예매 정보 연관관계
         this.reserveTime = reserveTime;
         reserveTime.getReserveList().add(this);
+        this.member = member;
+        member.getReserveList().add(this);
         this.reserveSeat = reserveSeat;
+        this.count = count;
         this.reserveTimeSeatPriceIndex = reserveTimeSeatPriceIndex;
         this.method = paymentReserveDTO.getMethod();
         this.amount = paymentReserveDTO.getAmount();
@@ -83,7 +94,8 @@ public class Reserve extends BaseTimeEntity {
         this.status = status;
     }
 
-    public void updateRefundTime(LocalDateTime now) {
-        this.refund = now;
+    public void updateRefundTime(ReserveStatus status, LocalDateTime now) {
+        if (status == ReserveStatus.REFUND) this.refund = now;
+        if (status == ReserveStatus.CANCEL) this.cancel = now;
     }
 }

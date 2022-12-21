@@ -45,12 +45,14 @@ public class ProductServiceImpl implements ProductService {
     private final ReserveTimeCastingRepository reserveTimeCastingRepository;
     private final ReserveTimeSeatPriceRepository reserveTimeSeatPriceRepository;
     @Override
-    public List<BrowseKeywordDTO> browseByKeyword(String title) {
+    public BrowseKeywordPageDTO browseByKeyword(String title, Pageable pageable) {
 
         List<BrowseKeywordDTO> browseKeywordDTOList = new ArrayList<>();
+        Page<Product> productList = null;
         // 영어 대소문자 구분 없이, 한글 다 검색 가능
         if(title.matches(".*[a-zA-Z0-9 ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
-            List<Product> productList = productRepository.findByTitleContaining(title);
+//            List<Product> productList = productRepository.findByTitleContaining(title);
+            productList = productRepository.browseByTitle(title, LocalDateTime.now(), pageable);
             for(Product product : productList) {
                 BrowseKeywordDTO browseKeywordDTO = new BrowseKeywordDTO().toDTO(product);
                 browseKeywordDTOList.add(browseKeywordDTO);
@@ -58,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new CustomException(CustomErrorCode.NOT_SEARCH_DATA);
         }
-        return browseKeywordDTOList;
+        return new BrowseKeywordPageDTO().toDTO(productList, browseKeywordDTOList);
     }
 
     /*관리자 페이지 전시 전체 조회(페이지네이션)*/
@@ -81,7 +83,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
+    /**
+     * 상세 페이지 조회하는 서비스
+     * @param productCode: 조회할 상품 코드
+     * @return 상세 페이지 DTO
+     */
     @Override
     public DetailProductDTO detailProductPage(String productCode) {
         //상품 조회, 없다면 예외 처리

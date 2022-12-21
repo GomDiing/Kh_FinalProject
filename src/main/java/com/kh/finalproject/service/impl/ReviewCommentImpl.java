@@ -52,6 +52,9 @@ public class ReviewCommentImpl implements ReviewCommentService {
                 createReviewCommentDTO.getRate());
         reviewCommentRepository.save(writeReviewComment);
 
+        //평점 추가
+        product.updateRate(createReviewCommentDTO.getRate());
+
         List<ReviewComment> findAllReview = reviewCommentRepository.findAllByProduct(product);
 
         Long group = 0L;

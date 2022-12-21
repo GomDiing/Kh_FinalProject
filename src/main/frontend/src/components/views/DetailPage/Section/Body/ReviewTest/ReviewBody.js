@@ -50,11 +50,11 @@ const ReviewBody=(props)=>{
           {replyToggle &&
           <div>
             <ChildReview/>
-            {childResult.map(({memberId, title, content, rate, like,group,productCode})=>(
+            {Reviews.map(({memberId, title, content, rate, like,group,productCode})=>(
         <div>
           <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label className="reply-title">{content}</Form.Label>
+          <Form.Label className="reply-title">댓글창</Form.Label>
           </Form.Group>
           </Form>
         </div>

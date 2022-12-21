@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.product.BrowseKeywordDTO;
+import com.kh.finalproject.dto.product.BrowseKeywordPageDTO;
 import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
@@ -16,7 +17,7 @@ public interface ProductService {
     /**
      * 상품 검색 메서드
      */
-    List<BrowseKeywordDTO> browseByKeyword(String keyword);
+    BrowseKeywordPageDTO browseByKeyword(String keyword, Pageable pageable);
 
     /**
      * 상품 전체 조회 메서드
