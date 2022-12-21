@@ -38,7 +38,8 @@ public class BrowseKeywordDTO {
 
         this.age = product.getAge();
         this.age_is_korean = product.getAgeIsKorean();
-        this.time_min = product.getTimeMin();
+        if (product.getTimeMin() == -1) this.time_min = 0;
+        else this.time_min = product.getTimeMin();
         this.time_break = product.getTimeBreak();
 
         return this;
