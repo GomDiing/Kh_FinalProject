@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import WishBt from './WishBt';
+import WishLikeApi from '../../../../../api/WishLikeApi';
+import { useSelector } from 'react-redux';
 
 const PosterStyle = styled.div `
 .summary-top {
@@ -30,11 +32,14 @@ const PosterStyle = styled.div `
 
 // 상세페이지 상단 포스터
 function Poster(props) {
+    const userInfo = useSelector((state) => state.user.info)
     // 별점
     const [value, setValue] = useState(props.rate);
+    const [pCode, setPcode] = useState(props.code);
     
     // 찜하기
     const [isWishAdd, setIsWishAdd] = useState(false);
+    const [wishCount, setWishCount] = useState(1);
     const [like, setLike] = useState(false);
 
     const wishAddHandler = () => {
@@ -43,15 +48,41 @@ function Poster(props) {
 
     useEffect(() => {
         setValue(props.rate);
+        setPcode(props.code);
     }, [props.rate])
 
-    const wishHandler = async (e) => {
-        wishAddHandler()
-        // const res = await DetailApi.axios.postWish
-        // 사용자가 찜하기를 누름 -> DB 갱신
-        setLike(!like);
-    }
+    console.log(pCode);
 
+    const wishHandler = async () => {
+        wishAddHandler();
+        if(!isWishAdd) {
+            setWishCount(wishCount + 1);
+            try {
+                const res = await WishLikeApi.addWish(userInfo.userIndex, pCode);
+                if(res.data.statusCode === 200) {
+                    setLike(true);
+                    console.log(res.data.message);
+                } else {
+                    alert("에러 1")
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        } else if(isWishAdd) {
+            setWishCount(wishCount -1);
+            try {
+                const res = await WishLikeApi.cancelWish(userInfo.userIndex, pCode);
+                if(res.data.statusCode === 200) {
+                    setLike(false);
+                    console.log(res.data.message);
+                } else {
+                    alert("에러 2")
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
 
     return (
         <PosterStyle>
