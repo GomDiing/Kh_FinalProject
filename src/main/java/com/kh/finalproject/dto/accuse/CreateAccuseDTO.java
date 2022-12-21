@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateAccuseDTO {
-    private String memberEmailSuspect;
-    private String memberEmailVictim;
+    private Long memberIndexSuspect;
+    private Long memberIndexVictim;
     private String reason;
 }

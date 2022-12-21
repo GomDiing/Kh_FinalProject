@@ -35,15 +35,15 @@ const MemberApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
-
+  // Id 로 정보 받아오기
   searchId : async function(id) {
     const searchById = {
       id : id
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/search-by-id", searchById, HEADER);
   },
-
-  memberUpdate : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode) {
+  // 회원 정보 수정
+  memberUpdate : async function(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode, type) {
     const updateMember = {
       id : inputId,
       password : inputPwd,
@@ -52,9 +52,10 @@ const MemberApi = {
       road : road,
       jibun : jibun,
       detail : address,
-      zipcode : postCode
+      zipcode : postCode,
+      providerType : type
     }
-    return await axios.post(TCAT_DOMAIN + "/api/mebmer/info-update", updateMember, HEADER);
+    return await axios.post(TCAT_DOMAIN + "/api/member/info-update", updateMember, HEADER);
   },
   // 마이페이지 qna 목록
   myQnalist : async function(userIndex, currentPage, setPageSize){

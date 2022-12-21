@@ -4,10 +4,14 @@ import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
 import { Rate } from "antd";
 import DetailApi from "../../../../../../api/DetailApi";
+import { useSelector } from 'react-redux';
 
 
 const WriteReview=(props)=>{
-    
+    // 로그인 유저 정보를 리덕스에서 가져옴
+    const userInfo = useSelector((state) => state.user.info)
+    const memberIndex = userInfo.userIndex;
+
     const [rate, setRate] = useState('');
     const [inputTitle, setInputTitle] = useState('');
     const [inputContent, setInputContent] = useState('');
@@ -16,13 +20,10 @@ const WriteReview=(props)=>{
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
-    let memberIndex = 322; //테스트용
-    console.log("해당 공연 정보는?" + props.productCode);
     console.log("해당 공연 정보는?" + props.code);
 
-
-    const onClickSubmit=async(productCode)=>{
-        const res = await DetailApi.sendComment(memberIndex,inputTitle, inputContent, rate, productCode);
+    const onClickSubmit=async()=>{
+        const res = await DetailApi.sendComment(memberIndex,inputTitle,inputContent,rate, props.code);
         if(res.data.statusCode === 200){
           console.log("공지사항 작성 완료 후 목록으로 이동");
         } else{
@@ -35,18 +36,17 @@ const WriteReview=(props)=>{
         <Rate allowHalf className="star-rate" value={rate} style={{ fontSize: '2.3rem'}}
         onChange = {onChangeRate}/>
         <Form.Group className="mb-2">
-        <Form.Control className="review-title" type="text" placeholder="Enter title" value={inputTitle} onChange={onChangeTitle}/>
+        <Form.Control className="write-review-title" type="text" placeholder="Enter title" value={inputTitle} onChange={onChangeTitle}/>
         </Form.Group>
         <Form.Group className="mb-3">
-        <Form.Control className="review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
+        <Form.Control className="write-review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
       </Form.Group>
-      <Button className="review-btn" variant="primary" type="submit" onClick={onClickSubmit}>
+      <Button className="write-review-btn" variant="primary" type="submit" onClick={onClickSubmit}>
         후기 작성하기
       </Button>
     </Form>
     <br/>
     </WriteReviewBlock>
-
     );
 
 }
@@ -59,14 +59,15 @@ const WriteReviewBlock=styled.div`
 .write-review-container{
   width: 50vw;
   margin: 0 20px ;
+  margin-bottom: 50px;
 }
-.review-content{
-  height: 250px;
+.write-review-content{
+  height: 200px;
 }
 .star-rate{
   margin: 5px 0px;
 }
-.review-btn{
+.write-review-btn{
   float: right;
 }
 

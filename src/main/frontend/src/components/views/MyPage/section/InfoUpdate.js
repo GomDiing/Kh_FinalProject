@@ -57,6 +57,7 @@ const InfoUpdate = () => {
   const [inputName, setInputName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [type, setType] = useState('HOME')
   const [isOpen, setIsOpen] = useState(false);
 
     // 주소 
@@ -106,12 +107,7 @@ const InfoUpdate = () => {
     setRoad(data.roadAddress);
     setJibun(data.jibunAddress);
     setPostCode(data.zonecode);
-
-    console.log(data.address);
-    console.log(data.roadAddress);
-    console.log(data.jibunAddress);
-    console.log(data.zonecode);
-
+    setIsOpen(false);
     data.preventDefault();
   }
 
@@ -125,10 +121,11 @@ const InfoUpdate = () => {
   console.log(jibun);
   console.log(address);
   console.log(postCode);
+  console.log(type);
 
   const onClickChange = async (e) => {
     try {
-      const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode);
+      const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode, type);
       if(response.data.statusCode === 200) {
       alert("회원정보 변경 완료");
     } Navigate('/Mypage');

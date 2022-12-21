@@ -75,10 +75,9 @@ const MainIcon = () => {
 
     // 로그인 / 비로그인 체크
     const ClickItem = (e) =>{
-        if(userInfo.userIndex){
+        if(userInfo.userIndex) {
             Navigate(e)
         }else {
-            console.log("flase")
             alert("로그인 후 이용해 주시길 바랍니다.")
         }
     }

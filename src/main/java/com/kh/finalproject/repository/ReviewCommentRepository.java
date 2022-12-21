@@ -25,6 +25,8 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     @Query("UPDATE Member n SET n.status = :status where n.index = :index")
     Optional<Integer> changeStatusMember(@Param("index") Long index, @Param("status") MemberStatus status);
 
+    Optional<ReviewComment> findByIndex(Long index);
+
 //    @Query(nativeQuery = true,
 //    value = "select * from review_comment")
 //    List<ReviewComment> selectAll(Pageable size);

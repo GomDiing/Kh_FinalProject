@@ -1,4 +1,3 @@
-// import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -8,19 +7,28 @@ import ChildReview from "./ChildReview";
 import { AlertOutlined } from "@ant-design/icons";
 import DetailApi from "../../../../../../api/DetailApi";
 import AccuseModal from "./AccuseModal";
-import { async } from "q";
-
+import { useSelector } from 'react-redux';
 
 const ReviewBody=(props)=>{
-  // const [index, setIndex] = useState('');
+  // 로그인 유저 정보를 리덕스에서 가져옴
+  const userInfo = useSelector((state) => state.user.info)
+  const memberIndex = userInfo.userIndex;
 
-    const [Reviews, setReviews] = useState(props.reviewList);
+    const [reviews, setReviews] = useState(props.reviewList);
+
+    const [motherReviews, setMotherReview] = useState([]);
+
+    console.log("그룹값 : " + reviews.group); //undefined
+    console.log("그룹값 : " + props.reviewList.group); //undefined
+    console.log(reviews); // 이건 찍힘
+    console.log(reviews.group); //undefined
+    console.log("그룹값33 : " + props.reviewList); //undefined
+
+
     // 댓글 보기 토글
     const [replyToggle, setReplyToggle] = useState(false);
     // const [replyToggle, setReplyToggle] = useState([]);
     console.log(props.reviewList.index);
-
-    let memberIndex = 322;
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -28,37 +36,36 @@ const ReviewBody=(props)=>{
     const close = () => setModalOpen(false);
 
     // 댓글 정보를 토글로 가렸다 보여주기
-    const toggleReplyView = () => {
+    const toggleReplyView = (index) => {
+      console.log(index);
+      console.log("토클 버튼 클릭시 토글 찍힌값 : "+index);
+      // console.log(replyToggle.index);
       setReplyToggle(!replyToggle)
-      // if(this.state[e.target.id] !== true){
-      //   this.setState(
-      //     {
-      //       [e.target.id] : true,
-      //     }
-      //   );
-      // }else{
-      //   this.setState(
-      //     {
-      //       [e.target.id] : false,
-      //     }
-      //   );
-      // }
   };
-
 
     useEffect(() => {
       setReviews(props.reviewList);
     }, [props.reviewList]);
 
-    const motherResult = Reviews.filter(item=>item.layer < 1);
-    const childResult = Reviews.filter(item=>item.layer > 0);
-    // const childResult = Reviews.filter(item=>item.layer > 0 && item.group===item.index);
+    // useEffect(()=>{
+    //   setMotherReview(motherResult);
+    // },[motherReviews]);
 
-    console.log(motherResult);
 
+    const motherResult = reviews.filter(item=>item.layer < 1);
+    const motherIndex = reviews.group;
+
+    // const motherGroup = reviews.filter(item=>item.group)
+
+    console.log("부모그룹");
+    console.log(motherIndex);
+    // const childResult = reviews.filter(item=>item.layer > 0);
+    // const childResult = reviews.filter(item=>item.layer > 0 && item.group === motherIndex);
+
+    // console.log(motherResult);
 
     const onClickDelete=async(index)=>{
-      const res = await DetailApi.deleteComment(index, memberIndex); //[0] 배열 표시 해주니까 값 들어감 
+      const res = await DetailApi.deleteComment(index, memberIndex);
       if(res.data.statusCode === 200){
         alert("댓글이 삭제되었습니다.")
       }
@@ -78,9 +85,7 @@ const ReviewBody=(props)=>{
           {/* 신고 버튼  */}
           <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1rem'}}
           onClick={open}/>
-
           {modalOpen && <AccuseModal open={open} close={close} />}
-
 
           <Form.Label>{like}</Form.Label>
           </Form.Group>
@@ -88,35 +93,14 @@ const ReviewBody=(props)=>{
           {/* 로그인 사용자만 수정 삭제 버튼 보이게 ㅋ 하.. ㅎ */}
           <div className="mother-btn-container">
           <button className="mother-reply-btn">수정</button>
-          <button className="mother-reply-btn" onClick={()=>onClickDelete(index)}>삭제</button>
+          <button className="mother-reply-btn" 
+          onClick={()=>onClickDelete(index)}>삭제</button>
           </div>
-
-        <div style={{ display: 'flex', margin: '1rem'}}>
-          <Button style={{backgroundColor: 'white', color: 'black'}} id={motherResult.index} onClick={toggleReplyView}>더보기
-          </Button></div>
-          {modalOpen && <AccuseModal setModalOpen={setModalOpen} />}
-          </Form>
-          {replyToggle &&
-          <div>
-            <ChildReview/>
-            {childResult.map(({index,memberId,content,group,productCode,createTime})=>(
-        <div key={index}>
-          <Form className="child-reply-container">
-          <Form.Group>
-          <Form.Label className="child-reply-user">{memberId}</Form.Label>
-          <Form.Label className="child-reply-time">{createTime}</Form.Label>
-          <button className="child-reply-btn">수정</button>
-          <button className="child-reply-btn">삭제</button>
-          </Form.Group>
-          <Form.Label className="child-reply-content">{content}</Form.Label>
-          </Form>
+          {/* 부모 댓글 index 넘겨서 비교하기 */}
+          <ChildReview reviews={reviews} index={motherReviews.index}/>
+        </Form>
         </div>
         ))}
-          </div>
-        }
-        </div>
-        ))}
-        
         </ReviewBodyBlock>
     )
 }

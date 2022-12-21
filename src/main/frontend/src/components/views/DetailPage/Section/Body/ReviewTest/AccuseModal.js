@@ -2,26 +2,27 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Form from 'react-bootstrap/Form';
 import DetailApi from '../../../../../../api/DetailApi';
+import { useSelector } from 'react-redux';
 
 
-function AccuseModal (props) {
+
+const AccuseModal= (props)=> {
+    const userInfo = useSelector((state) => state.user.info)
+    const victimIndex= userInfo.userIndex;
+    let suspectEmail = '3@gmail.com'; // 글 작성자
+
+
+    console.log("신고할 회원" + victimIndex);
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
     const { open, close, header, body,reviewIndex} = props;
     
     const [reason, setReason] = useState("욕설");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
-    console.log(reason); //찍힌다~!
-
-    // let userId = window.localStorage.getItem("email");
-    // console.log("유저아이디 값 : " + userId);
 
 
-    // let reviewIndex = 5;
-    let victionEmail = 'asdqwe123@naver.com'; // 신고한사람 = 로그인유저
-    let suspectEmail = '3@gmail.com'; // 글 작성자
 
     const onClickAccuse=async(reviewIndex)=>{
-        const res = await DetailApi.accuseComment(reviewIndex,victionEmail, suspectEmail,reason);
+        const res = await DetailApi.accuseComment(reviewIndex,victimIndex, suspectEmail,reason);
         if(res.data.statusCode === 200) {
             console.log("신고 완료");
             // 왜 안걸러지냐
