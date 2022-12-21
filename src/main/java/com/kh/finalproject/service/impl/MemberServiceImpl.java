@@ -388,10 +388,6 @@ public class MemberServiceImpl implements MemberService {
             Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(signinRequestDTO.getId(),
                             signinRequestDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.HOME)
                      .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-            //영구 정지 회원일 경우
-            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
-                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
-            }
             return new SigninResponseDTO().toDTO(findMember);
         //소셜 로그인 가입 회원일 시
         } else {
@@ -403,10 +399,6 @@ public class MemberServiceImpl implements MemberService {
             Member findMember = memberRepository.findByEmailAndStatusNotAndProviderType(
                     signinRequestDTO.getEmail(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(signinRequestDTO.getProviderType()))
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-            //영구 정지 회원일 경우
-            if (findMember.getStatus() == MemberStatus.UNREGISTER) {
-                throw new CustomException(CustomErrorCode.ERROR_UNREGISTER);
-            }
             return new SigninResponseDTO().toDTO(findMember);
         }
     }

@@ -41,11 +41,8 @@ const MainBanner = () =>{
         <BannerContainer>            
             <Carousel fade className="CarouselContainer">            
                 {imageList.map((imageList , index)=>(
-                <Carousel.Item>
-                    <img 
-                        key={index}
-                        src={imageList}
-                    alt=''></img>
+                <Carousel.Item key={index}>
+                    <img src={imageList}alt=''></img>
                 </Carousel.Item>
                 ))}
             </Carousel>

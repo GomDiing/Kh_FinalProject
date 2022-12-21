@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import HorizontalScroll from "react-horizontal-scrolling"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 import MainApi from "../../../../../api/MainApi"
@@ -91,6 +92,12 @@ const MainPoster2Container = styled.div`
     }
 `
 
+const HWrap = styled.div`
+.HorizontalScrollTrack {
+    display: hidden;
+}
+`
+
 const categories = [
     {
         name : 'MUSICAL',
@@ -137,28 +144,33 @@ const RankingClose = () =>{
             <PosterCategoryContainer>
             <div className="PosterTitle">
                 <h2>종료임박</h2>
-            {categories.map(c=>(
+            {categories.map((categories , index)=>(
                 <li 
-                    key={c.name}
-                    onClick={()=>onSelect(c.name)}
-                >{c.text}</li>
+                    key={index}
+                    onClick={()=>onSelect(categories.name)}
+                >{categories.text}</li>
             ))}
             </div>
         </PosterCategoryContainer>
-            <MainPoster2Container>
-                <ul>
-                    {ItemData.map((ItemData , index)=>(
-                        <div className="MainPoster2Contan">
-                            <li key={index} >
-                                <Link to={`/detail/${ItemData.code}`} >
-                                <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                                <p>{ItemData.product.title}</p>
-                                </Link>
-                            </li>
-                        </div>
-                    ))}
-                </ul>
-            </MainPoster2Container>
+
+            <HWrap>
+                <HorizontalScroll>
+                    <MainPoster2Container>
+                        <ul>
+                            {ItemData.map((ItemData , index)=>(
+                                <div className="MainPoster2Contan" key={index}>
+                                    <li>
+                                        <Link to={`/detail/${ItemData.code}`} >
+                                        <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                                        <p>{ItemData.product.title}</p>
+                                        </Link>
+                                    </li>
+                                </div>
+                            ))}
+                        </ul>
+                    </MainPoster2Container>
+                </HorizontalScroll>
+            </HWrap>
     </>
 )
 }

@@ -51,30 +51,6 @@ const MainNoticeContainer = styled.div`
         margin-right: 10px;
     }
     `
-// const notice = [
-//     {
-
-//         id : 'Notice1',
-//         categories : 'Notice',
-//         text : '1번 공지사항 내용입니다.'
-//     },
-//     {
-//         id : 'Notice2',
-//         categories : 'Notice',
-//         text : '2번 공지사항 내용입니다.'
-//     },
-//     {
-//         id : 'Notice3',
-//         categories : 'Event',
-//         text : '3번 이벤트 내용입니다.'
-//     },
-//     {
-//         id : 'Notice4',
-//         categories : 'Event',
-//         text : '4번 이벤트 내용입니다.'
-//     },
-// ]
-
 
 const MainNotice = () =>{
 
@@ -98,8 +74,8 @@ const MainNotice = () =>{
     return(
         <MainNoticeContainer>
             <div className="MainNotice">
-                {notice.map((notice)=>(
-                    <div className="Notice1">
+                {notice.map((notice ,index)=>(
+                    <div className="Notice1" key = {index}>
                         <img className="Noticeimg" src="https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/6562f7bc017800001.png?type=thumb&opt=C72x72.fwebp" alt=""></img>
                         <p>Notice</p>
                         <span >{notice.content}</span>

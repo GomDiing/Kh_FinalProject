@@ -14,7 +14,7 @@ function GridCards(props) {
         e.target.src = xbox;
     }
     return (
-        <div style={{display: 'inline-flex', marginTop: '1rem', marginLeft: '3rem', zIndex: '-1'}}>
+        <div style={{ marginTop: '1rem', marginLeft: '3rem', zIndex: '-1'}}>
         <div lg={6} md={8} xs={24}  style={{paddingBottom: '10px'}}>
             <div>
             {/* 렌더링 전 로딩중일시 보이게 */}

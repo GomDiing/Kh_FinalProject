@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.reviewLike;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
@@ -7,4 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public class AddReviewLikeDTO {
+    @JsonProperty("member_index")
+    private Long memberIndex;
+    @JsonProperty("review_comment_index")
+    private Long reviewCommentIndex;
 }

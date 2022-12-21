@@ -54,6 +54,10 @@ public enum CustomErrorCode {
     EMPTY_RESERVE(StatusCode.BAD_REQUEST, "R001", "예매 내역이 존재하지 않습니다"),
     EMPTY_CHART(StatusCode.BAD_REQUEST, "C001", "차트 내역이 존재하지 않습니다"),
 
+    DUPLI_REVIEW_LIKE(StatusCode.BAD_REQUEST, "RL001", "해당 회원은 이미 이 후기에 좋아요를 눌렀습니다"),
+    DUPLI_WISH_PRODUCT(StatusCode.BAD_REQUEST, "WP001", "해당 회원은 이미 해당 상품에 찜하기를 했습니다"),
+    EMPTY_WISH_PRODUCT(StatusCode.BAD_REQUEST, "WP002", "해당 상품에 찜하기를 누르지 않았습니다"),
+
     EMPTY_RESERVE_TIME_SEAT_PRICE(StatusCode.BAD_REQUEST, "RTSP001", "상세 예매 좌석 정보가 없습니다"),
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),
     NOT_MATCH_ID(StatusCode.BAD_REQUEST, "J004", "비밀번호가 일치하지 않습니다"),
