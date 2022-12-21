@@ -64,6 +64,7 @@ public class AccuseServiceImpl implements AccuseService {
 
         return;
     }
+
     /**
      * 신고한 회원이(victim) 동일 리뷰 중복 신고 여부 확인
      */

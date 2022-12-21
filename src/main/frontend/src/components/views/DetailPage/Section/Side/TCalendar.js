@@ -192,51 +192,51 @@ function TCalendar (props) {
             <hr />
             </div>
             <Styleside>
-                <div className='side-container'>
-                    <h4 className='side-header'>회차</h4>
-                    <div className='side-content'>
-                      {/* 1회차 정보 상시 상품은 안보임. */}
-                    {reserve_turn === 1 &&
-                    <>
-                    <div>
-                        <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                    </div>
-                    {seatList && seatList.map(seat => {
-                        return(
-                        <>
-                            <div style={{display : 'inline'}} key={seat.index}>
-                            <span>{seat.seat} {seat.remain_quantity} / </span>
-                            </div>
-                        </>
-                        );
-                    })}
-                    <hr />
-                    <h4 className='side-header'>캐스팅</h4>
-                    {cast && castingList && castingList.map((cast) => {
-                        return(
-                        <>
-                            <div style={{display: 'inline'}} >
-                            <span>{cast}, </span>
-                            </div>
-                        </>
-                        );
-                    })}
-                    {!cast && <div>캐스팅 정보가 없습니다.</div>}
-                    </>
-                    }
-                    {/* 2회차 정보가 들어오면 할 예정 */}
-                    {reserve_turn === 2 &&
-                    <button className='button no' type='button'>2회 20:00</button>
-                    }
-                        </div>
-                        <p />
-                    <button className='pay-button' onClick={openModal}>예매하기</button>
-                    {modalOpen && <PayPopup 
-                    plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
-                    header={<PopupHeader index={index}/>}
-                    body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
-                    seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
+              <div className='side-container'>
+                <h4 className='side-header'>회차</h4>
+                <div className='side-content'>
+                  {/* 1회차 정보 상시 상품은 안보임. */}
+                {reserve_turn === 1 &&
+                <>
+                <div>
+                    <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
                 </div>
+                {seatList && seatList.map(seat => {
+                    return(
+                    <>
+                        <div style={{display : 'inline'}} key={seat.index}>
+                        <span>{seat.seat} {seat.remain_quantity} / </span>
+                        </div>
+                    </>
+                    );
+                })}
+                <hr />
+                <h4 className='side-header'>캐스팅</h4>
+                {cast && castingList && castingList.map((cast) => {
+                    return(
+                    <>
+                        <div style={{display: 'inline'}} >
+                        <span>{cast}, </span>
+                        </div>
+                    </>
+                    );
+                })}
+                {!cast && <div>캐스팅 정보가 없습니다.</div>}
+                </>
+                }
+                {/* 2회차 정보가 들어오면 할 예정 */}
+                {reserve_turn === 2 &&
+                <button className='button no' type='button'>2회 20:00</button>
+                }
+                    </div>
+                    <p />
+                <button className='pay-button' onClick={openModal}>예매하기</button>
+                {modalOpen && <PayPopup 
+                plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
+                header={<PopupHeader index={index}/>}
+                body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
+                seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
+              </div>
             </Styleside>
         </SideWrap>
     );

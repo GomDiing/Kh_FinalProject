@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.reviewComment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.ReviewComment;
 import lombok.Getter;
 
@@ -23,6 +24,8 @@ public class ReviewCommentDTO {
     private Integer accuseCount;
     private String productCode;
     private String createTime;
+    @JsonProperty("thumb_poster_url")
+    private String thumbPosterUrl;
 
     /*관리자페이지 Dashboard에서 리뷰 조회용*/
     public ReviewCommentDTO toDTO(ReviewComment reviewComment){
@@ -35,10 +38,11 @@ public class ReviewCommentDTO {
         this.group = reviewComment.getGroup();
         this.layer = reviewComment.getLayer();
         this.order = reviewComment.getOrder();
-        this.reviewCommentStatus = reviewComment.getStatus().ACTIVE.getStatus();
+        this.reviewCommentStatus = reviewComment.getStatus().getStatus();
         this.accuseCount = reviewComment.getAccuseCount();
         this.productCode = reviewComment.getProduct().getCode();
         this.createTime = reviewComment.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.thumbPosterUrl = reviewComment.getProduct().getThumbPosterUrl();
 
         return  this;
     }
