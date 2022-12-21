@@ -84,14 +84,14 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, userInfo, seatIndexList, date, cancelday, index } = props;
+  const { title, seat, userInfo, seatIndex, date, cancelday, index } = props;
   
   // 회원 정보
-  console.log(userInfo);
+  // console.log(userInfo);
   // 좌석 별 가격
-  console.log(seat);
+  // console.log(seat);
   // 좌석 인덱스가 담겨져있는 리스트
-  console.log(seatIndexList);
+  console.log(seatIndex);
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [type, setType] = useState('');
@@ -198,7 +198,7 @@ function PopupContent (props) {
             <div onClick={() => {
               setSeatList(seats.seat);
               // 필터를 걸쳐 테스트를 통과한 것의 배열을 다시 만들어줌
-              const res = seatIndexList.filter(test => test.seat.includes(seats.seat));
+              const res = seatIndex.filter(test => test.seat.includes(seats.seat));
               // 만들어진 배열에서 필요한 값을 추출..
               setSeatNumber(res[0].index);
               dispatch(seatIndexAction.setSeatInfo(res[0].index));
