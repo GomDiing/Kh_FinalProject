@@ -7,50 +7,22 @@ const MainReviewContainer = styled.div`
     width: 100%;
     margin: 40px 0;
     .ReviewBox{
-        /* display: flex; */
-        /* justify-content: center; */
+
         margin: 20px 0;
-        /* height: 240px; */
     }
     .MainReviewContents{
         /* border: 1px solid black; */
         border: 1px solid silver;
         margin: 0 5px;
     }
-    /* li{
-        width: 23%;
-        list-style: none;
-        float: left;
-    }
-    hr{
-        margin: 0;
-        padding: 0px;
-    }
-    .ReviewContents{
-        margin:5px;
-        opacity: 60%;
-    }
-    .con{
-        white-space: normal;
-        word-wrap: break-word;
-        display: -webkit-box;
-        -webkit-line-clamp: 8;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .minititle{
-        background-color: #f5f5f5;
-        margin: 0;
-        text-align: center;
-        text-overflow: ellipsis;
-        overflow:hidden;
-        white-space: nowrap;
-        opacity: 90%;
-    } */
     h2{
         font-size: 1.5em;
         font-weight: bold;
         margin:24px 15px;
+    }
+    img{
+        width: 120px;
+        height: 140px;
     }
     ul{
         background-color: #f5f5f5;
@@ -107,7 +79,7 @@ const MainReview = () =>{
         setIsFinish(false)
     },[])
 
-    // console.log(reviewItem);
+    console.log(reviewItem);
 
     return(
         <MainReviewContainer>
@@ -117,19 +89,22 @@ const MainReview = () =>{
             <div className="ReviewBox">
                 {isFinish && reviewItem.map ((reviewItem , index) =>(
                     <ul className="itemInfoContainer">
+                        <div style={{display :'flex'}}>
+                        <img src={reviewItem.thumb_poster_url}></img>
+                            <div >                        
+                                <li className="itemInfo">
+                                    <p className="title">{reviewItem.title}</p>
+                                </li>
+                                <li className="itemInfo">
+                                    <p className="content">{reviewItem.content}</p>
+                                </li>
+                            </div>
+                        </div>
                         <li className="userInfo" key={index}>
                             <span className="itemList">작성자 : {reviewItem.memberId}</span>
                             <span className="itemList">작성 시간 : {reviewItem.createTime}</span>
                             <span className="itemList">평점 :<Rate allowHalf disabled className="rate" value={reviewItem.rate}/></span>
                         </li>
-                        <div >                        
-                            <li className="itemInfo">
-                                <p colspan="3" className="title">{reviewItem.title}</p>
-                            </li>
-                            <li className="itemInfo">
-                                <p colspan="3" className="content">{reviewItem.content}</p>
-                            </li>
-                        </div>
                     <hr/>
                     </ul>
                         ))}
