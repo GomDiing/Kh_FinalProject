@@ -78,7 +78,8 @@ const Styleside = styled.div`
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
-    const {cast, reserve, dim, code, userInfo, title, seat, dateList } = props;
+    const { dim, code, userInfo, title, seat } = props;
+    
     const [date, setDate] = useState(new Date());
     const [modalOpen, setModalOpen] = useState(false);
     const [index, setIndex] = useState(1);
@@ -92,6 +93,33 @@ function TCalendar (props) {
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
 
+    // 회차 리스트 정보
+    const [reserveList, setReserveList] = useState([]);
+    // 몇 회차인지
+    const [turn, setTurn] = useState(0);
+    // 캐스팅 유무
+    const [isCasting, setIsCasting] = useState(false);
+    const [isTimeCasting, setIsTimeCasting] = useState(false);
+    
+    // 선택한 날짜
+    const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
+    // 1일 전
+    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => {
+        setModalOpen(false);
+        setIndex(1);
+    }
+
+    const onClickTurn = e => {
+      const name = e.target.name;
+      if(name === 'turn1') {
+        setTurn(1);
+      } else if(name === 'turn2') {
+        setTurn(2);
+      }
+    }
+
     useEffect(() => {
       setSelect(dim);
       setPcode(code);
@@ -104,9 +132,12 @@ function TCalendar (props) {
         const changeReserveMonth = async () => {
           const res = await DetailApi.getNextReserve(pCode, year, month);
           // 날짜가 바뀌면 값은 잘 찍힌다..
-          console.log(res);
           if(res.data.statusCode === 200) {
             setSelect([...res.data.results.check_list.reserve_day_in_month]);
+            // 캐스팅 정보가 있는지 받음
+            setIsCasting(res.data.results.check_list.is_info_casting);
+            // 캐스팅 정보가 있을 경우 시간 캐스팅 정보 유무 확인
+            isCasting && setIsTimeCasting(res.data.results.check_list.is_info_time_casting);
           } else {
             console.log('error');
             console.log(res);
@@ -118,46 +149,30 @@ function TCalendar (props) {
       }
     }, [month, pCode, year]);
 
-    const chagneReserveDay = async () => {
-        setYear(year - 1);
-        const response = await DetailApi.getNextDateReserve(pCode, year, month);
-    }
+    console.log(isCasting);
+    console.log(isTimeCasting);
+
+    useEffect(() => {
+      try {
+        const chagneReserveDay = async () => {
+          const res = await DetailApi.getNextDateReserve(pCode, year, month, date.getDate());
+          if(res.data.statusCode === 200) {
+            // 회차 리스트
+            setReserveList(res.data.results.reserve_list);
+          } else {
+            console.log('error');
+            console.log(res);
+          }
+        }
+        chagneReserveDay();
+      } catch(e) {
+        console.log(e);
+      }
+    }, [date, month, pCode, year]);
 
     const clickDay = () => {
         console.log(date.toLocaleString("kr", {year: "numeric", month:"2-digit", day: "numeric"}));
     };
-
-    // str -> date type convert
-    const parseDate = (dateList) => {
-        let y = dateList.substr(0,4);
-        let m = dateList.substr(5,2);
-        let d = dateList.substr(8,2);
-        return new Date(y,m-1,d);
-    }
-
-    // 첫 예매 가능한 날짜
-    const first_reserve_day = parseDate(dateList.date);
-    // 회차 정보 0이면 상시 상품
-    const reserve_turn = dateList.reserve_list[0].turn;
-    // 첫 회차별 예매 상세 정보 2회차가 있으면 1도 있을 듯 나중에 2회차도 하려면 로직 짜야함.
-    const detail_info = dateList.reserve_list[0];
-    // 첫 회차별 예매 시간
-    const info_hour = detail_info.hour;
-    // 첫 회차별 예매 분
-    const info_minute = detail_info.minute;
-    // 좌석 리스트
-    const seatList = detail_info.reserve_seat_time;
-    // 캐스팅 리스트
-    const castingList = detail_info.compact_casting;
-    
-    const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
-    // 1일 전
-    const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
-    const openModal = () => setModalOpen(true);
-    const closeModal = () => {
-        setModalOpen(false);
-        setIndex(1);
-    }
 
     return (
         <SideWrap>
@@ -175,11 +190,8 @@ function TCalendar (props) {
               setYear(activeStartDate.getFullYear());
               setMonth(activeStartDate.getMonth() + 1);
             }}
-            // 예매 가능한 첫 날짜 집어넣음
-            minDate={first_reserve_day}
             tileDisabled={({activeStartDate, date, view}) => {
               if (!select.find((x) => moment(x).format('YYYY-MM-DD') === moment(date).format("YYYY-MM-DD"))) {
-                console.log(date.getDate());
                 return date.getDate();
               }
             }}
@@ -192,50 +204,95 @@ function TCalendar (props) {
             <hr />
             </div>
             <Styleside>
-              <div className='side-container'>
+            <div className='side-container'>
                 <h4 className='side-header'>회차</h4>
                 <div className='side-content'>
-                  {/* 1회차 정보 상시 상품은 안보임. */}
-                {reserve_turn === 1 &&
-                <>
-                <div>
-                    <button className='button select' type='button'>{reserve_turn}회 {info_hour}:{info_minute}</button>
-                </div>
-                {seatList && seatList.map(seat => {
-                    return(
-                    <>
-                        <div style={{display : 'inline'}} key={seat.index}>
-                        <span>{seat.seat} {seat.remain_quantity} / </span>
-                        </div>
-                    </>
-                    );
-                })}
-                <hr />
-                <h4 className='side-header'>캐스팅</h4>
-                {cast && castingList && castingList.map((cast) => {
-                    return(
-                    <>
-                        <div style={{display: 'inline'}} >
-                        <span>{cast}, </span>
-                        </div>
-                    </>
-                    );
-                })}
-                {!cast && <div>캐스팅 정보가 없습니다.</div>}
-                </>
-                }
-                {/* 2회차 정보가 들어오면 할 예정 */}
-                {reserve_turn === 2 &&
-                <button className='button no' type='button'>2회 20:00</button>
-                }
+                {/* 1회차 정보. */}
+                {/* 기본으로 1회차 정보 보여주고 1회차 클릭 1회차 정보 2회차 클릭 2회차 정보 나오게 둘다 나오면 너무 커지기 때문 이거 내일 오전에 수정 */}
+                {/* 낼 포인트 로직, 취소 로직, 오늘 수정한 것 다시 팝업에 정보 잘 넘어가는지 확인, 포인트 되면 캐시백 로직, 체크박스 수정 */}
+                {/* 1번 모달 수정 가격표 수정 */}
+                {reserveList && reserveList.map(reserve => {
+                  return(
+                    reserve.turn === 1 &&
+                    <div key={reserve.index}>
+                      <div>
+                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>{reserve.turn}회 {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}</button>
+                      </div>
+                      {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
+                        return(
+                          <div style={{display: 'inline'}} key={seat.index}>
+                            {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
+                          </div>
+                        );
+                      })}
+                      <h4 className='side-header'>캐스팅</h4>
+                      {/* 캐스팅 정보, 시간 별로 캐스팅 정보가 있으면 보임 없으면 x */}
+                      {isCasting && isTimeCasting && reserve.compact_casting ?
+                       reserve.compact_casting.map((cast, id) => {
+                          return(
+                          <>
+                            <div style={{display: 'inline'}} key={id} >
+                            <span>{cast}, </span>
+                            </div>
+                          </>
+                          );
+                      })
+                      :
+                      <small>해당 상품은 캐스팅 정보가 없습니다.</small>
+                      }
                     </div>
-                    <p />
+                  );
+                })}
+                {/* 2회차 정보. */}
+                {reserveList && reserveList.map(reserve => {
+                  return(
+                    reserve.turn === 2 &&
+                    <div key={reserve.index}>
+                      <div>
+                        <button className='button select' name='turn2' onClick={onClickTurn} type='button'>
+                          {reserve.turn}회 
+                          {/* 시간이 14:0 이렇게 들어오는 경우도 있어 + 0 처리 */}
+                          {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}
+                        </button>
+                      </div>
+                      {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
+                        return(
+                          <div style={{display: 'inline'}} key={seat.index}>
+                            {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
+                          </div>
+                        );
+                      })}
+                      {/* 캐스팅 정보, 시간 별로 캐스팅 정보가 있으면 보임 없으면 x */}
+                      <h4 className='side-header'>캐스팅</h4>
+                      {isCasting && isTimeCasting && reserve.compact_casting ?
+                      reserve.compact_casting.map((cast, id) => {
+                        return(
+                        <>
+                          <div style={{display: 'inline'}} key={id} >
+                          <span>{cast}, </span>
+                          </div>
+                        </>
+                        );
+                    })
+                    :
+                      <small>해당 상품은 캐스팅 정보가 없습니다.</small>
+                    }
+                    </div>
+                  );
+                })}
+                </div>
                 <button className='pay-button' onClick={openModal}>예매하기</button>
                 {modalOpen && <PayPopup 
-                plus={plusIndex} index={index} minus={minusIndex} open={openModal} close={closeModal}
+                plus={plusIndex} index={index} minus={minusIndex}
+                open={openModal} close={closeModal}
+                // Header
                 header={<PopupHeader index={index}/>}
-                body={<PopupContent userInfo={userInfo} date={selectDay} cancelday={cancelday} 
-                seat={seat} seatIndexList={seatList} title={title} index={index} />}/>}
+                // Body
+                body={<PopupContent userInfo={userInfo}
+                date={selectDay} cancelday={cancelday}
+                // 1회차 2회차 좌석 인덱스가 달라서 구분
+                seat={seat} seatIndex={turn === 1 ? reserveList[0].reserve_seat_time : reserveList[1].reserve_seat_time}
+                title={title} index={index} />}/>}
               </div>
             </Styleside>
         </SideWrap>
