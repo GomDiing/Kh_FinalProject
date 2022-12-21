@@ -3,12 +3,19 @@ const HEADER = 'application/json';
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const WishLikeApi = {
-    deleteCancel : async function(id, password) {
-        const cancelObj = {
-        id : id,
-        password : password
+    addWish : async function(memberIndex, pCode) {
+        const add = {
+        member_index : memberIndex,
+        product_code : pCode
         }
-        return await axios.post(TCAT_DOMAIN + "/api/member/delete/cancel", cancelObj, HEADER);
-    }
+        return await axios.post(TCAT_DOMAIN + "/api/wish/add", add, HEADER);
+    },
+    cancelWish : async function(memberIndex, pCode) {
+        const cancel = {
+        member_index : memberIndex,
+        product_code : pCode
+        }
+        return await axios.post(TCAT_DOMAIN + "/api/wish/cancel", cancel, HEADER);
+    },
     }
 export default WishLikeApi;

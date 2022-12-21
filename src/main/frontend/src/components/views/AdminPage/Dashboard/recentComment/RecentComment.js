@@ -4,8 +4,6 @@ import AdminApi from '../../../../../api/AdminApi'
 import { Rate } from "antd";
 import {HeartOutlined} from "@ant-design/icons/lib/icons";
 
-
-
 const RecentComment=()=>{
     const [reviewList, setReviewList] = useState('');
       /** 최신 후기 목록을 가져오는 useEffect */
