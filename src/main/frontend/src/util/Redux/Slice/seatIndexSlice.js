@@ -12,7 +12,10 @@ const seatSlice = createSlice({
         // 초기값의 info 에 값을 넘겨줌
         setSeatInfo : (state ,action) =>{
             state.index = action.payload;
-        }
+        },
+        reset(state) {
+            Object.assign(state, initialState);
+        }   
     }
 })
 
