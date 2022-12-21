@@ -52,6 +52,8 @@ const DetailApi={
     },
     // 후기 신고하기
     accuseComment : async function(reviewIndex,victionEmail, suspectEmail,reason){
+        console.log("api 찍힌값 : " + reviewIndex,victionEmail, suspectEmail,reason);
+        debugger;
         const params = {
             memberEmailVictim : victionEmail, // 신고한사람
             memberEmailSuspect : suspectEmail, // 신고당한사람 (글작성자)

@@ -22,6 +22,10 @@ const ReviewBody=(props)=>{
 
     let memberIndex = 322;
 
+    // 모달부분
+    const [modalOpen, setModalOpen] = useState(false);
+    const open = () => setModalOpen(true);
+    const close = () => setModalOpen(false);
 
     // 댓글 정보를 토글로 가렸다 보여주기
     const toggleReplyView = () => {
@@ -41,11 +45,6 @@ const ReviewBody=(props)=>{
       // }
   };
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const open = () => setModalOpen(true);
-  const close = () => setModalOpen(false);
-  const [rIndex, setRindex] = useState('');
-
 
     useEffect(() => {
       setReviews(props.reviewList);
@@ -57,21 +56,6 @@ const ReviewBody=(props)=>{
 
     console.log(motherResult);
 
-    const onClickAccuse=(index)=>{
-      setModalOpen(true); 
-      // setIndex(Reviews.title)
-      console.log("신고한거 찍히는지");
-      // setModalOpen(true)
-      // alert("신고할거야?")
-      // if(alert("신고하시겠습니까?")){
-        // const res = await DetailApi.deleteComment(props.reviewIndex);
-        // if(res.data.status === 200) {
-        //   console.log("댓글 신고 완료");
-        // } else{
-        //   console.log("신고 실패");
-        // }
-      // }
-    }
 
     const onClickDelete=async(index)=>{
       const res = await DetailApi.deleteComment(index, memberIndex); //[0] 배열 표시 해주니까 값 들어감 
@@ -90,10 +74,13 @@ const ReviewBody=(props)=>{
           <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label className="reply-title">{title}</Form.Label>
           <Form.Label className="">{memberId}</Form.Label>
+
           {/* 신고 버튼  */}
           <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1rem'}}
-        onClick={()=>onClickAccuse(index)}/>
-            {modalOpen && <AccuseModal setModalOpen={setModalOpen} />}
+          onClick={open}/>
+
+          {modalOpen && <AccuseModal open={open} close={close} />}
+
 
           <Form.Label>{like}</Form.Label>
           </Form.Group>
