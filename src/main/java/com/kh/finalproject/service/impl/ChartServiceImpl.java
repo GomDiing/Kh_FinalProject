@@ -118,65 +118,49 @@ public class ChartServiceImpl implements ChartService {
      * 차트 리스트 DTO 반환
      * 예) 2022년 12월 12일에 인자로 5를 주고 생성시
      * 2022년 8월 ~ 12월 차트 데이터 반환 (없다면 생성)
+     * @param listCount: 조회할 차트 개수
      */
     @Transactional
     @Override
     public List<ChartDTO> searchChartList(Integer listCount) {
         List<ChartDTO> chartDTOList = new ArrayList<>();
         for (int i = 0; i < listCount; i++) {
+            //관리자 차트 이름 생성
             LocalDateTime todayTime = LocalDateTime.now();
             LocalDateTime beforeMonthTime = todayTime.minusMonths(i);
             beforeMonthTime = LocalDateTime.of(beforeMonthTime.getYear(), beforeMonthTime.getMonth(), beforeMonthTime.with(lastDayOfMonth()).getDayOfMonth(), 23, 59, 59);
             int nowYear = beforeMonthTime.getYear();
             int nowMonth = beforeMonthTime.getMonthValue();
-            //관리자 차트 메서드
-//            int nowYear = LocalDateTime.now().getYear();
-//            int nowMonth = LocalDateTime.now().getMonthValue();
 
-            //관리자 차트 이름 생성
             String charId;
             if (nowMonth < 10) charId = nowYear + "/0" + nowMonth;
             else charId = nowYear + "/" + nowMonth;
 
             //현재 개월의 차트 존재 유무
             boolean isChartExist = chartRepository.findById(charId).isPresent();
-            //현재 월의 차트 정보가 없다면
+            //현재 월의 차트 정보가 없다면 자동 생성
             if (!isChartExist) {
                 processCreateChart(charId, beforeMonthTime);
             }
+            //있다면 불러와서 리스트에 추가
             Chart chart = chartRepository.findById(charId)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_CHART));
             chartDTOList.add(new ChartDTO().toDTO(chart));
         }
-//
-//        for (int i = 0; i < listCount; i++) {
-//            LocalDateTime todayTime = LocalDateTime.now();
-//            LocalDateTime beforeMonthTime = todayTime.minusMonths(i);
-//            int nowYear = beforeMonthTime.getYear();
-//            int nowMonth = beforeMonthTime.getMonthValue();
-//            //관리자 차트 메서드
-////            int nowYear = LocalDateTime.now().getYear();
-////            int nowMonth = LocalDateTime.now().getMonthValue();
-//
-//            //관리자 차트 이름 생성
-//            String charId = nowYear + "/" + nowMonth;
-//
-//            Chart chart = chartRepository.findById(charId)
-//                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_CHART));
-//            chartDTOList.add(new ChartDTO().toDTO(chart));
-//        }
 
         return chartDTOList;
     }
 
+    /**
+     * 관리자 차트 생성
+     */
     public void processCreateChart(String charId, LocalDateTime beforeMonthTime) {
 
         //지난 거래내역 존재하는지 확인
         boolean isReserveExist = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
                 .isEmpty();
 
-        //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
-        log.info("debug!!! beforMonthTime = {}", beforeMonthTime);
+        //UNREGISTER 상태가 아니고 (조회 직전 월) 이전의 총 회원수 조회
         Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
 
         //거래내역이 존재하지 않다면
@@ -185,6 +169,7 @@ public class ChartServiceImpl implements ChartService {
             Chart chart = new Chart().toEntity(charId, 0L, 0L, 0L, (long) memberCount, 0L);
             chartRepository.save(chart);
         }
+
         //거래내역이 존재한다면
         else {
             //이전 모든 거래내역 조회
@@ -197,6 +182,7 @@ public class ChartServiceImpl implements ChartService {
             Long totalMember = (long) memberCount;
             Long totalReserve = (long) findAllReserveListBefore.size();
 
+            //모든 거래 내역의 예매 수, 할인 금액, 총 결제 금액 계산
             for (Reserve reserve : findAllReserveListBefore) {
                 cumuAmount += reserve.getAmount();
                 cumuDiscount += reserve.getDiscount();

@@ -41,15 +41,16 @@ public class AccuseServiceImpl implements AccuseService {
     @Transactional
     public void create(CreateAccuseDTO createAccuseDTO, Long reviewCommentIndex) {
         // 회원 Email 추출 후 회원, 후기 DB 조회
-        String vitimEmail = createAccuseDTO.getMemberEmailVictim(); //신고한사람
-        String suspectEmail = createAccuseDTO.getMemberEmailSuspect();//신고당한 사람(글쓴 사람)
+//        회원 아이디로 추출
+        Long vitimIndex = createAccuseDTO.getMemberIndexVictim(); //신고한사람
+        Long suspectIndex = createAccuseDTO.getMemberIndexSuspect();//신고당한 사람(글쓴 사람)
 
         //조회한 회원, 후기가 없다면 예외 처리
         ReviewComment reviewComment = reviewCommentRepository.findById(reviewCommentIndex)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_REVIEW_COMMENT));
-        Member findVictimMember = memberRepository.findByEmailAndStatusNot(vitimEmail, MemberStatus.UNREGISTER)
+        Member findVictimMember = memberRepository.findByIndexAndStatusNot(vitimIndex, MemberStatus.UNREGISTER)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-        Member findSuspectMember = memberRepository.findByEmailAndStatusNot(suspectEmail, MemberStatus.UNREGISTER)
+        Member findSuspectMember = memberRepository.findByIndexAndStatusNot(suspectIndex, MemberStatus.UNREGISTER)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //중복 신고 방지
@@ -64,6 +65,7 @@ public class AccuseServiceImpl implements AccuseService {
 
         return;
     }
+
     /**
      * 신고한 회원이(victim) 동일 리뷰 중복 신고 여부 확인
      */

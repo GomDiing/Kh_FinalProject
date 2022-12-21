@@ -10,7 +10,7 @@ public interface ReviewLikeService {
     /**
      * 좋아요 추가 메서드
      */
-    void create(AddReviewLikeDTO addReviewLikeDTO);
+    void addLike(AddReviewLikeDTO addReviewLikeDTO);
 
     /**
      * 좋아요 제거 메서드

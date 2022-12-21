@@ -26,6 +26,10 @@ public enum CustomErrorCode {
     NOT_MATCH_PROVIDER_TYPE(StatusCode.BAD_REQUEST, "M012", "회원 정보 주체가 올바르지 않습니다"),
     ERROR_POINT_INFO(StatusCode.BAD_REQUEST, "M013", "포인트 값이 잘못 설정되어있습니다"),
     ERROR_UNREGISTER(StatusCode.BAD_REQUEST, "M014", "영구정지 회원입니다"),
+    ERROR_MEMBER_ACCUSED_OVER_FIVE(StatusCode.BAD_REQUEST, "M015", "신고 횟수가 5회 이상 회원이 존재하지 않습니다"),
+    DUPLI_NAME(StatusCode.BAD_REQUEST, "M016", "이름으로 조회되는 회원이 있습니다"),
+    DELETE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M017", "삭제 신청 회원입니다"),
+    ACTIVE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M018", "현재 강비 회원입니다"),
 
     EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
     OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),
@@ -49,6 +53,10 @@ public enum CustomErrorCode {
 
     EMPTY_RESERVE(StatusCode.BAD_REQUEST, "R001", "예매 내역이 존재하지 않습니다"),
     EMPTY_CHART(StatusCode.BAD_REQUEST, "C001", "차트 내역이 존재하지 않습니다"),
+
+    DUPLI_REVIEW_LIKE(StatusCode.BAD_REQUEST, "RL001", "해당 회원은 이미 이 후기에 좋아요를 눌렀습니다"),
+    DUPLI_WISH_PRODUCT(StatusCode.BAD_REQUEST, "WP001", "해당 회원은 이미 해당 상품에 찜하기를 했습니다"),
+    EMPTY_WISH_PRODUCT(StatusCode.BAD_REQUEST, "WP002", "해당 상품에 찜하기를 누르지 않았습니다"),
 
     EMPTY_RESERVE_TIME_SEAT_PRICE(StatusCode.BAD_REQUEST, "RTSP001", "상세 예매 좌석 정보가 없습니다"),
     NOT_MATCH_PASSWORD_ID(StatusCode.BAD_REQUEST, "J003", "이메일 혹은 아이디가 일치하지 않습니다"),

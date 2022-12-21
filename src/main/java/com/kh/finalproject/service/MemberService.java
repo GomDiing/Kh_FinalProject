@@ -37,7 +37,7 @@ public interface MemberService {
     /**
      * 회원 아이디 이름 이메일로 비밀번호 찾기
      */
-    Map<String, String> findPassword(String id, String name, String email);
+    Map<String, String> findPassword(FindPwdMemberDTO findPwdMemberDTO);
 
     /**
      * 회원이 회원탈퇴 버튼 눌르면 실행되는 메서드

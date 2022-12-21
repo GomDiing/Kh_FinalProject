@@ -4,10 +4,11 @@ import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import MemberApi from '../../../../../api/MemberApi';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 const Contact = () => {
-    let memberId = "test456"; //테스트용 아이디
+    const userInfo = useSelector((state) => state.user.info)
     const navigate = useNavigate();
     const [inputSelect, setInputSelect] = useState("티켓예매/발권");
     const [inputQnaTitle, setInputQnaTitle] = useState("");
@@ -23,7 +24,7 @@ const Contact = () => {
         alert('문의 사항을 최소 5 ~ 1000글자 이내로 부탁드립니다.');
         e.preventDefault();
     } else {
-        const res = await MemberApi.sendQna(memberId,inputSelect,inputQnaTitle,inputQnaContent);
+        const res = await MemberApi.sendQna(userInfo.userId,inputSelect,inputQnaTitle,inputQnaContent);
         if(res.data.statusCode === 200) {
             console.log(res.data.message);
             alert('문의가 정상 전송 되었습니다.');

@@ -17,7 +17,7 @@ const ChartBlock=styled.div`
 }
 
 `;
-const Chart = () => {
+const Chart = (props) => {
   const [chartData, setChartData] = useState([]);
   const [chart, setChart] = useState([]);
   
@@ -27,10 +27,11 @@ const Chart = () => {
           const res = await AdminApi.getChart();
           if(res.data.statusCode === 200){
             setChartData([...chartData, ...res.data.results]);
+            console.log(res.data.results);
             if(chart.length === 0) {
               const mapChart = chartData.map((data) => {
                 return {
-                  index: data.index + '월',
+                  index: data.id,
                   income: data.cumuAmount,
                   discount: data.cumuDiscount,
                   all: data.finalAmount

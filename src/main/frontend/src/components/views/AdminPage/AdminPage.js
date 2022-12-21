@@ -13,6 +13,8 @@ import NoticeDetail from './Notice/NoticeDetail';
 import NoticeList from './Notice/NoticeList';
 import Inquiry from './Inquiry/Inquiry';
 import UpdateNotice from './Notice/UpdateNotice';
+import { loginActions } from '../../../util/Redux/Slice/userSlice';
+import { useDispatch } from 'react-redux';
 
 const HeaderBlock=styled.div`
   background-color: #92A9BD;
@@ -53,13 +55,20 @@ function Header() {
   );
 }
 function SideMenu() {
+  const dispatch = useDispatch('');
   const navigate = useNavigate();
   return(
     <Menu style={{backgroundColor : '#f5f5f5'}}
       onClick={({key})=>{
         if(key === "로그아웃"){
-          console.log("관리자 로그아웃");
-          // 로그아웃일 때 로그인페이지로 이동
+              const data = {
+                  userIndex : undefined,
+                  userId : undefined,
+                  userPoint : undefined,
+              }
+              dispatch(loginActions.setUserInfo({data}));
+              alert('관리자 로그아웃 성공');
+              navigate('/login');
         } else {
           navigate(key);
         }

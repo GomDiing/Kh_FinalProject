@@ -21,6 +21,11 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_SEARCH_PRODUCTLIST = "상품 전체 목록 조회 성공";
     public static final String SUCCESS_SEARCH_PRODUCT_DETAIL = "상품 상세 조회 성공";
 
+    public static final String SUCCESS_ADD_REVIEW_LIKE = "좋아요 생성 성공";
+
+    public static final String SUCCESS_ADD_WISH_PRODUCT = "찜하기 추가 성공";
+    public static final String SUCCESS_CANCEL_WISH_PRODUCT = "찜하기 취소 성공";
+
     public static final String ERROR_SOCIAL_LOGIN = "소셜 로그인 실패";
     public static final String SUCCESS_KAKAO_SIGNUP = "카카오 회원가입 성공";
     public static final String SUCCESS_LOGIN = "로그인 성공";

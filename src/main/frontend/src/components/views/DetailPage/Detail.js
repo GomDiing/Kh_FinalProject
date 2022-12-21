@@ -12,11 +12,11 @@ import Tabs from 'react-bootstrap/Tabs';
 import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
-// import Reviews from './Section/Body/Reviews';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
 import WriteReview from './Section/Body/ReviewTest/WriteReview';
+import ChildReview from './Section/Body/ReviewTest/ChildReview';
 
 const { Content, Sider } = Layout;
 
@@ -25,7 +25,6 @@ width: 100%;
 min-width: 970px;
 background-color: #f5f5f5;
 /* min-width: 1024px; */
-/* border: 1px solid black; */
 .topBtn {
   position: fixed; 
   opacity: 0; 
@@ -44,7 +43,6 @@ background-color: #f5f5f5;
   z-index: 10; 
   opacity: 1; 
 }
-
 .topBtn:hover,
 .topBtn:focus,
 .topBtn:active { 
@@ -61,14 +59,12 @@ background-color: #f5f5f5;
   /* bottom: 0; */
   bottom: 100px;
   padding-bottom: 40px;
-
 }
 .ItemContainer2{
   width: 100%;
   display: flex;
   background-color: white;
 }
-
 @media (max-width: 1225px){
   .ItemContainer2{
     display: block;
@@ -83,7 +79,6 @@ background-color: #f5f5f5;
     left: 500px;
     position: sticky;
     height: 720px;
-    
   }
 .info {
   margin-left: 4.8rem;
@@ -123,7 +118,7 @@ function Detail() {
       try {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
-          console.log(res.data.results.compact_list.perf_time_break);
+          console.log(res.data.results.compact_list);
           // checkList 특정 요소의 유무 판단
           setCkList(res.data.results.check_list);
           setCastInfo(res.data.results.check_list.is_info_casting);
@@ -248,8 +243,9 @@ function Detail() {
             }
             </Tab>
             <Tab eventKey="profile" title="관람후기">
-            <WriteReview/>
+            <WriteReview code={comList.code}/>
             <ReviewBody reviewList={reviewList}/>
+            <ChildReview reviewList={reviewList}/>
             </Tab>
           </Tabs>
           </div>

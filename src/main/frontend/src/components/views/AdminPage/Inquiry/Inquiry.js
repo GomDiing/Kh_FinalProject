@@ -58,7 +58,7 @@ const Inquiry=(props)=>{
   // console.log(temp.reply);
   // console.log(qnaList.reply);
   // const reply = `${qnaList[5].reply}`;
- 
+
 
   return(
     <InquiryBlock>
@@ -84,7 +84,7 @@ const Inquiry=(props)=>{
                     <td>{qnaList.id}</td>
                     <td>{qnaList.createTime}</td>
                     <td>{qnaList.qnaStatus}</td>
-                    <td><button onChange={onChangeStatus} onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
+                    <td><button className="re" onChange={onChangeStatus} onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
                       {modalOpen && <QnaModal setModalOpen={setModalOpen} />}
                     </td>
                   </tr>
@@ -142,9 +142,16 @@ const InquiryBlock=styled.div`
     flex-direction: column;
     text-align: center;
   }
-  button{
+  button {
     width: 80px;
     border: none;
+  }
+  // 답장하기 버튼(색 바꾸셔도 되요 잘 안보여서 hover 해놓은거)
+  .re {
+    :hover {
+      background-color: black;
+      color: white;
+    }
   }
 
 `;

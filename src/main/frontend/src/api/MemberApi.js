@@ -57,8 +57,8 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/mebmer/info-update", updateMember, HEADER);
   },
   // 마이페이지 qna 목록
-  myQnalist : async function(currentPage, setPageSize){
-    return await axios.get(TCAT_DOMAIN+`/api/qna/mypage/1?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+  myQnalist : async function(userIndex, currentPage, setPageSize){
+    return await axios.get(TCAT_DOMAIN+`/api/qna/mypage/${(userIndex)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
   },
   // qna 전송하기
   sendQna : async function(memberId,inputSelect,inputQnaTitle,inputQnaContent) {
