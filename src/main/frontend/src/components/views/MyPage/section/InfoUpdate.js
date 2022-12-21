@@ -152,6 +152,7 @@ const InfoUpdate = () => {
           <input type='email' value={inputEmail} onChange={onChangeEmail} />
         <label>주소</label>
           <input type='address' readOnly value={fullAddress}/><span><button onClick={onOpen}>주소 검색</button></span>
+          <br/>
           <div id='popupDom'>
             {isOpen && (
               <div>

@@ -252,7 +252,7 @@ function Sign() {
     if(e.key === "Enter") {
         onClickSign();
     }
- }
+  }
 
 
   return (
@@ -335,13 +335,13 @@ function Sign() {
               </div>  
               <div className='inputContainer'>
                 <input type='text' readOnly placeholder='선택된 주소' value={fullAddress}  />
-                <input type='text' value={address} onChange={onChangeAddress} onKeyPress={onKeyPress} placeholder='상세 주소 입력'/>
+                <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
               </div>
               </div>
           </div>
           <div>
           </div>
-            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px'}} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
+            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
           </div>
       </form>
     </div>
