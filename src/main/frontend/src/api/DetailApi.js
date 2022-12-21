@@ -15,13 +15,14 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
     },
-    // 대댓글
-    childComment : async function(memberIndex,group,content, code){
+    // 대댓글 작성(자식댓글)
+    childComment : async function(memberIndex,group,inputContent,productCode){
+        console.log("댓글 코드 " + productCode);
         const params = {
             memberIndex : memberIndex,
             group : group, // 부모댓글 group값 = 부모 댓글 고유 index 값
-            content : content,
-            code : code // 공연상품 code 값
+            content : inputContent,
+            code : productCode // 공연상품 code 값
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/add", params, HEADER);
     },
