@@ -83,7 +83,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
+    /**
+     * 상세 페이지 조회하는 서비스
+     * @param productCode: 조회할 상품 코드
+     * @return 상세 페이지 DTO
+     */
     @Override
     public DetailProductDTO detailProductPage(String productCode) {
         //상품 조회, 없다면 예외 처리

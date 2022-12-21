@@ -14,7 +14,7 @@ public class ReviewCommentDTO {
     private String memberId;
     private String title;
     private Integer like;
-    private Integer rate;
+    private Float rate;
     private String content;
     private Long group;
     private Integer layer;

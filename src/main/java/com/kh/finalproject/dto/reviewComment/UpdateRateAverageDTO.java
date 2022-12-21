@@ -7,4 +7,7 @@ import lombok.Getter;
  */
 @Getter
 public class UpdateRateAverageDTO {
+    Long memberIndex;
+    String productCode;
+    Float addRate;
 }
