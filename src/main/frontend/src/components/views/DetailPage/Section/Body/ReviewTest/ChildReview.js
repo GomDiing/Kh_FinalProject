@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
 
 
-const ReplyReview=()=>{
+const ChildReview=()=>{
     const [inputReply, setInputReply] = useState('');
     const onChangeReply=(e)=>{setInputReply(e.target.value);}
 
@@ -18,7 +18,7 @@ const ReplyReview=()=>{
         <Form>
         <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Control type="text" placeholder="Password" value={inputReply} onChange={onChangeReply}/>
-      </Form.Group>
+        </Form.Group>
       <Button variant="primary" type="submit" onClick={onClickSubmit}>
         댓글 등록하기
       </Button>
@@ -27,4 +27,4 @@ const ReplyReview=()=>{
         </>
     );
 }
-export default ReplyReview;
+export default ChildReview;

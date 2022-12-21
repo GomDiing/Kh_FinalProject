@@ -45,7 +45,7 @@ const DetailApi={
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?sort=index,desc`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(reviewIndex,victionEmail, suspectEmail,reason){
