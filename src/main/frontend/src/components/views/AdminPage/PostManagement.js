@@ -6,9 +6,6 @@ import {useNavigate} from "react-router-dom";
 import { useState, useEffect} from "react";
 import AdminApi from "../../../api/AdminApi";
 
-
-
-
 const PostManagement=()=>{
   const navigate = useNavigate();
 
