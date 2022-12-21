@@ -62,7 +62,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
   const PayResult = () => {
     const [isTrue, setIsTrue] = useState(false);
     const user = useSelector((state) => state.user.info);
-    console.log(user);
+    const seatIndex = useSelector((state) => state.seat.index);
     const [test, setTest] = useState({
       price : 0,
       total : 0,
@@ -72,17 +72,17 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
     });
     const [modalOpen, setModalOpen] = useState(true);
     let search = window.location.search;
-    const [data, setData] = useState({
-        params: {
-            cid: "TC0ONETIME",
-            tid : test.tid,
-            partner_order_id: "partner_order_id",
-            // 가맹점 회원 id
-            partner_user_id: "partner_user_id",
-            // 결제승인 요청을 인정하는 토큰
-            pg_token: search.split("=")[1],
-        }
-    });
+    const data = {
+      params: {
+        cid: "TC0ONETIME",
+        tid : test.tid,
+        partner_order_id: "partner_order_id",
+        // 가맹점 회원 id
+        partner_user_id: "partner_user_id",
+        // 결제승인 요청을 인정하는 토큰
+        pg_token: search.split("=")[1],
+      }
+    };
     const navigate = useNavigate();
     const openModal = () => setModalOpen(true);
     const closeModal = () => {
@@ -107,9 +107,11 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
               total : response.data.amount.total,
               quantity : response.data.quantity,
               tid : response.data.tid,
-              method : response.data.payment_method_type
+              // CARD OR MONEY 둘 중 하나의 방식이면 백에서 받을 때 KAKAOPAY라고 알려주기 위하여 KAKAOPAY로 변환해서 넘겨줌 둘 다 아니면 에러
+              method : response.data.payment_method_type === 'CARD' || response.data.payment_method_type === 'MONEY' ? 'KAKAOPAY' : 'ERROR'
             }));
             setIsTrue(true);
+            window.localStorage.removeItem('url');
             console.log(test);
             console.log(response);
         }).catch(error => {
@@ -118,25 +120,24 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
         });
     }, []);
 
-    let userIndex = 32;
-    let point = 0;
-    let seatIndex = 31;
-
       useEffect(() => {
         const PayReadySubmit = async () => {
           try {
-            const response = await PayApi.payReady(userIndex, seatIndex, test.quantity, test.price, point, test.method, test.tid, test.total);
+            const response = await PayApi.payReady(user.userIndex, seatIndex, test.quantity, test.price, user.userPoint, test.method, test.tid, test.total);
             console.log(response);
             window.localStorage.removeItem('tid');
           } catch (e) {
             window.localStorage.removeItem('tid');
-            console.log(userIndex);
+            console.log(seatIndex);
+            console.log(user);
+            console.log(user.userIndex);
+            console.log(user.userPoint);
             console.log(e);
             console.log('에러!!!');
           }
         }
         isTrue && PayReadySubmit();
-      }, [isTrue, point, seatIndex, test.method, test.price, test.quantity, test.tid, test.total, userIndex]);
+      }, [isTrue, seatIndex, test.method, test.price, test.quantity, test.tid, test.total, user]);
 
     const Body = () => {
         return(

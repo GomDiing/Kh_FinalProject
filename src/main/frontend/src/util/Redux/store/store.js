@@ -4,9 +4,11 @@ import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 
 import userReducer from '../Slice/userSlice'
+import seatReducer from '../Slice/seatIndexSlice'
 
 const reducers = combineReducers({
-    user : userReducer,
+    user : userReducer, 
+    seat : seatReducer
 });
 
 const persistConfig = {
