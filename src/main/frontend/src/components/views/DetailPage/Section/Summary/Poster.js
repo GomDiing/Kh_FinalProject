@@ -30,8 +30,9 @@ const PosterStyle = styled.div `
 
 // 상세페이지 상단 포스터
 function Poster(props) {
-    // const item_name = '태양의서커스 <뉴 알레그리아>';
-
+    // 별점
+    const [value, setValue] = useState(props.rate);
+    
     // 찜하기
     const [isWishAdd, setIsWishAdd] = useState(false);
     const [like, setLike] = useState(false);
@@ -52,12 +53,6 @@ function Poster(props) {
     }
 
 
-    // 별점
-    const [value, setValue] = useState(props.rate);
-    const handleChange = (value) => {
-        setValue(value);
-    }
-
     return (
         <PosterStyle>
         <h3 className='summary-top'>{props.title}</h3>
@@ -67,7 +62,7 @@ function Poster(props) {
                         <img className='poster-box-top' src={props.image} alt='포스터 이미지'/>
                             <div className='poster-box-bottom'>
                                 <div>
-                                    <Rate allowHalf value={value} onChange={handleChange} style={{ fontSize: '1.8rem'}}/>
+                                    <Rate allowHalf value={value} style={{ fontSize: '1.8rem'}}/>
                                     <span style={{marginLeft: '6px', fontSize: 'medium'}}>{value}</span>
                                 </div>
                                 <div>

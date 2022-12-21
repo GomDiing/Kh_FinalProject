@@ -112,7 +112,7 @@ const Reviews = () => {
     </div>
     <br/>
     <WriteReview/>
-   
+
     </div>
 
     );

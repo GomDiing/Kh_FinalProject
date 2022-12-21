@@ -11,5 +11,5 @@ public class UpdateReviewCommentDTO {
     private Long memberIndex;
     private String memberId;
     private String content;
-    private Integer rate;
+    private Float rate;
 }

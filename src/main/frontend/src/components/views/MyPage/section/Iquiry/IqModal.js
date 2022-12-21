@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import AdminApi from '../../../../../api/AdminApi';
 
 
-const QnaModal = (props) => {
+const IqModal = (props) => {
     // const params = useParams().index;
     const navigate = useNavigate();
     console.log(props.index);
@@ -75,7 +75,7 @@ const QnaModal = (props) => {
 
     );
 };
-export default QnaModal;
+export default IqModal;
 
 const QWrap=styled.div`
 
