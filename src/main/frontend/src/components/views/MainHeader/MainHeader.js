@@ -6,7 +6,8 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link, useNavigate } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const HeaderContainer = styled.div`
     @media (max-width : 911px){
@@ -118,6 +119,13 @@ const MainHeader = () =>{
     }
     // console.log(categoryvalue);
 
+    const userInfo = useSelector((state) => state.user.info)
+    console.log(userInfo);
+    
+    // useEffect(() =>{
+    //     if(userInfo)
+    // })
+
 
     return(
         <>
@@ -134,7 +142,6 @@ const MainHeader = () =>{
                         <a className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</a>
                         <a className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</a>
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link>
-                        <Link to = "/detail" className = "HeaderMenu">상세</Link>
                     </Nav>
                     <Form className="d-flex">
                         <Form.Control onChange={onClickValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>

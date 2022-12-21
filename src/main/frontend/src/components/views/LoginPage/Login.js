@@ -319,16 +319,18 @@ const IdStyle = styled.div`
         if(response.data.statusCode === 200) {
           
           console.log(response.data);
-          const data = {
-            // userIndex : dispatch(response.data.results.),
-            userId : response.data.results.id,
-            userPoint : response.data.results.point
-          }
-          dispatch(loginActions.setUserInfo({data}));
           // 모달로 교체 예정
-
+          
           switch(response.data.results.status) {
             case "ACTIVE" :
+              
+            const data = {
+                userIndex : response.data.results.index,
+                userId : response.data.results.id,
+                userPoint : response.data.results.point
+              }
+              dispatch(loginActions.setUserInfo({data}));
+
               navigate('/');
               break;
             case "DELETE" :

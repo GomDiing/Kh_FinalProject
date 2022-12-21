@@ -7,12 +7,9 @@ const BodyContainer = styled.div`
         width: 100%;
         height: 230px;
     }
-    img:active{
-        height: 400px;
-    }
 `
 const CancelModalBody = () => {
-
+    
     return(
         <BodyContainer>
             <div>

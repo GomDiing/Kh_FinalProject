@@ -153,10 +153,10 @@ const RankingMonth = () =>{
                     <ul>
                         {ItemData.map((ItemData , index)=>(
                             <li key={index} >
-                            <a href={`/detail/${ItemData.code}`} >
+                            <Link to ={`/detail/${ItemData.code}`} >
                             <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
                             <p>{ItemData.product.title}</p>
-                            </a>
+                            </Link>
                         </li>
                         ))}
                     </ul>

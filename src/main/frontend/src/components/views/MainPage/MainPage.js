@@ -11,7 +11,7 @@ import { BsArrowUpCircle } from "react-icons/bs";
 import MainPoster from "./Content/MainPoster/MainPoster";
 import RankingClose from "./Content/MainRankingClose/RankingClose";
 import MainReview from "./Content/MainReview/MainReview";
-import { useSelector } from "react-redux";
+
 
 const ItemContainer = styled.div`
     width: 80%;
@@ -85,9 +85,6 @@ const MainPage = () =>{
             window.removeEventListener('scroll', handleFollow)
         }
     })
-
-    const userInfo = useSelector((state) => state.user.info)
-    console.log(userInfo);
 
     return(
         <MainContainer>
