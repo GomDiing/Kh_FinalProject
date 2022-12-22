@@ -39,7 +39,7 @@ const ReviewBody=(props)=>{
     // },[motherReviews]);
 
     // 상위댓글(layer=0) 필터
-    // const motherResult = reviews.filter(item=>item.layer < 1);
+    const motherResult = reviews.filter(item=>item.layer < 1);
     // setMotherReview(motherResult);
 
     console.log("제발 찍혀라 ㅋ");
@@ -62,7 +62,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {reviews.map(({index,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {motherResult&&motherResult.map(({index,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -110,6 +110,7 @@ const ReviewBodyBlock = styled.div`
   width: 50vw;
   margin: 0 20px ;
   margin-bottom: 50px;
+  background-color: #f5f5f5;
 
 }
 .review-head-container{
@@ -129,7 +130,7 @@ const ReviewBodyBlock = styled.div`
   margin-top: 15px;
 }
 .review-content{
-  height: 130px;
+  height: 110px;
 }
 hr{
   margin-top: 15px;

@@ -62,7 +62,7 @@ const WriteReviewBlock=styled.div`
   margin-bottom: 50px;
 }
 .write-review-content{
-  height: 130px;
+  height: 100px;
 }
 .star-rate{
   margin: 5px 0px;
