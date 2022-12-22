@@ -117,11 +117,12 @@ function Detail() {
     
   const [reviewList, setReviewList] = useState([]);
 
+  console.log(code);
   useEffect(() => {
     setPcode(code);
     const getData = async()=> {
       try {
-        const res = await DetailApi.getDetail(pCode);
+        const res = await DetailApi.getDetail(code);
         if(res.data.statusCode === 200){
           console.log(res.data.results.compact_list.perf_time_break);
           // checkList 특정 요소의 유무 판단
