@@ -60,7 +60,7 @@ const RList = () => {
       try {
         const res = await PayApi.paySelect(userIndex);
         if(res.data.statusCode === 200) {
-          console.log(res);
+          console.log(res.data);
           setSelectList(res.data.results);
         }
       } catch (e) {
@@ -71,74 +71,43 @@ const RList = () => {
     paySelect();
   }, [userIndex]);
 
-  selectList && selectList.map(list =>  {
-      <div>
-        <div>수량 {list.count}</div>
-        <div>총 금액 {list.finalAmount}</div>
-        <div>결제 방식 {list.method}</div>
-        <div>결제 완료 시간 {list.payment_complete_time}</div>
-        <div>상품 제목 {list.product_title}</div>
-        <div>결제 상태 {list.reserve_status}</div>
-        <div>예매번호 {list.reserve_ticket}</div>
-        <div>예매 날짜 {list.reserve_time}</div>
-        <div>공연 날짜 {list.view_time}</div>
-      </div>
-  });
-
+  console.log(selectList);
+  
   const columns = [
     {
         title: '예매일',
-        dataIndex: 'Rdate',
+        dataIndex: 'reserve_time',
     },
     {
         title: '예매번호',
-        dataIndex: 'Rnum',
+        dataIndex: 'reserve_ticket',
     },
     {
         title: '공연명',
-        dataIndex: 'name',
+        dataIndex: 'product_title',
     },
     {
         title: '관람일',
-        dataIndex: 'date',
+        dataIndex: 'view_time',
     },
     {
         title: '매수',
         dataIndex: 'count',
     },
     {
-        title: '상태',
-        dataIndex: 'detail',
+        title: '취소',
+        dataIndex: 'reserve_ticket',
+        render: () => (
+          <button onClick={open}>취소</button>
+        )
     },
 ];
-
-const data = [
-    {
-        key: '1',
-        Rdate: '2022.11.28',
-        Rnum: 'T2200902901R1',
-        name: '태양의서커스〈뉴 알레그리아〉',
-        date: '2022.11.30',
-        count: '1매',
-        detail: <button onClick={open}>상세보기</button>
-    },
-    {
-        key: '2',
-        Rdate: '2022.11.28',
-        Rnum: 'T2200922601R1',
-        name: '마틸다',
-        date: '2022.11.30',
-        count: '1매',
-        detail: <button onClick={open}>상세보기</button>
-    },                                    
-  ];
-
 
   return(
     <>
     {modalOpen && <ReserveDetailModal open={open} cancel={cancelClick} close={close} body={<Body />}/>}
     <Divider>예매 내역</Divider>
-    <Table columns={columns} dataSource={data} size="middle" />
+    <Table columns={columns} dataSource={selectList} size="middle" />
     </>
   );
 };
