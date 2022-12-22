@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class EditMemberInfoDTO {
 
-    @NotNull(message = "아이디는 필수 입력 값")
+//    @NotNull(message = "아이디는 필수 입력 값")
     private String id;
-    @NotNull(message = "비밀번호는 필수 입력 값")
+//    @NotNull(message = "비밀번호는 필수 입력 값")
     private String password;
     @NotNull(message = "이름은 필수 입력 값")
     private String name;

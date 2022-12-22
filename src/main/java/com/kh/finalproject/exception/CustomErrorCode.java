@@ -31,6 +31,9 @@ public enum CustomErrorCode {
     DELETE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M017", "삭제 신청 회원입니다"),
     ACTIVE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M018", "현재 강비 회원입니다"),
     EMPTY_ID(StatusCode.BAD_REQUEST, "M019", "아이디가 없습니다"),
+    ERROR_BLACKLIST(StatusCode.BAD_REQUEST, "M020", "이미 해당 회원은 블랙리스트 회원입니다"),
+    NOT_SEARCH_ID(StatusCode.BAD_REQUEST, "M021", "해당 아이디로 조회된 회원이 없습니다"),
+    EMPTY_MEMBER_ACCUSE_COUNT(StatusCode.BAD_REQUEST, "M021", "5회 이상 신고 누적된 회원이 없습니다"),
 
     EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
     OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),

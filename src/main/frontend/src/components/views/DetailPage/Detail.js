@@ -117,6 +117,7 @@ function Detail() {
     
   const [reviewList, setReviewList] = useState([]);
 
+  console.log(code);
   useEffect(() => {
     setPcode(code);
     const getData = async()=> {
@@ -197,7 +198,7 @@ function Detail() {
   
   return (
     <DWrap>
-      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
+      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
       <BsArrowUpCircle className='arrow'/>
         </button>
       <MainHeader/>

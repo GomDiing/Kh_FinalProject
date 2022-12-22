@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = 'application/json'; 
-const TCAT_DOMAIN = "http://localhost:8100"; //server path
+const TCAT_DOMAIN = "http://localhost:8100";
 
 const AdminApi={
     //공지사항 쓰기 api
@@ -96,6 +96,5 @@ const AdminApi={
     exhibitionList : async function(currentPage ,setPageSize){
         return await axios.get(TCAT_DOMAIN + `/api/product/list?page=${(currentPage - 1)}&size=${setPageSize}&sort=periodStart,desc`, HEADER)
     },
-
 }
 export default AdminApi;
