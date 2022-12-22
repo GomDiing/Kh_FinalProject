@@ -168,7 +168,7 @@ function Social() {
     const onOpen = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
 
-    const onChangeName = e => {
+    const checkName = e => {
         const value = e.target.value;
         setInputName(value);
         const regEx = /^[ㄱ-ㅎ|가-힣]+$/;
@@ -228,7 +228,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-name">Name</label>
                 <div className="input-group">
-                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onBeforeInput={onChangeName} data-lpignore="true" />
+                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onBeforeInput={checkName} data-lpignore="true" />
             </div>
             <div className='fail-message'>
             {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
