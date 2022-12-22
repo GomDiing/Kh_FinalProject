@@ -87,33 +87,37 @@ function MyPage() {
   const userInfo = useSelector((state) => state.user.info);
 
   useEffect(() => {
-    const getInfo = async() => {
-      if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') {
-      try {
-        const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
-        if(res.data.statusCode === 200) {
-          SetInfo(res.data.results);
-          console.log(res.data);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    } else if(userInfo.userProvider_type === 'HOME'){
-      try {
-        const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
-        if(res.data.statusCode === 200) {
-          SetInfo(res.data.results);
-          console.log(res.data);
-        }
-      } catch (e) {
-        console.log(e);
-      }
+    if(userInfo.userProvider_type === 'HOME') {
+      getInfo();
+    } else if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') { 
+      getInfo2();
     }
-  }; getInfo();
-  },[userInfo.userEmail, userInfo.userId, userInfo.userProvider_type])
+  },[userInfo.userProvider_type])
 
-    console.log(info);
+  const getInfo = async() => {
+    try {
+      const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
+      if(res.data.statusCode === 200) {
+        SetInfo(res.data.results);
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
+  const getInfo2 = async() => {
+    try {
+      const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
+      if(res.data.statusCode === 200) {
+        SetInfo(res.data.results);
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+    
   useEffect(() => {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
     el[0].style.position = 'relative';

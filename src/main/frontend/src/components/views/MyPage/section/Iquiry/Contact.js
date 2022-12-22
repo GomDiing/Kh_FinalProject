@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 
 const Contact = () => {
-    const userInfo = useSelector((state) => state.user.info)
+    const userInfo = useSelector((state) => state.user.info);
     const navigate = useNavigate();
     const [inputSelect, setInputSelect] = useState("티켓예매/발권");
     const [inputQnaTitle, setInputQnaTitle] = useState("");
@@ -17,7 +17,8 @@ const Contact = () => {
     const onChangeSelect=(e)=>{setInputSelect(e.target.value);}
     const onChangeQnaTitle=(e)=>{setInputQnaTitle(e.target.value);}
     const onChangeQnaContent=(e)=>{setInputQnaContent(e.target.value);}
-    console.log("셀렉트 표시 : " +inputSelect);
+    console.log("셀렉트 표시 : " + inputSelect);
+    console.log("회원인덱스 : " + userInfo.userIndex);
 
     const onClickReply=async(e)=>{
         if(inputQnaContent.length <= 5 || inputQnaContent.length >= 1000) {

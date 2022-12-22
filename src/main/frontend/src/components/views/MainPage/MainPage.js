@@ -87,7 +87,7 @@ const MainPage = () =>{
         return () => {
             window.removeEventListener('scroll', handleFollow)
         }
-    })
+    },)
     
     // 검색결과 초기화
     useEffect (() =>{

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
 import NowLoading from '../../../util/Loading';
 import xbox from "../../../images/sad.jpg";
-// import { Col } from 'react-bootstrap';
 
 // 상세 페이지 배우 사진용 그리드카드
 function GridCards(props) {
