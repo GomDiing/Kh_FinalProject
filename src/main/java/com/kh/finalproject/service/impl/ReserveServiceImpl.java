@@ -172,7 +172,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public RefundReserveCancelDTO refundCancel(String ticket, ReserveStatus status) {
         //예매ID와 결제 완료된 상태인 예매 조회
-        List<Reserve> reserveList = reserveRepository.findAllByTicketAndStatus(ticket, ReserveStatus.PAYMENT)
+        Reserve reserve = reserveRepository.findByTicketAndStatus(ticket, ReserveStatus.PAYMENT)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
 
         KakaoPay kakaoPay = null;
@@ -182,33 +182,31 @@ public class ReserveServiceImpl implements ReserveService {
         Integer cumuFianlAmount = 0;
 
 
-        for (Reserve reserve : reserveList) {
+        //해당 회원이 예매했던 상세 좌석/가격 정보 조회
+        ReserveTimeSeatPrice reserveTimeSeatPrice = reserveTimeSeatPriceRepository.findById(reserve.getReserveTimeSeatPriceIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_RESERVE_TIME_SEAT_PRICE));
+        //상태 변경 및 환불 시간 갱신
+        reserve.updateStatus(status);
+        reserve.updateRefundTime(status, LocalDateTime.now());
 
-            //해당 회원이 예매했던 상세 좌석/가격 정보 조회
-            ReserveTimeSeatPrice reserveTimeSeatPrice = reserveTimeSeatPriceRepository.findById(reserve.getReserveTimeSeatPriceIndex())
-                    .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_RESERVE_TIME_SEAT_PRICE));
-            //상태 변경 및 환불 시간 갱신
-            reserve.updateStatus(status);
-            reserve.updateRefundTime(status, LocalDateTime.now());
+        //수량 증가 (단일 환불임으로 1만 증가)
+        reserveTimeSeatPrice.addQuantity(1);
 
-            //수량 증가 (단일 환불임으로 1만 증가)
-            reserveTimeSeatPrice.addQuantity(1);
+        //결제 수단이 카카오페이인 경우
+        if (reserve.getMethod().equals("KAKAOPAY")) {
+            kakaoPay = kakaoPayRepository.findByReserve(reserve)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_KAKAO_TID));
 
-            //결제 수단이 카카오페이인 경우
-            if (reserve.getMethod().equals("KAKAOPAY")) {
-                kakaoPay = kakaoPayRepository.findByReserve(reserve)
-                        .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_KAKAO_TID));
-
-            }
-            cumuAmount += reserve.getAmount();
-            cumuDiscount += reserve.getDiscount();
-            cumuFianlAmount += reserve.getFinalAmount();
         }
+        cumuAmount += reserve.getAmount();
+        cumuDiscount += reserve.getDiscount();
+        cumuFianlAmount += reserve.getFinalAmount();
+
         if (Objects.isNull(kakaoPay)) {
-            return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod());
+            return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserve.getMethod());
 
         }
-        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), kakaoPay.getKakaoTID());
+        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserve.getMethod(), kakaoPay.getKakaoTID());
     }
 
     @Transactional
@@ -246,7 +244,13 @@ public class ReserveServiceImpl implements ReserveService {
                 //총 예매 개수
                 Integer count = reserveRepository.countByTicket(ticket);
                 Integer finalAmount = reserveRepository.sumByTicket(ticket);
-                reserveDTOList.add(new SearchPaymentReserveDTO().toDTO(reserve, count, finalAmount));
+                SearchPaymentReserveDTO reserveDTO = new SearchPaymentReserveDTO().toDTO(reserve, count, finalAmount);
+                //결제수단이 KAKAOPAY이면 갱신
+                if (reserve.getMethod().equals("KAKAOPAY")) {
+                    String kakaoTID = reserve.getKakaoPayList().get(0).getKakaoTID();
+                    reserveDTO.updateTID(kakaoTID);
+                }
+                reserveDTOList.add(reserveDTO);
                 //중복 확인 리스트 추가
                 duplicateList.add(ticket);
             }

@@ -219,7 +219,7 @@ public class Member extends BaseTimeEntity {
         this.status = MemberStatus.BLACKLIST;
     }
 
-    public void updateName(String randomName) {
-        this.name = randomName;
+    public void updateId(String randomId) {
+        this.id = randomId;
     }
 }

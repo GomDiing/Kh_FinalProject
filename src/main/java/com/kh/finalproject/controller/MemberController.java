@@ -48,7 +48,6 @@ public class MemberController {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         PagingMemberDTO searchMemberList = memberService.searchAllBlackMember(pageable);
-        log.info("searchMemberList = {}", searchMemberList.getMemberDTOList().get(0).getName());
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
 

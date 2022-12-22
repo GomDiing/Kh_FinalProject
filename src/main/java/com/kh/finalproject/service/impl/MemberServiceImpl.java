@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
         //회원의 가입 주체
         MemberProviderType signupProviderType = MemberProviderType.valueOf(signupDto.getProviderType());
 
-        //홈 가입 회원인데 아이닥 없다면
+        //홈 가입 회원인데 아이디가 없다면
         if (signupProviderType == MemberProviderType.HOME && Objects.isNull(signupDto.getId())) {
             throw new CustomException(CustomErrorCode.EMPTY_ID);
         }
@@ -49,6 +49,11 @@ public class MemberServiceImpl implements MemberService {
         //홈 가입 회원인데 비밀번호가 없다면
         if (signupProviderType == MemberProviderType.HOME && Objects.isNull(signupDto.getPassword())) {
             throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
+        }
+
+        //소셜 연동 회원인데 이메일 정보가 없으면 예외 처리
+        if (signupProviderType != MemberProviderType.HOME && Objects.isNull(signupDto.getEmail())) {
+            throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
         }
 
         // DTO -> ENTITY 변환
@@ -82,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
                 randomId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
             } while (memberRepository.findById(randomId).isPresent());
             //Id 갱신
-            signMember.updateName(randomId);
+            signMember.updateId(randomId);
         }
 
         log.info("signMember.toString() = {}", signMember.toString());
@@ -320,10 +325,6 @@ public class MemberServiceImpl implements MemberService {
         //블랙 상태 회원 조회
         Page<Member> pageMemberList = memberRepository.findByStatus(MemberStatus.BLACKLIST,pageable);
 
-        if (Objects.isNull(pageMemberList)) {
-            throw new CustomException(CustomErrorCode.EMPTY_MEMBER_BLAK_LIST);
-        }
-
         //리스트에 조회한 회원 추가
         List<Member> memberList = pageMemberList.getContent();
         Integer totalPages = pageMemberList.getTotalPages();
@@ -390,9 +391,14 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public SigninResponseDTO signIn(SigninRequestDTO signinRequestDTO) {
+        MemberProviderType loginProviderType = MemberProviderType.valueOf(signinRequestDTO.getProviderType());
         log.info("signinRequestDTO.getProviderType() = {}", signinRequestDTO.getProviderType());
         //홈페이지 가입 회원일 시
-        if (signinRequestDTO.getProviderType().equals(MemberProviderType.HOME.name())) {
+        if (loginProviderType  == MemberProviderType.HOME) {
+            //아이디가 없으면 예외처리
+            if (Objects.isNull(signinRequestDTO.getId())) {
+                throw new CustomException(CustomErrorCode.EMPTY_ID);
+            }
             //비밀번호 없으면 예외 처리
             if (Objects.isNull(signinRequestDTO.getPassword())) {
                 throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
@@ -410,7 +416,7 @@ public class MemberServiceImpl implements MemberService {
             }
             //회원 조회
             Member findMember = memberRepository.findByEmailAndStatusNotAndProviderType(
-                    signinRequestDTO.getEmail(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(signinRequestDTO.getProviderType()))
+                    signinRequestDTO.getEmail(), MemberStatus.UNREGISTER, loginProviderType)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
             return new SigninResponseDTO().toDTO(findMember);
         }
