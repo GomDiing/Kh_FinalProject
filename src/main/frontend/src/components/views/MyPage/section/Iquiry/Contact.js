@@ -24,7 +24,7 @@ const Contact = () => {
         alert('문의 사항을 최소 5 ~ 1000글자 이내로 부탁드립니다.');
         e.preventDefault();
     } else {
-        const res = await MemberApi.sendQna(userInfo.userId,inputSelect,inputQnaTitle,inputQnaContent);
+        const res = await MemberApi.sendQna(userInfo.userIndex,inputSelect,inputQnaTitle,inputQnaContent);
         if(res.data.statusCode === 200) {
             console.log(res.data.message);
             alert('문의가 정상 전송 되었습니다.');

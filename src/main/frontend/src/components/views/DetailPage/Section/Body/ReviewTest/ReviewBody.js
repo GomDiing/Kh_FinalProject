@@ -30,8 +30,6 @@ const ReviewBody=(props)=>{
     // const res = await DetailApi.allReviewComment(pCode,currentPage, pageSize);
   })
 
-
-
   const [reviews, setReviews] = useState(props.reviewList);
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {motherResult&&motherResult.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {reviews&&reviews.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -111,7 +109,8 @@ const ReviewBody=(props)=>{
              total={totalCount}  //총 데이터 갯수
              current={currentPage} 
              pageSize={pageSize}
-             onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
+             onChange={(page) => {setCurrentPage(page); 
+              setReviews([]);}} //숫자 누르면 해당 페이지로 이동
             />
         </ReviewBodyBlock>
     )
