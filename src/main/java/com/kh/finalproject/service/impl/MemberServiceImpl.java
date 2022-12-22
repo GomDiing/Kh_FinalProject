@@ -38,11 +38,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void signup(SignupDTO signupDto) {
-
-        unregisterCheck();
-
         //회원의 가입 주체
         MemberProviderType signupProviderType = MemberProviderType.valueOf(signupDto.getProviderType());
+
+        //홈 가입 회원인데 아이닥 없다면
+        if (signupProviderType == MemberProviderType.HOME && Objects.isNull(signupDto.getId())) {
+            throw new CustomException(CustomErrorCode.EMPTY_ID);
+        }
+
+        //홈 가입 회원인데 비밀번호가 없다면
+        if (signupProviderType == MemberProviderType.HOME && Objects.isNull(signupDto.getPassword())) {
+            throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
+        }
 
         // DTO -> ENTITY 변환
         Member signMember = new Member().toEntity(signupDto, signupProviderType);
@@ -73,14 +80,16 @@ public class MemberServiceImpl implements MemberService {
             String randomId;
             do {
                 randomId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
-            } while (memberRepository.findById(randomId).isEmpty());
+            } while (memberRepository.findById(randomId).isPresent());
             //Id 갱신
-            signupDto.updateName(randomId);
+            signMember.updateName(randomId);
         }
 
-        //회원 가입 후 불러오기
+        log.info("signMember.toString() = {}", signMember.toString());
+
+        //회원 가입 후 불러오기 (동일한 가입 주체 내 아이디 조회)
         memberRepository.save(signMember);
-        Member savedMember = memberRepository.findById(signupDto.getId())
+        Member savedMember = memberRepository.findByIdAndProviderType(signMember.getId(), signMember.getProviderType())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
 
         //주소 정보 저장
@@ -95,9 +104,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void editMemberInfoByHome(EditMemberInfoDTO memberInfoDTO) {
-
-        unregisterCheck();
-
         //주어진 ID로 회원 조회
         Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(memberInfoDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
@@ -121,9 +127,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public void validateDuplicateById(String id, MemberProviderType providerType) {
-        //1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         //중복 회원 조회
         Optional<Member> findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, providerType);
 
@@ -187,9 +190,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public Map<String, String> findMemberId(String name, String email) {
-
-        unregisterCheck();
-
         //이름과 이메일로 회원 조회
         Member findNameAndEmail = memberRepository.findByNameAndEmailAndStatusNotAndProviderType(name, email, MemberStatus.UNREGISTER, MemberProviderType.HOME)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.DUPLI_EMAIL_NAME));
@@ -204,7 +204,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 이름과 이메일로 비밀번호 조회
+     * 아이디와 이름과 이메일로 비밀번호 조회
      * 이 서비스는 홈페이지에서 가입한 회원에게만 제공됩니다
      * 따라서, 이름과 이메일로 홈페이지에서 가입한 회원만 조회하되 UNREGISTER는 조회하지 않습니다
      * @return 조회 회원 비밀번호
@@ -212,9 +212,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Map<String, String> findPassword(FindPwdMemberDTO findPwdMemberDTO) {
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         //ProviderType과 맞지 않다면 예외
         if (MemberProviderType.valueOf(findPwdMemberDTO.getProviderType()) != MemberProviderType.HOME)
             throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
@@ -237,10 +234,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO) {
-
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         // 아이디 패스워드로 조회 성공하면
         Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(
                 deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
@@ -291,9 +284,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public PagingMemberDTO searchAllActiveMember(Pageable pageable) {
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         //전체 회원 리스트 생성
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
@@ -324,9 +314,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public PagingMemberDTO searchAllBlackMember(Pageable pageable) {
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         //회원 목록
         List<MemberDTO> memberDTOList = new ArrayList<>();
 
@@ -367,9 +354,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     public void changeMemberStatusToUnregister(List<CheckMemberDTO> checkMemberDTOList){
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         for(CheckMemberDTO checkMemberDTO : checkMemberDTOList){
             log.info("memberIndex = {}", checkMemberDTO.getIndex());
             memberRepository.changeStatusMember(checkMemberDTO.getIndex(), MemberStatus.UNREGISTER)
@@ -381,9 +365,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberDTO> updateStatusByCount() {
-        // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
-        unregisterCheck();
-
         //신고횟수 5회 이상 회원 조회
         Optional<List<Member>> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4);
 
@@ -402,8 +383,8 @@ public class MemberServiceImpl implements MemberService {
      * 로그인 서비스
      * 로그인 DTO로 로그인 요청을 할 때
      * ProviderType은 반드시 담겨야합니다.
-     * 홈페이지 가입 회원은 아이디, 비밀번호가 반드시 있어야하고
-     * 소셜 로그인 회원은 이메일이 반드시 있어야합니다
+     * 홈페이지 가입 회원은 아이디, 비밀번호, 이름이 반드시 있어야하고
+     * 소셜 로그인 회원은 이메일, 이름이 반드시 있어야합니다
      * @param signinRequestDTO: 로그인 요청 DTO
      * @return
      */
@@ -441,7 +422,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteCancelMember(DeleteCancelDTO deleteCancelDTO) {
-        unregisterCheck();
         // DELETE 상태인 회원만 조회
         Member deleteMember = memberRepository.findByIdAndPasswordAndStatus(deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));

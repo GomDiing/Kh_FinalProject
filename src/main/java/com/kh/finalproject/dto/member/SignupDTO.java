@@ -45,8 +45,4 @@ public class SignupDTO {
 
         return this;
     }
-
-    public void updateName(String randomName) {
-        this.name = randomName;
-    }
 }
