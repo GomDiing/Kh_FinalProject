@@ -30,6 +30,7 @@ public class MemberDTO {
     private Integer memberAccuseCount;
     private String zipcode;
     private Integer MemberAccuseCount;
+    private String providerType;
 
     /**
      * 전체 일반 회원 조회 Entity -> DTO
@@ -39,7 +40,10 @@ public class MemberDTO {
         this.index = member.getIndex();
         this.id = member.getId();
         this.name = member.getName();
-        this.pwd = member.getPassword();
+        if (Objects.isNull(member.getPassword())) {
+            this.pwd = "null";
+        }
+        else this.pwd = member.getPassword();
         this.point = member.getPoint();
         this.email=member.getEmail();
         if (Objects.isNull(address.getRoad())) {
@@ -68,6 +72,7 @@ public class MemberDTO {
         }
         else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.memberAccuseCount = member.getAccuseCount();
+        this.providerType = member.getProviderType().name();
 
         return this;
     }
@@ -75,6 +80,7 @@ public class MemberDTO {
         this.index = member.getIndex();
         this.memberStatus = member.getStatus().name();
         this.memberAccuseCount = member.getAccuseCount();
+        this.providerType = member.getProviderType().name();
         return this;
 
     }

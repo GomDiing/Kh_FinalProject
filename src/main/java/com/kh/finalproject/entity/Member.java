@@ -198,11 +198,20 @@ public class Member extends BaseTimeEntity {
         return this;
     }
 
-    public void updateMember(Address findAddress, EditMemberInfoDTO editMemberInfoDTO) {
+    public void updateMemberHome(Address findAddress, EditMemberInfoDTO editMemberInfoDTO) {
         this.id = editMemberInfoDTO.getId();
         this.name = editMemberInfoDTO.getName();
         this.password = editMemberInfoDTO.getPassword();
         this.email = editMemberInfoDTO.getEmail();
+        findAddress.updateAddress(editMemberInfoDTO);
+
+        //양방향 연관관계 편의 메서드
+        this.address = findAddress;
+        findAddress.updateMember(this);
+    }
+
+    public void updateMemberSocial(Address findAddress, EditMemberInfoDTO editMemberInfoDTO) {
+        this.name = editMemberInfoDTO.getName();
         findAddress.updateAddress(editMemberInfoDTO);
 
         //양방향 연관관계 편의 메서드
@@ -221,5 +230,9 @@ public class Member extends BaseTimeEntity {
 
     public void updateId(String randomId) {
         this.id = randomId;
+    }
+
+    public void updateStatus(MemberStatus status) {
+        this.status = status;
     }
 }

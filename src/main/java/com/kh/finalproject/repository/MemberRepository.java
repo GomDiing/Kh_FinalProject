@@ -43,6 +43,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    Optional<Member> findByEmailAndStatusNot(String email, MemberStatus status);
 //    Optional<Member> findByIdAndStatusNot(String id, MemberStatus status);
     Optional<Member> findByIndexAndStatusNot(Long index, MemberStatus status);
+    Optional<Member> findByIndexAndStatusAndStatus(Long index, MemberStatus statusA, MemberStatus statusB);
+    Optional<Member> findByIndexAndStatus(Long index, MemberStatus status);
 
 
     Optional<Member> findByEmailAndStatusNotAndProviderTypeNot(String email, MemberStatus status, MemberProviderType providerType);
