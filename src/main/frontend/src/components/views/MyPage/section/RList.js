@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Table, Divider } from 'antd';
 import styled from 'styled-components';
 import ReserveDetailModal from '../section/ReserveDetailModal';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PayApi from '../../../../api/PayApi';
 
@@ -16,32 +15,12 @@ const Style = styled.div`
 
 const Body = () => (
   <Style>
-    <div>
-      <div>
-          <table>
-            <thead>
-              <tr>
-                <th>상품 이름</th>
-                <th>상품 수량</th>
-                <th>상품 총 가격</th>
-                <th>결제 수단</th>
-                <th>결제 상태</th>
-                <th>결제 완료 시간</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-                <td>안녕테스트</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-    </div>
+    <ul>
+      <li>공연 당일 1주일 전까지는 수수료 없이 무료 환불이 가능합니다.</li>
+      <li>공연 당일 3일 전에 취소를 신청할 경우 환불 시 수수료가 5% 발생합니다</li>
+      <li>공연 당일 1일 전에 취소를 신청할 경우 환불 시 수수료가 10% 발생합니다</li>
+      <li>공연 당일은 취소가 불가능합니다.</li>
+    </ul>
   </Style>
 );
 
@@ -50,10 +29,11 @@ const RList = () => {
   const userIndex = useSelector((state) => state.user.info.userIndex);
   const [selectList, setSelectList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const open = () => setModalOpen(true);
+  const [ticket, setTicket] = useState('');
+  const open = () => {
+    setModalOpen(true);
+  }
   const close = () => setModalOpen(false);
-  const navigate = useNavigate();
-  const cancelClick = () => navigate('/paycancel');
 
   useEffect(() => {
     const paySelect = async () => {
@@ -71,8 +51,6 @@ const RList = () => {
     paySelect();
   }, [userIndex]);
 
-  console.log(selectList);
-  
   const columns = [
     {
         title: '예매일',
@@ -97,15 +75,28 @@ const RList = () => {
     {
         title: '취소',
         dataIndex: 'reserve_ticket',
-        render: () => (
-          <button onClick={open}>취소</button>
+        render: (reserve_ticket) => (
+          <button onClick={(() => {
+            setModalOpen(true);
+            // 기존 값을 맵 돌려서
+            selectList && selectList.map(item => {
+              // 선택한 티켓이랑 같은 것만 찾고
+              if(item.reserve_ticket === reserve_ticket) {
+                // 하나만 같고 나머지는 undifinded라 그거 다 걸러서 setTicket에 선택한 정보를 받음
+                if(item !== undefined) {
+                  setTicket(item);
+                }
+              }
+              return item;
+            });
+            })}>취소</button>
         )
-    },
-];
-
+      }
+    ];
+    
   return(
     <>
-    {modalOpen && <ReserveDetailModal open={open} cancel={cancelClick} close={close} body={<Body />}/>}
+    {modalOpen && <ReserveDetailModal open={open} ticket={ticket} close={close} body={<Body />}/>}
     <Divider>예매 내역</Divider>
     <Table columns={columns} dataSource={selectList} size="middle" />
     </>

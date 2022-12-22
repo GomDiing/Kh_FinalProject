@@ -31,11 +31,12 @@ const Contact = () => {
             navigate('/MyPage/IqList')
         } else {
             alert('문의 전송이 실패 하였습니다.');
+            console.log("전송 실패");
             e.preventDefault();
         }
     }
 }
-const data=["티켓예매/발권", "취소/환불", "신고"];
+// const data=["티켓예매/발권", "취소/환불", "신고"];
     return (
         <Form
             labelCol={{span: 4,}}

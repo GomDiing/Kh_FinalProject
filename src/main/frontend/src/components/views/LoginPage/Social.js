@@ -136,6 +136,7 @@ function Social() {
     const [type, setType] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [isName, setIsName] = useState(false);
+    const [isEmail, setIsEmail] = useState(false);
 
     useEffect(() => {
         const AccInfo = location.search
@@ -187,6 +188,13 @@ function Social() {
             } else {
             setIsName(false);     
         }
+    }
+    const onChangeEmail = e => {
+        const value = e.target.value;
+        setInputEmail(value);
+        const regEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+        if(regEx.test(value)) setIsEmail(true);
+        else setIsEmail(false);
     }
 
     const handlePostCode = (data) => {
@@ -245,7 +253,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-email">Email</label>
                 <div className="input-group">
-                <input type="email" className={inputEmail.length > 0 && 'reg-input'} id="sign-email" value={inputEmail} readonly data-lpignore="true" />
+                <input type="email" className={inputEmail.length > 0 && 'reg-input'} id="sign-email" value={inputEmail} onBlur={onChangeEmail} readonly data-lpignore="true" />
             </div>
             </div>
             <div className='addrContainer' id='popupDom'>
@@ -269,7 +277,9 @@ function Social() {
             </div>
             <div>
             </div>
-                <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button></div>
+                <div className="btn-group">
+                <button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button>
+                </div>
             </div>
         </form>
     </div>

@@ -68,9 +68,17 @@ const Inquiry=(props)=>{
                     <td>{qnaList.title}</td>
                     <td>{qnaList.id}</td>
                     <td>{qnaList.createTime}</td>
-                    <td>{qnaList.qnaStatus}</td>
-                    <td><button className="re" onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
-                     {(modalOpen && <QnaModal setModalOpen={setModalOpen} />)}
+                    {qnaList.qnaStatus === '응답 완료' 
+                     ? <td style={{color : "olive"}}>{qnaList.qnaStatus}</td> 
+                     : <td style={{color : "red"}}>{qnaList.qnaStatus}</td> 
+                    }
+                    <td>
+                      {qnaList.reply === null && (
+                        <>
+                        <button className="re" onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
+                        {(modalOpen && <QnaModal setModalOpen={setModalOpen} />)}
+                        </>
+                      )}
                     </td>
                   </tr>
                   ))}

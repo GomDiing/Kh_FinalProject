@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = 'application/json'; 
-const TCAT_DOMAIN = "http://localhost:8100"; //server path
+const TCAT_DOMAIN = "http://localhost:8100";
 
 const AdminApi={
     //공지사항 쓰기 api
@@ -19,7 +19,6 @@ const AdminApi={
     noticeDetail : async function(index){
         return await axios.get(TCAT_DOMAIN +"/api/notice/detail/" + index, "Text/json")
     },
-
     // 공지사항 삭제 
     noticeDelete : async function(index){
         return await axios.delete(TCAT_DOMAIN + "/api/notice/delete/"+ index, HEADER)
@@ -96,6 +95,5 @@ const AdminApi={
     exhibitionList : async function(currentPage ,setPageSize){
         return await axios.get(TCAT_DOMAIN + `/api/product/list?page=${(currentPage - 1)}&size=${setPageSize}&sort=periodStart,desc`, HEADER)
     },
-
 }
 export default AdminApi;

@@ -1,9 +1,8 @@
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react"
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
-import { seatIndexAction } from "../../util/Redux/Slice/seatIndexSlice";
 import { ADMIN_KEY } from "../Config";
 import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
@@ -64,7 +63,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
     const [isTrue, setIsTrue] = useState(false);
     const user = useSelector((state) => state.user.info);
     const seatIndex = useSelector((state) => state.seat.index);
-    const [test, setTest] = useState({
+    const [payment, setPayment] = useState({
       price : 0,
       total : 0,
       quantity : 0,
@@ -76,7 +75,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
     const data = {
       params: {
         cid: "TC0ONETIME",
-        tid : test.tid,
+        tid : payment.tid,
         partner_order_id: "partner_order_id",
         // 가맹점 회원 id
         partner_user_id: "partner_user_id",
@@ -102,7 +101,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
             },
             params,
         }).then(response => {
-            setTest((state) => ({
+            setPayment((state) => ({
               ...state,
               price : response.data.amount.total / response.data.quantity,
               total : response.data.amount.total,
@@ -122,7 +121,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
         const PayReadySubmit = async () => {
           console.log(seatIndex);
           try {
-            const response = await PayApi.payReady(user.userIndex, seatIndex, test.quantity, test.price, user.userPoint, test.method, test.tid, test.total);
+            const response = await PayApi.payReady(user.userIndex, seatIndex, payment.quantity, payment.price, user.userPoint, payment.method, payment.tid, payment.total);
             console.log(response);
             if(response.data.statusCode === 200) {
               window.localStorage.removeItem('tid');
@@ -134,7 +133,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
           }
         }
         isTrue && PayReadySubmit();
-      }, [isTrue, seatIndex, test, user]);
+      }, [isTrue, seatIndex, payment, user]);
 
     const Body = () => {
         return(
@@ -154,21 +153,69 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
   };
 
 const PayCancel = () => {
-    // 취소는 나중에 구현
-    const[data, setData] = useState({
-        next_redirect_pc_url : "",
-        tid: "",
-        params: {
-            cid: "TC0ONETIME",
-            tid: window.localStorage.getItem("tid"),
-            cancel_amount: 100000,
-            cancel_tax_free_amount:10000,
-        }
-    });
+  const location = useLocation();
+  // 넘어온 티켓 정보.
+  const ticket = location.state.ticket;
+  console.log(ticket);
+  const [cancelTry, setCancelTry] = useState(false);
+  // 공연 날짜
+  const viewTime = ticket.view_time;
+  const today = new Date();
+  const isSameDate = (date1, date2) => {
+    return date1.getFullYear() === date2.getFullYear()
+       && date1.getMonth() === date2.getMonth()
+       && date1.getDate() === date2.getDate();
+  }
 
+  const [cancel, setCancel] = useState({
+    // 상품 금액
+    amount : ticket.final_amount / ticket.count,
+    // 총 금액
+    final_amount : ticket.final_amount,
+    // 상품 수량
+    count : ticket.count,
+    // 비과세 총 금액의 5%
+    tax_free_amount : Math.floor(ticket.final_amount / 20),
+    // 상품 tid
+    tid : ticket.kakaoTID
+  });
+
+  // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
+  // useEffect(() => {
+  //   const onPayCancelDate = (reserveTime, today) => {
+  //     if(isSameDate(new Date(reserveTime), today)) {
+  //       setCancelTry(false);
+  //     } else if (new Date(reserveTime).getDate() - today.getDate() >= 3 && new Date(reserveTime).getDate() - today.getDate() > 1) {
+  //       // 3일 전이면 총 금액은 수수료 5% 떼고 취소
+  //     } else if (new Date(reserveTime).getDate() - today.getDate() === 1 && new Date(reserveTime).getDate() - today.getDate() > 0) {
+  //       // 하루 전이면 총 금액 수수료 10% 떼고 취소
+  //       setCancel(state => ({
+  //         ...state,
+  //         final_amount : state.final_amount - Math.floor(state.final_amount / 10)
+  //       }));
+  //     }
+  //   }
+  //   onPayCancelDate(viewTime, today);
+  // }, [viewTime]);
+    const navigate = useNavigate();
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => {
+    setModalOpen(false);
+    navigate('/', {replace:true});
+    }
+    const data = {
+      params: {
+        cid: "TC0ONETIME",
+        tid : cancel.tid,
+        cancel_amount	: cancel.final_amount - 100000,
+        cancel_tax_free_amount : cancel.tax_free_amount - 10000,
+      }
+    };
+
+    // payCancel 들어오면 결제 취소 ! ! !
     useEffect(() => {
-        const { params } = data;
-
+      const { params } = data;
         axios({
             url: "https://kapi.kakao.com/v1/payment/cancel",
             method: "POST",
@@ -176,22 +223,47 @@ const PayCancel = () => {
                 Authorization: `KakaoAK ${ADMIN_KEY}`,
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
             },
-            params
+            params,
         }).then(response => {
-            const {
-                data: { tid }
-            } = response;
-            setData({ tid });
-            console.log(tid);
-        });
-    });
+          console.log(response);
+        }).catch(error => {
+          console.log('취소 실패');
+          console.log(error);
+      });
+    }, []);
 
-    return(
+    useEffect(() => {
+      const payCancel = async () => {
+        try {
+          const response = await PayApi.payCancel(ticket.reserve_ticket);
+          console.log(response);
+          if(response.data.statusCode === 200) {
+          }
+        } catch (e) {
+          console.log(ticket.reserve_ticket);
+          console.log(e);
+          console.log('에러!!!');
+        }
+      }
+      payCancel();
+      openModal();
+    }, []);
+
+    const Body = () => {
+      return(
         <div>
-            <h1>결제 취소가 완료 되었습니다.</h1>
-            <Link to='/MyPage/CList'>취소 내역 확인하러 가기</Link>
-            <Link to='/'>메인으로 돌아가기</Link>
+          <h1>환불신청이 정상 처리되었습니다.</h1>
+          <h2>환불기간은 3 ~ 7일 이내로 입금됩니다.</h2>
+          <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
+          <Link replace={true} to='/MyPage/RList'>취소 내역 보러가기</Link>
         </div>
+      );
+    }
+    
+    return(
+      <div>
+        {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
+      </div>
     );
   };
 

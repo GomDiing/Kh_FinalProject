@@ -31,7 +31,7 @@ public class QnAServiceImpl implements QnAService {
     @Transactional
     public Map<String,String> create(CreateQnADTO createQnADTO) {
 //        작성할때 회원 아이디로 회원 조회
-        Optional<Member> findOne = memberRepository.findByIndex(createQnADTO.getIndex());
+        Optional<Member> findOne = memberRepository.findById(createQnADTO.getMemberId());
         if(findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
@@ -52,7 +52,6 @@ public class QnAServiceImpl implements QnAService {
     public void cancel(CancelQnADTO cancelQnADTO) {
 
     }
-
 
     /*qna 목록 조회 (마이페이지)*/
     @Override

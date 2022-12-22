@@ -10,6 +10,7 @@ import AccuseModal from "./AccuseModal";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
 
+
 const ReviewBody=(props)=>{
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
@@ -22,7 +23,7 @@ const ReviewBody=(props)=>{
     setReviews(props.reviewList);
   }, [props.reviewList]);
 
-  const [parentReviews, setParentReview] = useState('');
+  // const [parentReviews, setParentReview] = useState('');
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -32,10 +33,10 @@ const ReviewBody=(props)=>{
     // 상위댓글(layer=0) 필터
     const motherResult = reviews.filter(item=>item.layer < 1);
 
-    useEffect(()=>{
-      setParentReview(motherResult);
-    },[])
-    // console.log(parentReviews[0].index); // 11
+    // useEffect(()=>{
+    //   setParentReview(motherResult);
+    // },[]) 
+    // 혹시 이것때문에 group 0으로 찍히는걸까봐
 
     const onClickDelete=async(index)=>{
       try{
@@ -47,7 +48,6 @@ const ReviewBody=(props)=>{
         console.log(e);
       }
     }
-
     const onClickUpdate=()=>{
 
     }
@@ -71,7 +71,7 @@ const ReviewBody=(props)=>{
                   index={index}
                   memberIndex={memberIndex}
                    />}
-                  <Form.Label className="review-like">{like}</Form.Label>
+                  {/* <Form.Label className="review-like">{like}</Form.Label> */}
               </div>
             </div>
 
@@ -88,15 +88,10 @@ const ReviewBody=(props)=>{
           </div>
           <Alert.Heading className="review-title">{title}</Alert.Heading>
            <p className="review-content">{content}</p>
-           
           <hr/>
           <ChildReview reviews={reviews} 
           index={index} 
           code={productCode}/>
-          
-
-
-          
         </Alert>
         </div>
         ))}
@@ -109,9 +104,8 @@ const ReviewBodyBlock = styled.div`
 .first-comment-container{
   width: 50vw;
   margin: 0 20px ;
-  margin-bottom: 50px;
+  margin-bottom: 35px;
   background-color: #f5f5f5;
-
 }
 .review-head-container{
   display: flexbox;
@@ -130,7 +124,7 @@ const ReviewBodyBlock = styled.div`
   margin-top: 15px;
 }
 .review-content{
-  height: 110px;
+  height: 50px;
 }
 hr{
   margin-top: 15px;
@@ -143,11 +137,13 @@ hr{
   margin: 0 20px ;
 }
 .review-btn-container{
-  margin-right: 20px;
+  margin-right: 10px;
 }
 .review-update-btn, .review-delete-btn{
   background-color: transparent;
   margin-left: 7px;
   border: none;
+  color: red;
+
 }
 `;

@@ -141,6 +141,7 @@ tr{
 }
 .qnaBtn{
   border: none;
+  background-color: transparent;
 }
 .table-container{
   text-align: center;

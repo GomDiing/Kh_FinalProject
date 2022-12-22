@@ -125,7 +125,9 @@ const MainHeader = () =>{
         const data = {
             userIndex : undefined,
             userId : undefined,
-            userPoint : undefined,
+            userPoint : 0,
+            userName : undefined,
+            userEmail : undefined,
             userProvider_type : undefined,
         }
         dispatch(loginActions.setUserInfo({data}));

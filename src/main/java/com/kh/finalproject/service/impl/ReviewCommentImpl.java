@@ -96,7 +96,8 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Product product = findProduct.get();
 
         /*댓글 후기 작성*/
-        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member, product, createReviewCommentDTO.getContent());
+        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member, product, createReviewCommentDTO.getContent(),
+                createReviewCommentDTO.getGroup());
         reviewCommentRepository.save(rewriteReviewComment);
 
         /*해당 상품에 작성된 모든 후기 가져오기*/
@@ -119,7 +120,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
                 reCount++;
                 reGroup = parentGroup;
             }
-            reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
+//            reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
         }
 
         Integer lastOrder = findAllReview.get(findAllReview.size() - 2).getOrder(); //마지막 쓰여진 글의 순서 가져오기
