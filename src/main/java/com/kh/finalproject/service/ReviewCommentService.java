@@ -56,5 +56,6 @@ public interface ReviewCommentService {
     List<ReviewCommentDTO> searchAll(Pageable pageSize);
 
     /*후기 댓글 전체 메서드*/
+
     List<ParentReviewDTO> allComment(String productCode, Pageable pageable);
 }

@@ -70,11 +70,11 @@ const MemberApi = {
     return await axios.get(TCAT_DOMAIN+`/api/qna/mypage/${(userIndex)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
   },
   // qna 전송하기
-  sendQna : async function(memberId,inputSelect,inputQnaTitle,inputQnaContent) {
-    console.log("문의 값: " +memberId, inputSelect,inputQnaTitle, inputQnaContent );
+  sendQna : async function(memberIndex,inputSelect,inputQnaTitle,inputQnaContent) {
+    console.log("문의 값: " +memberIndex, inputSelect,inputQnaTitle, inputQnaContent );
     // debugger;
     const params = {
-      memberId : memberId,
+      index : memberIndex,
       category : inputSelect,
       title : inputQnaTitle,
       content : inputQnaContent

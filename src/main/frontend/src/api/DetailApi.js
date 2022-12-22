@@ -5,6 +5,7 @@ const TCAT_DOMAIN = "http://localhost:8100";
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
     sendComment : async function(memberIndex,inputTitle, inputContent, rate, productCode){
+        console.log("찍히는 값 : " + memberIndex,inputTitle, inputContent, rate, productCode);
         const params = {
             memberIndex : memberIndex,
             title : inputTitle,
@@ -46,8 +47,8 @@ const DetailApi={
         return await axios.post(TCAT_DOMAIN+"/api/review/delete", params,HEADER)
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
-    allReviewComment : async function(productCode){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
+    allReviewComment : async function(productCode,currentPage ,setPageSize){
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
