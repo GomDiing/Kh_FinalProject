@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
 import { seatIndexAction } from "../../util/Redux/Slice/seatIndexSlice";
 import { ADMIN_KEY } from "../Config";
@@ -154,16 +154,62 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
   };
 
 const PayCancel = () => {
-    // 취소는 나중에 구현
-    const[data, setData] = useState({
-        next_redirect_pc_url : "",
-        tid: "",
-        params: {
-            cid: "TC0ONETIME",
-            tid: window.localStorage.getItem("tid"),
-            cancel_amount: 100000,
-            cancel_tax_free_amount:10000,
-        }
+  // amount : amount,
+  // discount : discount,
+  // finalAmount : finalAmount,
+  // method : method,
+  // kakaoTID : TID
+  const location = useLocation();
+  // 넘어온 티켓 정보.
+  const ticket = location.state.ticket;
+  console.log(ticket);
+  
+  // 공연 날짜
+  const reserveTime = ticket.reserve_time;
+  const today = new Date();
+  const isSameDate = (date1, date2) => {
+    return date1.getFullYear() === date2.getFullYear()
+       && date1.getMonth() === date2.getMonth()
+       && date1.getDate() === date2.getDate();
+  }
+  // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
+  if(isSameDate(new Date(reserveTime), today)) {
+    alert('당일 취소 x');
+  } else if (new Date(2022, 12 - 1, 29).getDate() - today.getDate() >= 7) {
+    alert('공연 시작 7일 넘게 남으면 무료 취소')
+  } else if (new Date(reserveTime).getDate() - today.getDate() >= 3 && new Date(reserveTime).getDate() - today.getDate() > 1) {
+    alert('공연 시작 하루는 아니고 3일 남았거나 3일보다 적을 경우 수수료 5%')
+  } else if (new Date(reserveTime).getDate() - today.getDate() === 1 && new Date(reserveTime).getDate() - today.getDate() > 0) {
+    alert('공연 시작 하루 남았으면 수수료 10%');
+  }
+
+  const cancel = {
+    // 상품 금액
+    amount : ticket.final_amount / ticket.count,
+    // 총 금액
+    final_amount : ticket.final_amount,
+    // 상품 수량
+    count : ticket.count,
+    // 비과세 총 금액의 5%
+  };
+    
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => {
+  setModalOpen(false);
+  navigate('/', {replace:true});
+  }
+  const[data, setData] = useState({
+      next_redirect_pc_url : "",
+      tid: "",
+      params: {
+        cid: "TC0ONETIME",
+        tid: window.localStorage.getItem("tid"),
+        // 결제 총 금액을 넘겨줌
+        cancel_amount: ticket,
+        cancel_tax_free_amount:10000,
+      }
     });
 
     useEffect(() => {
@@ -186,13 +232,30 @@ const PayCancel = () => {
         });
     });
 
-    return(
+    const Body = () => {
+      return(
         <div>
-            <h1>결제 취소가 완료 되었습니다.</h1>
-            <Link to='/MyPage/CList'>취소 내역 확인하러 가기</Link>
-            <Link to='/'>메인으로 돌아가기</Link>
+          <h1>환불신청이 정상 처리되었습니다.</h1>
+          <h2>환불기간은 3 ~ 7일 이내로 입금됩니다.</h2>
+          <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
+          <Link replace={true} to='/MyPage/RList'>취소 내역 보러가기</Link>
         </div>
+      );
+    }
+    
+    return(
+      <div>
+        {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
+      </div>
     );
+
+    // return(
+    //     <div>
+    //         <h1>결제 취소가 완료 되었습니다.</h1>
+    //         <Link to='/MyPage/CList'>취소 내역 확인하러 가기</Link>
+    //         <Link to='/'>메인으로 돌아가기</Link>
+    //     </div>
+    // );
   };
 
 export { PayReady, PayResult, PayCancel };

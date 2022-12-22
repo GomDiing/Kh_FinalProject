@@ -331,9 +331,8 @@ function PopupContent (props) {
             <th className="sh">취소 수수료</th>
             <td>티켓 금액의 0 ~ 30% <small onClick={onTogle}><strong><u>상세 보기</u></strong></small>
               {open && <>
-              <br /><small>공연기간 1주일 전까지는 수수료가 없습니다.</small>
-              <br /><small>공연기간 1주일 이내로 남았을 경우 수수료가 10% 발생합니다</small>
-              <br /><small>공연 당일 취소에 경우 수수료가 15% 발생합니다</small>
+              <br /><small>공연 당일 하루 전까지는 수수료 없이 무료 환불이 가능합니다.</small>
+              <br /><small>공연 당일 취소를 신청할 경우 환불 시 수수료가 10% 발생합니다.</small>
               </>}
             </td>
           </tr>
