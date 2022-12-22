@@ -134,7 +134,7 @@ const MainHeader = () =>{
     // 확인용
     const userInfo = useSelector((state) => state.user.info)
 
-    // console.log(userInfo);
+    console.log(userInfo);
     // console.log(categoryvalue);
 
     return(
@@ -155,7 +155,7 @@ const MainHeader = () =>{
                     <Form className="d-flex">
                         <Form.Control onChange={onChangeValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
                         <Link to = "/search" ><Button className="SearchBtn" variant="outline-success">Search</Button></Link>
-                        {userInfo.userIndex === undefined ? 
+                        {userInfo.userEmail === undefined ? 
                             <Link to = "/login"><RiLoginBoxLine className="User"/></Link>
                             : 
                             <Link><RiLogoutBoxLine className="User" onClick={clickLogout}/></Link>

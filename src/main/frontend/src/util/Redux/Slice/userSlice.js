@@ -5,7 +5,9 @@ const initialState = {
     info : {
         userIndex : undefined,
         userId : undefined,
-        userPoint : undefined,
+        userName : undefined,
+        userPoint : 0,
+        userEmail : undefined,
         userProvider_type : undefined,
     }
 };
