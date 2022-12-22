@@ -134,6 +134,7 @@ function Social() {
     const [address, setAddress] = useState('');
     const [inputEmail, setInputEmail] = useState('');
     const [type, setType] = useState('');
+    // const [Join, setJoin] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [isName, setIsName] = useState(false);
 
@@ -145,13 +146,15 @@ function Social() {
         console.log(inputName)
         setInputEmail(params.get('email'));
         console.log(inputEmail);
+        // setJoin('isJoin');
+        // console.log(Join);
         setType(params.get('providerType'));
         console.log(type);
         const name = params.get('name')
         const email = params.get('email')
         const provider_type = params.get('providerType')
         const join = params.get('isJoin');
-        if(join === 1) {
+        if(join == 1) {
             const data = {
                 userName : name,
                 userEmail : email,
