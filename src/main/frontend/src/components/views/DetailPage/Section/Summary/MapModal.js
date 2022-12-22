@@ -39,7 +39,7 @@ const MapModalBody = (props) =>{
         var mapContainer = document.getElementById('map'),
         mapOption = {
             center: new kakao.maps.LatLng(mapL.y, mapL.x),
-            level: 3
+            level: 2
         };
         var map = new kakao.maps.Map(mapContainer, mapOption);
         var imageSrc = 'https://ifh.cc/g/XS4tdd.jpg',

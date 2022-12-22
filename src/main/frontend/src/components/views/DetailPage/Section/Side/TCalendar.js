@@ -180,6 +180,7 @@ function TCalendar (props) {
       }
     }, [date, month, pCode, year]);
 
+    console.log(select);
     const clickDay = () => {
         console.log(date.toLocaleString("kr", {year: "numeric", month:"2-digit", day: "numeric"}));
     };
