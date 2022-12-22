@@ -36,9 +36,9 @@ const BodyStyle = styled.div`
   .kpay-button {
     background-color: white;
   }
-  /* .sh {
+  .sh {
     border-left: 1px solid black;
-  } */
+  }
   
 `;
 
@@ -324,7 +324,7 @@ function PopupContent (props) {
             <th>비과세(5%)</th>
             <td>{tax}</td>
             <th className="sh">현재 포인트</th>
-            <td>{point}<span><button type="button">포인트는 500원부터 사용 가능합니다.</button></span></td>
+            <td>{point}<span></span></td>
           </tr>
           <tr>
             <th>취소 기한</th>
