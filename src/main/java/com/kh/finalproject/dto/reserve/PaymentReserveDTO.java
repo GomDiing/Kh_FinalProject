@@ -24,4 +24,6 @@ public class PaymentReserveDTO {
     private String method;
     //카카오페이 TID
     private String kakaoTID;
+    //카카오페이 taxFreeAmount
+    private Integer kakaoTaxFreeAmount;
 }

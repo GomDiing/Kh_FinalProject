@@ -23,6 +23,8 @@ public class SigninResponseDTO {
     @JsonProperty("provider_type")
     private String providerType;
 
+    private String role;
+
 
     public SigninResponseDTO toDTO(Member member) {
         this.index = member.getIndex();
@@ -36,6 +38,7 @@ public class SigninResponseDTO {
         this.status = member.getStatus().name();
         this.providerType = member.getProviderType().name();
         this.email = member.getEmail();
+        this.role = member.getRole().name();
 
         return this;
     }
