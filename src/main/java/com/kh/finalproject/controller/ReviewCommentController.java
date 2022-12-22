@@ -60,8 +60,8 @@ public class ReviewCommentController {
     }
     /*상세페이지에 전체 댓글 목록 */
     @GetMapping("/all/{productCode}")
-    public ResponseEntity<Object> viewAllReview(@PathVariable String productCode){
-        List<ReviewCommentDTO> reviewCommentDTOList=reviewCommentService.allComment(productCode);
+    public ResponseEntity<Object> viewAllReview(@PathVariable String productCode,Pageable pageable){
+        PagingReviewCommentDTO reviewCommentDTOList =reviewCommentService.allComment(productCode,pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW,reviewCommentDTOList),HttpStatus.OK);
     }
 }
