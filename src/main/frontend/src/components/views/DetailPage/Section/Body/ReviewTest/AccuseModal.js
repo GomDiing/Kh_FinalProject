@@ -5,24 +5,21 @@ import DetailApi from '../../../../../../api/DetailApi';
 import { useSelector } from 'react-redux';
 
 
-
 const AccuseModal= (props)=> {
     const userInfo = useSelector((state) => state.user.info)
     const victimIndex= userInfo.userIndex;
-    let suspectEmail = '3@gmail.com'; // 글 작성자
 
+    console.log("신고할 후기 글 index: " + props.index);
+    console.log("신고작성글 아이디 : " + props.memberIndex);
 
-    console.log("신고할 회원" + victimIndex);
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-    const { open, close, header, body,reviewIndex} = props;
+    const { open, close, header,index} = props;
     
-    const [reason, setReason] = useState("욕설");
+    const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
 
-
-
-    const onClickAccuse=async(reviewIndex)=>{
-        const res = await DetailApi.accuseComment(reviewIndex,victimIndex, suspectEmail,reason);
+    const onClickAccuse=async(index)=>{
+        const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
         if(res.data.statusCode === 200) {
             console.log("신고 완료");
             // 왜 안걸러지냐
@@ -46,14 +43,14 @@ const AccuseModal= (props)=> {
             </header>
             <main>
             <Form.Select value={reason} onChange={onChangeSelect}>
-                 <option value="욕설">욕설</option>
                  <option value="광고">광고</option>
+                 <option value="욕설">욕설</option>
                  <option value="기타">기타</option>
             </Form.Select>
                 {/* {body} */}
             </main>
             <footer className='modal-footer'>
-                <button className='submit' onClick={onClickAccuse}>Submit</button>
+                <button className='submit' onClick={()=>onClickAccuse(index)}>Submit</button>
                 <button className='close' onClick={close}>close</button>
             </footer>
             </section>

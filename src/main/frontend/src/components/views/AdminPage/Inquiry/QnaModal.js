@@ -133,7 +133,7 @@ const QnaModal = (props) => {
         }
     }
 }
-    const { open, close, header, index } = props;
+    const { open, close, header, index} = props;
 
     return (
         <QWrap>
