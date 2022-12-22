@@ -105,15 +105,6 @@ const MemberApi = {
       providerType : type,
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
-  },
-  // 소셜 로그인
-  socialLogin : async function(name, inputEmail, pType) {
-    const loginObj = {
-      name : name,
-      email : inputEmail,
-      providerType : pType
-    }
-    return await axios.post(TCAT_DOMAIN + "/api/member/signin", loginObj, HEADER);
-  },
+  }
 }
 export default MemberApi;
