@@ -1,5 +1,7 @@
 import axios from "axios";
-const HEADER = 'application/json'
+const HEADER = {
+    'Content-Type' : 'application/json'
+}
 const TCAT_DOMAIN = "http://localhost:8100"; //server path
 
 const DetailApi={
@@ -66,7 +68,7 @@ const DetailApi={
         const memberIndex = {
             memberIndex : 322
         }
-        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}`, memberIndex, HEADER);
+        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {
