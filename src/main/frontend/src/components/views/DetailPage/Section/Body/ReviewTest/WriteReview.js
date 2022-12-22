@@ -25,7 +25,8 @@ const WriteReview=(props)=>{
     const onClickSubmit=async()=>{
         const res = await DetailApi.sendComment(memberIndex,inputTitle,inputContent,rate, props.code);
         if(res.data.statusCode === 200){
-          console.log("공지사항 작성 완료 후 목록으로 이동");
+          console.log("후기 작성 완료 후 목록으로 이동");
+          alert("공연 후기 작성 성공")
         } else{
           console.log("공지사항 작성 실패");
         }

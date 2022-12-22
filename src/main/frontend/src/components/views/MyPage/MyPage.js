@@ -12,6 +12,7 @@ import InfoUpdate from './section/InfoUpdate';
 import styled from 'styled-components';
 import MemberApi from '../../../api/MemberApi';
 import { useSelector } from 'react-redux';
+import WishList from './section/WishList';
 
 const MyInfoStyle = styled.div`
   width: 100%;
@@ -89,7 +90,7 @@ function MyPage() {
     const getInfo = async() => {
       if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') {
       try {
-        const res = await MemberApi.searchId(userInfo.userEmail, userInfo.userProvider_type);
+        const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
           SetInfo(res.data.results);
           console.log(res.data);
@@ -97,7 +98,7 @@ function MyPage() {
       } catch (e) {
         console.log(e);
       }
-    } else {
+    } else if(userInfo.userProvider_type === 'HOME'){
       try {
         const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
@@ -109,7 +110,7 @@ function MyPage() {
       }
     }
   }; getInfo();
-  })
+  },[userInfo.userEmail, userInfo.userId, userInfo.userProvider_type])
 
     console.log(info);
 
@@ -134,7 +135,7 @@ function MyPage() {
       getItem('문의 조회', '/MyPage/IqList'),
     ]),
     getItem('회원 정보 변경', '/MyPage/InfoUpdate', <EditOutlined />),
-    getItem('내가 찜한 목록', 'sub', <BookOutlined />)
+    getItem('내가 찜한 목록', '/MyPage/WishList', <BookOutlined />)
   ];
   const navigate = useNavigate();
   
@@ -184,6 +185,7 @@ const MyBody = () => (
       <Route path='/CList' element={<CList/>}/>
       <Route path='/Contact' element={<Contact/>}/>
       <Route path='/IqLIst' element={<IqList/>}/>
+      <Route path='/WishList' element={<WishList/>}/>
       <Route exact path='/InfoUpdate' element={<InfoUpdate />} />
     </Routes>
     </>

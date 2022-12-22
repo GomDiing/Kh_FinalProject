@@ -26,12 +26,9 @@ const AccuseModal= (props)=> {
             if(res.data.statusCode === 200) {
                 console.log("신고 완료");
                 close();
-
             }else {
-                close();
                 console.log(res.data.message);
                 alert("중복신고되었습니다.")
-                console.log("중복신고 되었습니다.");
             } 
         }catch(e){
             console.log(e);
@@ -147,7 +144,7 @@ const AccuseModalBlock=styled.div`
         border-radius: 5px;
         font-size: 13px;
     }
-    /* @keyframes modal-show {
+    @keyframes modal-show {
         from {
             opacity: 0;
             margin-top: -50px;
@@ -164,6 +161,6 @@ const AccuseModalBlock=styled.div`
         to {
             opacity: 1;
         }
-    } */
+    }
 
 `;

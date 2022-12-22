@@ -19,14 +19,11 @@ const ChildReview=(props)=>{
 
     const childResult = reviews2.filter(item=>item.layer>0 &&(item.group === props.index)); // 댓글
 
-    console.log(reviews2);
-    console.log("인덱스 값 : " + props.index);
-
     const [inputContent, setInputContent] = useState('');
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
-    // debugger;
+
+    // 댓글 토글 창
     const onClickDisplay=(e)=>{
-      console.log("클릭값" + e);
       e.preventDefault(); //새로고침 막기
       setDisplay(!display);
     }
@@ -49,18 +46,25 @@ const ChildReview=(props)=>{
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
 
     const onClickSubmit=async()=>{
+      try{
         const res = await DetailApi.childComment(memberIndex,group,inputContent,props.code);
         if(res.data.statusCode === 200){
           console.log("댓글 작성 완료 후 목록으로 이동");
+          alert("댓글 작성 성공!")
+          return;
         } else{
           console.log("댓글 작성 실패");
         }
-      }
+      } catch(e){
+        console.log(e);
+    }
+  }
+
       const [display, setDisplay] = useState(false);
 
     return(
       <ChildReviewInputBlock>
-      <button className="reply-toggle-btn" onClick={onClickDisplay}>댓글</button>
+      <button className="reply-toggle-btn" onClick={onClickDisplay}>댓글 더보기</button>
     <Form>
       {display &&
       <div>
@@ -76,16 +80,18 @@ const ChildReview=(props)=>{
         <div key={index}>
           <Alert variant="light" className="reply-container">
             <div className="reply-title-container">
-              <div>{comment.memberId}</div>
+              <div className="reply-top-left">{comment.memberId}</div>
+              <div className="reply-top-right">
               <div>{comment.createTime}</div>
-              <div>{comment.index}</div>
-            </div>
-            <div className="reply-content">{comment.content}</div>
-            {memberId === loginMember && (
-              <>
-              <button onClick={()=>onClickDeleteReply(index)}>삭제</button>
+              {memberId !== loginMember && (
+                <>
+              {/* 로그인회원이랑 댓글 작성자랑 같아야 삭제 버튼 뜨는건데 왜.. */}
+              <button className="delete-reply-btn" onClick={()=>onClickDeleteReply(index)}>삭제</button>
               </>
             )}
+            </div>
+            </div>
+            <div className="reply-content">{comment.content}</div>
           </Alert>
         </div>
         )}
@@ -111,6 +117,10 @@ const ChildReviewInputBlock = styled.div`
   display: flexbox;
   justify-content: space-between;
 }
+.reply-top-right{
+  float: right;
+  display: flex;
+}
 .reply-content{
   margin-top: 8px;
   font-size: 1.1rem;
@@ -119,8 +129,16 @@ const ChildReviewInputBlock = styled.div`
   margin-left: 15px;
 }
 
-.reply-toggle-btn{
+button.reply-toggle-btn{
   background-color: transparent;
+  border: none;
+}
+
+button.delete-reply-btn{
+  background-color: transparent;
+  border: none;
+  float: right;
+  color: red;
 }
 
 `;

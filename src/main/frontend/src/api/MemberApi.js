@@ -36,9 +36,15 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
   // Id 로 정보 받아오기
-  searchId : async function(id, email, providerType) {
+  searchId : async function(id, providerType) {
     const searchById = {
       id : id,
+      providerType : providerType
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-id", searchById, HEADER);
+  },
+  searchId2 : async function(email, providerType) {
+    const searchById = {
       email : email,
       providerType : providerType
     }
@@ -64,11 +70,11 @@ const MemberApi = {
     return await axios.get(TCAT_DOMAIN+`/api/qna/mypage/${(userIndex)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
   },
   // qna 전송하기
-  sendQna : async function(memberId,inputSelect,inputQnaTitle,inputQnaContent) {
-    console.log("문의 값: " +memberId, inputSelect,inputQnaTitle, inputQnaContent );
+  sendQna : async function(memberIndex,inputSelect,inputQnaTitle,inputQnaContent) {
+    console.log("문의 값: " +memberIndex, inputSelect,inputQnaTitle, inputQnaContent );
     // debugger;
     const params = {
-      memberId : memberId,
+      index : memberIndex,
       category : inputSelect,
       title : inputQnaTitle,
       content : inputQnaContent

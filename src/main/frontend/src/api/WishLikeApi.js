@@ -17,5 +17,8 @@ const WishLikeApi = {
         }
         return await axios.post(TCAT_DOMAIN + "/api/wish/cancel", cancel, HEADER);
     },
+    wishList : async function(userIndex) {
+        return await axios.get(TCAT_DOMAIN + `/api/wish/${(userIndex)}`, HEADER);
+    },
     }
 export default WishLikeApi;
