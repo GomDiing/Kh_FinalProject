@@ -5,6 +5,7 @@ import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,7 +33,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 //    List<ReviewComment> selectAll(Pageable size);
 
     /*후기 최근글 조회할때 부모 댓글만 볼 수 있게 layer=0*/
-    List<ReviewComment> searchAllByLayer(Integer layer,Pageable size);
+    List<ReviewComment> searchAllByLayerAndStatus(Integer layer,ReviewCommentStatus status,Pageable size);
 
     List<ReviewComment> findAllByProduct(Product productCode);
 
@@ -45,7 +46,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 
-    List<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status);
+    Page<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status, Pageable pageable);
 
 
 }

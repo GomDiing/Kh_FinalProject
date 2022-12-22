@@ -1,5 +1,6 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.member.PagingMemberDTO;
 import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.entity.ReviewComment;
 import org.springframework.data.domain.Pageable;
@@ -55,5 +56,5 @@ public interface ReviewCommentService {
     List<ReviewCommentDTO> searchAll(Pageable pageSize);
 
     /*후기 댓글 전체 메서드*/
-    List<ReviewCommentDTO> allComment(String productCode);
+    public PagingReviewCommentDTO allComment(String productCode, Pageable pageable);
 }

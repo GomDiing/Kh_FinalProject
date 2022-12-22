@@ -1,9 +1,6 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.ReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
@@ -63,8 +60,8 @@ public class ReviewCommentController {
     }
     /*상세페이지에 전체 댓글 목록 */
     @GetMapping("/all/{productCode}")
-    public ResponseEntity<Object> viewAllReview(@PathVariable String productCode){
-        List<ReviewCommentDTO> reviewCommentDTOList=reviewCommentService.allComment(productCode);
+    public ResponseEntity<Object> viewAllReview(@PathVariable String productCode,Pageable pageable){
+       PagingReviewCommentDTO reviewCommentDTOList =reviewCommentService.allComment(productCode,pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW,reviewCommentDTOList),HttpStatus.OK);
     }
 }

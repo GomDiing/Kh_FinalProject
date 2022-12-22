@@ -14,6 +14,7 @@ const ReviewBody=(props)=>{
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
   const memberIndex = userInfo.userIndex;
+  const loginMember = userInfo.userId; // 삭제버튼 오픈용(로그인 회원 일치)
 
   const [reviews, setReviews] = useState(props.reviewList);
 
@@ -21,12 +22,12 @@ const ReviewBody=(props)=>{
     setReviews(props.reviewList);
   }, [props.reviewList]);
 
-  const [motherReviews, setMotherReview] = useState([]);
+  const [motherReviews, setMotherReview] = useState('');
 
-    console.log("그룹값 : " + reviews.group); //undefined
-    console.log("그룹값 : " + props.reviewList.group); //undefined
-    console.log(reviews); // 이건 찍힘
-    console.log("그룹값33 : " + props.reviewList); //undefined
+    // console.log("그룹값 : " + reviews.group); //undefined
+    // console.log("그룹값 : " + props.reviewList.group); //undefined
+    // console.log(reviews); // 이건 찍힘
+    // console.log("그룹값33 : " + props.reviewList); //undefined
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -37,18 +38,31 @@ const ReviewBody=(props)=>{
     //   setMotherReview(motherResult);
     // },[motherReviews]);
 
-    const motherResult = reviews.filter(item=>item.layer < 1);
+    // 상위댓글(layer=0) 필터
+    // const motherResult = reviews.filter(item=>item.layer < 1);
+    // setMotherReview(motherResult);
+
+    console.log("제발 찍혀라 ㅋ");
+    console.log(motherReviews);
 
     const onClickDelete=async(index)=>{
-      const res = await DetailApi.deleteComment(index, memberIndex);
-      if(res.data.statusCode === 200){
-        alert("댓글이 삭제되었습니다.")
+      try{
+        const res = await DetailApi.deleteComment(index, memberIndex);
+        if(res.data.statusCode === 200){
+          alert("댓글이 삭제되었습니다.")
+        }
+      } catch(e){
+        console.log(e);
       }
+    }
+
+    const onClickUpdate=()=>{
+
     }
 
     return(
         <ReviewBodyBlock>
-        {motherResult.map(({index,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {reviews.map(({index,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -65,10 +79,18 @@ const ReviewBody=(props)=>{
                   <Form.Label className="review-like">{like}</Form.Label>
               </div>
             </div>
+            
+
             <div className="review-btn-container">
-              <button className="review-update-btn">수정</button>
+              {/* 로그인한 회원이랑 작성자랑 동일하면 삭제 버튼 */}
+              {memberId === loginMember && (
+              <>
+              <button className="review-update-btn" onClick={onClickUpdate(index)}>수정</button>
               <button className="review-delete-btn" 
                 onClick={()=>onClickDelete(index)}>삭제</button>
+              </>
+              )}
+              
           </div>
           <Alert.Heading className="review-title">{title}</Alert.Heading>
            <p className="review-content">{content}</p>

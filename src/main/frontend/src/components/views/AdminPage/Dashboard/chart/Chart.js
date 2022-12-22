@@ -49,7 +49,7 @@ const Chart = (props) => {
     return (
         <ChartBlock>
         <div className='chart'>
-        <h3 className="chartTitle">누적 차트</h3>
+        <button class="button-53" role="button">누적 차트</button>
         <ResponsiveContainer width="100%" aspect={4/1}>
         <BarChart
           // width={500}
