@@ -156,8 +156,8 @@ public class MemberServiceImpl implements MemberService {
      * 소셜 로그인 이메일 가입여부 확인
      */
     @Override
-    public Boolean searchByEmailSocialLogin(String email) {
-        return memberRepository.findByEmailAndStatusNotAndProviderTypeNot(email, MemberStatus.UNREGISTER, MemberProviderType.HOME)
+    public Boolean searchByEmailSocialLogin(String email, MemberProviderType providerType) {
+        return memberRepository.findByEmailAndStatusNotAndProviderType(email, MemberStatus.UNREGISTER, providerType)
                 .isPresent();
     }
 
