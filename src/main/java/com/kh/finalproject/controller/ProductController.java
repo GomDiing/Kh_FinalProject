@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,9 +30,14 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/{code}")
-    public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code) {
-        DetailProductDTO detailProductDTO = productService.detailProductPage(code);
+    @PostMapping("/{code}")
+    public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code,
+                                                                       @RequestBody(required = false) Map<String, Long> memberIndex) {
+        //회원 인덱스가 존재하지않으면 -1, 존재하면 해당 값 매핑
+        Long isMemberIndex = (long) -1;
+        if (!Objects.isNull(memberIndex))
+            isMemberIndex = memberIndex.get("memberIndex");
+        DetailProductDTO detailProductDTO = productService.detailProductPage(code, isMemberIndex);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCT_DETAIL, detailProductDTO), HttpStatus.OK);
     }
 

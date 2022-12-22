@@ -54,6 +54,7 @@ public class ReserveServiceImpl implements ReserveService {
         }
 
         //잔여 예매 좌석 유효성 확인 (상시 상품은 제외)
+        //한정 상품이고 (총 좌석이 0이 아니고) 남은 좌석이 주문 수량보다 작으면
         if (reserveDetail.getTotalQuantity() != 0 && reserveDetail.getRemainQuantity() < paymentReserveDTO.getQuantity()) {
             throw new CustomException(CustomErrorCode.ERROR_REMAIN_QUANTITY);
         }
@@ -69,12 +70,6 @@ public class ReserveServiceImpl implements ReserveService {
         do {
 //                String randomIdKey = UUID.randomUUID().toString().substring(0, 5);
             randomIdKey = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase().substring(0, 32);
-
-            LocalDateTime now = LocalDateTime.now();
-
-//                reserveId = reserveProduct.getCode() + "_" + randomIdKey + "_" + now.getYear() + ":" + now.getMonthValue() + ":" +
-//                        now.getDayOfMonth() + "_" + reserveTime.getTurn() + "_" + reserveDetail.getIndex() + ":" + count;
-
 
             //동일한 아이디가 없어야 무한루프 탈출
         } while (reserveRepository.findByTicket(randomIdKey).isPresent());

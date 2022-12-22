@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Divider } from 'antd';
 import styled from 'styled-components';
 import ReserveDetailModal from '../section/ReserveDetailModal';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import PayApi from '../../../../api/PayApi';
 
 // 컬럼명 맞춰서 API 문서 만들면 됨
 
@@ -44,12 +46,44 @@ const Body = () => (
 );
 
 const RList = () => {
-
+  
+  const userIndex = useSelector((state) => state.user.info.userIndex);
+  const [selectList, setSelectList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const open = () => setModalOpen(true);
   const close = () => setModalOpen(false);
   const navigate = useNavigate();
   const cancelClick = () => navigate('/paycancel');
+
+  useEffect(() => {
+    const paySelect = async () => {
+      try {
+        const res = await PayApi.paySelect(userIndex);
+        if(res.data.statusCode === 200) {
+          console.log(res);
+          setSelectList(res.data.results);
+        }
+      } catch (e) {
+        console.log(e);
+        console.log('error!!');
+      }
+    }
+    paySelect();
+  }, [userIndex]);
+
+  selectList && selectList.map(list =>  {
+      <div>
+        <div>수량 {list.count}</div>
+        <div>총 금액 {list.finalAmount}</div>
+        <div>결제 방식 {list.method}</div>
+        <div>결제 완료 시간 {list.payment_complete_time}</div>
+        <div>상품 제목 {list.product_title}</div>
+        <div>결제 상태 {list.reserve_status}</div>
+        <div>예매번호 {list.reserve_ticket}</div>
+        <div>예매 날짜 {list.reserve_time}</div>
+        <div>공연 날짜 {list.view_time}</div>
+      </div>
+  });
 
   const columns = [
     {
@@ -77,6 +111,7 @@ const RList = () => {
         dataIndex: 'detail',
     },
 ];
+
 const data = [
     {
         key: '1',
@@ -96,7 +131,8 @@ const data = [
         count: '1매',
         detail: <button onClick={open}>상세보기</button>
     },                                    
-];
+  ];
+
 
   return(
     <>

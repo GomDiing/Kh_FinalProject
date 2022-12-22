@@ -49,9 +49,9 @@ function Poster(props) {
     useEffect(() => {
         setValue(props.rate);
         setPcode(props.code);
-    }, [props.rate])
+    }, [props.code, props.rate])
 
-    console.log(pCode);
+    console.log(props.code);
 
     const wishHandler = async () => {
         wishAddHandler();

@@ -24,7 +24,7 @@ public interface WishProductService {
     /**
      * 회원으로 찜하기 조회 메서드
      */
-    WishProductDTO selectByMember(Long memberIndex);
+    List<WishProductDTO> selectByMember(Long memberIndex);
 
     /**
      * 찜하기 전체 조회 메서드

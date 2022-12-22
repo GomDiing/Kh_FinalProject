@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { KAKAO_AUTH_URL } from '../../Config';
 import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
-import { Link, useNavigate } from 'react-router-dom';
-import PayPopup from '../DetailPage/Section/Popup/PayPopup';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
@@ -241,9 +240,21 @@ const IdStyle = styled.div`
 
   function Login() {
   // 카카오 로그인
-    const handleLogin = () => {
-    window.location.href = KAKAO_AUTH_URL;
-    };
+    const KakaoLogin = () => {
+      // window.location.href = KAKAO_AUTH_URL;
+        const location = useLocation();
+        fetch(`${KAKAO_AUTH_URL}`)
+        .then(res => console.log(res.data))
+        const KakaoAccInfo = location.search
+        console.log(KakaoAccInfo);
+        let params = new URLSearchParams(KakaoAccInfo);
+        let kEmail = params.get('email');
+        console.log(kEmail);
+        let ckJoin = params.get('isJoin');
+        console.log(ckJoin);
+    }
+
+    // };
 
     const [modalOpen, setModalOpen] = useState(false);
     const [id, setId] = useState(1);
@@ -321,14 +332,15 @@ const IdStyle = styled.div`
       try {
         const response = await MemberApi.login(inputId, inputPwd, providerType);
         if(response.data.statusCode === 200) {
-
+          // console.log(response.data)
           switch(response.data.results.status) {
             case "ACTIVE" :
               
             const data = {
                 userIndex : response.data.results.index,
                 userId : response.data.results.id,
-                userPoint : response.data.results.point
+                userPoint : response.data.results.point,
+                userProvider_type : response.data.results.provider_type
               }
               dispatch(loginActions.setUserInfo({data}));
               navigate('/');
@@ -365,7 +377,7 @@ const IdStyle = styled.div`
       if(e.key === "Enter") {
           onClickLogin();
       }
-   }
+  }
 
   return (
   <>
@@ -374,7 +386,7 @@ const IdStyle = styled.div`
         <div className='a'>
           <div>
             <div className='loginHead'>
-              <a href='/'><img src='images/TCat.jpg'></img></a>
+              <a href='/'><img src='images/TCat.jpg' alt=''></img></a>
             </div>
             <div className='loginHead'>
               <h2>User Login</h2>
@@ -398,7 +410,7 @@ const IdStyle = styled.div`
               </div>
               {login === true && <span>아이디 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요</span>}
                 <div className='btn-group'>
-                  <img src='/images/test.png' alt='카카오 로그인' onClick={handleLogin}/>
+                  <img src='/images/test.png' alt='카카오 로그인' onClick={KakaoLogin}/>
                 </div>
                 <div className='btn-group2' style={{marginTop : '40px'}}>
                   <Link to = '/agree' style={{textDecoration:'none',color:'inherit' }}>

@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../../util/Redux/Slice/userSlice";
 import { RiLoginBoxLine , RiLogoutBoxLine } from "react-icons/ri";
+import { useEffect } from "react";
 
 const HeaderContainer = styled.div`
     @media (max-width : 911px){
@@ -111,6 +112,7 @@ const MainHeader = () =>{
     const clickCategory = (e ,a) =>{
         window.localStorage.setItem("category" , e)
         window.localStorage.setItem("categoryName" , a)
+    
     }
     // 앤터키 누르면 검색
     const EnterKeypress = () =>{
@@ -118,19 +120,20 @@ const MainHeader = () =>{
             Navigate("/search")
         }
     }
-
     // 로그아웃
     const clickLogout = () =>{
         const data = {
             userIndex : undefined,
             userId : undefined,
             userPoint : undefined,
+            userProvider_type : undefined,
         }
         dispatch(loginActions.setUserInfo({data}));
         alert('정상적으로 로그아웃 되었습니다.')
     }
     // 확인용
     const userInfo = useSelector((state) => state.user.info)
+
     // console.log(userInfo);
     // console.log(categoryvalue);
 

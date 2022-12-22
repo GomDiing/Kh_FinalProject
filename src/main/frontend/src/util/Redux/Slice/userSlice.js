@@ -6,6 +6,7 @@ const initialState = {
         userIndex : undefined,
         userId : undefined,
         userPoint : undefined,
+        userProvider_type : undefined,
     }
 };
 
@@ -16,6 +17,9 @@ const userSlice = createSlice({
         // 초기값의 info 에 값을 넘겨줌
         setUserInfo : (state ,action) =>{
             state.info = action.payload.data;
+        },
+        setUserPoint : (state, action) => {
+            state.info.userPoint = action.payload;
         }
     }
 })
