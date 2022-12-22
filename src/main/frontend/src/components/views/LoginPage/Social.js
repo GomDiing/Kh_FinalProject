@@ -6,6 +6,8 @@ import { DaumPostcodeEmbed } from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import PopupDom from "../../views/SignPage/PopupDom";
 import MemberApi from "../../../api/MemberApi";
+import { useDispatch } from 'react-redux';
+import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const SignWrap = styled.div`
     width: 100%;
@@ -126,11 +128,11 @@ padding: "7px",
 function Social() {
     const location = useLocation();
     const Navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    
     const [inputName, setInputName] = useState('');
     const [address, setAddress] = useState('');
     const [inputEmail, setInputEmail] = useState('');
-    const [join, setJoin] = useState('');
     const [type, setType] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [isName, setIsName] = useState(false);
@@ -144,11 +146,21 @@ function Social() {
         console.log(inputName)
         setInputEmail(params.get('email'));
         console.log(inputEmail);
-        setJoin(params.get('isJoin'));
-        console.log(join);
-        setType(params.get('providerType'));
-        console.log(type);
-        if(join === 1) {
+        // console.log(join);
+        // setType(params.get('providerType'));
+        // console.log(type);
+        const name = params.get('name')
+        const email = params.get('email')
+        const provider_type = params.get('providerType')
+        const join = params.get('isJoin');
+        if(join == 1) {
+            const data = {
+                userName : name,
+                userEmail : email,
+                userProvider_type : provider_type,
+            }
+            dispatch(loginActions.setUserInfo({data}));
+            
             alert('로그인 성공')
             Navigate('/')
         } 
@@ -199,7 +211,6 @@ function Social() {
 
     const onClickSign = async () => {
     try {
-        // 수정해야됨!!
         const response = await MemberApi.socialSign(inputName, inputEmail, road, jibun, address, postCode, type);
         if(response.data.statusCode === 200) {
         alert("회원가입 완료");
