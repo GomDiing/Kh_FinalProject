@@ -136,7 +136,6 @@ function Social() {
     const [type, setType] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [isName, setIsName] = useState(false);
-    const [isEmail, setIsEmail] = useState(false);
 
     useEffect(() => {
         const AccInfo = location.search
@@ -146,14 +145,13 @@ function Social() {
         console.log(inputName)
         setInputEmail(params.get('email'));
         console.log(inputEmail);
-        // console.log(join);
-        // setType(params.get('providerType'));
-        // console.log(type);
+        setType(params.get('providerType'));
+        console.log(type);
         const name = params.get('name')
         const email = params.get('email')
         const provider_type = params.get('providerType')
         const join = params.get('isJoin');
-        if(join == 1) {
+        if(join === 1) {
             const data = {
                 userName : name,
                 userEmail : email,

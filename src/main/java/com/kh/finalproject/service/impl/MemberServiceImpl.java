@@ -444,7 +444,7 @@ public class MemberServiceImpl implements MemberService {
         //신고횟수 5회 이상 회원 조회
         Optional<List<Member>> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4);
 
-        if (findMemberList.get().isEmpty())
+        if (findMemberList.isEmpty())
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER_ACCUSE_COUNT);
 
         //전체 블랙리스트 회원 리스트에 저장 및 반환
