@@ -1,6 +1,6 @@
 import axios from "axios";
-const HEADER = 'application/json'
-const TCAT_DOMAIN = "http://localhost:8100"; //server path
+const HEADER = {'Content-Type' : 'application/json'}
+const TCAT_DOMAIN = "http://localhost:8100";
 
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
@@ -35,7 +35,6 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/update",params,HEADER)
     },
-
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
         console.log("api 찍힌 값 : " + commentIndex, memberIndex);
@@ -60,10 +59,9 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+`/api/accuse/${(reviewIndex)}`,params, HEADER)
     },
-
     // 상품 상세 가져오기
-    getDetail : async function(code) {
-        return await axios.post(TCAT_DOMAIN + `/api/product/${(code)}`, HEADER);
+    getDetail : async function(pCode) {
+        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}` , HEADER);
     },
     // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {
