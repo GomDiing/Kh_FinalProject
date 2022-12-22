@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.product;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.vo.CalendarReserveInfoVO;
@@ -30,6 +31,10 @@ public class DetailProductCheckList {
     @JsonProperty("reserve_day_in_month")
     List<String> findReserveTimeDayListInMonth = new ArrayList<>();
 
+    @JsonProperty("is_wish_product")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Boolean isWishProduct;
+
     /**
      * 한정 상품일 경우
      */
@@ -41,6 +46,22 @@ public class DetailProductCheckList {
         this.isNextMonthProductExist = calendarReserveInfoVO.getIsNextMonthProductExist();
         this.isLastMonthProductExist = calendarReserveInfoVO.getIsLastMonthProductExist();
         this.findReserveTimeDayListInMonth = calendarReserveInfoVO.getReserveTimeDayListInMonth();
+
+        return this;
+    }
+
+    /**
+     * 한정 상품일 경우
+     */
+    public DetailProductCheckList toDTO(Product product, CalendarReserveInfoVO calendarReserveInfoVO, Boolean isLimit, Boolean isWishProduct) {
+        this.isLimit = isLimit;
+        this.ageIsKorean = product.getAgeIsKorean();
+        this.isInfoCasting = product.getIsInfoCasting();
+        this.isInfoTimeCasting = product.getIsInfoTimeCasting();
+        this.isNextMonthProductExist = calendarReserveInfoVO.getIsNextMonthProductExist();
+        this.isLastMonthProductExist = calendarReserveInfoVO.getIsLastMonthProductExist();
+        this.findReserveTimeDayListInMonth = calendarReserveInfoVO.getReserveTimeDayListInMonth();
+        this.isWishProduct = isWishProduct;
 
         return this;
     }

@@ -44,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
     private final ReserveTimeRepository reserveTimeRepository;
     private final ReserveTimeCastingRepository reserveTimeCastingRepository;
     private final ReserveTimeSeatPriceRepository reserveTimeSeatPriceRepository;
+    private final MemberRepository memberRepository;
+    private final WishProductRepository wishProductRepository;
     @Override
     public BrowseKeywordPageDTO browseByKeyword(String title, Pageable pageable) {
 
@@ -89,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
      * @return 상세 페이지 DTO
      */
     @Override
-    public DetailProductDTO detailProductPage(String productCode) {
+    public DetailProductDTO detailProductPage(String productCode, Long memberIndex) {
         //상품 조회, 없다면 예외 처리
         Product findProduct = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE));
@@ -103,6 +105,14 @@ public class ProductServiceImpl implements ProductService {
 
         //좌석/가격 리스트 조회 및 Entity -> DTO 리스트
         List<SeatPriceDTO> seatPriceDTOList = createSeatPriceDTOList(findProduct);
+
+        //회원 인덱스가 있다면 회원 정보의 좋아요 유무 확인
+        boolean isWishProduct = false;
+        if (memberIndex != -1) {
+            Member loginMember = memberRepository.findByIndex(memberIndex)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            isWishProduct = wishProductRepository.findByMemberAndProduct(loginMember, findProduct).isPresent();
+        }
 
         //상시 혹은 한정 상품 여부 판단
         Boolean isLimit = isLimitOrAlways(findProduct);
@@ -127,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
         processTimeSeatPrice(calendarReserveInfoVO.getReserveTimeListFirstList(), seatPriceDTOList);
 
         //상세 상품 체크 리스트 생성
-        DetailProductCheckList detailProductCheckList = new DetailProductCheckList().toDTO(findProduct, calendarReserveInfoVO, isLimit);
+        DetailProductCheckList detailProductCheckList = new DetailProductCheckList().toDTO(findProduct, calendarReserveInfoVO, isLimit, isWishProduct);
 
         //상세 상품 간단 정보 생성
         DetailProductCompactDTO detailProductCompactDTO = new DetailProductCompactDTO().toDTO(findProduct);

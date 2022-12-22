@@ -42,4 +42,7 @@ public class WishProductController {
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CANCEL_WISH_PRODUCT), HttpStatus.OK);
     }
+
+//    @GetMapping("{index}")
+//    public ResponseEntity<DefaultResponse<Object>> searchAllBy
 }
