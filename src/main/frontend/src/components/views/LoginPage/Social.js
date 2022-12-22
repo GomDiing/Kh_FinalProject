@@ -266,7 +266,9 @@ function Social() {
             </div>
             <div>
             </div>
-                <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button></div>
+                <div className="btn-group">
+                <button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button>
+                </div>
             </div>
         </form>
     </div>

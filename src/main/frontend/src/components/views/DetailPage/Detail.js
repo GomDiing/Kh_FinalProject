@@ -122,7 +122,7 @@ function Detail() {
     setPcode(code);
     const getData = async()=> {
       try {
-        const res = await DetailApi.getDetail(code);
+        const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
           console.log(res.data.results.compact_list.perf_time_break);
           // checkList 특정 요소의 유무 판단
@@ -198,7 +198,7 @@ function Detail() {
   
   return (
     <DWrap>
-      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop}>
+      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
       <BsArrowUpCircle className='arrow'/>
         </button>
       <MainHeader/>

@@ -1,9 +1,8 @@
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react"
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
-import { seatIndexAction } from "../../util/Redux/Slice/seatIndexSlice";
 import { ADMIN_KEY } from "../Config";
 import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
 
@@ -76,7 +75,7 @@ const PayReady = (title, total, tax, value, seatNumber, userInfo, price) => {
     const data = {
       params: {
         cid: "TC0ONETIME",
-        tid : test.tid,
+        tid : payment.tid,
         partner_order_id: "partner_order_id",
         // 가맹점 회원 id
         partner_user_id: "partner_user_id",
@@ -160,7 +159,7 @@ const PayCancel = () => {
   console.log(ticket);
   const [cancelTry, setCancelTry] = useState(false);
   // 공연 날짜
-  const reserveTime = ticket.reserve_time;
+  const viewTime = ticket.view_time;
   const today = new Date();
   const isSameDate = (date1, date2) => {
     return date1.getFullYear() === date2.getFullYear()
@@ -182,26 +181,22 @@ const PayCancel = () => {
   });
 
   // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
-    if(isSameDate(new Date(reserveTime), today)) {
-      setCancelTry(false);
-
-    } else if (new Date(2022, 12 -1, 25).getDate() - today.getDate() >= 3 && new Date(reserveTime).getDate() - today.getDate() > 1) {
-      // 3일 전이면 총 금액은 수수료 5% 떼고 취소
-      setCancel(state => ({
-        ...state,
-        final_amount : state.final_amount - Math.floor(state.final_amount / 20)
-      }));
-
-    } else if (new Date(reserveTime).getDate() - today.getDate() === 1 && new Date(reserveTime).getDate() - today.getDate() > 0) {
-      // 하루 전이면 총 금액 수수료 10% 떼고 취소
-      setCancel(state => ({
-        ...state,
-        final_amount : state.final_amount - Math.floor(state.final_amount / 10)
-      }));
-    }
-    // 확인
-    console.log(cancel);
-
+  // useEffect(() => {
+  //   const onPayCancelDate = (reserveTime, today) => {
+  //     if(isSameDate(new Date(reserveTime), today)) {
+  //       setCancelTry(false);
+  //     } else if (new Date(reserveTime).getDate() - today.getDate() >= 3 && new Date(reserveTime).getDate() - today.getDate() > 1) {
+  //       // 3일 전이면 총 금액은 수수료 5% 떼고 취소
+  //     } else if (new Date(reserveTime).getDate() - today.getDate() === 1 && new Date(reserveTime).getDate() - today.getDate() > 0) {
+  //       // 하루 전이면 총 금액 수수료 10% 떼고 취소
+  //       setCancel(state => ({
+  //         ...state,
+  //         final_amount : state.final_amount - Math.floor(state.final_amount / 10)
+  //       }));
+  //     }
+  //   }
+  //   onPayCancelDate(viewTime, today);
+  // }, [viewTime]);
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
@@ -209,22 +204,18 @@ const PayCancel = () => {
     setModalOpen(false);
     navigate('/', {replace:true});
     }
-    const[data, setData] = useState({
-        next_redirect_pc_url : "",
-        params: {
-          cid: "TC0ONETIME",
-          // 결제 고유번호
-          tid: cancel.tid,
-          // 결제 총 금액을 넘겨줌
-          cancel_amount: cancel.final_amount,
-          // 결제 비과게 총 금액 5%
-          cancel_tax_free_amount: cancel.tax_free_amount,
-        }
-      });
+    const data = {
+      params: {
+        cid: "TC0ONETIME",
+        tid : cancel.tid,
+        cancel_amount	: cancel.final_amount - 100000,
+        cancel_tax_free_amount : cancel.tax_free_amount - 10000,
+      }
+    };
 
     // payCancel 들어오면 결제 취소 ! ! !
     useEffect(() => {
-        const { params } = data;
+      const { params } = data;
         axios({
             url: "https://kapi.kakao.com/v1/payment/cancel",
             method: "POST",
@@ -232,7 +223,7 @@ const PayCancel = () => {
                 Authorization: `KakaoAK ${ADMIN_KEY}`,
                 "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
             },
-            params
+            params,
         }).then(response => {
           console.log(response);
         }).catch(error => {
@@ -249,12 +240,14 @@ const PayCancel = () => {
           if(response.data.statusCode === 200) {
           }
         } catch (e) {
+          console.log(ticket.reserve_ticket);
           console.log(e);
           console.log('에러!!!');
         }
       }
-      cancelTry && payCancel();
-    }, [cancelTry, ticket.reserve_ticket]);
+      payCancel();
+      openModal();
+    }, []);
 
     const Body = () => {
       return(
@@ -272,14 +265,6 @@ const PayCancel = () => {
         {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
       </div>
     );
-
-    // return(
-    //     <div>
-    //         <h1>결제 취소가 완료 되었습니다.</h1>
-    //         <Link to='/MyPage/CList'>취소 내역 확인하러 가기</Link>
-    //         <Link to='/'>메인으로 돌아가기</Link>
-    //     </div>
-    // );
   };
 
 export { PayReady, PayResult, PayCancel };

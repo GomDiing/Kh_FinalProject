@@ -1,5 +1,5 @@
 import axios from "axios";
-const HEADER = 'application/json';
+const HEADER = {'Content-Type' : 'application/json'}
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const PayApi = {
@@ -17,7 +17,7 @@ const PayApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/reserve/payment", payReadyObj, HEADER);
   },
-  // 결제 취소
+  // 결제 환불
   payCancel : async function(ticket) {
     return await axios.get(TCAT_DOMAIN + `/api/reserve/refund/${ticket}`, HEADER);
   },

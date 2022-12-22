@@ -275,6 +275,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public Boolean deleteChangeMember(DeleteMemberDTO deleteMemberDTO) {
+        MemberProviderType providerType = MemberProviderType.valueOf(deleteMemberDTO.getProviderType());
+        if (providerType != MemberProviderType.HOME) {
+            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
+        }
+
         // 아이디 패스워드로 조회 성공하면
         Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(
                 deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
@@ -412,7 +417,8 @@ public class MemberServiceImpl implements MemberService {
         //신고횟수 5회 이상 회원 조회
         Optional<List<Member>> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4);
 
-        if (findMemberList.isEmpty()) return null;
+        if (findMemberList.get().isEmpty())
+            throw new CustomException(CustomErrorCode.EMPTY_MEMBER_ACCUSE_COUNT);
 
         //전체 블랙리스트 회원 리스트에 저장 및 반환
         List<MemberDTO> memberDTOList = new ArrayList<>();
