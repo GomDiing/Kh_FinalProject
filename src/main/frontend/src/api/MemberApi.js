@@ -92,6 +92,19 @@ const MemberApi = {
       password : password
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/delete/cancel", cancelObj, HEADER);
+  },
+  // 소셜 회원가입
+  socialSign : async function(inputName, inputEmail, road, jibun, address, postCode, type){
+    const signMember = {
+      name : inputName,
+      email : inputEmail,
+      road : road,
+      jibun : jibun,
+      detail : address,
+      zipcode : postCode,
+      providerType : type,
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   }
 }
 export default MemberApi;

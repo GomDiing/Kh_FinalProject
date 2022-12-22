@@ -1,5 +1,5 @@
 import axios from "axios";
-const HEADER = 'application/json'; 
+const HEADER = 'application/json'
 const TCAT_DOMAIN = "http://localhost:8100"; //server path
 
 const DetailApi={
@@ -63,10 +63,10 @@ const DetailApi={
     },
 
     // 상품 상세 가져오기
-    getDetail : async function(pCode) {
-        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
+    getDetail : async function(code) {
+        return await axios.post(TCAT_DOMAIN + `/api/product/${(code)}`, HEADER);
     },
-    // 다음달 예매가능 일자 
+    // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {
         return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
     },
