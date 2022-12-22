@@ -5,7 +5,9 @@ const initialState = {
     info : {
         userIndex : undefined,
         userId : undefined,
-        userPoint : undefined,
+        userPoint : 0,
+        userName : undefined,
+        userEmail : undefined,
         userProvider_type : undefined,
     }
 };
@@ -19,7 +21,7 @@ const userSlice = createSlice({
             state.info = action.payload.data;
         },
         setUserPoint : (state, action) => {
-            state.info.userPoint = action.payload;
+            state.info = action.payload;
         }
     }
 })

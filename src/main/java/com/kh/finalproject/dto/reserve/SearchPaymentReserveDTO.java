@@ -41,6 +41,7 @@ public class SearchPaymentReserveDTO {
     private String paymentCompleteTime;
 
     private String kakaoTID;
+    private Integer kakaoTaxFreeAmount;
 
     public SearchPaymentReserveDTO toDTO(Reserve reserve, Integer count, Integer finalAmount) {
         this.reserveTime = reserve.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -53,11 +54,13 @@ public class SearchPaymentReserveDTO {
         this.reserveStatus = reserve.getStatus().name();
         this.paymentCompleteTime = reserve.getCreateTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         this.kakaoTID = "null";
+        this.kakaoTaxFreeAmount = 0;
 
         return this;
     }
 
-    public void updateTID(String kakaoTID) {
+    public void updateTID(String kakaoTID, Integer kakaoTaxFreeAmount) {
         this.kakaoTID = kakaoTID;
+        this.kakaoTaxFreeAmount = kakaoTaxFreeAmount;
     }
 }

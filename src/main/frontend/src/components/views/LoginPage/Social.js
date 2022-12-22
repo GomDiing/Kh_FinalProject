@@ -6,6 +6,8 @@ import { DaumPostcodeEmbed } from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import PopupDom from "../../views/SignPage/PopupDom";
 import MemberApi from "../../../api/MemberApi";
+import { useDispatch } from 'react-redux';
+import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const SignWrap = styled.div`
     width: 100%;
@@ -126,15 +128,15 @@ padding: "7px",
 function Social() {
     const location = useLocation();
     const Navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    
     const [inputName, setInputName] = useState('');
     const [address, setAddress] = useState('');
     const [inputEmail, setInputEmail] = useState('');
-    const [join, setJoin] = useState('');
     const [type, setType] = useState('');
+    // const [Join, setJoin] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [isName, setIsName] = useState(false);
-    const [isEmail, setIsEmail] = useState(false);
 
     useEffect(() => {
         const AccInfo = location.search
@@ -144,11 +146,22 @@ function Social() {
         console.log(inputName)
         setInputEmail(params.get('email'));
         console.log(inputEmail);
-        setJoin(params.get('isJoin'));
-        console.log(join);
+        // setJoin('isJoin');
+        // console.log(Join);
         setType(params.get('providerType'));
         console.log(type);
-        if(join === 1) {
+        const name = params.get('name')
+        const email = params.get('email')
+        const provider_type = params.get('providerType')
+        const join = params.get('isJoin');
+        if(join == 1) {
+            const data = {
+                userName : name,
+                userEmail : email,
+                userProvider_type : provider_type,
+            }
+            dispatch(loginActions.setUserInfo({data}));
+            
             alert('로그인 성공')
             Navigate('/')
         } 
@@ -168,22 +181,17 @@ function Social() {
     const onOpen = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
 
-    const onChangeName = e => {
+    const checkName = e => {
         const value = e.target.value;
         setInputName(value);
+        const regEx = /^[ㄱ-ㅎ|가-힣]+$/;
+        if(regEx.test(value)) {
             if(value.length > 1) {
                 setIsName(true);
-            } else {
-            setIsName(false);     
+            }
+            }
+            else setIsName(false);
         }
-    }
-    const onChangeEmail = e => {
-        const value = e.target.value;
-        setInputEmail(value);
-        const regEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-        if(regEx.test(value)) setIsEmail(true);
-        else setIsEmail(false);
-    }
 
     const handlePostCode = (data) => {
     setFullAddress(data.address);
@@ -204,7 +212,6 @@ function Social() {
 
     const onClickSign = async () => {
     try {
-        // 수정해야됨!!
         const response = await MemberApi.socialSign(inputName, inputEmail, road, jibun, address, postCode, type);
         if(response.data.statusCode === 200) {
         alert("회원가입 완료");
@@ -233,7 +240,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-name">Name</label>
                 <div className="input-group">
-                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={onChangeName} data-lpignore="true" />
+                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={checkName} data-lpignore="true" />
             </div>
             <div className='fail-message'>
             {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
@@ -242,7 +249,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-email">Email</label>
                 <div className="input-group">
-                <input type="email" className={inputEmail.length > 0 && 'reg-input'} id="sign-email" value={inputEmail} onBlur={onChangeEmail} readonly data-lpignore="true" />
+                <input type="email" id="sign-email" value={inputEmail} readOnly data-lpignore="true" />
             </div>
             </div>
             <div className='addrContainer' id='popupDom'>

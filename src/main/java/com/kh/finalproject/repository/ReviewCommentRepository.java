@@ -1,6 +1,5 @@
 package com.kh.finalproject.repository;
 
-import com.kh.finalproject.dto.reviewComment.ReviewCommentDTO;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
@@ -46,7 +45,9 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 
-//    List<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status);
+
+    List<ReviewComment> findByProductCodeAndStatusAndLayer(String code, ReviewCommentStatus status, Pageable pageable, Integer layer);
+    List<ReviewComment> findByProductCodeAndStatusAndLayerAndIndexNotAndGroup(String code, ReviewCommentStatus status, Integer layer, Long index, Long group);
 
     Page<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status, Pageable pageable);
 

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 public class SearchByIdDTO {
-
-    @NotNull(message = "아이디는 필수 입력 값")
     private String id;
+    private String email;
+    private String providerType;
 }
