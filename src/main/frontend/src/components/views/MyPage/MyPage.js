@@ -91,65 +91,37 @@ function MyPage() {
   const userInfo = useSelector((state) => state.user.info);
 
   useEffect(() => {
-    const getInfo = async() => {
-      if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') {
-      try {
-        const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
-        if(res.data.statusCode === 200) {
-          SetInfo(res.data.results);
-          console.log(res.data);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    } else if(userInfo.userProvider_type === 'HOME'){
-      try {
-        const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
-        if(res.data.statusCode === 200) {
-          SetInfo(res.data.results);
-          console.log(res.data);
-        }
-      } catch (e) {
-        console.log(e);
-      }
+    if(userInfo.userProvider_type === 'HOME') {
+      getInfo();
+    } else if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') { 
+      getInfo2();
     }
-  }; getInfo();
-  },[userInfo.userEmail, userInfo.userId, userInfo.userProvider_type])
-  
-  // const DeleteModalBody = props => {
-  //     const [inputPwd, setInputPwd] = useState('');
-  //     const onChangePassword = e => setInputPwd(e.target.value);
-  //       return(
-  //         <div>
-  //           <h3>정말 탈퇴 하시겠습니까?</h3>
-  //           <ul>
-  //             <li>탈퇴신청 시 1주일 뒤에 처리됩니다.</li>
-  //             <li>1주일 이내 다시 로그인 할 경우 다시 복구신청이 가능합니다.</li>
-  //             <li>탈퇴신청 1주일이 지나면 영구탈퇴가 되므로 주의바랍니다.</li>
-  //           </ul>
-  //           <div style={{display : 'flex', alignItems: 'center', justifyContent: 'center'}}>
-  //             <input style={{width : '300px', height: '40px'}} type='text' placeholder='패스워드를 입력 후 확인을 눌러주세요' value={inputPwd} onChange={onChangePassword} />
-  //             <button type='button' onClick={props.delete}>확인</button>
-  //           </div>
-  //         </div>
-  //       );
-  //   }
+  },[userInfo.userProvider_type])
 
-  //   const onClickDeleteModal = async () => {
-  //     try{
-  //       const result = await MemberApi.deleteMmeber(userInfo.userId, userInfo.userProvider_type);
-  //       console.log(result);
-  //       if(result.data.statusCode === 200) {
-  //         alert('회원탈퇴 신청이 정상적으로 완료되었습니다.');
-  //       } else {
-  //         alert('비밀번호를 다시 확인해주세요.');
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       console.log('통신 오류...')
-  //     }
-  //   }
+  const getInfo = async() => {
+    try {
+      const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
+      if(res.data.statusCode === 200) {
+        SetInfo(res.data.results);
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
+  const getInfo2 = async() => {
+    try {
+      const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
+      if(res.data.statusCode === 200) {
+        SetInfo(res.data.results);
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+    
   useEffect(() => {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
     el[0].style.position = 'relative';
