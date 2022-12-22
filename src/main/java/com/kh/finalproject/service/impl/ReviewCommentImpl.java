@@ -13,6 +13,7 @@ import com.kh.finalproject.repository.ReviewCommentRepository;
 import com.kh.finalproject.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,10 +194,15 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-    public List<ParentReviewDTO> allComment(String productCode, Pageable pageable) {
+    public PageReviewCommentDTO allComment(String productCode, Pageable pageable) {
         List<ParentReviewDTO> parentReviewDTOList = new ArrayList<>();
-        //후기 조회
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.findByProductCodeAndStatusAndLayer(productCode, ReviewCommentStatus.ACTIVE, pageable, 0);
+        //후기만 조회
+        Page<ReviewComment> reviewCommentPage = reviewCommentRepository.findByProductCodeAndStatusAndLayer(productCode, ReviewCommentStatus.ACTIVE, pageable, 0);
+
+        List<ReviewComment> reviewCommentList = reviewCommentPage.getContent();
+        Integer totalPages = reviewCommentPage.getTotalPages();
+        Integer page = reviewCommentPage.getNumber() + 1;
+        Long totalResults = reviewCommentPage.getTotalElements();
 
         for(ReviewComment reviewComment : reviewCommentList){
             ParentReviewDTO parentReviewDTO = new ParentReviewDTO().toDTO(reviewComment);
@@ -215,7 +221,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
             parentReviewDTOList.add(parentReviewDTO);
 
         }
-        return parentReviewDTOList;
+        return new PageReviewCommentDTO().toPageDTO(page, totalPages, totalResults, parentReviewDTOList);
     }
 
     /*댓글 순서 정렬용*/
