@@ -105,19 +105,55 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 정보 수정 메서드
      * 아이디와 동일한 가입 주체로 회원을 조회하되 UNREGISTER는 조회하지 않는다
+     * 홈 가입 회원은 아이디, 비밀번호 공백 여부 확인 -> 홈 가입 회원 내 해당 회원 아이디 조회 -> 회원 정보 갱신
+     * 소셜 가입 회원은 이메일 공백 여부 확인 -> 동일 소셜 가입 회원 내 이메일로 회원 조회 -> 회원 정보 갱신
      */
     @Override
     @Transactional
     public void editMemberInfoByHome(EditMemberInfoDTO memberInfoDTO) {
         //주어진 ID로 회원 조회
-        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(memberInfoDTO.getProviderType()))
-                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//        Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(memberInfoDTO.getProviderType()))
+//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//
+//        //주어진 회원과 연결된 주소 조회
+//        Address findAddress = addressRepository.findByMember(findMember);
+//
+//        //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
+//        findMember.updateMember(findAddress, memberInfoDTO);
 
-        //주어진 회원과 연결된 주소 조회
-        Address findAddress = addressRepository.findByMember(findMember);
-
-        //회원 정보 갱신 (단순 값 교체 + 연관관계 편의 메서드)
-        findMember.updateMember(findAddress, memberInfoDTO);
+        MemberProviderType editProviderType = MemberProviderType.valueOf(memberInfoDTO.getProviderType());
+        //홈페이지 가입 회원일 시
+        if (editProviderType  == MemberProviderType.HOME) {
+            //아이디가 없으면 예외처리
+            if (Objects.isNull(memberInfoDTO.getId())) {
+                throw new CustomException(CustomErrorCode.EMPTY_ID);
+            }
+            //비밀번호 없으면 예외 처리
+            if (Objects.isNull(memberInfoDTO.getPassword())) {
+                throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
+            }
+            //회원 조회
+            Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(memberInfoDTO.getId(),
+                            MemberStatus.UNREGISTER, MemberProviderType.HOME)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_SEARCH_ID));
+            //주어진 회원과 연결된 주소 조회
+            Address findAddress = addressRepository.findByMember(findMember);
+            //정보 갱신
+            findMember.updateMemberHome(findAddress, memberInfoDTO);
+        } else {
+            //이메일 정보가 없으면 예외 처리
+            if (Objects.isNull(memberInfoDTO.getEmail())) {
+                throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
+            }
+            //회원 조회
+            Member findMember = memberRepository.findByEmailAndStatusNotAndProviderType(
+                            memberInfoDTO.getEmail(), MemberStatus.UNREGISTER, editProviderType)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            //주어진 회원과 연결된 주소 조회
+            Address findAddress = addressRepository.findByMember(findMember);
+            //정보 갱신
+            findMember.updateMemberSocial(findAddress, memberInfoDTO);
+        }
     }
 
     @Override
@@ -351,14 +387,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 회원 상태 탈퇴 변환 메서드
+     * 회원 상태 변환 메서드
      */
     @Transactional
     public void changeMemberStatusToUnregister(List<CheckMemberDTO> checkMemberDTOList){
-        for(CheckMemberDTO checkMemberDTO : checkMemberDTOList){
-            log.info("memberIndex = {}", checkMemberDTO.getIndex());
-            memberRepository.changeStatusMember(checkMemberDTO.getIndex(), MemberStatus.UNREGISTER)
-                    .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
+        List<Member> blackMemberList = new ArrayList<>();
+        for (CheckMemberDTO memberDTO : checkMemberDTOList) {
+            //회원 조회, 없다면 예외
+            Member findMember = memberRepository.findByIndex(memberDTO.getIndex())
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            blackMemberList.add(findMember);
+        }
+
+        //블랙리스트 변환
+        for (Member member : blackMemberList) {
+            member.updateStatus(MemberStatus.BLACKLIST);
         }
     }
 
