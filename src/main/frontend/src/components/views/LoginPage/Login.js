@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { KAKAO_AUTH_URL } from '../../Config';
 import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
@@ -241,10 +241,19 @@ const IdStyle = styled.div`
   function Login() {
   // 카카오 로그인
     const KakaoLogin = () => {
+      // window.location.href = KAKAO_AUTH_URL;
+        const location = useLocation();
         fetch(`${KAKAO_AUTH_URL}`)
-        .then(res => console.log(res.header))
+        .then(res => console.log(res.data))
+        const KakaoAccInfo = location.search
+        console.log(KakaoAccInfo);
+        let params = new URLSearchParams(KakaoAccInfo);
+        let kEmail = params.get('email');
+        console.log(kEmail);
+        let ckJoin = params.get('isJoin');
+        console.log(ckJoin);
     }
-    // window.location.href = KAKAO_AUTH_URL;
+
     // };
 
     const [modalOpen, setModalOpen] = useState(false);
