@@ -1,4 +1,4 @@
-package com.kh.finalproject.vo.kakao;
+package com.kh.finalproject.social.kakao;
 
 import lombok.Getter;
 

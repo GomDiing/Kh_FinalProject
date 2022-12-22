@@ -1,20 +1,15 @@
-package com.kh.finalproject.controller;
+package com.kh.finalproject.social;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kh.finalproject.dto.member.KakaoLoginResponseDTO;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
-import com.kh.finalproject.response.DefaultErrorResponse;
-import com.kh.finalproject.response.DefaultResponse;
-import com.kh.finalproject.response.DefaultResponseMessage;
-import com.kh.finalproject.response.StatusCode;
 import com.kh.finalproject.service.MemberService;
-import com.kh.finalproject.service.impl.SocialLoginServiceImpl;
-import com.kh.finalproject.vo.kakao.KakaoLoginInfoAccount;
-import com.kh.finalproject.vo.kakao.KakaoLoginInfoProfile;
-import com.kh.finalproject.vo.kakao.KakaoLoginInfoProperties;
-import com.kh.finalproject.vo.kakao.KakaoLoginResponse;
+import com.kh.finalproject.social.kakao.KakaoLoginInfoAccount;
+import com.kh.finalproject.social.kakao.KakaoLoginInfoProfile;
+import com.kh.finalproject.social.kakao.KakaoLoginInfoProperties;
+import com.kh.finalproject.social.kakao.KakaoLoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,9 +30,8 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/login/oauth2/code")
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
-public class SocialLoginController {
+public class KakaoLoginController {
 
-    private final SocialLoginServiceImpl socialLoginService;
 
     private final MemberService memberService;
     @Value("${kakao.client-id}")
@@ -51,6 +45,8 @@ public class SocialLoginController {
 
     @Value("${kakao.redirect-uri}")
     private String kakaoRedirectUri;
+
+
 
     @GetMapping("/kakao")
     public String redirectKakaoLogin(
@@ -106,7 +102,7 @@ public class SocialLoginController {
                 String nickname = properties.getNickname();
                 String email = kakao_account.getEmail();
 
-                Boolean isJoin = memberService.searchByEmailSocialLogin(email);
+                Boolean isJoin = memberService.searchByEmailSocialLogin(email, MemberProviderType.KAKAO);
                 int isJoinParam = 0;
                 if (isJoin) isJoinParam = 1;
 
@@ -114,8 +110,8 @@ public class SocialLoginController {
                         .queryParam("name", nickname)
                         .queryParam("email", email)
                         .queryParam("isJoin",isJoinParam)
-                        .queryParam("kakaoSuccess", 1)
-                        .queryParam("isJoin", isJoinParam)
+                        .queryParam("socialSuccess", 1)
+                        .queryParam("providerType", MemberProviderType.KAKAO.name())
                         .build()
                         .encode(StandardCharsets.UTF_8);
             }
@@ -124,15 +120,9 @@ public class SocialLoginController {
             throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
         return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
-                .queryParam("kakaoSuccess", 0)
+                .queryParam("socialSuccess", 0)
+                .queryParam("providerType", MemberProviderType.KAKAO.name())
                 .build()
                 .encode(StandardCharsets.UTF_8);
-
-
-//        res.setHeader("ProviderType", kakaoLoginResponse.getProviderType());
-//        res.setHeader("IsJoined", kakaoLoginResponse.getIsJoin());
-//        res.setHeader("MemberEmail", kakaoLoginResponse.getEmail());
-//
-//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_KAKAO_SIGNUP, kakaoLoginResponse), HttpStatus.OK);
     }
 }
