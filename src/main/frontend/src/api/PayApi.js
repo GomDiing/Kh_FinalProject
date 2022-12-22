@@ -18,15 +18,8 @@ const PayApi = {
     return await axios.post(TCAT_DOMAIN + "/api/reserve/payment", payReadyObj, HEADER);
   },
   // 결제 취소
-  payCancel : async function(ticket, amount, discount, finalAmount, method, TID) {
-    const payCancelObj = {
-      amount : amount,
-      discount : discount,
-      finalAmount : finalAmount,
-      method : method,
-      kakaoTID : TID
-    }
-    return await axios.get(TCAT_DOMAIN + `/api/reserve/refund/${ticket}`, payCancelObj, HEADER);
+  payCancel : async function(ticket) {
+    return await axios.get(TCAT_DOMAIN + `/api/reserve/refund/${ticket}`, HEADER);
   },
   // 결제 내역 조회
   paySelect : async function(index) {
