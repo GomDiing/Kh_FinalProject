@@ -35,9 +35,9 @@ const BodyStyle = styled.div`
   .kpay-button {
     background-color: white;
   }
-  .sh {
+  /* .sh {
     border-left: 1px solid black;
-  }
+  } */
   
 `;
 

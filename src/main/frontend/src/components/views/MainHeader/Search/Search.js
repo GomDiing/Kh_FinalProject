@@ -100,18 +100,18 @@ const SearchContainer = styled.div`
             }
         }
 
-`
+        `
 const Search = () =>{
     const text = window.localStorage.getItem("searchText")
     const [SearchData, setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
     const Navigate = useNavigate();
-
+    
     useEffect(() => {
         const SearchAsync = async() =>{
             try{
                 const res = await MainApi.mainsearch(text)
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data.statusCode === 200){
                     console.log("성공")
                     setSearchData(res.data.results.content);

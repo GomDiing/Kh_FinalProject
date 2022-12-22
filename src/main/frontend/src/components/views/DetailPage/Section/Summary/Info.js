@@ -44,6 +44,9 @@ const InfoStyle = styled.div`
     .infoPriceList {
         margin-left: 1rem;
     }
+    .modal > section > main > div > div{
+        margin-top: 0;
+    }
 
 }
 `;

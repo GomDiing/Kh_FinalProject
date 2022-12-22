@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import AdminApi from '../../../../../api/AdminApi'
 import { Rate } from "antd";
 import {HeartOutlined} from "@ant-design/icons/lib/icons";
-
+import Alert from 'react-bootstrap/Alert';
+import Form from 'react-bootstrap/Form';
 
 
 const RecentComment=()=>{
@@ -30,27 +31,32 @@ const RecentComment=()=>{
     return(
         <RecentWrap>
         <div className="comment-container">
-            {reviewList&&reviewList.map(({index,memberId, title, like, rate, content,createTime}) =>(
-            <div className="ReviewBox"  key={memberId}>
-                <li className="MainReviewContents">
-                    <div className='review-top'>
-                        <div className="minititle">{title}</div>
-                        <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.3rem'}}/>
-                        <div className="mini-user">{memberId} | </div>
-                        <div className="mini-time"> {createTime}</div>
-                        <button className='like-button' type='disabled'>
-                            <HeartOutlined color='red'/>
-                            <div className="mini-like" >{like}</div>
-                        </button>
-                        
-                    </div>
-                <hr></hr>
-                <div className="ReviewContents">
-                    <p className="con">{content}</p>
+        <button class="button-53" role="button">관람 후기</button>
+
+            {reviewList&&reviewList.map(({index,memberId, title, like, rate, content,createTime,thumb_poster_url}) =>(
+            // <div key={index}>
+            <Alert key={index} variant="light" className="first-comment-container">
+                <div className='review-image-container'>
+                    <img src={thumb_poster_url}/>
                 </div>
-                </li>
-            </div>
-            ))}
+                <div className='review-text-container'>
+                    <div className="review-head-container">
+                         <div className="review-head-left">
+                        <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.7rem'}}/>
+                        </div>
+                        <div className="review-head-right">
+                            <Form.Label className="review-id">{memberId}</Form.Label>
+                            <Form.Label className="review-id">{createTime}</Form.Label>
+                        </div>
+                    </div>
+                        <Alert.Heading className="review-title">{title}</Alert.Heading>
+                        <p className="review-content">{content}</p>
+                        <hr/>
+                </div>
+          </Alert>
+        //   </div>
+            )
+            )}
         </div>
         </RecentWrap>
     )
@@ -94,12 +100,42 @@ li{
 .review-top{
     display: flex;
 }
-.mini-user{
-    margin-right: 0;
+.review-head-container{
+  display: flexbox;
+  justify-content: space-between;
+
 }
-.like-button{
-    border: none;
-    background-color: white;
-    display: flex;
+.review-head-right{
+  float: right;
+  .review-id,.review-like{
+    margin-right: 20px;
+  }
 }
+.review-title{
+  width: 90%;
+  margin-top: 15px;
+}
+.review-content{
+  height: 50px;
+}
+img{
+        width: 130px;
+        height: 160px;
+    }
+.first-comment-container{
+  /* justify-content: baseline,; */
+  display: flex;
+}
+.review-image-container{
+    flex: 1;
+  flex-direction: column;
+
+}
+.review-text-container{
+    flex: 5;
+  flex-direction: column;
+
+}
+
+
 `

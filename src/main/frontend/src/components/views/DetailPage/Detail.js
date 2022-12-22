@@ -206,7 +206,7 @@ function Detail() {
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
             <Content className='posterCon'>
-              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage}/>
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage} code={comList.code}/>
             </Content>
 
             <Content className='DetailInfoContainer' style={{width: '60%' }}>
@@ -248,7 +248,6 @@ function Detail() {
             <Tab eventKey="profile" title="관람후기">
             <WriteReview code={comList.code}/>
             <ReviewBody reviewList={reviewList}/>
-            {/* <ChildReview reviewList={reviewList}/> */}
             </Tab>
           </Tabs>
           </div>

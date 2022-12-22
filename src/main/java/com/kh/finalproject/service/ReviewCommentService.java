@@ -1,5 +1,6 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.member.PagingMemberDTO;
 import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.entity.ReviewComment;
 import org.springframework.data.domain.Pageable;
