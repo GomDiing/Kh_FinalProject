@@ -1,5 +1,6 @@
 package com.kh.finalproject.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import lombok.Getter;
@@ -16,7 +17,10 @@ public class SigninResponseDTO {
     private String detail;
     private String zipcode;
     private Integer point;
-    private MemberStatus status;
+    private String status;
+
+    @JsonProperty("provider_type")
+    private String providerType;
 
 
     public SigninResponseDTO toDTO(Member member) {
@@ -28,7 +32,8 @@ public class SigninResponseDTO {
         this.jibun = member.getAddress().getJibun();
         this.detail = member.getAddress().getDetail();
         this.zipcode = member.getAddress().getZipcode();
-        this.status = member.getStatus();
+        this.status = member.getStatus().name();
+        this.providerType = member.getProviderType().name();
 
         return this;
     }

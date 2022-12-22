@@ -6,6 +6,7 @@ const initialState = {
         userIndex : undefined,
         userId : undefined,
         userPoint : undefined,
+        userProvider_type : undefined,
     }
 };
 

@@ -1,9 +1,6 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.ReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
+import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;

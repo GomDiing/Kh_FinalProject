@@ -13,6 +13,7 @@ import com.kh.finalproject.repository.ReviewCommentRepository;
 import com.kh.finalproject.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,21 +36,21 @@ public class ReviewCommentImpl implements ReviewCommentService {
     public void create(CreateReviewCommentDTO createReviewCommentDTO) {
         /*공연 후기 작성 시 회원 아이디로 회원 조회*/
         Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
-        if(findOne.isEmpty()){
+        if (findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
         Member member = findOne.get();
         log.info("일치하는 아이디가 있습니다.", member);
         /*후기 작성 시 공연 조회 */
         Optional<Product> findProduct = productRepository.findByCode(createReviewCommentDTO.getProductCode());
-        if(findProduct.isEmpty()){
+        if (findProduct.isEmpty()) {
             throw new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE);
         }
         Product product = findProduct.get();
         log.info("일치하는 공연명이 있습니다.", product);
 
         /*작성 후 save*/
-        ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product, createReviewCommentDTO.getTitle(),createReviewCommentDTO.getContent(),
+        ReviewComment writeReviewComment = new ReviewComment().createReviewComment(member, product, createReviewCommentDTO.getTitle(), createReviewCommentDTO.getContent(),
                 createReviewCommentDTO.getRate());
         reviewCommentRepository.save(writeReviewComment);
 
@@ -68,7 +69,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
         int lastOrder = findAllReview.size();
 
-        ReviewComment savedreview = findAllReview.get(lastOrder - 1 );
+        ReviewComment savedreview = findAllReview.get(lastOrder - 1);
         log.info("savedreview.getIndex() = {}", savedreview.getIndex());
 
         savedreview.updateGroupAndOrder(group, lastOrder);
@@ -79,23 +80,23 @@ public class ReviewCommentImpl implements ReviewCommentService {
     /*후기 대댓글 작성*/
     @Override
     @Transactional
-    public void reCreate(CreateReviewCommentDTO createReviewCommentDTO){
+    public void reCreate(CreateReviewCommentDTO createReviewCommentDTO) {
         /*회원 조회*/
         Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
-        if(findOne.isEmpty()){
+        if (findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
         Member member = findOne.get();
         log.info("일치하는 아이디가 있습니다.", member);
         /*공연상품 조회 */
         Optional<Product> findProduct = productRepository.findByCode(createReviewCommentDTO.getProductCode());
-        if(findProduct.isEmpty()){
+        if (findProduct.isEmpty()) {
             throw new CustomException(CustomErrorCode.ERROR_EMPTY_PRODUCT_CODE);
         }
         Product product = findProduct.get();
 
         /*댓글 후기 작성*/
-        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member,product, createReviewCommentDTO.getContent());
+        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member, product, createReviewCommentDTO.getContent());
         reviewCommentRepository.save(rewriteReviewComment);
 
         /*해당 상품에 작성된 모든 후기 가져오기*/
@@ -121,14 +122,14 @@ public class ReviewCommentImpl implements ReviewCommentService {
             reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
         }
 
-        Integer lastOrder = findAllReview.get(findAllReview.size() -2).getOrder(); //마지막 쓰여진 글의 순서 가져오기
+        Integer lastOrder = findAllReview.get(findAllReview.size() - 2).getOrder(); //마지막 쓰여진 글의 순서 가져오기
 
         for (ReviewComment reviewComment : findAllReview) {
             if (reviewComment.getOrder() > lastOrder) {
                 reviewComment.updateOrder(reviewComment.getOrder() + 1);
             }
         }
-        findAllReview.get(findAllReview.size() -1).updateOrder(lastOrder + 1);
+        findAllReview.get(findAllReview.size() - 1).updateOrder(lastOrder + 1);
     }
 
     /*후기 댓글 삭제하기(status 상태 변화)*/
@@ -137,7 +138,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     public void remove(RemoveReviewCommentDTO removeReviewCommentDTO) {
 //        아이디 조회
         Optional<Member> findOne = memberRepository.findByIndex(removeReviewCommentDTO.getMemberIndex());
-        if(findOne.isEmpty()){
+        if (findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
         Member member = findOne.get();
@@ -155,7 +156,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     public void update(UpdateReviewCommentDTO updateReviewCommentDTO) {
         // 회원 고유 index 값으로 회원 조회
         Optional<Member> findOne = memberRepository.findByIndex(updateReviewCommentDTO.getMemberIndex());
-        if(findOne.isEmpty()){
+        if (findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
         Member member = findOne.get();
@@ -181,8 +182,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Override
     public List<ReviewCommentDTO> searchAll(Pageable pageSize) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayer(0,pageSize);
-//                .selectAll(pageSize);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayerAndStatus(0, ReviewCommentStatus.ACTIVE, pageSize);
 
         for (ReviewComment e : reviewCommentList) {
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
@@ -218,5 +218,4 @@ public class ReviewCommentImpl implements ReviewCommentService {
             }
         }
     }
-
 }

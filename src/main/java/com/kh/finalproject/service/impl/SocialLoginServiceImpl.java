@@ -3,6 +3,8 @@ package com.kh.finalproject.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.finalproject.dto.member.KakaoLoginResponseDTO;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
+import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -21,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +48,7 @@ public class SocialLoginServiceImpl {
     @Value("${kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
-    public KakaoLoginResponseDTO processKakaoLogin(String authCode, HttpServletResponse res, HttpSession session) {
+    public String processKakaoLogin(String authCode, HttpServletResponse res, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
@@ -94,13 +98,26 @@ public class SocialLoginServiceImpl {
                 String email = kakao_account.getEmail();
 
                 Boolean isJoin = memberService.searchByEmailSocialLogin(email);
+                int isJoinParam = 0;
+                if (isJoin) isJoinParam = 1;
 
-                return new KakaoLoginResponseDTO().toDTO(email, isJoin);
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+                        .queryParam("name", nickname)
+                        .queryParam("email", email)
+                        .queryParam("isJoin",isJoinParam)
+                        .queryParam("providerType", MemberProviderType.KAKAO.name())
+                        .queryParam("socialSuccess", 1)
+                        .build()
+                        .encode(StandardCharsets.UTF_8);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
-        return null;
+        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+                .queryParam("providerType", MemberProviderType.KAKAO.name())
+                .queryParam("socialSuccess", 0)
+                .build()
+                .encode(StandardCharsets.UTF_8);
     }
 }

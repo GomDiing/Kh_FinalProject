@@ -9,6 +9,7 @@ import com.kh.finalproject.response.DefaultErrorResponse;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
+import com.kh.finalproject.service.MemberService;
 import com.kh.finalproject.service.impl.SocialLoginServiceImpl;
 import com.kh.finalproject.vo.kakao.KakaoLoginInfoAccount;
 import com.kh.finalproject.vo.kakao.KakaoLoginInfoProfile;
@@ -18,16 +19,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 @RequestMapping("/login/oauth2/code")
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
@@ -35,16 +39,100 @@ public class SocialLoginController {
 
     private final SocialLoginServiceImpl socialLoginService;
 
+    private final MemberService memberService;
+    @Value("${kakao.client-id}")
+    private String kakaoId;
+
+    @Value("${kakao.client-secret}")
+    private String kakaoSecret;
+
+    @Value("${kakao.authorization-grant-type}")
+    private String kakaoAuthorizationGrantType;
+
+    @Value("${kakao.redirect-uri}")
+    private String kakaoRedirectUri;
+
     @GetMapping("/kakao")
-    public ResponseEntity<Object> redirectKakaoLogin(
+    public String redirectKakaoLogin(
             @RequestParam(value = "code") String authCode, HttpServletResponse res, HttpSession session) {
 
-        KakaoLoginResponseDTO kakaoLoginResponse = socialLoginService.processKakaoLogin(authCode, res, session);
+//        return socialLoginService.processKakaoLogin(authCode, res, session);
 
-        res.setHeader("ProviderType", kakaoLoginResponse.getProviderType());
-        res.setHeader("IsJoined", kakaoLoginResponse.getIsJoin());
-        res.setHeader("MemberEmail", kakaoLoginResponse.getEmail());
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_KAKAO_SIGNUP, kakaoLoginResponse), HttpStatus.OK);
+        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        MultiValueMap<String, String> accessTokenParams = new LinkedMultiValueMap<>();
+        accessTokenParams.add("grant_type", kakaoAuthorizationGrantType);
+        accessTokenParams.add("client_id", kakaoId);
+        accessTokenParams.add("code", authCode);
+        accessTokenParams.add("redirect_uri", kakaoRedirectUri);
+        accessTokenParams.add("client_secret", kakaoSecret);
+
+        log.info("accessTokenParams = {}", accessTokenParams.toString());
+        log.info("headers = {}", headers);
+
+        ResponseEntity<String> accessTokenResponse = restTemplate.postForEntity("https://kauth.kakao.com/oauth/token", accessTokenParams, String.class);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+                log.info("accessTokenResponse = {}", accessTokenResponse.getBody());
+            KakaoLoginResponse kakaoResponseObject = objectMapper.readValue(accessTokenResponse.getBody(), new TypeReference<KakaoLoginResponse>() {
+            });
+
+            session.setAttribute("Authorization", kakaoResponseObject.getAccess_token());
+
+            String header = "Bearer " + kakaoResponseObject.getAccess_token();
+            log.info("header = {}", header);
+            MultiValueMap<String, String> requestHeaders = new LinkedMultiValueMap<>();
+            requestHeaders.add("Authorization", header);
+
+            ResponseEntity<String> responseBody = restTemplate.exchange(
+                    "https://kapi.kakao.com/v2/user/me",
+                    HttpMethod.GET,
+                    new HttpEntity<>(requestHeaders),
+                    String.class
+            );
+
+            KakaoLoginInfoProfile profile = objectMapper.readValue(responseBody.getBody(), new TypeReference<KakaoLoginInfoProfile>() {
+            });
+
+            if (profile != null) {
+
+                KakaoLoginInfoProperties properties = profile.getProperties();
+                KakaoLoginInfoAccount kakao_account = profile.getKakao_account();
+
+                String nickname = properties.getNickname();
+                String email = kakao_account.getEmail();
+
+                Boolean isJoin = memberService.searchByEmailSocialLogin(email);
+                int isJoinParam = 0;
+                if (isJoin) isJoinParam = 1;
+
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+                        .queryParam("name", nickname)
+                        .queryParam("email", email)
+                        .queryParam("isJoin",isJoinParam)
+                        .queryParam("kakaoSuccess", 1)
+                        .queryParam("isJoin", isJoinParam)
+                        .build()
+                        .encode(StandardCharsets.UTF_8);
+            }
+
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
+        }
+        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+                .queryParam("kakaoSuccess", 0)
+                .build()
+                .encode(StandardCharsets.UTF_8);
+
+
+//        res.setHeader("ProviderType", kakaoLoginResponse.getProviderType());
+//        res.setHeader("IsJoined", kakaoLoginResponse.getIsJoin());
+//        res.setHeader("MemberEmail", kakaoLoginResponse.getEmail());
+//
+//        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_KAKAO_SIGNUP, kakaoLoginResponse), HttpStatus.OK);
     }
 }
