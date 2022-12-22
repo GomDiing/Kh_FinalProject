@@ -83,12 +83,13 @@ function MyPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [info, SetInfo] = useState('');
 
-  const userInfo = useSelector((state) => state.user.info)
+  const userInfo = useSelector((state) => state.user.info);
 
   useEffect(() => {
     const getInfo = async() => {
+      if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') {
       try {
-        const res = await MemberApi.searchId(userInfo.userId);
+        const res = await MemberApi.searchId(userInfo.userEmail, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
           SetInfo(res.data.results);
           console.log(res.data);
@@ -96,8 +97,19 @@ function MyPage() {
       } catch (e) {
         console.log(e);
       }
-    }; getInfo();
-    }, [userInfo.userId]);
+    } else {
+      try {
+        const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
+        if(res.data.statusCode === 200) {
+          SetInfo(res.data.results);
+          console.log(res.data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }; getInfo();
+  })
 
     console.log(info);
 

@@ -49,6 +49,7 @@ public enum CustomErrorCode {
     EMPTY_RESERVE_TIME_CASTING(StatusCode.BAD_REQUEST, "RTC001", "조회한 시간별 예매 정보가 없습니다"),
     ERROR_REMAIN_QUANTITY(StatusCode.BAD_REQUEST, "RTC002", "잔여 좌석이 부족합니다"),
     EMPTY_KAKAO_TID(StatusCode.BAD_REQUEST, "RTC003", "카카오페이 TID가 없습니다"),
+    EMPTY_KAKAO_TAX_FREE(StatusCode.BAD_REQUEST, "RTC004", "카카오페이 면세 금액이 없습니다"),
 
     ERROR_KAKAO_LOGIN(StatusCode.BAD_REQUEST, "SOCIAL02", "카카오 API가 실패했습니다"),
 

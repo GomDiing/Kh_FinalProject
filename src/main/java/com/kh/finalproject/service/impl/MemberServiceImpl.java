@@ -200,14 +200,42 @@ public class MemberServiceImpl implements MemberService {
      */
     @Transactional
     @Override
-    public MemberDTO searchById(String id) {
+    public MemberDTO searchById(SearchByIdDTO searchByIdDTO) {
+        log.info("searchByIdDTO.getProviderType()={}", searchByIdDTO.getProviderType());
+        MemberProviderType loginProviderType = MemberProviderType.valueOf(searchByIdDTO.getProviderType());
+        //홈페이지 가입 회원일 시
+        if (loginProviderType  == MemberProviderType.HOME) {
+            //아이디가 없으면 예외처리
+            if (Objects.isNull(searchByIdDTO.getId())) {
+                throw new CustomException(CustomErrorCode.EMPTY_ID);
+            }
+            //회원 조회
+            Member findMember = memberRepository.findByIdAndStatusNotAndProviderType(searchByIdDTO.getId(),
+                            MemberStatus.UNREGISTER, MemberProviderType.HOME)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+
+            Address findAddress = addressRepository.findByMember(findMember);
+            return new MemberDTO().toDTO(findMember, findAddress);
+            //소셜 로그인 가입 회원일 시
+        } else {
+            //이메일 정보가 없으면 예외 처리
+            if (Objects.isNull(searchByIdDTO.getEmail())) {
+                throw new CustomException(CustomErrorCode.EMPTY_EMAIL);
+            }
+            //회원 조회
+            Member findMember = memberRepository.findByEmailAndStatusNotAndProviderType(
+                            searchByIdDTO.getEmail(), MemberStatus.UNREGISTER, loginProviderType)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+            Address findAddress = addressRepository.findByMember(findMember);
+            return new MemberDTO().toDTO(findMember, findAddress);
+        }
         //홈에서 가입 회원이고 완전 탈퇴된 회원 제외
-        Member findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, MemberProviderType.HOME)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
-
-        Address memberAddress = addressRepository.findByMember(findId);
-
-        return new MemberDTO().toDTO(findId, memberAddress);
+//        Member findId = memberRepository.findByIdAndStatusNotAndProviderType(id, MemberStatus.UNREGISTER, MemberProviderType.HOME)
+//                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//
+//        Address memberAddress = addressRepository.findByMember(findId);
+//
+//        return new MemberDTO().toDTO(findId, memberAddress);
     }
 
     /**
@@ -417,7 +445,7 @@ public class MemberServiceImpl implements MemberService {
         //신고횟수 5회 이상 회원 조회
         Optional<List<Member>> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4);
 
-        if (findMemberList.get().isEmpty())
+        if (findMemberList.isEmpty())
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER_ACCUSE_COUNT);
 
         //전체 블랙리스트 회원 리스트에 저장 및 반환

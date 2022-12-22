@@ -13,7 +13,6 @@ import com.kh.finalproject.repository.ReviewCommentRepository;
 import com.kh.finalproject.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +95,8 @@ public class ReviewCommentImpl implements ReviewCommentService {
         Product product = findProduct.get();
 
         /*댓글 후기 작성*/
-        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member, product, createReviewCommentDTO.getContent());
+        ReviewComment rewriteReviewComment = new ReviewComment().createAddReviewComment(member, product, createReviewCommentDTO.getContent(),
+                createReviewCommentDTO.getGroup());
         reviewCommentRepository.save(rewriteReviewComment);
 
         /*해당 상품에 작성된 모든 후기 가져오기*/
@@ -119,7 +119,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
                 reCount++;
                 reGroup = parentGroup;
             }
-            reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
+//            reviewComment.updateGroup(reGroup); // 댓글 그룹 부모 그룹값으로 저장
         }
 
         Integer lastOrder = findAllReview.get(findAllReview.size() - 2).getOrder(); //마지막 쓰여진 글의 순서 가져오기
@@ -193,15 +193,29 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-    public List<ReviewCommentDTO> allComment(String productCode) {
-        List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE);
+    public List<ParentReviewDTO> allComment(String productCode, Pageable pageable) {
+        List<ParentReviewDTO> parentReviewDTOList = new ArrayList<>();
+        //후기 조회
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.findByProductCodeAndStatusAndLayer(productCode, ReviewCommentStatus.ACTIVE, pageable, 0);
 
-        for(ReviewComment e : reviewCommentList){
-            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e,e.getMember());
-            reviewCommentDTOList.add(reviewCommentDTO);
+        for(ReviewComment reviewComment : reviewCommentList){
+            ParentReviewDTO parentReviewDTO = new ParentReviewDTO().toDTO(reviewComment);
+            //댓글 조회 (해당 상품 + 상태(ACTIVE) + 레이어=1 + 후기가 아니고(인덱스가 후기 인덱스가 아니고) + 그룹이 후기 그룹인 댓글 조회
+            List<ReviewComment> findCommentList = reviewCommentRepository.findByProductCodeAndStatusAndLayerAndIndexNotAndGroup(productCode, ReviewCommentStatus.ACTIVE, 1, reviewComment.getIndex(), reviewComment.getGroup());
+            //해당 게시글에 댓글이 있다면
+            if (!findCommentList.isEmpty()) {
+                List<ChildCommentDTO> childCommentDTOList = new LinkedList<>();
+                for (ReviewComment findComment : findCommentList) {
+                    ChildCommentDTO childCommentDTO = new ChildCommentDTO().toDTO(findComment);
+                    childCommentDTOList.add(childCommentDTO);
+                }
+                //부모 후기에 자식 댓글 리스트 추가
+                parentReviewDTO.updateChildComment(childCommentDTOList);
+            }
+            parentReviewDTOList.add(parentReviewDTO);
+
         }
-        return reviewCommentDTOList;
+        return parentReviewDTOList;
     }
 
     /*댓글 순서 정렬용*/
