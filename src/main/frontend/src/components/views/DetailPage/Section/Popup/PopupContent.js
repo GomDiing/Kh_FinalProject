@@ -116,9 +116,8 @@ function PopupContent (props) {
     const openEvent = price - (price / 20);
 
     const [selectPrice, setSelectPrice] = useState(0);
-
+    const [checkTrue, setCheckTrue] = useState(false);
     const dispatch = useDispatch();
-    
     /**
      * Ticekt Discount !Duplicate Accept
      */
@@ -153,22 +152,22 @@ function PopupContent (props) {
           setType('student');
           totalPayChange(tickets, values, taxs, totals, student);
           break;
-          case 'double':
-            setDouValue(values);
-            setValue(0);
-            setEveValue(0);
-            setStuValue(0);
-            setType('double');
-            totalPayChange(tickets, values, taxs, totals, double);
-            break;
-            case 'event':
-              setEveValue(values);
-              setValue(0);
-              setDouValue(0);
-              setStuValue(0);
-              setType('event');
-            totalPayChange(tickets, values, taxs, totals, openEvent);
+        case 'double':
+          setDouValue(values);
+          setValue(0);
+          setEveValue(0);
+          setStuValue(0);
+          setType('double');
+          totalPayChange(tickets, values, taxs, totals, double);
           break;
+        case 'event':
+          setEveValue(values);
+          setValue(0);
+          setDouValue(0);
+          setStuValue(0);
+          setType('event');
+        totalPayChange(tickets, values, taxs, totals, openEvent);
+        break;
         default:
           alert('오류');
       }
@@ -190,24 +189,46 @@ function PopupContent (props) {
     <>
     {index === 1 &&
     <div>
-      <h2>좌석 선택 <h6><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></h6></h2>
+      <h2>좌석 선택 <p style={{fontSize : '14px'}}><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></p></h2>
       <div className='seat-container'>
-      {seat && seat.map((seats, index) => (
-        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
-          <li className="infoPriceItem">
-            <div onClick={() => {
-              setSeatList(seats.seat);
-              // 필터를 걸쳐 테스트를 통과한 것의 배열을 다시 만들어줌
-              const res = seatIndex.filter(test => test.seat.includes(seats.seat));
-              // 만들어진 배열에서 필요한 값을 추출..
-              setSeatNumber(res[0].index);
-              dispatch(seatIndexAction.setSeatInfo(res[0].index));
-            }}>
-              <span className="name">{seats.seat}</span>
-              <span className="price">{seats.price} <input className={'check' + index} type='checkbox' onClick={() => setPrice(seats.price)} /></span>
-            </div>
-          </li> <br />
-        </ul>
+      {seat && seat.map((seats, key) => (
+        <table style={{border: 'none'}} key={key}>
+          <thead>
+            <tr>
+              <th style={{border : 'none'}}
+              >등급</th>
+              <th style={{border : 'none'}}>가격</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{seats.seat}</td>
+              <td>{seats.price}<input className={'check' + key} checked={checkTrue} value={'check' + key} type='checkbox' onClick={e => {
+                // 선택한 좌석의 이름
+                setSeatList(seats.seat);
+                // 필터를 걸쳐 테스트를 통과한 것을 배열로 다시 만들어줌
+                const res = seatIndex.filter(test => test.seat.includes(seats.seat));
+                // 만들어진 배열에서 필요한 값을 추출..
+                setSeatNumber(res[0].index);
+                setPrice(seats.price);
+                console.log(seatNumber);
+                console.log(price)
+                // setCheckTrue(true);
+                // 리덕스에 값 저장
+                dispatch(seatIndexAction.setSeatInfo(res[0].index));
+                // 체크박스 수정 안되면 일단 더블클릭 할 예정 스트레스 수치 398%
+                let value = e.target.value;
+                if(value === 'check' + key) {
+                  console.log(value);
+                  e.target.checked = true;
+                  console.log(e.target.checked);
+                  setCheckTrue(!checkTrue);
+                }
+                }}/>
+                </td>
+            </tr>
+          </tbody>
+        </table>
       ))}
       </div>
         <hr />
@@ -324,7 +345,6 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          {/* <Link to={'/payready'}>카카오페이 가자</Link> */}
           <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
         </div>
     </div>
@@ -335,7 +355,7 @@ function PopupContent (props) {
     
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);
-    const { date, ticket, tax, total, price, index, seat, cancelday } = props;
+    const { date, title, ticket, tax, total, price, index, seat, cancelday } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -343,7 +363,7 @@ function PopupContent (props) {
           <tbody>
           <tr>
             <th>제목</th>
-            <td>{props.title}</td>
+            <td>{title}</td>
             <th className="sh">일시</th>
             <td>{date}</td>
           </tr>

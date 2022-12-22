@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import './calendar.css';
 import styled from 'styled-components';
@@ -97,15 +97,25 @@ function TCalendar (props) {
     const [reserveList, setReserveList] = useState([]);
     // 몇 회차인지
     const [turn, setTurn] = useState(0);
-    // 캐스팅 유무
+    // 캐스팅 유무preventDefault
     const [isCasting, setIsCasting] = useState(false);
     const [isTimeCasting, setIsTimeCasting] = useState(false);
+    const [infoButton, setInfoButton] = useState(false);
     
     // 선택한 날짜
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
     const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
-    const openModal = () => setModalOpen(true);
+    const preventEvent = useCallback((e) => e.preventDefault(), []); 
+
+    const openModal = e => {
+      if(turn === 0) {
+        alert('회차를 선택해주세요.');
+        preventEvent(e);
+      } else if (turn > 0) {
+        setModalOpen(true);
+      }
+    }
     const closeModal = () => {
         setModalOpen(false);
         setIndex(1);
@@ -115,8 +125,10 @@ function TCalendar (props) {
       const name = e.target.name;
       if(name === 'turn1') {
         setTurn(1);
+        setInfoButton(!infoButton);
       } else if(name === 'turn2') {
         setTurn(2);
+        setInfoButton(!infoButton);
       }
     }
 
@@ -149,9 +161,6 @@ function TCalendar (props) {
       }
     }, [month, pCode, year]);
 
-    console.log(isCasting);
-    console.log(isTimeCasting);
-
     useEffect(() => {
       try {
         const chagneReserveDay = async () => {
@@ -159,6 +168,7 @@ function TCalendar (props) {
           if(res.data.statusCode === 200) {
             // 회차 리스트
             setReserveList(res.data.results.reserve_list);
+            console.log(res);
           } else {
             console.log('error');
             console.log(res);
@@ -216,72 +226,75 @@ function TCalendar (props) {
                     reserve.turn === 1 &&
                     <div key={reserve.index}>
                       <div>
-                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>{reserve.turn}회 {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}</button>
+                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>
+                          {reserve.turn}회
+                          {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
+                        </button>
                       </div>
-                      {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
-                        return(
-                          <div style={{display: 'inline'}} key={seat.index}>
-                            {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
-                          </div>
-                        );
-                      })}
-                      <h4 className='side-header'>캐스팅</h4>
-                      {/* 캐스팅 정보, 시간 별로 캐스팅 정보가 있으면 보임 없으면 x */}
-                      {isCasting && isTimeCasting && reserve.compact_casting ?
-                       reserve.compact_casting.map((cast, id) => {
+                        {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
                           return(
-                          <>
-                            <div style={{display: 'inline'}} key={id} >
-                            <span>{cast}, </span>
+                            <div style={{display: 'inline'}} key={seat.index}>
+                              {seat.is_reserve && <span> / {seat.seat} {seat.remain_quantity}</span>}
                             </div>
-                          </>
                           );
+                        })
+                        }
+                      {/* 캐스팅 정보, 시간 별로 캐스팅 정보가 있으면 보임 없으면 x */}
+                      <p className='side-header' style={{marginTop : '8px'}}>캐스팅 정보</p>
+                      {isCasting && isTimeCasting && reserve.compact_casting &&
+                       reserve.compact_casting.map((cast, key) => {
+                         return(
+                           <>
+                            <span style={{display: 'inline'}} key={key} >
+                            <span>{cast}, </span>
+                            </span>
+                          </>
+                        )
                       })
-                      :
-                      <small>해당 상품은 캐스팅 정보가 없습니다.</small>
-                      }
+                    }
+                    {!isCasting && !isTimeCasting && !reserve.compact_casting && <small>해당 상품은 캐스팅 정보가 없습니다.</small>}
                     </div>
                   );
                 })}
                 {/* 2회차 정보. */}
+                <hr />
                 {reserveList && reserveList.map(reserve => {
                   return(
                     reserve.turn === 2 &&
                     <div key={reserve.index}>
                       <div>
-                        <button className='button select' name='turn2' onClick={onClickTurn} type='button'>
-                          {reserve.turn}회 
-                          {/* 시간이 14:0 이렇게 들어오는 경우도 있어 + 0 처리 */}
-                          {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}
+                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>
+                          {reserve.turn}회
+                          {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
                         </button>
                       </div>
-                      {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
-                        return(
-                          <div style={{display: 'inline'}} key={seat.index}>
-                            {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
-                          </div>
-                        );
-                      })}
+                        {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
+                          return(
+                            <div style={{display: 'inline'}} key={seat.index}>
+                              {seat.is_reserve && <span> / {seat.seat} {seat.remain_quantity}</span>}
+                            </div>
+                          );
+                        })
+                        }
+                      <p className='side-header' style={{marginTop : '8px'}}>캐스팅 정보</p>
                       {/* 캐스팅 정보, 시간 별로 캐스팅 정보가 있으면 보임 없으면 x */}
-                      <h4 className='side-header'>캐스팅</h4>
-                      {isCasting && isTimeCasting && reserve.compact_casting ?
-                      reserve.compact_casting.map((cast, id) => {
-                        return(
-                        <>
-                          <div style={{display: 'inline'}} key={id} >
-                          <span>{cast}, </span>
-                          </div>
-                        </>
-                        );
-                    })
-                    :
-                      <small>해당 상품은 캐스팅 정보가 없습니다.</small>
+                        {isCasting && isTimeCasting && reserve.compact_casting &&
+                        reserve.compact_casting.map((cast, key) => {
+                         return(
+                           <>
+                            <span style={{display: 'inline'}} key={key} >
+                            <span>{cast}, </span>
+                            </span>
+                          </>
+                        )
+                      })
                     }
+                    {!isCasting && !isTimeCasting && !reserve.compact_casting && <small>해당 상품은 캐스팅 정보가 없습니다.</small>}
                     </div>
                   );
                 })}
                 </div>
-                <button className='pay-button' onClick={openModal}>예매하기</button>
+                <button className='pay-button' type='button' onClick={openModal}>예매하기</button>
                 {modalOpen && <PayPopup 
                 plus={plusIndex} index={index} minus={minusIndex}
                 open={openModal} close={closeModal}
