@@ -185,7 +185,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayerAndStatus(0, ReviewCommentStatus.ACTIVE, pageSize);
 
         for (ReviewComment e : reviewCommentList) {
-            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
+            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e, e.getMember());
             reviewCommentDTOList.add(reviewCommentDTO);
         }
         return reviewCommentDTOList;
@@ -198,7 +198,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE);
 
         for(ReviewComment e : reviewCommentList){
-            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
+            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e,e.getMember());
             reviewCommentDTOList.add(reviewCommentDTO);
         }
         return reviewCommentDTOList;

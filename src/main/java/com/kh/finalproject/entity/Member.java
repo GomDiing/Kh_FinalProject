@@ -7,6 +7,7 @@ import com.kh.finalproject.entity.enumurate.MemberRoleType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "member")
+@ToString
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -215,5 +217,9 @@ public class Member extends BaseTimeEntity {
     public void updateBlackByCount() {
         this.reason = "신고 누적으로인한 블랙리스트 추가";
         this.status = MemberStatus.BLACKLIST;
+    }
+
+    public void updateId(String randomId) {
+        this.id = randomId;
     }
 }

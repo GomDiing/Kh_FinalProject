@@ -28,7 +28,7 @@ public interface ProductService {
     /**
      * 상품 상세페이지 메서드
      */
-    DetailProductDTO detailProductPage(String productCode);
+    DetailProductDTO detailProductPage(String productCode, Long index);
 
     DetailProductDTO reserveCalendarMonth(String productCode, Integer year, Integer month);
 

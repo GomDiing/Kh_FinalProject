@@ -17,6 +17,7 @@ const Inquiry=(props)=>{
     const [modalOpen, setModalOpen] = useState(false);
     // 모달 내용
     const [modalText, setModalText] = useState('');
+
   
   const closeModal = () => {
     setModalOpen(false);
@@ -69,8 +70,7 @@ const Inquiry=(props)=>{
                     <td>{qnaList.createTime}</td>
                     <td>{qnaList.qnaStatus}</td>
                     <td><button className="re" onClick={()=>{setModalText(qnaList); setModalOpen(true); setQindex(qnaList.index);}}>답장</button>
-                    
-                      {(modalOpen && <QnaModal setModalOpen={setModalOpen} />)}
+                     {(modalOpen && <QnaModal setModalOpen={setModalOpen} />)}
                     </td>
                   </tr>
                   ))}

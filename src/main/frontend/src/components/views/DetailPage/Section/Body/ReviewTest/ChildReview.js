@@ -14,27 +14,25 @@ const ChildReview=(props)=>{
     const memberIndex = userInfo.userIndex;
 
     const [reviews2, setReviews2] = useState(props.reviews);
-    const childResult = reviews2.filter(item=>item.layer > 0);
 
-    console.log("child index 찍힌값 " + props.index); //no
-    console.log("child 찍힌값 " + reviews2.index); //no
-    console.log("댓글");
-    console.log(reviews2[1].group); //yes
+    const childResult = reviews2.filter(item=>item.layer>0 &&(item.group === props.index)); // 댓글
+
+    console.log(reviews2);
+    console.log("인덱스 값 : " + props.index);
 
     const [inputContent, setInputContent] = useState('');
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
     // debugger;
-
     const onClickDisplay=(e)=>{
+      console.log("클릭값" + e);
       e.preventDefault(); //새로고침 막기
       setDisplay(!display);
-      console.log("클릭값" + e);
     }
 
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
 
     const onClickSubmit=async()=>{
-        const res = await DetailApi.childComment(memberIndex,group,inputContent,reviews2.code);
+        const res = await DetailApi.childComment(memberIndex,group,inputContent,props.code);
         if(res.data.statusCode === 200){
           console.log("댓글 작성 완료 후 목록으로 이동");
         } else{
@@ -44,35 +42,34 @@ const ChildReview=(props)=>{
       const [display, setDisplay] = useState(false);
 
     return(
-        <ChildReviewInputBlock>
-          <button className="reply-toggle-btn" onClick={onClickDisplay}>댓글</button>
-        <Form>
-
-          {display &&
-          <div>
-            <div className="sec-input-container">
-             
-            <Form.Control type="text" placeholder="Enter Reply" value={inputContent} onChange={onChangeContent}/>
-             <Button className="child-submit-btn" variant="dark" type="submit" 
-               onClick={onClickSubmit}>
-                  등록
-              </Button>
+      <ChildReviewInputBlock>
+      <button className="reply-toggle-btn" onClick={onClickDisplay}>댓글</button>
+    <Form>
+      {display &&
+      <div>
+        <div className="sec-input-container">
+         
+        <Form.Control type="text" placeholder="Enter Reply" value={inputContent} onChange={onChangeContent}/>
+         <Button className="child-submit-btn" variant="dark" type="submit" 
+           onClick={onClickSubmit}>
+              등록
+          </Button>
+        </div>
+      {childResult.map((comment,index)=>
+        <div key={index}>
+          <Alert variant="light" className="reply-container">
+            <div className="reply-title-container">
+              <div>{comment.memberId}</div>
+              <div>{comment.createTime}</div>
             </div>
-          {childResult&&childResult.map((comment,index)=>
-            <div key={index}>
-              <Alert variant="light" className="reply-container">
-                <div className="reply-title-container">
-                  <div>{comment.memberId}</div>
-                  <div>{comment.createTime}</div>
-                </div>
-                <div className="reply-content">{comment.content}</div>
-              </Alert>
-            </div>
-            )}
-            </div>
-          }
-        </Form>
-        </ChildReviewInputBlock>
+            <div className="reply-content">{comment.content}</div>
+          </Alert>
+        </div>
+        )}
+        </div>
+      }
+    </Form>
+    </ChildReviewInputBlock>
     );
 }
 export default ChildReview;

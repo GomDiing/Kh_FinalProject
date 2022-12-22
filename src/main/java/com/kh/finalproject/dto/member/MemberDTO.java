@@ -61,7 +61,7 @@ public class MemberDTO {
         }
         else this.zipcode = address.getZipcode();
         this.memberRoleType = member.getRole().getRole();
-        this.memberStatus = member.getStatus().getStatus();
+        this.memberStatus = member.getStatus().name();
         this.createTime=member.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         if (Objects.isNull(member.getUnregister())){
             this.unregisterTime = "null";
@@ -73,7 +73,7 @@ public class MemberDTO {
     }
     public MemberDTO toDTOByCount(Member member){
         this.index = member.getIndex();
-        this.memberStatus = member.getStatus().getStatus();
+        this.memberStatus = member.getStatus().name();
         this.memberAccuseCount = member.getAccuseCount();
         return this;
 

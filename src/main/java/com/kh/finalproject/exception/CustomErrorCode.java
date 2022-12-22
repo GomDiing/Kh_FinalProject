@@ -30,6 +30,7 @@ public enum CustomErrorCode {
     DUPLI_NAME(StatusCode.BAD_REQUEST, "M016", "이름으로 조회되는 회원이 있습니다"),
     DELETE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M017", "삭제 신청 회원입니다"),
     ACTIVE_MEMBER_SIGN(StatusCode.BAD_REQUEST, "M018", "현재 강비 회원입니다"),
+    EMPTY_ID(StatusCode.BAD_REQUEST, "M019", "아이디가 없습니다"),
 
     EMPTY_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC001", "조회한 후기가 없습니다"),
     OVERLAP_REVIEW_COMMENT(StatusCode.BAD_REQUEST, "RC002", "중복 신고가 되었습니다"),
