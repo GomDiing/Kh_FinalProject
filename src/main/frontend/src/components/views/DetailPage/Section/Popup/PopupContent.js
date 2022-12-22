@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice";
 import { PayReady } from "../../../../KakaoPay/PayReady";
@@ -19,49 +18,8 @@ const BodyStyle = styled.div`
     width: 100px;
     padding-left: 1rem;
   }
-  .seat-container {
-    border: 1px solid black;  
-    width: 400px;
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
   .seat-container .name {
     color: rebeccapurple;
-  }
-  li{
-    display: inline-block;
-    margin-top: 10px;
-  }
-  .price {
-    margin-top: 10px; 
-    margin-left: 12px;
-    padding: 12px;
-    margin: 0 auto;
-  }
-  .check-box {
-    margin: 0 auto;
-  }
-  .seat {
-    float: left;
-    margin-right: 30px;
-    width: 20px;
-    height: 20px;
-    margin-top: 10px;
-  }
-  .seat-vip {
-    background-color: red;
-  }
-  .seat-r {
-    background-color: green;
-  }
-  .seat-s {
-    background-color: royalblue;
-  }
-  .seat-a {
-    background-color: aliceblue;
   }
   .BorderBottom{
     border-bottom: 1px solid silver;
@@ -84,14 +42,8 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, userInfo, seatIndex, date, cancelday, index } = props;
+  const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute } = props;
   
-  // 회원 정보
-  // console.log(userInfo);
-  // 좌석 별 가격
-  // console.log(seat);
-  // 좌석 인덱스가 담겨져있는 리스트
-  console.log(seatIndex);
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [type, setType] = useState('');
@@ -190,28 +142,41 @@ function PopupContent (props) {
     <>
     {index === 1 &&
     <div>
-      <h2>좌석 선택 <h6><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></h6></h2>
+      <h2>좌석 선택 <p style={{fontSize : '14px'}}><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></p></h2>
       <div className='seat-container'>
-      {seat && seat.map((seats, index) => (
-        <ul className="infoPriceList" style={{listStyle: 'none'}} key={index}>
-          <li className="infoPriceItem">
-            <div onClick={() => {
-              setSeatList(seats.seat);
-              // 필터를 걸쳐 테스트를 통과한 것의 배열을 다시 만들어줌
-              const res = seatIndex.filter(test => test.seat.includes(seats.seat));
-              // 만들어진 배열에서 필요한 값을 추출..
-              setSeatNumber(res[0].index);
-              dispatch(seatIndexAction.setSeatInfo(res[0].index));
-            }}>
-              <span className="name">{seats.seat}</span>
-              <span className="price">{seats.price} <input className={'check' + index} type='checkbox' onClick={() => setPrice(seats.price)} /></span>
-            </div>
-          </li> <br />
-        </ul>
-      ))}
+        {seat && seat.map((seats, key) => (
+          <table style={{border: 'none'}} key={key}>
+            <thead>
+              <tr>
+                <th style={{border : 'none'}}
+                >등급</th>
+                <th style={{border : 'none'}}>가격</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{seats.seat}</td>
+                <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={e => {
+                  // 선택한 좌석의 이름
+                  setSeatList(seats.seat);
+                  // 필터를 걸쳐 테스트를 통과한 것을 배열로 다시 만들어줌
+                  const res = seatIndex.filter(test => test.seat.includes(seats.seat));
+                  // 만들어진 배열에서 필요한 값을 추출..
+                  setSeatNumber(res[0].index);
+                  setPrice(seats.price);
+                  console.log(seatNumber);
+                  console.log(price)
+                  // 리덕스에 값 저장
+                  dispatch(seatIndexAction.setSeatInfo(res[0].index));
+                  }}/>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        ))}
       </div>
         <hr />
-        <MyInfo seat={seatList} index={index} price={price} title={title} date={date} cancelday={cancelday} />
+        <MyInfo seat={seatList} hour={hour} turn={turn} point={userInfo.userPoint} minute={minute} index={index} price={price} title={title} date={date} cancelday={cancelday} />
     </div>
     }
     {index === 2 &&
@@ -297,14 +262,15 @@ function PopupContent (props) {
         <li>동일 상품에 대해서 회차, 좌석 가격, 결제 등 일부 변경을 원하시는 경우, 기존 예매 건을 취소하시고 재예매 하셔야 합니다.
         단, 취소 시점에 따라 예매수수료가 환불 되지 않으며, 취소 수수료가 부과될 수 있습니다.</li>
       </div>
-      <MyInfo seat={seatList} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />
+      <MyInfo seat={seatList} hour={hour}turn={turn} point={userInfo.userPoint} minute={minute} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total} />
       </>
-    }
-    {index === 3 && <FinalModal
-      seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
-      title={title} date={date} value={valueSelect()} ticket={ticket}
-       price={selectPrice} tax={tax} total={total} userInfo={userInfo} />}
-    </>
+      }
+      {index === 3 && <FinalModal
+        seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
+        title={title} date={date} value={valueSelect()} ticket={ticket}
+        price={selectPrice} tax={tax} total={total} userInfo={userInfo} 
+        hour={hour} minute={minute}  turn={turn}/>}
+      </>
   );
 
   return(
@@ -315,14 +281,14 @@ function PopupContent (props) {
 }
 
   const FinalModal = props => {
-    const { seatNumber, seat, cancelday, title, date, value, ticket, tax, total, userInfo, price } = props;
+    const { seatNumber, seat, cancelday, hour, minute, title, date, turn, value, ticket, tax, total, userInfo, price } = props;
     PayReady(title, total, tax, value, seatNumber, userInfo, price);
     const payUrl = window.localStorage.getItem('url');
 
     return(
       <div>
         <div>
-          <MyInfo seat={seat} cancelday={cancelday} title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
+          <MyInfo seat={seat} hour={hour} point={userInfo.userPoint} minute={minute} turn={turn} cancelday={cancelday}  title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
           {/* <Link to={'/payready'}>카카오페이 가자</Link> */}
           <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
@@ -335,7 +301,7 @@ function PopupContent (props) {
     
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);
-    const { date, ticket, tax, total, price, index, seat, cancelday } = props;
+    const { date, hour, point, minute, ticket, tax, total, price, index, seat, cancelday, turn } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -344,8 +310,8 @@ function PopupContent (props) {
           <tr>
             <th>제목</th>
             <td>{props.title}</td>
-            <th className="sh">일시</th>
-            <td>{date}</td>
+            <th className="sh">일시/회차</th>
+            <td>{date} / {turn}회차 {hour}시{minute}분</td>
           </tr>
           <tr>
             <th>선택 좌석</th>
@@ -357,7 +323,7 @@ function PopupContent (props) {
             <th>비과세(5%)</th>
             <td>{tax}</td>
             <th className="sh">현재 포인트</th>
-            <td>230 <span><button>포인트 사용하기</button></span></td>
+            <td>{point}<span><button type="button">포인트 사용하기</button></span></td>
           </tr>
           <tr>
             <th>취소 기한</th>

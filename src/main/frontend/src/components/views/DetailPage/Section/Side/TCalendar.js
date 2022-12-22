@@ -51,6 +51,7 @@ const Styleside = styled.div`
     }
     .button:focus {
         color: #EF3F43;
+        font-weight: 750;
     }
     .pay-button {
         width: 100%;
@@ -97,6 +98,9 @@ function TCalendar (props) {
     const [reserveList, setReserveList] = useState([]);
     // 몇 회차인지
     const [turn, setTurn] = useState(0);
+    // 시간 받기
+    const [hour, setHour] = useState([]);
+    const [minute, setMinute] = useState([]);
     // 캐스팅 유무
     const [isCasting, setIsCasting] = useState(false);
     const [isTimeCasting, setIsTimeCasting] = useState(false);
@@ -105,10 +109,19 @@ function TCalendar (props) {
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
     const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
-    const openModal = () => setModalOpen(true);
+
+    const openModal = e => {
+      if(turn === 0) {
+        alert('회차를 선택해주세요.');
+        e.preventDefault();
+      } else if(turn > 0) {
+        setModalOpen(true);
+      }
+    }
     const closeModal = () => {
         setModalOpen(false);
         setIndex(1);
+        setTurn(0);
     }
 
     const onClickTurn = e => {
@@ -147,18 +160,18 @@ function TCalendar (props) {
       } catch(e) {
         console.log(e);
       }
+
     }, [month, pCode, year]);
-
-    console.log(isCasting);
-    console.log(isTimeCasting);
-
     useEffect(() => {
       try {
         const chagneReserveDay = async () => {
           const res = await DetailApi.getNextDateReserve(pCode, year, month, date.getDate());
           if(res.data.statusCode === 200) {
+            let response = res.data.results.reserve_list
             // 회차 리스트
-            setReserveList(res.data.results.reserve_list);
+            setReserveList(response);
+            setHour(response.map((cd) => cd.hour));
+            setMinute(response.map((cd) => cd.minute));
           } else {
             console.log('error');
             console.log(res);
@@ -171,7 +184,7 @@ function TCalendar (props) {
     }, [date, month, pCode, year]);
 
     const clickDay = () => {
-        console.log(date.toLocaleString("kr", {year: "numeric", month:"2-digit", day: "numeric"}));
+      setTurn(0);
     };
 
     return (
@@ -216,7 +229,9 @@ function TCalendar (props) {
                     reserve.turn === 1 &&
                     <div key={reserve.index}>
                       <div>
-                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>{reserve.turn}회 {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}</button>
+                        <button className='button select' onClick={onClickTurn} name='turn1' type='button'>
+                          {reserve.turn}회 {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
+                        </button>
                       </div>
                       {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
                         return(
@@ -249,10 +264,8 @@ function TCalendar (props) {
                     reserve.turn === 2 &&
                     <div key={reserve.index}>
                       <div>
-                        <button className='button select' name='turn2' onClick={onClickTurn} type='button'>
-                          {reserve.turn}회 
-                          {/* 시간이 14:0 이렇게 들어오는 경우도 있어 + 0 처리 */}
-                          {reserve.hour}:{reserve.minute.length === 1 ? reserve.minute + '0' : reserve.minute}
+                        <button className='button select' onClick={onClickTurn} name='turn2' type='button'>
+                          {reserve.turn}회 {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
                         </button>
                       </div>
                       {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
@@ -281,7 +294,11 @@ function TCalendar (props) {
                   );
                 })}
                 </div>
-                <button className='pay-button' onClick={openModal}>예매하기</button>
+                {/* 회차에 따라 넘겨주는 정보가 다르기 때문임 회차 선택 시 가능 */}
+                {turn === 0 ? <button className='pay-button' type='button' onClick={openModal}>예매하기</button>
+                :
+                <button className='pay-button' type='button' onClick={openModal}>예매하기</button>
+                }
                 {modalOpen && <PayPopup 
                 plus={plusIndex} index={index} minus={minusIndex}
                 open={openModal} close={closeModal}
@@ -292,6 +309,9 @@ function TCalendar (props) {
                 date={selectDay} cancelday={cancelday}
                 // 1회차 2회차 좌석 인덱스가 달라서 구분
                 seat={seat} seatIndex={turn === 1 ? reserveList[0].reserve_seat_time : reserveList[1].reserve_seat_time}
+                hour={turn === 1 ? hour[0] : hour[1]}
+                minute={turn === 1 ? minute[0] === 0 ? '00' : minute[0] : minute[1] === 0 ? '00' : minute[1]}
+                turn={turn === 1 ? reserveList[0].turn : reserveList[1].turn}
                 title={title} index={index} />}/>}
               </div>
             </Styleside>
