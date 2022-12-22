@@ -88,6 +88,11 @@ const MainPage = () =>{
             window.removeEventListener('scroll', handleFollow)
         }
     })
+    
+    // 검색결과 초기화
+    useEffect (() =>{
+        window.localStorage.setItem("searchText" , undefined);
+    },[])
 
     return(
         <MainContainer>

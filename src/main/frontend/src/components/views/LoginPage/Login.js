@@ -321,14 +321,15 @@ const IdStyle = styled.div`
       try {
         const response = await MemberApi.login(inputId, inputPwd, providerType);
         if(response.data.statusCode === 200) {
-
+          // console.log(response.data)
           switch(response.data.results.status) {
             case "ACTIVE" :
               
             const data = {
                 userIndex : response.data.results.index,
                 userId : response.data.results.id,
-                userPoint : response.data.results.point
+                userPoint : response.data.results.point,
+                userProvider_type : response.data.results.provider_type
               }
               dispatch(loginActions.setUserInfo({data}));
               navigate('/');

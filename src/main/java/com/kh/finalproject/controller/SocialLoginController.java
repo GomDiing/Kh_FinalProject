@@ -77,7 +77,7 @@ public class SocialLoginController {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            log.info("accessTokenResponse = {}", accessTokenResponse.getBody());
+                log.info("accessTokenResponse = {}", accessTokenResponse.getBody());
             KakaoLoginResponse kakaoResponseObject = objectMapper.readValue(accessTokenResponse.getBody(), new TypeReference<KakaoLoginResponse>() {
             });
 
