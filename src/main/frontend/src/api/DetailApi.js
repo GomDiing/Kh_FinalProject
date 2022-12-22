@@ -39,6 +39,7 @@ const DetailApi={
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
         console.log("api 찍힌 값 : " + commentIndex, memberIndex);
+        // debugger;
         const params = {
             index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
@@ -47,7 +48,7 @@ const DetailApi={
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?sort=index,desc`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){

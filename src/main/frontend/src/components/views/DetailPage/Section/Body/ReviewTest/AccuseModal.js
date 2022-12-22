@@ -18,16 +18,25 @@ const AccuseModal= (props)=> {
     const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
 
-    const onClickAccuse=async(index)=>{
-        const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
-        if(res.data.statusCode === 200) {
-            console.log("신고 완료");
-            // 왜 안걸러지냐
-        } else if(res.data.statusCode === 400){
-            alert("중복신고")
-            console.log("중복신고 되었습니다.");
-        } 
-    }
+    const onClickAccuse=async()=>{
+        try{
+            const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
+            console.log(res.data.message);
+            console.log(res.request.response);
+            if(res.data.statusCode === 200) {
+                console.log("신고 완료");
+                close();
+
+            }else {
+                close();
+                console.log(res.data.message);
+                alert("중복신고되었습니다.")
+                console.log("중복신고 되었습니다.");
+            } 
+        }catch(e){
+            console.log(e);
+        }
+    };
 
     return (
     <AccuseModalBlock>

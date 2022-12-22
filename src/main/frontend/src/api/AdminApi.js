@@ -19,7 +19,6 @@ const AdminApi={
     noticeDetail : async function(index){
         return await axios.get(TCAT_DOMAIN +"/api/notice/detail/" + index, "Text/json")
     },
-
     // 공지사항 삭제 
     noticeDelete : async function(index){
         return await axios.delete(TCAT_DOMAIN + "/api/notice/delete/"+ index, HEADER)
