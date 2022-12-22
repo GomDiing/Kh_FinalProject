@@ -40,6 +40,8 @@ public class SearchPaymentReserveDTO {
     @JsonProperty("payment_complete_time")
     private String paymentCompleteTime;
 
+    private String kakaoTID;
+
     public SearchPaymentReserveDTO toDTO(Reserve reserve, Integer count, Integer finalAmount) {
         this.reserveTime = reserve.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.reserveTicket = reserve.getTicket();
@@ -50,7 +52,12 @@ public class SearchPaymentReserveDTO {
         this.method = reserve.getMethod();
         this.reserveStatus = reserve.getStatus().name();
         this.paymentCompleteTime = reserve.getCreateTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        this.kakaoTID = "null";
 
         return this;
+    }
+
+    public void updateTID(String kakaoTID) {
+        this.kakaoTID = kakaoTID;
     }
 }

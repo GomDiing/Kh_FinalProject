@@ -17,7 +17,7 @@ const DetailApi={
     // 대댓글 작성(자식댓글)
     childComment : async function(memberIndex,group,inputContent,productCode){
         console.log("댓글 코드 " + memberIndex,group,inputContent,productCode);
-        debugger;
+        // debugger;
         const params = {
             memberIndex : memberIndex,
             group : group, // 부모댓글 group값 = 부모 댓글 고유 index 값
@@ -50,12 +50,12 @@ const DetailApi={
         return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?sort=index,desc`, HEADER)
     },
     // 후기 신고하기
-    accuseComment : async function(reviewIndex,victimIndex, suspectIndex,reason){
-        console.log("api 찍힌값 : " + reviewIndex,victimIndex, suspectIndex,reason);
-        debugger;
+    accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
+        console.log("api 찍힌값 : " + suspectIndex,victimIndex,reason,reviewIndex,);
+        // debugger;
         const params = {
-            memberIndexVictim : victimIndex, // 신고한사람 (로그인한 회원)
             memberIndexSuspect : suspectIndex, // 신고당한사람 (글작성자)
+            memberIndexVictim : victimIndex, // 신고한사람 (로그인한 회원)
             reason : reason //신고사유
         }
         return await axios.post(TCAT_DOMAIN+`/api/accuse/${(reviewIndex)}`,params, HEADER)

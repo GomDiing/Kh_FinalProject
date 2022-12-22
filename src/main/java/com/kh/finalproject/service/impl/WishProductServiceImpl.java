@@ -1,5 +1,6 @@
 package com.kh.finalproject.service.impl;
 
+import com.kh.finalproject.dto.product.ProductDTO;
 import com.kh.finalproject.dto.wishProduct.AddWishProductDTO;
 import com.kh.finalproject.dto.wishProduct.DeleteWishProductDTO;
 import com.kh.finalproject.dto.wishProduct.WishProductDTO;
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -76,9 +79,28 @@ public class WishProductServiceImpl implements WishProductService {
         wishProductRepository.delete(wishProduct);
     }
 
+    /**
+     * 회원 인덱스로 찜한 상품 조회 서비스
+     * @param memberIndex: 회원 인덱스
+     * @return 회원이 찜한 상품 리스트
+     */
     @Override
-    public WishProductDTO selectByMember(Long memberIndex) {
-        return null;
+    public List<WishProductDTO> selectByMember(Long memberIndex) {
+        //회원 조회
+        Member findMember = memberRepository.findByIndex(memberIndex)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+        //찜한 상품 조회
+        List<WishProduct> wishProductList = wishProductRepository.findByMember(findMember)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_WISH_PRODUCT));
+
+        //찜한 상품 목록 생성 후 추가 및 반환
+        List<WishProductDTO> wishProductDTOList = new LinkedList<>();
+
+        for (WishProduct wishProduct : wishProductList) {
+            wishProductDTOList.add(new WishProductDTO().toDTO(wishProduct.getProduct()));
+        }
+
+        return wishProductDTOList;
     }
 
     @Override

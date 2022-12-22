@@ -7,12 +7,14 @@ import com.kh.finalproject.service.WishProductService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
 
     Optional<WishProduct> findByMemberAndProduct(Member member, Product product);
+    Optional<List<WishProduct>> findByMember(Member member);
 
     Optional<WishProduct> findByIndex(Long wishIndex);
 }

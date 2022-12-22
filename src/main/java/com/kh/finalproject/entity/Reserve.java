@@ -68,7 +68,7 @@ public class Reserve extends BaseTimeEntity {
     @JoinColumn(name = "member_index", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "reserve")
     private List<KakaoPay> kakaoPayList = new ArrayList<>();
 
     public Reserve toEntity(String ticket, Integer count, ReserveTime reserveTime, String reserveSeat, Long reserveTimeSeatPriceIndex, PaymentReserveDTO paymentReserveDTO, Member member) {

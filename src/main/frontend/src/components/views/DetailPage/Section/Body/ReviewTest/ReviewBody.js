@@ -22,28 +22,20 @@ const ReviewBody=(props)=>{
     setReviews(props.reviewList);
   }, [props.reviewList]);
 
-  const [motherReviews, setMotherReview] = useState('');
-
-    // console.log("그룹값 : " + reviews.group); //undefined
-    // console.log("그룹값 : " + props.reviewList.group); //undefined
-    // console.log(reviews); // 이건 찍힘
-    // console.log("그룹값33 : " + props.reviewList); //undefined
+  const [parentReviews, setParentReview] = useState('');
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
     const open = () => setModalOpen(true);
     const close = () => setModalOpen(false);
 
-    // useEffect(()=>{
-    //   setMotherReview(motherResult);
-    // },[motherReviews]);
-
     // 상위댓글(layer=0) 필터
     const motherResult = reviews.filter(item=>item.layer < 1);
-    // setMotherReview(motherResult);
 
-    console.log("제발 찍혀라 ㅋ");
-    console.log(motherReviews);
+    useEffect(()=>{
+      setParentReview(motherResult);
+    },[])
+    // console.log(parentReviews[0].index); // 11
 
     const onClickDelete=async(index)=>{
       try{
@@ -62,7 +54,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {motherResult&&motherResult.map(({index,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {motherResult&&motherResult.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -74,15 +66,17 @@ const ReviewBody=(props)=>{
                   <Form.Label className="review-id">{memberId}</Form.Label>
                   <Form.Label className="review-id">{createTime}</Form.Label>
                   <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1.5rem'}}
-                  onClick={open}/>
-                  {modalOpen && <AccuseModal open={open} close={close} />}
+                  onClick={()=>open(index)}/>
+                  {modalOpen && <AccuseModal open={open} close={close}
+                  index={index}
+                  memberIndex={memberIndex}
+                   />}
                   <Form.Label className="review-like">{like}</Form.Label>
               </div>
             </div>
-            
 
             <div className="review-btn-container">
-              {/* 로그인한 회원이랑 작성자랑 동일하면 삭제 버튼 */}
+              {/* 로그인한 회원이랑 작성자랑2 동일하면 삭제 버튼 */}
               {memberId === loginMember && (
               <>
               <button className="review-update-btn" onClick={onClickUpdate(index)}>수정</button>
@@ -96,7 +90,13 @@ const ReviewBody=(props)=>{
            <p className="review-content">{content}</p>
            
           <hr/>
-          <ChildReview reviews={reviews} index={motherReviews.index} code={reviews.code}/>
+          <ChildReview reviews={reviews} 
+          index={index} 
+          code={productCode}/>
+          
+
+
+          
         </Alert>
         </div>
         ))}

@@ -1,6 +1,7 @@
 package com.kh.finalproject.dto.reviewComment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 public class ReviewCommentDTO {
     private Long index;
+    private Long memberIndex;
     private String memberId;
     private String title;
     private Integer like;
@@ -28,8 +30,9 @@ public class ReviewCommentDTO {
     private String thumbPosterUrl;
 
     /*관리자페이지 Dashboard에서 리뷰 조회용*/
-    public ReviewCommentDTO toDTO(ReviewComment reviewComment){
+    public ReviewCommentDTO toDTO(ReviewComment reviewComment, Member member){
         this.index = reviewComment.getIndex();
+        this.memberIndex = reviewComment.getMember().getIndex();
         this.memberId = reviewComment.getMember().getId();
         this.title = reviewComment.getTitle();
         this.like = reviewComment.getLike();
