@@ -19,7 +19,7 @@ const userSlice = createSlice({
             state.info = action.payload.data;
         },
         setUserPoint : (state, action) => {
-            state.info.userPoint = action.payload;
+            state.info = action.payload;
         }
     }
 })

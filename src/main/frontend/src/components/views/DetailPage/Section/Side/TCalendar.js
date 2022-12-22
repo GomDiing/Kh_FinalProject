@@ -161,7 +161,7 @@ function TCalendar (props) {
         console.log(e);
       }
 
-    }, [month, pCode, year]);
+    }, [isCasting, month, pCode, year]);
     useEffect(() => {
       try {
         const chagneReserveDay = async () => {
