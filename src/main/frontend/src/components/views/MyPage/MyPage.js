@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScheduleOutlined, DeleteOutlined, WhatsAppOutlined, GithubFilled, EditOutlined, BookOutlined} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import MainHeader from '../MainHeader/MainHeader';
@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import MemberApi from '../../../api/MemberApi';
 import { useSelector } from 'react-redux';
 import WishList from './section/WishList';
+import FindModal from '../LoginPage/FindModal';
 
 const MyInfoStyle = styled.div`
   width: 100%;
@@ -83,6 +84,9 @@ function MyPage() {
   const { Content, Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   const [info, SetInfo] = useState('');
+  const [open, setOpen] = useState(false);
+  const onClickDeleteMember = () => setOpen(true);
+  const onCloseDeleteMember = () => setOpen(false);
 
   const userInfo = useSelector((state) => state.user.info);
 
@@ -111,8 +115,40 @@ function MyPage() {
     }
   }; getInfo();
   },[userInfo.userEmail, userInfo.userId, userInfo.userProvider_type])
+  
+  // const DeleteModalBody = props => {
+  //     const [inputPwd, setInputPwd] = useState('');
+  //     const onChangePassword = e => setInputPwd(e.target.value);
+  //       return(
+  //         <div>
+  //           <h3>정말 탈퇴 하시겠습니까?</h3>
+  //           <ul>
+  //             <li>탈퇴신청 시 1주일 뒤에 처리됩니다.</li>
+  //             <li>1주일 이내 다시 로그인 할 경우 다시 복구신청이 가능합니다.</li>
+  //             <li>탈퇴신청 1주일이 지나면 영구탈퇴가 되므로 주의바랍니다.</li>
+  //           </ul>
+  //           <div style={{display : 'flex', alignItems: 'center', justifyContent: 'center'}}>
+  //             <input style={{width : '300px', height: '40px'}} type='text' placeholder='패스워드를 입력 후 확인을 눌러주세요' value={inputPwd} onChange={onChangePassword} />
+  //             <button type='button' onClick={props.delete}>확인</button>
+  //           </div>
+  //         </div>
+  //       );
+  //   }
 
-    console.log(info);
+  //   const onClickDeleteModal = async () => {
+  //     try{
+  //       const result = await MemberApi.deleteMmeber(userInfo.userId, userInfo.userProvider_type);
+  //       console.log(result);
+  //       if(result.data.statusCode === 200) {
+  //         alert('회원탈퇴 신청이 정상적으로 완료되었습니다.');
+  //       } else {
+  //         alert('비밀번호를 다시 확인해주세요.');
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //       console.log('통신 오류...')
+  //     }
+  //   }
 
   useEffect(() => {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
@@ -155,6 +191,11 @@ function MyPage() {
               <div className='userInfo'>
                 <div className='Contain1'>
                   <GithubFilled style={{fontSize: '10rem', margin: '2rem'}} />
+                  <div style={{display : 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '12px'}}>
+                    {/* <button onClick={onClickDeleteMember} style={{boder : 'none'}}>회원탈퇴</button>
+                    {open && <FindModal open={onClickDeleteMember} deleteClick={onClickDeleteModal} close={onCloseDeleteMember}
+                    body={<DeleteModalBody user={userInfo} delete={onClickDeleteModal}/>} />} */}
+                  </div>
                 </div>
                   <div className='info-des'>
                     <div className='description'>

@@ -161,15 +161,15 @@ const PayReady = (title, total, tax, value) => {
     // 넘어온 티켓 정보.
     const ticket = location.state.ticket;
     console.log(ticket);
-    // const [cancelTry, setCancelTry] = useState(false);
-    // // 공연 날짜 계산해서 수수료 하는 것은 나중에 ...
-    // const viewTime = ticket.view_time;
-    // const today = new Date();
-    // const isSameDate = (date1, date2) => {
-    //   return date1.getFullYear() === date2.getFullYear()
-    //     && date1.getMonth() === date2.getMonth()
-    //     && date1.getDate() === date2.getDate();
-    // }
+    const [cancelTry, setCancelTry] = useState(false);
+    // 공연 날짜 계산해서 수수료 하는 것은 나중에 ...
+    const viewTime = ticket.view_time;
+    const today = new Date();
+    const isSameDate = (date1, date2) => {
+      return date1.getFullYear() === date2.getFullYear()
+        && date1.getMonth() === date2.getMonth()
+        && date1.getDate() === date2.getDate();
+    }
 
     const [cancel, setCancel] = useState({
       // 상품 금액 === 총 금액 / 수량
