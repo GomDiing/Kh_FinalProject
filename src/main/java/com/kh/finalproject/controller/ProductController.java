@@ -1,9 +1,6 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.product.BrowseKeywordDTO;
-import com.kh.finalproject.dto.product.BrowseKeywordPageDTO;
-import com.kh.finalproject.dto.product.PagingProductDTO;
-import com.kh.finalproject.dto.product.DetailProductDTO;
+import com.kh.finalproject.dto.product.*;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import com.kh.finalproject.response.DefaultResponse;
@@ -32,11 +29,11 @@ public class ProductController {
 
     @PostMapping("/{code}")
     public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code,
-                                                                       @RequestBody(required = false) Map<String, Long> memberIndex) {
+                                                                       @RequestBody(required = false) DetailRequestDTO requestDTO) {
         //회원 인덱스가 존재하지않으면 -1, 존재하면 해당 값 매핑
         Long isMemberIndex = (long) -1;
-        if (!Objects.isNull(memberIndex))
-            isMemberIndex = memberIndex.get("memberIndex");
+        if (!Objects.isNull(requestDTO.getMemberIndex()))
+            isMemberIndex = requestDTO.getMemberIndex();
         DetailProductDTO detailProductDTO = productService.detailProductPage(code, isMemberIndex);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCT_DETAIL, detailProductDTO), HttpStatus.OK);
     }
