@@ -1,3 +1,5 @@
+
+
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
@@ -99,8 +101,9 @@ public class ReviewComment extends BaseTimeEntity {
 
 
     /*대댓글 작성*/
-    public ReviewComment createAddReviewComment(Member member, Product product, String content){
-        this.group = 0L; //프론트에서 그룹 index보내줘야함
+    public ReviewComment createAddReviewComment(Member member, Product product, String content, Long group){
+//        this.group = 0L; //프론트에서 그룹 index보내줘야함
+        this.group = group;
         this.layer = 1;
         this.content = content;
         this.status = ReviewCommentStatus.ACTIVE;

@@ -1,5 +1,7 @@
 import axios from "axios";
-const HEADER = {'Content-Type' : 'application/json'}
+const HEADER = {
+    'Content-Type' : {'Content-Type' : 'application/json'}
+}
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const DetailApi={
@@ -38,6 +40,7 @@ const DetailApi={
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
         console.log("api 찍힌 값 : " + commentIndex, memberIndex);
+        // debugger;
         const params = {
             index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
@@ -46,7 +49,7 @@ const DetailApi={
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?sort=index,desc`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
@@ -61,7 +64,10 @@ const DetailApi={
     },
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
-        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}` , HEADER);
+        const memberIndex = {
+            memberIndex : 322
+        }
+        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {

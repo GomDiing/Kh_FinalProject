@@ -18,6 +18,7 @@ public class SigninResponseDTO {
     private String zipcode;
     private Integer point;
     private String status;
+    private String email;
 
     @JsonProperty("provider_type")
     private String providerType;
@@ -34,6 +35,7 @@ public class SigninResponseDTO {
         this.zipcode = member.getAddress().getZipcode();
         this.status = member.getStatus().name();
         this.providerType = member.getProviderType().name();
+        this.email = member.getEmail();
 
         return this;
     }
