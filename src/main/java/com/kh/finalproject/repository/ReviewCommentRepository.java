@@ -46,7 +46,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     Optional<ReviewComment> findByMember_Id(String memberId);
 
-    Page<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status, Pageable pageable);
+    List<ReviewComment> findAllByProductCodeAndStatus(String code, ReviewCommentStatus status);
 
 
 }

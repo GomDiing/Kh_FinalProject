@@ -193,24 +193,16 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-
-    public PagingReviewCommentDTO allComment(String productCode, Pageable pageable) {
+    public List<ReviewCommentDTO> allComment(String productCode) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE);
 
-        Page<ReviewComment> pageReviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE, pageable);
-
-        List<ReviewComment> reviewCommentList = pageReviewCommentList.getContent();
-        Integer totalPages = pageReviewCommentList.getTotalPages();
-        Integer page = pageReviewCommentList.getNumber() + 1;
-        Long totalResults = pageReviewCommentList.getTotalElements();
-
-        for (ReviewComment e : reviewCommentList) {
+        for(ReviewComment e : reviewCommentList){
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e);
             reviewCommentDTOList.add(reviewCommentDTO);
         }
-        return new PagingReviewCommentDTO().toPageDTO(page, totalPages, totalResults, reviewCommentDTOList);
+        return reviewCommentDTOList;
     }
-
 
     /*댓글 순서 정렬용*/
     public class ListComparator implements Comparator {
