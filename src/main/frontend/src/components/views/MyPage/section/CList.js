@@ -6,19 +6,19 @@ import { Table, Divider } from 'antd';
 const columns = [
     {
         title: '예매일',
-        dataIndex: 'Rdate',
+        dataIndex: 'reserve_time',
     },
     {
         title: '예매번호',
-        dataIndex: 'Rnum',
+        dataIndex: 'reserve_ticket',
     },
     {
         title: '공연명',
-        dataIndex: 'name',
+        dataIndex: 'product_title',
     },
     {
         title: '관람일',
-        dataIndex: 'date',
+        dataIndex: 'view_time',
     },
     {
         title: '매수',
@@ -26,7 +26,7 @@ const columns = [
     },
     {
         title: '상태',
-        dataIndex: 'detail',
+        dataIndex: 'reserve_status',
     },
 ];
 const data = [

@@ -180,22 +180,17 @@ function Social() {
     const onOpen = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
 
-    const onChangeName = e => {
+    const checkName = e => {
         const value = e.target.value;
         setInputName(value);
+        const regEx = /^[ㄱ-ㅎ|가-힣]+$/;
+        if(regEx.test(value)) {
             if(value.length > 1) {
                 setIsName(true);
-            } else {
-            setIsName(false);     
+            }
+            }
+            else setIsName(false);
         }
-    }
-    const onChangeEmail = e => {
-        const value = e.target.value;
-        setInputEmail(value);
-        const regEx = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-        if(regEx.test(value)) setIsEmail(true);
-        else setIsEmail(false);
-    }
 
     const handlePostCode = (data) => {
     setFullAddress(data.address);
@@ -244,7 +239,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-name">Name</label>
                 <div className="input-group">
-                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={onChangeName} data-lpignore="true" />
+                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onBeforeInput={checkName} data-lpignore="true" />
             </div>
             <div className='fail-message'>
             {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
@@ -253,7 +248,7 @@ function Social() {
             <div className="input-wrapper">
                 <label for="sign-email">Email</label>
                 <div className="input-group">
-                <input type="email" className={inputEmail.length > 0 && 'reg-input'} id="sign-email" value={inputEmail} onBlur={onChangeEmail} readonly data-lpignore="true" />
+                <input type="email" id="sign-email" value={inputEmail} readOnly data-lpignore="true" />
             </div>
             </div>
             <div className='addrContainer' id='popupDom'>

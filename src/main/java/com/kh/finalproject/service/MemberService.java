@@ -22,7 +22,7 @@ public interface MemberService {
     /**
      * 아이디로 회원 조회
      */
-    MemberDTO searchById(String id);
+    MemberDTO searchById(SearchByIdDTO searchByIdDTO);
 
     /**
      * 이메일로 회원 조회 (소셜 로그인)
