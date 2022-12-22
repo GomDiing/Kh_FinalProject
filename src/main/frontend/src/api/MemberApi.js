@@ -36,9 +36,15 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
   // Id 로 정보 받아오기
-  searchId : async function(id, email, providerType) {
+  searchId : async function(id, providerType) {
     const searchById = {
       id : id,
+      providerType : providerType
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-id", searchById, HEADER);
+  },
+  searchId2 : async function(email, providerType) {
+    const searchById = {
       email : email,
       providerType : providerType
     }
