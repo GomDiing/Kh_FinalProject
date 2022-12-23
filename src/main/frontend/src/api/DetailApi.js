@@ -1,5 +1,5 @@
 import axios from "axios";
-const HEADER = {'Content-Type' : {'Content-Type' : 'application/json'}}
+const HEADER = {'Content-Type' :  'application/json'}
 const TCAT_DOMAIN = "http://localhost:8100";
 
 const DetailApi={
