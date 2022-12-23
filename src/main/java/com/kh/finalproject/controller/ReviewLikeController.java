@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class ReviewLikeController {
      * 좋아요 누르기 컨트롤러
      */
     @PostMapping("/add")
-    public ResponseEntity<DefaultResponse<Object>> addReviewLike(@RequestBody AddReviewLikeDTO addReviewLikeDTO){
+    public ResponseEntity<DefaultResponse<Object>> addReviewLike(@Validated @RequestBody AddReviewLikeDTO addReviewLikeDTO){
 
         reviewLikeService.addLike(addReviewLikeDTO);
 

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class AccuseController {
      */
     @PostMapping("/{index}")
     public ResponseEntity<DefaultResponse<Object>> createAccuse(@PathVariable Long index,
-                                               @RequestBody CreateAccuseDTO createAccuseDTO) {
+                                                                @Validated @RequestBody CreateAccuseDTO createAccuseDTO) {
         //후기 index 랑 유저 정보 service 넘겨주기
         accuseService.create(createAccuseDTO, index);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_ACCUSE), HttpStatus.OK);
