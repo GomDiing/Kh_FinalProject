@@ -7,7 +7,7 @@ import userReducer from '../Slice/userSlice'
 import seatReducer from '../Slice/seatIndexSlice'
 
 const reducers = combineReducers({
-    user : userReducer, 
+    user : userReducer,
     seat : seatReducer
 });
 

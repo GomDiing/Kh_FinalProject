@@ -14,7 +14,7 @@ const NoticeList=()=>{
 
   //  리액트 페이지네이션 변수 
   const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(12); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(6); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 

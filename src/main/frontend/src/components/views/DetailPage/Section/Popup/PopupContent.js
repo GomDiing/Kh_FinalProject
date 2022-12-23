@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice";
+import { loginActions } from "../../../../../util/Redux/Slice/userSlice";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
 const BodyStyle = styled.div`
@@ -35,15 +36,14 @@ const BodyStyle = styled.div`
   .kpay-button {
     background-color: white;
   }
-  /* .sh {
+  .sh {
     border-left: 1px solid black;
-  } */
+  }
   
 `;
 
 function PopupContent (props) {
   const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute } = props;
-  
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [type, setType] = useState('');
@@ -70,7 +70,6 @@ function PopupContent (props) {
     const [selectPrice, setSelectPrice] = useState(0);
 
     const dispatch = useDispatch();
-    
     /**
      * Ticekt Discount !Duplicate Accept
      */
@@ -105,22 +104,22 @@ function PopupContent (props) {
           setType('student');
           totalPayChange(tickets, values, taxs, totals, student);
           break;
-          case 'double':
-            setDouValue(values);
-            setValue(0);
-            setEveValue(0);
-            setStuValue(0);
-            setType('double');
-            totalPayChange(tickets, values, taxs, totals, double);
-            break;
-            case 'event':
-              setEveValue(values);
-              setValue(0);
-              setDouValue(0);
-              setStuValue(0);
-              setType('event');
-            totalPayChange(tickets, values, taxs, totals, openEvent);
+        case 'double':
+          setDouValue(values);
+          setValue(0);
+          setEveValue(0);
+          setStuValue(0);
+          setType('double');
+          totalPayChange(tickets, values, taxs, totals, double);
           break;
+        case 'event':
+          setEveValue(values);
+          setValue(0);
+          setDouValue(0);
+          setStuValue(0);
+          setType('event');
+          totalPayChange(tickets, values, taxs, totals, openEvent);
+           break;
         default:
           alert('오류');
       }
@@ -282,7 +281,10 @@ function PopupContent (props) {
 
   const FinalModal = props => {
     const { seatNumber, seat, cancelday, hour, minute, title, date, turn, value, ticket, tax, total, userInfo, price } = props;
-    PayReady(title, total, tax, value, seatNumber, userInfo, price);
+    // 가격과 수량을 선택 했을 때만 불려짐 
+    if(value > 0 && price > 0 && total > 0) {
+     PayReady(title, total, tax, value, seatNumber, userInfo, price);
+    }
     const payUrl = window.localStorage.getItem('url');
 
     return(
@@ -298,10 +300,9 @@ function PopupContent (props) {
   }
 
   const MyInfo = props => {
-    
+    const { date, hour, point, minute, ticket, tax, total, price, index, seat, cancelday, turn } = props;
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);
-    const { date, hour, point, minute, ticket, tax, total, price, index, seat, cancelday, turn } = props;
     return(
       <div>
         <h2>My예매정보</h2>
@@ -323,7 +324,7 @@ function PopupContent (props) {
             <th>비과세(5%)</th>
             <td>{tax}</td>
             <th className="sh">현재 포인트</th>
-            <td>{point}<span><button type="button">포인트 사용하기</button></span></td>
+            <td>{point}<span></span></td>
           </tr>
           <tr>
             <th>취소 기한</th>

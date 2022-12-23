@@ -55,16 +55,18 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  height: auto;
+  /* height: auto; */
   position: fixed; 
   left: 70%;
   /* top: 6.5rem; */
   /* bottom: 0; */
-  bottom: 100px;
-  padding-bottom: 40px;
+  /* bottom: 100px; */
+  padding: 0 1px;
+  padding-bottom: 30px;
 
 }
 .ItemContainer2{
+  padding: 40px 0;
   width: 100%;
   display: flex;
   background-color: white;
@@ -153,13 +155,15 @@ function Detail() {
     getData();
   }, [pCode]);
 
+
+
   // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
       try {
         const res = await DetailApi.allReviewComment(pCode);
         if(res.data.statusCode === 200) {
-          setReviewList(res.data.results);
+          setReviewList([reviewList, res.data.results]);
         } else {
           alert("리스트 조회가 안됩니다.")
         } 
@@ -170,40 +174,40 @@ function Detail() {
     reviewData();
   }, [pCode]); 
   
-  // 최상단 스크롤
-  const handleFollow = () => {
-    setScrollY(window.pageYOffset);
-    if(ScrollY > 100) {
-      setBtnStatus(true);
-    } else {
-      setBtnStatus(false);
-    }
-  }
-  const handleTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-    setScrollY(0);
-    setBtnStatus(false);
-  }
+  // // 최상단 스크롤
+  // const handleFollow = () => {
+  //   setScrollY(window.pageYOffset);
+  //   if(ScrollY > 100) {
+  //     setBtnStatus(true);
+  //   } else {
+  //     setBtnStatus(false);
+  //   }
+  // }
+  // const handleTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth"
+  //   });
+  //   setScrollY(0);
+  //   setBtnStatus(false);
+  // }
 
-  useEffect(() => {
-    const watch = () => {
-      window.addEventListener('scroll', handleFollow)
-    }
-    watch();
-    return () => {
-      window.removeEventListener('scroll', handleFollow)
-    }
-  })
+  // useEffect(() => {
+  //   const watch = () => {
+  //     window.addEventListener('scroll', handleFollow)
+  //   }
+  //   watch();
+  //   return () => {
+  //     window.removeEventListener('scroll', handleFollow)
+  //   }
+  // })
   
   return (
     <DWrap>
       {/* 스크롤 */}
-      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
+      {/* <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
       <BsArrowUpCircle className='arrow'/>
-        </button>
+        </button> */}
         {/* 해더 */}
       <MainHeader/>
         {/* 바디 */}
@@ -257,7 +261,9 @@ function Detail() {
             
             <Tab eventKey="profile" title="관람후기">
               <WriteReview code={comList.code}/>
-              <ReviewBody reviewList={reviewList}/>
+              <ReviewBody reviewList={reviewList}
+            code={comList.code}
+            />
             </Tab>
           </Tabs>
           </div>

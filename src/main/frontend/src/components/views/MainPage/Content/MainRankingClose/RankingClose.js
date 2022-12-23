@@ -147,7 +147,7 @@ const RankingClose = () =>{
             ))}
             </div>
         </PosterCategoryContainer>
-
+            <div>
                 <HorizontalScroll>
                     <MainPoster2Container>
                         <ul>
@@ -164,6 +164,7 @@ const RankingClose = () =>{
                         </ul>
                     </MainPoster2Container>
                 </HorizontalScroll>
+            </div>
     </>
 )
 }

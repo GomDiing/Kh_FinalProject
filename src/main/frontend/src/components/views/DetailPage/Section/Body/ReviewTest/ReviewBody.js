@@ -9,21 +9,55 @@ import DetailApi from "../../../../../../api/DetailApi";
 import AccuseModal from "./AccuseModal";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
+import { Pagination } from "antd";
+
 
 
 const ReviewBody=(props)=>{
+
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
   const memberIndex = userInfo.userIndex;
   const loginMember = userInfo.userId; // 삭제버튼 오픈용(로그인 회원 일치)
 
+    //  리액트 페이지네이션 변수 
+    // const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
+    const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
+    const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
+    const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
+
+
   const [reviews, setReviews] = useState(props.reviewList);
+  const [reviewList2, setReviewList2] = useState([]);
+
+  // console.log(reviews[1].length); //이걸로 총갯수
+  // console.log(reviews[1]);
+  // console.log("숫자" + reviewList2[1].length);
+  // console.log(props.reviewList[1].length); // 20
+  // console.log(reviews[1].length);
+
+
 
   useEffect(() => {
-    setReviews(props.reviewList);
-  }, [props.reviewList]);
+    const reviewData = async() => {
+      try {
+        const res = await DetailApi.allReviewComment(props.code,currentPage, pageSize);
+        if(res.data.statusCode === 200) {
+          setReviewList2([reviewList2, res.data.results]);
+          // 페이징 시작
+          // setTotalCount(props.reviewList[1].length); 
+          // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
+          setCurrentPage(1);
+        } else {
+          alert("리스트 조회가 안됩니다.")
+        } 
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    reviewData();
+  }, [props.code,currentPage]);
 
-  // const [parentReviews, setParentReview] = useState('');
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -31,30 +65,27 @@ const ReviewBody=(props)=>{
     const close = () => setModalOpen(false);
 
     // 상위댓글(layer=0) 필터
-    const motherResult = reviews.filter(item=>item.layer < 1);
+    // const motherResult = reviews.filter(item=>item.layer < 1);
 
-    // useEffect(()=>{
-    //   setParentReview(motherResult);
-    // },[]) 
-    // 혹시 이것때문에 group 0으로 찍히는걸까봐
+    const motherResult = reviewList2[1];
+    // console.log(motherResult);
+    
 
     const onClickDelete=async(index)=>{
       try{
         const res = await DetailApi.deleteComment(index, memberIndex);
         if(res.data.statusCode === 200){
           alert("댓글이 삭제되었습니다.")
+          // return;
         }
       } catch(e){
         console.log(e);
       }
     }
-    const onClickUpdate=()=>{
-
-    }
 
     return(
         <ReviewBodyBlock>
-        {motherResult&&motherResult.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {reviews&&reviews.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -79,7 +110,6 @@ const ReviewBody=(props)=>{
               {/* 로그인한 회원이랑 작성자랑2 동일하면 삭제 버튼 */}
               {memberId === loginMember && (
               <>
-              <button className="review-update-btn" onClick={onClickUpdate(index)}>수정</button>
               <button className="review-delete-btn" 
                 onClick={()=>onClickDelete(index)}>삭제</button>
               </>
@@ -95,6 +125,13 @@ const ReviewBody=(props)=>{
         </Alert>
         </div>
         ))}
+        <Pagination className="d-flex justify-content-center"
+             total={totalCount}  //총 데이터 갯수
+             current={currentPage} 
+             pageSize={pageSize}
+             onChange={(page) => {setCurrentPage(page); 
+              setReviewList2([]);}} //숫자 누르면 해당 페이지로 이동
+            />
         </ReviewBodyBlock>
     )
 }

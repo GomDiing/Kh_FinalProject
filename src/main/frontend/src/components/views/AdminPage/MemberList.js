@@ -10,7 +10,7 @@ const MemberList=()=>{
   const navigate = useNavigate();
   // 페이지네이션 변수
   const [memberList, setMemberList] = useState([]);
-  const [pageSize, setPageSize] = useState(12); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(8); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -95,13 +95,13 @@ const MemberList=()=>{
                 ))}
                 </tbody>
             </Table>
-            </div>
             <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
             current={currentPage} 
             pageSize={pageSize}
             onChange={(page) => {setCurrentPage(page); setMemberList([]);}}
             />
+            </div>
         </MemberBlock>
     );
 }

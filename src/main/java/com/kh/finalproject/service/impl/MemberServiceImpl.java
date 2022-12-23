@@ -201,6 +201,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberDTO searchById(SearchByIdDTO searchByIdDTO) {
+        log.info("searchByIdDTO.getProviderType()={}", searchByIdDTO.getProviderType());
         MemberProviderType loginProviderType = MemberProviderType.valueOf(searchByIdDTO.getProviderType());
         //홈페이지 가입 회원일 시
         if (loginProviderType  == MemberProviderType.HOME) {

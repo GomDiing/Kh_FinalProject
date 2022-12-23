@@ -5,6 +5,7 @@ const TCAT_DOMAIN = "http://localhost:8100";
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
     sendComment : async function(memberIndex,inputTitle, inputContent, rate, productCode){
+        console.log("찍히는 값 : " + memberIndex,inputTitle, inputContent, rate, productCode);
         const params = {
             memberIndex : memberIndex,
             title : inputTitle,
@@ -26,7 +27,7 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/add", params, HEADER);
     },
-    // 공연 후기 수정
+    // 공연 후기 수정 (프론트 수정은 없음)
     updateComment : async function(memberIndex,commentIndex,content){
         const params = {
             memberIndex : memberIndex,
@@ -46,8 +47,9 @@ const DetailApi={
         return await axios.post(TCAT_DOMAIN+"/api/review/delete", params,HEADER)
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
-    allReviewComment : async function(productCode){
+    allReviewComment : async function(productCode,currentPage ,setPageSize){
         return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
+        // ?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){

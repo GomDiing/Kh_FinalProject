@@ -57,7 +57,6 @@ const InfoUpdate = () => {
   const [inputName, setInputName] = useState('');
   const [inputEmail, setInputEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [type, setType] = useState('HOME')
   const [isOpen, setIsOpen] = useState(false);
 
     // 주소 
@@ -70,27 +69,55 @@ const InfoUpdate = () => {
     const [postCode, setPostCode] = useState("");
 
     useEffect(() => {
-      const getInfo = async() => {
-        try {
-          const res = await MemberApi.searchId(userInfo.userId);
-          if(res.data.statusCode === 200) {
-            setInputId(res.data.results.id);
-            setInputPwd(res.data.results.pwd);
-            setInputName(res.data.results.name);
-            setInputEmail(res.data.results.email);
-            setFullAddress(res.data.results.road);
-            setAddress(res.data.results.detail);
-            setRoad(res.data.results.road);
-            setJibun(res.data.results.jibun);
-            setPostCode(res.data.results.zipcode);
-            console.log(res.data);
+      if(userInfo.userProvider_type === 'HOME') {
+        getInfo();
+      } else if(userInfo.userProvider_type === 'KAKAO' || 'GOOGLE') { 
+        getInfo2();
+      }
+    },[userInfo.userProvider_type])
 
-          }
-        } catch (e) {
-          console.log(e);
+    const getInfo = async() => {
+      try {
+        const res = await MemberApi.searchId(userInfo.userId, userInfo.userProvider_type);
+        if(res.data.statusCode === 200) {
+          setInputId(res.data.results.id);
+          setInputPwd(res.data.results.pwd);
+          setInputName(res.data.results.name);
+          setInputEmail(res.data.results.email);
+          setFullAddress(res.data.results.road);
+          setAddress(res.data.results.detail);
+          setRoad(res.data.results.road);
+          setJibun(res.data.results.jibun);
+          setPostCode(res.data.results.zipcode);
+          console.log(res.data);
+          console.log(res.data);
         }
-      }; getInfo();
-    }, []);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    const getInfo2 = async() => {
+      try {
+        const res = await MemberApi.searchId2(userInfo.userEmail, userInfo.userProvider_type);
+        if(res.data.statusCode === 200) {
+          setInputId(res.data.results.id);
+          setInputPwd(res.data.results.pwd);
+          setInputName(res.data.results.name);
+          setInputEmail(res.data.results.email);
+          setFullAddress(res.data.results.road);
+          setAddress(res.data.results.detail);
+          setRoad(res.data.results.road);
+          setJibun(res.data.results.jibun);
+          setPostCode(res.data.results.zipcode);
+          console.log(res.data);
+          console.log(res.data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     console.log(fullAddress);
     console.log(inputName);
 
@@ -121,11 +148,10 @@ const InfoUpdate = () => {
   console.log(jibun);
   console.log(address);
   console.log(postCode);
-  console.log(type);
 
   const onClickChange = async (e) => {
     try {
-      const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode, type);
+      const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode, userInfo.userProvider_type);
       if(response.data.statusCode === 200) {
       alert("회원정보 변경 완료");
     } Navigate('/Mypage');

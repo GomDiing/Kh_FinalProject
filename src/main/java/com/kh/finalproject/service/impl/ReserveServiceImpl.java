@@ -89,8 +89,11 @@ public class ReserveServiceImpl implements ReserveService {
                 if (Objects.isNull(paymentReserveDTO.getKakaoTID())) {
                     throw new CustomException(CustomErrorCode.EMPTY_KAKAO_TID);
                 }
+                if (Objects.isNull(paymentReserveDTO.getKakaoTaxFreeAmount())) {
+                    throw new CustomException(CustomErrorCode.EMPTY_KAKAO_TAX_FREE);
+                }
                 //카카오페이 엔티티 생성 및 저장
-                KakaoPay kakaoPay = new KakaoPay().toEntity(paymentReserveDTO.getKakaoTID(), reserveMember, reserve);
+                KakaoPay kakaoPay = new KakaoPay().toEntity(paymentReserveDTO.getKakaoTID(), reserveMember, reserve, paymentReserveDTO.getKakaoTaxFreeAmount());
                 kakaoPayRepository.save(kakaoPay);
             }
         }
@@ -208,7 +211,7 @@ public class ReserveServiceImpl implements ReserveService {
             return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod());
 
         }
-        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), kakaoPay.getKakaoTID());
+        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), kakaoPay.getKakaoTID(), kakaoPay.getKakaoTaxFreeAmount());
     }
 
     @Transactional
@@ -250,7 +253,8 @@ public class ReserveServiceImpl implements ReserveService {
                 //결제수단이 KAKAOPAY이면 갱신
                 if (reserve.getMethod().equals("KAKAOPAY")) {
                     String kakaoTID = reserve.getKakaoPayList().get(0).getKakaoTID();
-                    reserveDTO.updateTID(kakaoTID);
+                    Integer kakaoTaxFreeAmount = reserve.getKakaoPayList().get(0).getKakaoTaxFreeAmount();
+                    reserveDTO.updateTID(kakaoTID, kakaoTaxFreeAmount);
                 }
                 reserveDTOList.add(reserveDTO);
                 //중복 확인 리스트 추가

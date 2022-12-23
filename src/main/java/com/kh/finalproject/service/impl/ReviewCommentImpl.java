@@ -194,15 +194,34 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
     /*공연 후기 전체 리스트*/
     @Override
-    public List<ReviewCommentDTO> allComment(String productCode) {
-        List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.findAllByProductCodeAndStatus(productCode, ReviewCommentStatus.ACTIVE);
+    public PageReviewCommentDTO allComment(String productCode, Pageable pageable) {
+        List<ParentReviewDTO> parentReviewDTOList = new ArrayList<>();
+        //후기만 조회
+        Page<ReviewComment> reviewCommentPage = reviewCommentRepository.findByProductCodeAndStatusAndLayer(productCode, ReviewCommentStatus.ACTIVE, pageable, 0);
 
-        for(ReviewComment e : reviewCommentList){
-            ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e,e.getMember());
-            reviewCommentDTOList.add(reviewCommentDTO);
+        List<ReviewComment> reviewCommentList = reviewCommentPage.getContent();
+        Integer totalPages = reviewCommentPage.getTotalPages();
+        Integer page = reviewCommentPage.getNumber() + 1;
+        Long totalResults = reviewCommentPage.getTotalElements();
+
+        for(ReviewComment reviewComment : reviewCommentList){
+            ParentReviewDTO parentReviewDTO = new ParentReviewDTO().toDTO(reviewComment);
+            //댓글 조회 (해당 상품 + 상태(ACTIVE) + 레이어=1 + 후기가 아니고(인덱스가 후기 인덱스가 아니고) + 그룹이 후기 그룹인 댓글 조회
+            List<ReviewComment> findCommentList = reviewCommentRepository.findByProductCodeAndStatusAndLayerAndIndexNotAndGroup(productCode, ReviewCommentStatus.ACTIVE, 1, reviewComment.getIndex(), reviewComment.getGroup());
+            //해당 게시글에 댓글이 있다면
+            if (!findCommentList.isEmpty()) {
+                List<ChildCommentDTO> childCommentDTOList = new LinkedList<>();
+                for (ReviewComment findComment : findCommentList) {
+                    ChildCommentDTO childCommentDTO = new ChildCommentDTO().toDTO(findComment);
+                    childCommentDTOList.add(childCommentDTO);
+                }
+                //부모 후기에 자식 댓글 리스트 추가
+                parentReviewDTO.updateChildComment(childCommentDTOList);
+            }
+            parentReviewDTOList.add(parentReviewDTO);
+
         }
-        return reviewCommentDTOList;
+        return new PageReviewCommentDTO().toPageDTO(page, totalPages, totalResults, parentReviewDTOList);
     }
 
     /*댓글 순서 정렬용*/

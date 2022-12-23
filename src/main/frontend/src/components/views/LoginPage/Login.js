@@ -341,7 +341,8 @@ const IdStyle = styled.div`
                 userPoint : response.data.results.point,
                 userName : response.data.results.name,
                 userEmail : response.data.results.email,
-                userProvider_type : response.data.results.provider_type
+                userProvider_type : response.data.results.provider_type,
+                userRole : response.data.results.rile
               }
               dispatch(loginActions.setUserInfo({data}));
               navigate('/');

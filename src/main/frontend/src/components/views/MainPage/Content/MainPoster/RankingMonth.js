@@ -140,7 +140,7 @@ const RankingMonth = () =>{
                     ))}
                     </div>
                 </PosterCategoryContainer>
-                
+                <div>
                     <HorizontalScroll>
                         <PosterImgContainer>
                     <ul>
@@ -155,6 +155,7 @@ const RankingMonth = () =>{
                     </ul>
                         </PosterImgContainer>
                     </HorizontalScroll>
+                </div>
             </>
     )
 }
