@@ -152,21 +152,15 @@ function Detail() {
     getData();
   }, [pCode]);
 
-    //  리액트 페이지네이션 변수 
-    const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-    const [pageSize, setPageSize] = useState(4); // 한페이지에 몇개씩 있을건지
-    const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
-    const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
+
 
   // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
       try {
-        const res = await DetailApi.allReviewComment(pCode,currentPage, pageSize);
+        const res = await DetailApi.allReviewComment(pCode);
         if(res.data.statusCode === 200) {
-          setReviewList([...reviewList, ...res.data.results.reviewCommentDTOList]);
-          setTotalCount(res.data.results.totalResults); 
-          setCurrentPage(res.data.results.page);
+          setReviewList([reviewList, res.data.results]);
         } else {
           alert("리스트 조회가 안됩니다.")
         } 
@@ -175,7 +169,7 @@ function Detail() {
       }
     };
     reviewData();
-  }, [pCode,currentPage]); 
+  }, [pCode]); 
   
   // 최상단 스크롤
   const handleFollow = () => {
@@ -256,7 +250,9 @@ function Detail() {
             </Tab>
             <Tab eventKey="profile" title="관람후기">
             <WriteReview code={comList.code}/>
-            <ReviewBody reviewList={reviewList}/>
+            <ReviewBody reviewList={reviewList}
+            code={comList.code}
+            />
             </Tab>
           </Tabs>
           </div>

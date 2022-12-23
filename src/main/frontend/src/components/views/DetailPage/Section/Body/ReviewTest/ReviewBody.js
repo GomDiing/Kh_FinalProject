@@ -21,22 +21,43 @@ const ReviewBody=(props)=>{
   const loginMember = userInfo.userId; // 삭제버튼 오픈용(로그인 회원 일치)
 
     //  리액트 페이지네이션 변수 
-    const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-    const [pageSize, setPageSize] = useState(4); // 한페이지에 몇개씩 있을건지
+    // const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
+    const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
     const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
-  useEffect(()=>{
-    // const res = await DetailApi.allReviewComment(pCode,currentPage, pageSize);
-  })
 
   const [reviews, setReviews] = useState(props.reviewList);
+  const [reviewList2, setReviewList2] = useState([]);
+
+  // console.log(reviews[1].length); //이걸로 총갯수
+  // console.log(reviews[1]);
+  // console.log("숫자" + reviewList2[1].length);
+  // console.log(props.reviewList[1].length); // 20
+  // console.log(reviews[1].length);
+
+
 
   useEffect(() => {
-    setReviews(props.reviewList);
-  }, [props.reviewList]);
+    const reviewData = async() => {
+      try {
+        const res = await DetailApi.allReviewComment(props.code,currentPage, pageSize);
+        if(res.data.statusCode === 200) {
+          setReviewList2([reviewList2, res.data.results]);
+          // 페이징 시작
+          setTotalCount(props.reviewList[1].length); 
+          // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
+          setCurrentPage(1);
+        } else {
+          alert("리스트 조회가 안됩니다.")
+        } 
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    reviewData();
+  }, [props.code,currentPage]);
 
-  // const [parentReviews, setParentReview] = useState('');
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
@@ -44,12 +65,11 @@ const ReviewBody=(props)=>{
     const close = () => setModalOpen(false);
 
     // 상위댓글(layer=0) 필터
-    const motherResult = reviews.filter(item=>item.layer < 1);
+    // const motherResult = reviews.filter(item=>item.layer < 1);
 
-    // useEffect(()=>{
-    //   setParentReview(motherResult);
-    // },[]) 
-    // 혹시 이것때문에 group 0으로 찍히는걸까봐
+    const motherResult = reviewList2[1];
+    // console.log(motherResult);
+    
 
     const onClickDelete=async(index)=>{
       try{
@@ -65,7 +85,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {reviews&&reviews.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {motherResult&&motherResult.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -110,7 +130,7 @@ const ReviewBody=(props)=>{
              current={currentPage} 
              pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); 
-              setReviews([]);}} //숫자 누르면 해당 페이지로 이동
+              setReviewList2([]);}} //숫자 누르면 해당 페이지로 이동
             />
         </ReviewBodyBlock>
     )
