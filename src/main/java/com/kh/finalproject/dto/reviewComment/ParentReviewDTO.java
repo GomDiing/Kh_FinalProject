@@ -3,6 +3,7 @@ package com.kh.finalproject.dto.reviewComment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
@@ -43,6 +44,9 @@ public class ParentReviewDTO {
     @JsonProperty("thumb_poster_url")
     private String thumbPosterUrl;
 
+    @JsonProperty("provider_type")
+    private String providerType;
+
     @JsonProperty("child_comment_list")
     private List<ChildCommentDTO> childCommentDTOList = new ArrayList<>();
 
@@ -50,7 +54,9 @@ public class ParentReviewDTO {
     public ParentReviewDTO toDTO(ReviewComment reviewComment){
         this.index = reviewComment.getIndex();
         this.memberIndex = reviewComment.getMember().getIndex();
-        this.memberId = reviewComment.getMember().getId();
+        //홈 회원이면 ID, 소셜 회원이면 이메일 노출
+        if (reviewComment.getMember().getProviderType() == MemberProviderType.HOME) this.memberId = reviewComment.getMember().getId();
+        else this.memberId = reviewComment.getMember().getEmail();
         this.title = reviewComment.getTitle();
         this.like = reviewComment.getLike();
         this.rate = reviewComment.getRate();
@@ -63,6 +69,7 @@ public class ParentReviewDTO {
         this.productCode = reviewComment.getProduct().getCode();
         this.createTime = reviewComment.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.thumbPosterUrl = reviewComment.getProduct().getThumbPosterUrl();
+        this.providerType = reviewComment.getMember().getProviderType().name();
 
         return  this;
     }
