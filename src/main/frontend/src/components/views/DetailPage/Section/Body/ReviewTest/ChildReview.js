@@ -47,13 +47,14 @@ const ChildReview=(props)=>{
     };
 
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
-    
+
     // 후기 작성
     const onClickSubmit=async()=>{
       try{
         const res = await DetailApi.childComment(userInfo.userIndex,group,inputContent,props.code);
         if(res.data.statusCode === 200){
           alert(res.data.message);
+          navigate(0);
         } 
       }catch(e){
         if(e.response.data.statusCode === 400){
