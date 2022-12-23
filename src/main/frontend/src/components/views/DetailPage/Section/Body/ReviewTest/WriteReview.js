@@ -56,7 +56,7 @@ const WriteReview=(props)=>{
         <Form.Control className="write-review-title" type="text" placeholder="Enter title" value={inputTitle} onChange={onChangeTitle}/>
         </Form.Group>
         <Form.Group className="mb-3">
-        <Form.Control className="write-review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
+        <Form.Control className="write-review-content" as="textarea" style={{resize: 'none', height: '150px'}} placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
       </Form.Group>
       <Button className="write-review-btn" variant="primary" onClick={onClickSubmit}>
         후기 작성하기

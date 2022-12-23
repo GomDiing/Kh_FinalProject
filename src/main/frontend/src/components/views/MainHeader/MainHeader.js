@@ -18,8 +18,8 @@ const HeaderContainer = styled.div`
         }
     }
     .Logo{
-        width   :150px;
-        height: 50px;
+        width: 130px;
+        height: 60px;
         margin: 0px;
         padding: 0px;
     }

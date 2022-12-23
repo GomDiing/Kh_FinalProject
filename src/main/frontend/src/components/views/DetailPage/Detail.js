@@ -12,12 +12,12 @@ import Tabs from 'react-bootstrap/Tabs';
 import DetailApi from '../../../api/DetailApi';
 import Contents from './Section/Body/Contents';
 import GridCards from '../Cards/GridCards';
-// import Reviews from './Section/Body/Reviews';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
 import WriteReview from './Section/Body/ReviewTest/WriteReview';
 import ChildReview from './Section/Body/ReviewTest/ChildReview';
+import NoImage from '../../../util/NoImage';
 
 const { Content, Sider } = Layout;
 
@@ -273,7 +273,7 @@ function Detail() {
               <div >
               {cast && cast.map((cast, id) => (
               <React.Fragment key={id}>
-              <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
+              <GridCards  character={cast.character} actor={cast.actor} url={cast.info_url} image={cast.image_url ? `${cast.image_url}` : NoImage}/>
               </React.Fragment>
               ))}</div>
             }
