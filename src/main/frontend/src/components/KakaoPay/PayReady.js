@@ -67,6 +67,7 @@ const PayReady = (title, total, tax, value) => {
       price : 0,
       total : 0,
       quantity : 0,
+      kakaoTaxFreeAmount : 0,
       tid : window.localStorage.getItem('tid'),
       method : ''
     });
@@ -101,27 +102,30 @@ const PayReady = (title, total, tax, value) => {
             },
             params,
         }).then(response => {
+            console.log(response);
             setPayment((state) => ({
               ...state,
               price : response.data.amount.total / response.data.quantity,
               total : response.data.amount.total,
               quantity : response.data.quantity,
               tid : response.data.tid,
+              kakaoTaxFreeAmount : response.data.amount.tax_free,
               // CARD OR MONEY 둘 중 하나의 방식이면 백에서 받을 때 KAKAOPAY라고 알려주기 위하여 KAKAOPAY로 변환해서 넘겨줌 둘 다 아니면 에러
               method : response.data.payment_method_type === 'CARD' || response.data.payment_method_type === 'MONEY' ? 'KAKAOPAY' : 'ERROR'
             }));
             setIsTrue(true);
             window.localStorage.removeItem('url');
         }).catch(error => {
+            window.localStorage.removeItem('tid');
             console.log(error);
         });
     }, []);
 
       useEffect(() => {
         const PayReadySubmit = async () => {
-          console.log(user.userPoint);
+          console.log(payment);
           try {
-            const response = await PayApi.payReady(user.userIndex, seatIndex, payment.quantity, payment.price, user.userPoint, payment.method, payment.tid, payment.total);
+            const response = await PayApi.payReady(user.userIndex, seatIndex, payment.quantity, payment.price, user.userPoint, payment.method, payment.tid, payment.total, payment.kakaoTaxFreeAmount);
             console.log(response);
             if(response.data.statusCode === 200) {
               window.localStorage.removeItem('tid');
@@ -174,11 +178,10 @@ const PayReady = (title, total, tax, value) => {
       final_amount : ticket.final_amount,
       // 상품 수량
       count : ticket.count,
-      // 결제 비과세 price & vlaue / 20 || 현재 비과세 => 총 금액 / 20 => 즉 total - total / 20 && total / 20
-      // 좀 복잡하네 잘못 짰다고 생각이 많이 드는 시간..
-      tax_free_amount : Math.ceil(ticket.final_amount - ticket.final_amount / 20) / 20,
+      // 상품 비과세
+      tax_free_amount : ticket.kakaoTaxFreeAmount,
       // 상품 tid
-      tid : ticket.kakaoTID
+      tid : ticket.kakaoTID,
     });
 
     // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
@@ -202,8 +205,8 @@ const PayReady = (title, total, tax, value) => {
       const [modalOpen, setModalOpen] = useState(false);
       const openModal = () => setModalOpen(true);
       const closeModal = () => {
-      setModalOpen(false);
-      navigate('/', {replace:true});
+        setModalOpen(false);
+        navigate('/', {replace:true});
       }
       const data = {
         params: {
@@ -215,7 +218,6 @@ const PayReady = (title, total, tax, value) => {
           cancel_tax_free_amount : cancel.tax_free_amount,
         }
       };
-      console.log(data);
       // payCancel 들어오면 결제 취소 ! ! !
       useEffect(() => {
         const { params } = data;

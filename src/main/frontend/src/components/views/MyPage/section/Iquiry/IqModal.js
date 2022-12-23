@@ -78,5 +78,7 @@ const IqModal = (props) => {
 export default IqModal;
 
 const QWrap=styled.div`
-
+.modal > section > header button {
+    top: 10px;
+}
 `;

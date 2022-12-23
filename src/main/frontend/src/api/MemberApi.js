@@ -36,9 +36,15 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },
   // Id 로 정보 받아오기
-  searchId : async function(id, email, providerType) {
+  searchId : async function(id, providerType) {
     const searchById = {
       id : id,
+      providerType : providerType
+    }
+    return await axios.post(TCAT_DOMAIN + "/api/member/search-by-id", searchById, HEADER);
+  },
+  searchId2 : async function(email, providerType) {
+    const searchById = {
       email : email,
       providerType : providerType
     }
@@ -108,6 +114,15 @@ const MemberApi = {
       providerType : type,
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
+  },
+  // 회원탈퇴
+  deleteMmeber : async function(id, password, providerType) {
+    const delteMemberObj = {
+      id : id,
+      password : password,
+      providerType : providerType
+    }
+    return await axios.post(TCAT_DOMAIN + '/api/member/delete', delteMemberObj, HEADER);
   }
 }
 export default MemberApi;
