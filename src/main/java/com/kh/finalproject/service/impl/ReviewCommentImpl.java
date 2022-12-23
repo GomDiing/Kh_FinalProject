@@ -33,6 +33,9 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Transactional
     @Override
     public void create(CreateReviewCommentDTO createReviewCommentDTO) {
+        if (Objects.isNull(createReviewCommentDTO.getRate())) {
+            throw new CustomException(CustomErrorCode.ERROR_RATE);
+        }
         /*공연 후기 작성 시 회원 아이디로 회원 조회*/
         Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
         if (findOne.isEmpty()) {
