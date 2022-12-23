@@ -81,6 +81,16 @@ const MyInfoStyle = styled.div`
 `;
 
 function MyPage() {
+  const userInfo = useSelector((state) => state.user.info);
+  const Navigate = useNavigate();
+
+if(!userInfo.userEmail) {
+  // 상세 url 주소로 바꿔야함 나중에
+  alert("어딜 감히")
+  document.location.href="http://localhost:3000"
+  // document.location.href="http://localhost:8100"
+} 
+
   const { Content, Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   const [info, SetInfo] = useState('');
@@ -88,7 +98,6 @@ function MyPage() {
   const onClickDeleteMember = () => setOpen(true);
   const onCloseDeleteMember = () => setOpen(false);
 
-  const userInfo = useSelector((state) => state.user.info);
 
   useEffect(() => {
     if(userInfo.userProvider_type === 'HOME') {
@@ -125,10 +134,10 @@ function MyPage() {
   useEffect(() => {
     const el = document.getElementsByClassName('ant-layout-sider-trigger');
     el[0].style.position = 'relative';
-    const el2 = document.getElementsByClassName('ant-layout-sider-children');
-    el2[0].style.height = '225px';
-    const el3 = document.getElementsByClassName('ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger');
-    el3[0].style.background = 'none';
+    // const el2 = document.getElementsByClassName('ant-layout-sider-children');
+    // el2[0].style.height = '225px';
+    // const el3 = document.getElementsByClassName('ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger');
+    // el3[0].style.background = 'none';
   });
   
   function getItem(label, key, icon, children) {

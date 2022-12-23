@@ -95,7 +95,7 @@ const MainReview = () =>{
                 {isFinish && reviewItem.map ((reviewItem , index) =>(
                     <ul className="itemInfoContainer" key={index}>
                         <div style={{display :'flex'}}>
-                        <img src={reviewItem.thumb_poster_url}></img>
+                        <img src={reviewItem.thumb_poster_url} alt=''></img>
                     
                             <div className="textbox">                        
                                 <li className="itemInfo">

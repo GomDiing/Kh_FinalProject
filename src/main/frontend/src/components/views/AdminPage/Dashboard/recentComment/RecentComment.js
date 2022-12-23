@@ -31,17 +31,17 @@ const RecentComment=()=>{
     return(
         <RecentWrap>
         <div className="comment-container">
-        <button class="button-53" role="button">관람 후기</button>
+        <button class="button-53">관람 후기</button>
 
             {reviewList&&reviewList.map(({index,memberId, title, like, rate, content,createTime,thumb_poster_url}) =>(
             // <div key={index}>
             <Alert key={index} variant="light" className="first-comment-container">
                 <div className='review-image-container'>
-                    <img src={thumb_poster_url}/>
+                    <img src={thumb_poster_url} alt=''/>
                 </div>
                 <div className='review-text-container'>
                     <div className="review-head-container">
-                         <div className="review-head-left">
+                        <div className="review-head-left">
                         <Rate allowHalf disabled className="rate" value={rate} style={{ fontSize: '1.7rem'}}/>
                         </div>
                         <div className="review-head-right">

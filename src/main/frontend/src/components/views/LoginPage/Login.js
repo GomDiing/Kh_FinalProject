@@ -135,14 +135,13 @@ const IdStyle = styled.div`
 
   const FindIdHeader = () => {
     return(
-      // <h4 style={{textAlign: 'center'}}>아이디 찾기</h4>
-      <h4 >아이디 찾기</h4>
+      <h4 style={{marginBottom: '0'}}>아이디 찾기</h4>
     );
   }
 
   const FindPwdHeader = () => {
     return(
-      <h4 style={{textAlign: 'center'}}> 비밀번호 찾기</h4>
+      <h4 style={{marginBottom: '0'}}> 비밀번호 찾기</h4>
     );
   }
 
