@@ -32,11 +32,16 @@ const WriteReview=(props)=>{
           navigate(0);
           } 
         } catch(e){
-          if(e.response.data.statusCode === 500){
-            alert("평점, 제목, 내용을 입력해 주세요")
-          }else if(e.response.data.statusCode === 400){
-            alert("로그인 후 이용하시기 바랍니다.");
-          }else{
+          if(e.response.data.statusCode === 400){
+            console.log(e.response.data.errors[0].field);
+            if(e.response.data.errors !== null){
+              alert("평점 입력은 필수 입력값입니다.")
+            } 
+            // else if(e.response.data.errors.field === "memberIndex"){
+            //   alert("로그인 후 이용하시기 바랍니다.")
+            // }
+          }else if(e.response.data.code === 'C001'){
+            alert("로그인하라고 ㅋ")
             console.log(e);
           }
         }

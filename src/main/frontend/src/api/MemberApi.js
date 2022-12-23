@@ -31,7 +31,8 @@ const MemberApi = {
     const findPwdObj = {
       id : id,
       name : name,
-      email : email
+      email : email,
+      providerType : 'HOME'
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/find-password", findPwdObj, HEADER);
   },

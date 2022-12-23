@@ -24,19 +24,18 @@ const AccuseModal= (props)=> {
             if(res.data.statusCode === 200) {
                 alert(props.title+" "+res.data.message);
                 close();
-            }else {
-                console.log(res.data.message);
-                alert("중복신고되었습니다.")
-            } 
+            }
         }catch(e){
             if(e.response.data.statusCode === 400){
                 if(e.response.data.errors == null){
                     alert(e.response.data.message);
+                    close();
                 } else if(e.response.data.errors !== null){
                     alert("로그인 후 이용 바랍니다.")
                 }
             }else{
                 console.log(e);
+                close();
             }
         }
     };

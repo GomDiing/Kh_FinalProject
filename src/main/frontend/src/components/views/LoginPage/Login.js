@@ -135,13 +135,14 @@ const IdStyle = styled.div`
 
   const FindIdHeader = () => {
     return(
-      <h4 style={{textAlign: 'center'}}>아이디 찾기</h4>
+      // <h4 style={{textAlign: 'center'}}>아이디 찾기</h4>
+      <h4 >아이디 찾기</h4>
     );
   }
 
   const FindPwdHeader = () => {
     return(
-      <h4 style={{textAlign: 'center'}}>비밀번호 찾기</h4>
+      <h4 style={{textAlign: 'center'}}> 비밀번호 찾기</h4>
     );
   }
 
@@ -212,7 +213,7 @@ const IdStyle = styled.div`
       } catch (e) {
         if(e.response.data.results.statusCode === 400){
           setIsShowPwd(false);
-          alert('조회 가능한 회원이 없습니다.');  
+          alert(e.response.data.results.message);  
         }else {
           console.log(e);
           console.log('통신 오류...')
@@ -235,7 +236,7 @@ const IdStyle = styled.div`
             {isShowPwd ? <></> : <button className='check-button' onClick={onClickCheck}>확인</button>}
               {isShowPwd &&
               <div className='show-00'>
-                <small>{inputName}님의 아이디는<br /> <u><span style={{fontWeight: 'bold', color: '#232323'}}>{password}</span></u>입니다.</small>
+                <small>{inputName}님의 비밀번호는<br /> <u><span style={{fontWeight: 'bold', color: '#232323'}}>{password}</span></u>입니다.</small>
               </div>}
         </div>
       </IdStyle>
@@ -342,7 +343,7 @@ const IdStyle = styled.div`
                 userName : response.data.results.name,
                 userEmail : response.data.results.email,
                 userProvider_type : response.data.results.provider_type,
-                userRole : response.data.results.rile
+                userRole : response.data.results.role
               }
               dispatch(loginActions.setUserInfo({data}));
               navigate('/');

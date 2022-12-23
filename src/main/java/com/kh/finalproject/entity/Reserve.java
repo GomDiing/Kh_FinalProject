@@ -52,6 +52,9 @@ public class Reserve extends BaseTimeEntity {
     @Column(name = "reserve_payment_final_amount", nullable = false)
     private Integer finalAmount;
 
+    @Column(name = "reserve_payment_refund_amount")
+    private Integer totalRefundAmount;
+
     @Column(name = "reserve_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ReserveStatus status;
@@ -97,5 +100,9 @@ public class Reserve extends BaseTimeEntity {
     public void updateRefundTime(ReserveStatus status, LocalDateTime now) {
         if (status == ReserveStatus.REFUND) this.refund = now;
         if (status == ReserveStatus.CANCEL) this.cancel = now;
+    }
+
+    public void updateTotalRefundAmount(Integer totalRefundAmount) {
+        this.totalRefundAmount = totalRefundAmount;
     }
 }
