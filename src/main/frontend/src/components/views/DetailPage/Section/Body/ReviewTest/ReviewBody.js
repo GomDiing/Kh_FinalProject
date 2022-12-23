@@ -10,6 +10,8 @@ import AccuseModal from "./AccuseModal";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
 import { Pagination } from "antd";
+import { useNavigate} from "react-router-dom";
+
 
 const ReviewBody=(props)=>{
 
@@ -25,6 +27,8 @@ const ReviewBody=(props)=>{
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
   const [reviews, setReviews] = useState(props.reviewList);
+  const navigate = useNavigate();
+
 
   // 댓글 데이터 받아서 페이지값 넘기기
   useEffect(() => {
@@ -58,6 +62,7 @@ const ReviewBody=(props)=>{
         const res = await DetailApi.deleteComment(index, memberIndex);
         if(res.data.statusCode === 200){
           alert("댓글이 삭제되었습니다.")
+          navigate(0);
         }
       } catch(e){
         console.log(e);
