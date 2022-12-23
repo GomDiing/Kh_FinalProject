@@ -133,12 +133,13 @@ function Sign() {
 
   // 모달 스타일
   const postCodeStyle = {
-    display: "block",
+    // display: "block",
     position: "absolute",
-    top: "2%",
+    top : "20%",
+    left : "37%",
     width: "500px",
     height: "500px",
-    padding: "7px",
+    // padding: "7px",
   };
 
   // 카카오주소 api
@@ -329,10 +330,14 @@ function Sign() {
           <div className='addrContainer' id='popupDom'>
               <div>
               <div className='AddrBtn'>
-                <button className="btn btn--primary" type='button' onClick={openPostCode}>Address</button>
+                {isOpen ? 
+                  <button className='btn btn--primary' onClick={closePostCode} type='button'>Close</button>
+                  : 
+                  <button className="btn btn--primary" type='button' onClick={openPostCode}>Address</button> 
+                }  
+                
               {isOpen && (
                 <>
-                  <button className='btn btn--primary' onClick={closePostCode} type='button'>닫기</button>
                   <PopupDom>
                     <DaumPostcode style={postCodeStyle} onComplete={handlePostCode} />
                   </PopupDom>

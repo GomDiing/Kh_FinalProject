@@ -24,7 +24,10 @@ const AccuseModal= (props)=> {
             if(res.data.statusCode === 200) {
                 alert(props.title+" "+res.data.message);
                 close();
-            }
+            }else {
+                console.log(res.data.message);
+                alert("중복신고되었습니다.")
+            } 
         }catch(e){
             if(e.response.data.statusCode === 400){
                 if(e.response.data.error == null){
