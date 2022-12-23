@@ -123,17 +123,17 @@ const NoticeList=()=>{
                 ))}
                 </tbody>
             </Table>
-            </div>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
              current={currentPage} 
              pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
-            />
+             />
             <div className="buttonWrap">
                 <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>작성하기</button>
                 <button className="noticeBtn" onClick={onClickDelete}>삭제하기</button>
             </div>
+             </div>
         </NoticeBlock>
     );
 }
@@ -143,12 +143,20 @@ const NoticeBlock=styled.div`
     margin:0 auto;
   box-sizing: border-box;
   .notice-list-container {
+    align-items: center;
     width: 70vw;
     margin : 10px;
     display: flex;
     height: 60%;
     flex-direction: column;
     text-align: center;
+    text-overflow: ellipsis;
+    td{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	max-width:100px;
+}
   }
 
     .buttonWrap{
@@ -164,5 +172,6 @@ const NoticeBlock=styled.div`
       width: 150px;
       height: 50px;
     }
+    
 
 `;

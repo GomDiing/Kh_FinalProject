@@ -28,7 +28,7 @@ const AccuseModal= (props)=> {
         }catch(e){
             if(e.response.data.statusCode === 400){
                 if(e.response.data.errors == null){
-                    alert(e.response.data.message);
+                    alert("중복신고 되었습니다.");
                     close();
                 } else if(e.response.data.errors !== null){
                     alert("로그인 후 이용 바랍니다.")

@@ -6,7 +6,7 @@ const TopBlock=styled.div`
         margin: 30px 10px;
         background-color: #92A9BD;
         border-radius: 5px;
-        width: 340px;
+        width: 15vw;
         height: 50px;
         display : flex;
         justify-content : center;

@@ -138,13 +138,13 @@ const BlackList=()=>{
                 ))}
                 </tbody>
             </Table>
-            </div>
             <Pagination className="d-flex justify-content-center"
             total={totalCount}  //총 데이터 갯수
             current={currentPage} 
             pageSize={pageSize}
             onChange={(page) => {setCurrentPage(page); setMemberList([]);}}
             />
+            </div>
             <div className="black-btn-container"><button className="blackBtn" onClick={onClickDelete}>회원탈퇴</button></div>
         </MemberBlock>
     );
@@ -156,12 +156,20 @@ const MemberBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
   .blackList-container {
+    align-items: center;
     width: 70vw;
     margin : 10px;
     display: flex;
     height: 60%;
     flex-direction: column;
     text-align: center;
+    td{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	max-width:100px;
+}
+
   }
   .black-btn-container{
     float: right;

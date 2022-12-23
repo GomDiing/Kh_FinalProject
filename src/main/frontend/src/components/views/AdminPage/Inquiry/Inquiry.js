@@ -102,13 +102,13 @@ const Inquiry=(props)=>{
               </QnaModal>
           }
 
-            </div>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
-            current={currentPage} 
-            pageSize={pageSize}
+             current={currentPage} 
+             pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); setQnaList([]);}} //숫자 누르면 해당 페이지로 이동
-            />
+             />
+             </div>
         </InquiryBlock>
     );
 }
@@ -118,12 +118,19 @@ const InquiryBlock=styled.div`
     margin:0 auto;
     box-sizing: border-box;
   .admin-qnalist-container {
+    align-items: center;
     width: 70vw;
     margin : 10px;
     display: flex;
     height: 60%;
     flex-direction: column;
     text-align: center;
+    td{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	max-width:100px;
+}
   }
   button {
     width: 80px;
