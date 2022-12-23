@@ -55,7 +55,7 @@ public class MemberController {
      * 블랙리스트 회원 탈퇴(체크박스)
      */
     @PostMapping("/delete/checkbox")
-    public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@RequestBody MemberCheckListDTO memberCheckListDTO){
+    public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@Validated @RequestBody MemberCheckListDTO memberCheckListDTO){
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         List<CheckMemberDTO> checkMemberList = memberCheckListDTO.getMemberDTOCheckList();
@@ -158,7 +158,7 @@ public class MemberController {
      * 로그인 컨트롤러
      */
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(@RequestBody SigninRequestDTO signinRequestDTO) {
+    public ResponseEntity<Object> signin(@Validated @RequestBody SigninRequestDTO signinRequestDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
@@ -167,14 +167,15 @@ public class MemberController {
     }
 
     /**
-     * 회원탈퇴 1주일 지나기 전에 복구
+     * 탈퇴 신청 취소 컨트롤러
+     * 단, 탈퇴 신청한지 일주일 이상이 지나면 탈퇴 취소가 되지 않는다
      */
     @PostMapping("/delete/cancel")
-    public ResponseEntity<DefaultResponse> deleteCancel(@Validated @RequestBody DeleteCancelDTO deleteCancelDTO) {
+    public ResponseEntity<DefaultResponse<Object>> deleteCancel(@Validated @RequestBody DeleteCancelDTO deleteCancelDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         memberService.deleteCancelMember(deleteCancelDTO);
 
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_CANCEL, deleteCancelDTO), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_CANCEL), HttpStatus.OK);
     }
 }

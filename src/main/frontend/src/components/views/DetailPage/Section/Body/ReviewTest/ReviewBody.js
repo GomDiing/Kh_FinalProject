@@ -14,7 +14,6 @@ import { useNavigate} from "react-router-dom";
 
 
 const ReviewBody=(props)=>{
-
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
   const memberIndex = userInfo.userIndex;
@@ -22,13 +21,12 @@ const ReviewBody=(props)=>{
 
     //  리액트 페이지네이션 변수 
     const [reviewList2, setReviewList2] = useState([]);
-    const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
+    const [pageSize, setPageSize] = useState(4); // 한페이지에 몇개씩 있을건지
     const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
   const [reviews, setReviews] = useState(props.reviewList);
   const navigate = useNavigate();
-
 
   // 댓글 데이터 받아서 페이지값 넘기기
   useEffect(() => {
@@ -41,8 +39,6 @@ const ReviewBody=(props)=>{
           setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
           setCurrentPage(res.data.results.page);
-        } else {
-          alert("리스트 조회가 안됩니다.")
         } 
       } catch (e) {
         console.log(e);
@@ -54,20 +50,26 @@ const ReviewBody=(props)=>{
 
     // 모달부분
     const [modalOpen, setModalOpen] = useState(false);
-    const open = () => setModalOpen(true);
+    // const open = () => setModalOpen(true);
+    const open = (index) => setModalOpen(index);
     const close = () => setModalOpen(false);
 
+    // 후기 글 삭제
     const onClickDelete=async(index)=>{
       try{
         const res = await DetailApi.deleteComment(index, memberIndex);
         if(res.data.statusCode === 200){
-          alert("댓글이 삭제되었습니다.")
+          alert(res.data.message)
           navigate(0);
         }
       } catch(e){
-        console.log(e);
+        if(e.response.data.statusCode === 400){
+          alert(e.response.data.message);
+        } else{
+          console.log(e);
+        }
       }
-    }
+    };
 
     return(
         <ReviewBodyBlock>
@@ -82,11 +84,16 @@ const ReviewBody=(props)=>{
               <div className="review-head-right">
                   <Form.Label className="review-id">{memberId}</Form.Label>
                   <Form.Label className="review-id">{createTime}</Form.Label>
+                  {/* 신고 */}
                   <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1.5rem'}}
                   onClick={()=>open(index)}/>
-                  {modalOpen && <AccuseModal open={open} close={close}
+                  {modalOpen === index &&<AccuseModal
+                  // props 넘겨줄것들
+                  open={open} 
+                  close={close}
                   index={index}
                   memberIndex={memberIndex}
+                  title={title}
                    />}
                   {/* <Form.Label className="review-like">{like}</Form.Label> */}
               </div>

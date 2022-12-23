@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public class NoticeController {
 
 //    공지사항 작성
     @PostMapping("/write")
-    public ResponseEntity<DefaultResponse<Object>> writeNotice(@RequestBody CreateNoticeDTO createNoticeDTO){
+    public ResponseEntity<DefaultResponse<Object>> writeNotice(@Validated @RequestBody CreateNoticeDTO createNoticeDTO){
         noticeService.createNotice(createNoticeDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_NOTICE), HttpStatus.OK);
     }
@@ -52,7 +53,7 @@ public class NoticeController {
 
 //  공지사항 수정
     @PutMapping("/edit/{index}")
-    public ResponseEntity<DefaultResponse<Object>> editNotice(@RequestBody EditNoticeDTO editNoticeDTO, @PathVariable Long index){
+    public ResponseEntity<DefaultResponse<Object>> editNotice(@Validated @RequestBody EditNoticeDTO editNoticeDTO, @PathVariable Long index){
         noticeService.editNotice(editNoticeDTO, index);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_NOTICE), HttpStatus.OK);
     }

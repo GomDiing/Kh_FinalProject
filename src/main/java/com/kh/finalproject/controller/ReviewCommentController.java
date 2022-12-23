@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,33 +28,33 @@ public class ReviewCommentController {
     @GetMapping("/dashboard")
     public ResponseEntity<Object> recentReview(@PageableDefault(size = 4) Pageable size){
         List<ReviewCommentDTO> reviewCommentDTOList = reviewCommentService.searchAll(size);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW, reviewCommentDTOList), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_REVIEW_TOP_FOUR, reviewCommentDTOList), HttpStatus.OK);
     }
 
     /*공연 후기 작성 */
     @PostMapping("/write")
-    public ResponseEntity<Object> writeReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
+    public ResponseEntity<Object> writeReview(@Validated @RequestBody CreateReviewCommentDTO createReviewCommentDTO){
         reviewCommentService.create(createReviewCommentDTO);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_REVIEW), HttpStatus.OK);
     }
 
     /*공연 후기 대댓글 작성*/
     @PostMapping("/add")
-    public ResponseEntity<Object> addReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
+    public ResponseEntity<Object> addReview(@Validated @RequestBody CreateReviewCommentDTO createReviewCommentDTO){
         reviewCommentService.reCreate(createReviewCommentDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK,DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
     }
 
     /*공연 후기 댓글 수정*/
     @PostMapping("/update")
-    public ResponseEntity<Object> updateReview(@RequestBody UpdateReviewCommentDTO updateReviewCommentDTO){
+    public ResponseEntity<Object> updateReview(@Validated @RequestBody UpdateReviewCommentDTO updateReviewCommentDTO){
         reviewCommentService.update(updateReviewCommentDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_REVIEW), HttpStatus.OK);
     }
 
     /*공연 후기 댓글 삭제*/
     @PostMapping("/delete")
-    public ResponseEntity<Object> deleteReview(@RequestBody RemoveReviewCommentDTO removeReviewCommentDTO){
+    public ResponseEntity<Object> deleteReview(@Validated @RequestBody RemoveReviewCommentDTO removeReviewCommentDTO){
         reviewCommentService.remove(removeReviewCommentDTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_REVIEW), HttpStatus.OK);
 

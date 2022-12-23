@@ -61,7 +61,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<List<Member>> findAllByStatus(MemberStatus status);
 
     Optional<Member> findByIdAndPassword(String id, String password);
-    Optional<Member> findByIdAndPasswordAndStatus(String id, String password, MemberStatus status);
+    Optional<Member> findByIdAndPasswordAndStatusAndProviderType(String id, String password, MemberStatus status, MemberProviderType providerType);
 
     Optional<Member> findByEmailAndProviderType(String email, MemberProviderType providerType);
 

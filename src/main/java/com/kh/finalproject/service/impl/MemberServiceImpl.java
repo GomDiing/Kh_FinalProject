@@ -501,14 +501,22 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 회원탈퇴 신청 1주일이 지나지 않은 회원 복구 메서드
+     * 먼저 1주일이 지난 회원을 완전 탈퇴 시켰음으로 아이디, 비밀번호, 상태가 Delete, Home가입 유저만 조회
+     *
      */
     @Override
     @Transactional
     public void deleteCancelMember(DeleteCancelDTO deleteCancelDTO) {
+        MemberProviderType providerType = MemberProviderType.valueOf(deleteCancelDTO.getProviderType());
+        //가입 주체가 HOME이 아니면
+        if (providerType != MemberProviderType.HOME) {
+            throw new CustomException(CustomErrorCode.NOT_MATCH_PROVIDER_TYPE);
+        }
         // DELETE 상태인 회원만 조회
-        Member deleteMember = memberRepository.findByIdAndPasswordAndStatus(deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+        Member deleteMember = memberRepository.findByIdAndPasswordAndStatusAndProviderType
+                        (deleteCancelDTO.getId(), deleteCancelDTO.getPassword(), MemberStatus.DELETE, MemberProviderType.HOME)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_SEARCH_ID));
         // ACTIVE 변경
-        deleteMember.deleteCancel(deleteCancelDTO);
+        deleteMember.cancelDelete(deleteCancelDTO);
     }
 }

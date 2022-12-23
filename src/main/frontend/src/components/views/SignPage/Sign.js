@@ -247,6 +247,8 @@ function Sign() {
       if(memberRegister.data.statusCode === 200) {
         alert("<Tcat에 회원가입 해주신 것을 진심으로 감사드립니다>");
         Navigate('/login');
+      } else {
+        console.log(memberRegister.data.message);
       }
     } catch (e) {
       if(e.response.data.statusCode === 400){

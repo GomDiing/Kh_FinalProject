@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -34,6 +33,9 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Transactional
     @Override
     public void create(CreateReviewCommentDTO createReviewCommentDTO) {
+        if (Objects.isNull(createReviewCommentDTO.getRate())) {
+            throw new CustomException(CustomErrorCode.ERROR_RATE);
+        }
         /*공연 후기 작성 시 회원 아이디로 회원 조회*/
         Optional<Member> findOne = memberRepository.findByIndex(createReviewCommentDTO.getMemberIndex());
         if (findOne.isEmpty()) {
@@ -160,8 +162,14 @@ public class ReviewCommentImpl implements ReviewCommentService {
         if (findOne.isEmpty()) {
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER);
         }
-        Member member = findOne.get();
-        Integer updateCount = reviewCommentRepository.updateReviewComment(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO), LocalDateTime.now());
+        ReviewComment findReviewComment = reviewCommentRepository.findByIndex(updateReviewCommentDTO.getIndex())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_REVIEW_COMMENT));
+//        Integer updateCount = reviewCommentRepository.updateReviewComment(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO), LocalDateTime.now());
+        if (findReviewComment.getLayer() == 0) {            // 후기이면
+            findReviewComment.updateEditReview(updateReviewCommentDTO);
+        } else if (findReviewComment.getLayer() == 1) {     // 댓글이면
+            findReviewComment.updateEditContent(updateReviewCommentDTO);
+        } else throw new CustomException(CustomErrorCode.ERROR_LAYER);
     }
 
     @Override
