@@ -9,6 +9,7 @@ const initialState = {
         userName : undefined,
         userEmail : undefined,
         userProvider_type : undefined,
+        userRole : undefined,
     }
 };
 

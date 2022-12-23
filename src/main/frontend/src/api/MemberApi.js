@@ -18,7 +18,7 @@ const MemberApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   },
-
+// 아이디찾기
   findId : async function(name, email) {
     const findIdObj = {
       name : name,
@@ -26,7 +26,7 @@ const MemberApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/find-id", findIdObj, HEADER);
   },
-
+// 비밀번호찾기
   findPassword : async function(id, name, email) {
     const findPwdObj = {
       id : id,

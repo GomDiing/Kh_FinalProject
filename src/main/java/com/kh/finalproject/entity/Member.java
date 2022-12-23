@@ -152,7 +152,7 @@ public class Member extends BaseTimeEntity {
         return this;
     }
 
-    public Member deleteCancel(DeleteCancelDTO deleteCancelDTO) {
+    public Member cancelDelete(DeleteCancelDTO deleteCancelDTO) {
         this.id = deleteCancelDTO.getId();
         this.password = deleteCancelDTO.getPassword();
         this.status = MemberStatus.ACTIVE;

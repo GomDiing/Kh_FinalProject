@@ -239,18 +239,26 @@ function Sign() {
     } setSubmit(true);
   }, [isId, isPwd, isCheck, isName, isEmail, isAddress]);
 
+  // 회원가입 시도
   const onClickSign = async () => {
     try {
       const memberRegister = await MemberApi.signup(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode)
       if(memberRegister.data.statusCode === 200) {
         alert("<Tcat에 회원가입 해주신 것을 진심으로 감사드립니다>");
         Navigate('/login');
+      } else {
+        console.log(memberRegister.data.message);
       }
     } catch (e) {
-      console.log(e);
-      console.log("connection fail...");
+      if(e.response.data.statusCode === 400){
+        alert(e.response.data.message)
+      }else{
+        console.log(e);
+        console.log("connection fail...");
+      }
     }
   }
+// 엔터키
   const onKeyPress = e => {
     if(e.key === "Enter") {
         onClickSign();

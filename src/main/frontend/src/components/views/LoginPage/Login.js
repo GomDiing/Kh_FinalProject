@@ -160,13 +160,15 @@ const IdStyle = styled.div`
         if(result.data.statusCode === 200) {
           setMemberId(result.data.results.member_id);
           setIsShowId(true);
-        } else {
-          setIsShowId(false);
-          alert('다시 확인해주세요.');
         }
       } catch (e) {
-        console.log(e);
-        console.log('통신 오류...')
+        if(e.response.data.statusCode === 400){
+          setIsShowId(false);
+          alert('조회 가능한 회원이 없습니다.');
+        }else{
+          console.log(e.response);
+          console.log('통신 오류...')
+        }
       }
     }
   
@@ -206,13 +208,15 @@ const IdStyle = styled.div`
         if(result.data.statusCode === 200) {
           setPassword(result.data.results.password);
           setIsShowPwd(true);
-        } else {
-          setIsShowPwd(false);
-          alert('다시 확인해주세요.');
         }
       } catch (e) {
-        console.log(e);
-        console.log('통신 오류...')
+        if(e.response.data.results.statusCode === 400){
+          setIsShowPwd(false);
+          alert('조회 가능한 회원이 없습니다.');  
+        }else {
+          console.log(e);
+          console.log('통신 오류...')
+        }
       }
     }
 
@@ -335,8 +339,10 @@ const IdStyle = styled.div`
                 userIndex : response.data.results.index,
                 userId : response.data.results.id,
                 userPoint : response.data.results.point,
+                userName : response.data.results.name,
                 userEmail : response.data.results.email,
-                userProvider_type : response.data.results.provider_type
+                userProvider_type : response.data.results.provider_type,
+                userRole : response.data.results.rile
               }
               dispatch(loginActions.setUserInfo({data}));
               navigate('/');
@@ -407,7 +413,7 @@ const IdStyle = styled.div`
                   <img src='/images/kakao.png' alt='카카오 로그인' onClick={KakaoLogin}/>
                 </div>
                 <div className='btn-group'>
-                  <img src='/images/google.png' alt='구글 로그인' onClick={GoogleLogin}/>
+                  <img src={process.env.PUBLIC_URL + '/images/google.png'} alt='구글 로그인' onClick={GoogleLogin}/>
                 </div>
                 <div className='btn-group2' style={{marginTop : '40px'}}>
                   <Link to = '/agree' style={{textDecoration:'none',color:'inherit' }}>

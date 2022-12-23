@@ -86,11 +86,6 @@ const PosterCategoryContainer = styled.div`
     `
 
 
-const HWrap = styled.div`
-.HorizontalScrollTrack {
-    display: hidden;
-}
-`
     const categories = [
         {
             name : 'MUSICAL',
@@ -144,23 +139,22 @@ const RankingWeek = () =>{
                     ))}
                     </div>
                 </PosterCategoryContainer>
-                
-                <HWrap>
+                <div>
                     <HorizontalScroll>
                         <PosterImgContainer>
-                    <ul>
-                        {ItemData.map((ItemData , index)=>(
-                            <li key={index} >
-                                <Link to={`/detail/${ItemData.code}`} >
-                                <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                                <p>{ItemData.product.title}</p>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                    </PosterImgContainer>
+                            <ul>
+                                {ItemData.map((ItemData , index)=>(
+                                    <li key={index} >
+                                        <Link to={`/detail/${ItemData.code}`} >
+                                        <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                                        <p>{ItemData.product.title}</p>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </PosterImgContainer>
                     </HorizontalScroll>
-                </HWrap>
+                </div>
             </>
     )
 }

@@ -62,8 +62,8 @@ const MainPage = () =>{
     const [BtnStatus, setBtnStatus] = useState(false);
     
     const handleFollow = () => {
-        setScrollY(window.pageYOffset);
-        if(ScrollY > 100) {
+        if(window.pageYOffset > 100) {
+            setScrollY(window.pageYOffset);
             setBtnStatus(true);
         } else {
             setBtnStatus(false);
@@ -79,15 +79,15 @@ const MainPage = () =>{
         setBtnStatus(false);
         }
     
-    useEffect(() => {
-        const watch = () => {
-        window.addEventListener('scroll', handleFollow)
+        useEffect(() => {
+            const watch = () => {
+                window.addEventListener('scroll', handleFollow)
         }
         watch();
         return () => {
             window.removeEventListener('scroll', handleFollow)
         }
-    },)
+    })
     
     // 검색결과 초기화
     useEffect (() =>{

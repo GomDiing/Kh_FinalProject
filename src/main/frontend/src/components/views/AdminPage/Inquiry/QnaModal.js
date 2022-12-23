@@ -117,18 +117,18 @@ const QnaModal = (props) => {
     // 문의 답장 전송 호출
     const onClickReply=async(e)=>{
         if(inputReply.length <= 5 || inputReply.length >= 1000) {
-        alert('문의 사항을 최소 5 ~ 1000글자 이내로 부탁드립니다.');
+        alert('관리자 인데 정성껏 길게 답변하세요. 10글자 이상');
         e.preventDefault();
     } else {
         const res = await AdminApi.qnaReply(inputReply, index);
         // console.log("답장 : " + inputReply + index);
         if(res.data.statusCode === 200) {
-            alert('문의가 정상 전송 되었습니다.');
+            alert('문의 답변이 정상적으로 전송 되었습니다.');
             close(true);
             navigate(0);
             
         } else {
-            alert('문의 전송이 실패 하였습니다.');
+            alert('문의 답변이 전송이 실패 하였습니다.');
             e.preventDefault();
         }
     }
