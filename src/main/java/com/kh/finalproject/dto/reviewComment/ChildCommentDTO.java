@@ -48,6 +48,7 @@ public class ChildCommentDTO {
         this.memberIndex = reviewComment.getMember().getIndex();
         //홈 회원이면 ID, 소셜 회원이면 이메일 노출
         if (reviewComment.getMember().getProviderType() == MemberProviderType.HOME) this.memberId = reviewComment.getMember().getId();
+        else this.memberId = reviewComment.getMember().getEmail();
         this.content = reviewComment.getContent();
         this.group = reviewComment.getGroup();
         this.layer = reviewComment.getLayer();
