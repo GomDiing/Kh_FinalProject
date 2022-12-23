@@ -30,7 +30,6 @@ const RList = () => {
   const [selectList, setSelectList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [ticket, setTicket] = useState('');
-  const [test, setTest] = useState(false);
   const open = () => {
     setModalOpen(true);
   }
@@ -43,7 +42,6 @@ const RList = () => {
         if(res.data.statusCode === 200) {
           console.log(res.data);
           setSelectList(res.data.results);
-          setTest(true);
         }
       } catch (e) {
         console.log(e);
@@ -95,19 +93,7 @@ const RList = () => {
         )
       }
     ];
-    const today = new Date();
 
-    if(test) {
-      const time = selectList[2].view_time;
-      console.log(time);
-  
-      const isSameDate = (date1, date2) => {
-        return date1.getFullYear() === date2.getFullYear()
-          && date1.getMonth() === date2.getMonth()
-          && date1.getDate() === date2.getDate();
-      }
-      console.log(isSameDate(new Date(time), today));
-    }
   return(
     <>
     {modalOpen && <ReserveDetailModal open={open} ticket={ticket} close={close} body={<Body />}/>}

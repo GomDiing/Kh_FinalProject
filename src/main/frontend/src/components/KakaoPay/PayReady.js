@@ -174,15 +174,11 @@ const PayReady = (title, total, tax, value) => {
     const viewTime = ticket.view_time;
     const today = new Date();
 
-    console.log(viewTime);
-
     const isSameDate = (date1, date2) => {
       return date1.getFullYear() === date2.getFullYear()
         && date1.getMonth() === date2.getMonth()
         && date1.getDate() === date2.getDate();
     }
-
-    console.log(isSameDate(viewTime, today));
 
     const [data, setData] = useState({
       // 티켓 가격
@@ -200,8 +196,9 @@ const PayReady = (title, total, tax, value) => {
       }
     });
 
+    // 년도가 크고 월이 작다 일ㅇ;
+    // 예를 들어 22.12.31현재 날짜 공연 날짜가 23.01.01 하루 전이면..
     // 맨처음에 한 번만 실행
-    // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
     useEffect(() => {
       const onPayCancelDate = (view_time, today) => {
         // 년 월 일이 같으면 안댐
@@ -232,20 +229,8 @@ const PayReady = (title, total, tax, value) => {
             }
           }));
           setCancelTry(true);
-          // 월이 같을 경우 4일 ~~ 쭉
-        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(viewTime).getDate() - today.getDate() > 3) {
-          setData((prevstate) => ({
-            // 데이터 객체를 복사
-            ...prevstate,
-            params : {
-              // 데이터 안에 params 객체를 복사
-              ...prevstate.params,
-              cancel_amount : ticket.final_amount
-            }
-          }));
-          setCancelTry(true);
-          // 연도 === 연도 && 공연날짜1월 < 현재2월 무료
-        } else if (new Date(viewTime).getFullYear() === today.getFullYear() && new Date(viewTime).getMonth() < today.getMonth()) {
+          // 나머지는 다 무료
+        } else {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
