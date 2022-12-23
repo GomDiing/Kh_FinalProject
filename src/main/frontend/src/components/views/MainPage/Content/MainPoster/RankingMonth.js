@@ -86,12 +86,6 @@ const PosterCategoryContainer = styled.div`
     `
 
 
-const HWrap = styled.div`
-.HorizontalScrollTrack {
-    display: hidden;
-}
-`
-
     const categories = [
         {
             name : 'MUSICAL',
@@ -146,8 +140,7 @@ const RankingMonth = () =>{
                     ))}
                     </div>
                 </PosterCategoryContainer>
-                
-                <HWrap>
+                <div>
                     <HorizontalScroll>
                         <PosterImgContainer>
                     <ul>
@@ -162,7 +155,7 @@ const RankingMonth = () =>{
                     </ul>
                         </PosterImgContainer>
                     </HorizontalScroll>
-                </HWrap>
+                </div>
             </>
     )
 }

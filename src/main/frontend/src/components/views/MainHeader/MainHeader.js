@@ -152,11 +152,15 @@ const MainHeader = () =>{
                         <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('CLASSIC' , "클래식/무용")}}>클래식/무용</Link>
                         <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</Link>
                         <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</Link>
-                        <Link to = "/admin" className = "HeaderMenu">관리자</Link>
+                        {/* 관리자 조건부 랜더링 */}
+                        {userInfo.userRole === "Admin" ? 
+                        <Link to = "/admin" className = "HeaderMenu">관리자</Link> : ""}
+                        
                     </Nav>
                     <Form className="d-flex">
                         <Form.Control onChange={onChangeValue} onKeyPress={EnterKeypress} type="search" placeholder="Search" className="me-2" aria-label="Search"/>
                         <Link to = "/search" ><Button className="SearchBtn" variant="outline-success">Search</Button></Link>
+                        {/* 로그인 / 로그아웃 */}
                         {userInfo.userEmail === undefined ? 
                             <Link to = "/login"><RiLoginBoxLine className="User"/></Link>
                             : 

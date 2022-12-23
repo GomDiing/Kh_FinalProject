@@ -21,6 +21,7 @@ const MainReviewContainer = styled.div`
         margin:24px 15px;
     }
     img{
+        padding: 10px 5px;
         width: 120px;
         height: 140px;
     }
@@ -45,6 +46,9 @@ const MainReviewContainer = styled.div`
     }
     .content{
         margin-left: 30px;
+    }
+    .textbox{
+        padding: 10px;
     }
     @media(max-width : 1024px){
         .ReviewContents{
@@ -87,11 +91,13 @@ const MainReview = () =>{
                 <h2>관람 후기</h2>
             </div>
             <div className="ReviewBox">
+                {/* 아이탬 */}
                 {isFinish && reviewItem.map ((reviewItem , index) =>(
                     <ul className="itemInfoContainer" key={index}>
                         <div style={{display :'flex'}}>
                         <img src={reviewItem.thumb_poster_url}></img>
-                            <div >                        
+                    
+                            <div className="textbox">                        
                                 <li className="itemInfo">
                                     <p className="title">{reviewItem.title}</p>
                                 </li>
@@ -100,6 +106,7 @@ const MainReview = () =>{
                                 </li>
                             </div>
                         </div>
+                    {/* 사용자정보 */}
                         <li className="userInfo">
                             <span className="itemList">작성자 : {reviewItem.memberId}</span>
                             <span className="itemList">작성 시간 : {reviewItem.createTime}</span>

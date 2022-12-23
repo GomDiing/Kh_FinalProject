@@ -92,11 +92,6 @@ const MainPoster2Container = styled.div`
     }
 `
 
-const HWrap = styled.div`
-.HorizontalScrollTrack {
-    display: hidden;
-}
-`
 
 const categories = [
     {
@@ -152,8 +147,7 @@ const RankingClose = () =>{
             ))}
             </div>
         </PosterCategoryContainer>
-
-            <HWrap>
+            <div>
                 <HorizontalScroll>
                     <MainPoster2Container>
                         <ul>
@@ -170,7 +164,7 @@ const RankingClose = () =>{
                         </ul>
                     </MainPoster2Container>
                 </HorizontalScroll>
-            </HWrap>
+            </div>
     </>
 )
 }

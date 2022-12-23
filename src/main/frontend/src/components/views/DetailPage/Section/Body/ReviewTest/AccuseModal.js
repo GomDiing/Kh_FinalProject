@@ -26,12 +26,17 @@ const AccuseModal= (props)=> {
             if(res.data.statusCode === 200) {
                 console.log("신고 완료");
                 close();
-            }else {
-                console.log(res.data.message);
-                alert("중복신고되었습니다.")
-            } 
+            }
         }catch(e){
-            console.log(e);
+            if(e.response.data.statusCode === 400){
+                alert(e.response.data.message)
+<<<<<<< HEAD
+=======
+                close();
+>>>>>>> d58f3b6074e354ad00494e686a920dfad3dee510
+            }else{
+                console.log(e);
+            }
         }
     };
 
@@ -77,7 +82,7 @@ const AccuseModalBlock=styled.div`
         bottom: 0;
         left: 0;
         z-index: 30;
-        background-color: rgba(0, 0, 0, 0.6);
+        /* background-color: rgba(0, 0, 0, 0.6); */
     }
     .modal button {
         outline: none;

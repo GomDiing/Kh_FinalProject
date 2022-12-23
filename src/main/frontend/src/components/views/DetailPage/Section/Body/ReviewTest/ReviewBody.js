@@ -10,7 +10,7 @@ import AccuseModal from "./AccuseModal";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
 import { Pagination } from "antd";
-
+import { useNavigate} from "react-router-dom";
 
 
 const ReviewBody=(props)=>{
@@ -21,33 +21,26 @@ const ReviewBody=(props)=>{
   const loginMember = userInfo.userId; // 삭제버튼 오픈용(로그인 회원 일치)
 
     //  리액트 페이지네이션 변수 
-    // const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
+    const [reviewList2, setReviewList2] = useState([]);
     const [pageSize, setPageSize] = useState(5); // 한페이지에 몇개씩 있을건지
     const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
-
   const [reviews, setReviews] = useState(props.reviewList);
-  const [reviewList2, setReviewList2] = useState([]);
-
-  // console.log(reviews[1].length); //이걸로 총갯수
-  // console.log(reviews[1]);
-  // console.log("숫자" + reviewList2[1].length);
-  // console.log(props.reviewList[1].length); // 20
-  // console.log(reviews[1].length);
+  const navigate = useNavigate();
 
 
-
+  // 댓글 데이터 받아서 페이지값 넘기기
   useEffect(() => {
     const reviewData = async() => {
       try {
         const res = await DetailApi.allReviewComment(props.code,currentPage, pageSize);
         if(res.data.statusCode === 200) {
-          setReviewList2([reviewList2, res.data.results]);
+          setReviewList2([...reviewList2, ...res.data.results.review_comment_list]);
           // 페이징 시작
-          // setTotalCount(props.reviewList[1].length); 
+          setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
-          setCurrentPage(1);
+          setCurrentPage(res.data.results.page);
         } else {
           alert("리스트 조회가 안됩니다.")
         } 
@@ -64,19 +57,12 @@ const ReviewBody=(props)=>{
     const open = () => setModalOpen(true);
     const close = () => setModalOpen(false);
 
-    // 상위댓글(layer=0) 필터
-    // const motherResult = reviews.filter(item=>item.layer < 1);
-
-    const motherResult = reviewList2[1];
-    // console.log(motherResult);
-    
-
     const onClickDelete=async(index)=>{
       try{
         const res = await DetailApi.deleteComment(index, memberIndex);
         if(res.data.statusCode === 200){
           alert("댓글이 삭제되었습니다.")
-          // return;
+          navigate(0);
         }
       } catch(e){
         console.log(e);
@@ -85,7 +71,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {reviews&&reviews.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {reviewList2&&reviewList2.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime,child_comment_list})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">
@@ -114,12 +100,12 @@ const ReviewBody=(props)=>{
                 onClick={()=>onClickDelete(index)}>삭제</button>
               </>
               )}
-              
           </div>
           <Alert.Heading className="review-title">{title}</Alert.Heading>
            <p className="review-content">{content}</p>
           <hr/>
-          <ChildReview reviews={reviews} 
+          <ChildReview 
+          child_comment_list={child_comment_list} 
           index={index} 
           code={productCode}/>
         </Alert>
