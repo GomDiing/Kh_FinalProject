@@ -112,6 +112,7 @@ public interface MemberService {
     /**
      * 회원 상태 탈퇴 변환 메서드
      */
+    /*체크박스 회원 강제 탈퇴*/
     void changeMemberStatusToUnregister(List<CheckMemberDTO> memberIndexList);
 
     /**

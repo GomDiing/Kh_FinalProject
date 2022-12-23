@@ -334,8 +334,8 @@ public class MemberServiceImpl implements MemberService {
         for(Member deleteMember : deleteListMember) {
             if (now.isAfter(deleteMember.getUnregister().plusDays(7))) {
                 // 1주일이 지난 회원들은 다 unregister status Change
-                deleteMember.changeMemberStatusToUnregister();
-            }
+            }                deleteMember.changeMemberStatusToUnregister();
+
         }
     }
 
@@ -416,12 +416,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateStatusInReviewComment(Long index) {
-
     }
 
     /**
      * 회원 상태 변환 메서드
      */
+    /*체크박스로 회원 강제 탈퇴*/
     @Transactional
     public void changeMemberStatusToUnregister(List<CheckMemberDTO> checkMemberDTOList){
         List<Member> blackMemberList = new ArrayList<>();
@@ -430,11 +430,14 @@ public class MemberServiceImpl implements MemberService {
             Member findMember = memberRepository.findByIndex(memberDTO.getIndex())
                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
             blackMemberList.add(findMember);
+            log.info("확인 회원" + findMember);
         }
-
-        //블랙리스트 변환
+        //강제탈퇴 되는 회원으로 전환
         for (Member member : blackMemberList) {
-            member.updateStatus(MemberStatus.BLACKLIST);
+//            member.updateStatus(MemberStatus.BLACKLIST);
+            member.updateStatus(MemberStatus.UNREGISTER);
+
+//            member.changeMemberStatusToUnregister();
         }
     }
 

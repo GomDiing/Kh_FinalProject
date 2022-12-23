@@ -16,16 +16,14 @@ const UpdateNotice=()=>{
 
 
   const onClickSubmit =async()=> {
-    console.log("클릭 찍히는지");
-    console.log("param: " + params)
-    const res = await AdminApi.noticeEdit(inputTitle,inputDetail,params);
-    if(res.data === true){
-        console.log("공지사항 수정 완료");
-        alert("공지사항이 수정되었습니다.")
+    try{
+      const res = await AdminApi.noticeEdit(inputTitle,inputDetail,params);
+      if(res.data.statusCode === 200) {
+        alert(res.data.message);
         navigate(`/admin/noticeDetail/${params}`)
-    } else{
-        console.log("수정 실패");
-        console.log(res.data);
+      }
+    } catch(e){
+      console.log(e);
     }
   };
   

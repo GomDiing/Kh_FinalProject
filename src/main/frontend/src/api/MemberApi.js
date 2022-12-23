@@ -82,7 +82,7 @@ const MemberApi = {
     }
     return await axios.post(TCAT_DOMAIN + "/api/qna/write", params, HEADER);
   },
-  // 5번 이상 신고당했을 시, 블랙리스트 회원으로 전환(프론트 미구현)
+  // 5번 이상 신고당했을 시, 블랙리스트 회원으로 전환
   changeBlack : async function(){
     return await axios.get(TCAT_DOMAIN+ "/api/mebmer/accuse/process", HEADER)
   },

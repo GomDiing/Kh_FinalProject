@@ -12,7 +12,6 @@ const NoticeDetail=()=>{
   
   useEffect(() => {
     const noticeData = async()=> {
-    //  setLoading(true);
       try {
         const res = await AdminApi.noticeDetail(params);
         if(res.data.statusCode === 200){
@@ -31,10 +30,15 @@ const NoticeDetail=()=>{
   }, []);
 
   const onClickDelete=async()=>{
-    const res = await AdminApi.noticeDelete(params);
-    console.log("삭제 되었습니다.");
-    alert("삭제 되었습니다.");
-    navigate('/admin/noticeList');
+    try{
+      const res = await AdminApi.noticeDelete(params);
+      if(res.data.statusCode===200){
+        alert(res.data.message);
+        navigate('/admin/noticeList');
+      } 
+    } catch(e){
+      console.log(e);
+    }
   };
   
     return(

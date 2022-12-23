@@ -66,22 +66,42 @@ const BlackList=()=>{
   }, [currentPage]);
 
   const onClickDelete=async()=>{
-    if(checkItems.length<1){
-      alert("체크박스 한개 이상 체크해주세요")
-      navigate(0);
-    } else{
-      console.log(checkItems);
+    try{
       const res = await AdminApi.deleteMemberAdmin(checkItems);
-      alert("선택하신 회원이 탈퇴되었습니다.");
-      try{
-        console.log("통신넘어가나? :" + res.results);
+      if(res.data.statusCode === 200){
+        alert(res.data.message);
         navigate(0);
-      }catch(e){
-        console.log(e);
       }
-    } 
+    } catch(e){
+      console.log(e);
+    }
     setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
   };
+  
+
+  //   try{
+  //     if(checkItems.length<1){
+  //       alert("체크박스 한개 이상 체크해주세요")
+  //       navigate(0);{
+  //         if()
+  //       }
+  //   }
+  //   if(checkItems.length<1){
+  //     alert("체크박스 한개 이상 체크해주세요")
+  //     navigate(0);
+  //   } else{
+  //     console.log(checkItems);
+  //     const res = await AdminApi.deleteMemberAdmin(checkItems);
+  //     alert("선택하신 회원이 탈퇴되었습니다.");
+  //     try{
+  //       console.log("통신넘어가나? :" + res.results);
+  //       navigate(0);
+  //     }catch(e){
+  //       console.log(e);
+  //     }
+  //   } 
+  //   setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
+  // };
   
     return(
         <MemberBlock>

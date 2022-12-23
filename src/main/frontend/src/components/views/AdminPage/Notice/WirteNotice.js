@@ -13,14 +13,21 @@ const WriteNotice=()=>{
     const onChangeDetail=(e)=>{setInputDetail(e.target.value);}
 
     const onClickSubmit=async()=>{
-        const res = await AdminApi.writing(inputTitle, inputDetail);
-        if(res.data.statusCode === 200){
-            console.log("공지사항 작성 완료 후 목록으로 이동");
-            navigate('/admin/noticeList')
-        } else{
-            console.log("공지사항 작성 실패");
+        try{
+            const res = await AdminApi.writing(inputTitle, inputDetail);
+            if(res.data.statusCode === 200){
+                alert(res.data.message);
+                navigate('/admin/noticeList')
+            } 
+        } catch(e){
+            console.log(e);
+            if(e.response.data.statusCode === 400){
+                alert("제목과 내용을 입력해주세요")
+            }else{
+                console.log(e);
+            }
         }
-    }
+    };
     
     return(
         <>
