@@ -65,7 +65,12 @@ console.log(props.rate);
                     alert("에러 1")
                 }
             } catch (e) {
-                console.log(e)
+                console.log(e);
+                if(e.response.data.statusCode === 400) {
+                    alert("로그인 후 이용해주세요.")
+                } else {
+                    console.log("Error")
+                }
             }
         } else if(isWishAdd) {
             setWishCount(wishCount -1);
@@ -73,12 +78,15 @@ console.log(props.rate);
                 const res = await WishLikeApi.cancelWish(userInfo.userIndex, pCode);
                 if(res.data.statusCode === 200) {
                     setLike(false);
-                    console.log(res.data.message);
                 } else {
                     alert("에러 2")
                 }
             } catch (e) {
-                console.log(e)
+                if(e.response.data.statusCode === 400) {
+                    alert("로그인 후 이용해주세요.")
+                } else {
+                    console.log("Error")
+                }
             }
         }
     }

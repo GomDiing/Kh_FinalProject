@@ -129,8 +129,13 @@ function TCalendar (props) {
         alert('회차를 선택해주세요.');
         e.preventDefault();
       } else if(turn > 0) {
-        handleTop();
-        setModalOpen(true);
+        if(userInfo.userEmail === undefined && userInfo.userId === undefined) {
+          alert('로그인이 필요한 페이지입니다.');
+          e.preventDefault();
+        } else {
+          handleTop();
+          setModalOpen(true);
+        }
       }
     }
     const closeModal = () => {
