@@ -12,17 +12,19 @@ function GridCards(props) {
         e.target.src = xbox;
     }
     return (
-        <div style={{ marginTop: '1rem', marginLeft: '3rem', zIndex: '-1'}}>
-        <div lg={6} md={8} xs={24}  style={{paddingBottom: '10px'}}>
+        
+        <div style={{ zIndex: '-1' , display : 'inline-block' , margin : '20px 55px' }}>
+        <div  style={{paddingBottom: '10px'}}>
             <div>
             {/* 렌더링 전 로딩중일시 보이게 */}
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
-            <a href={props.url}><img style={{ width: '200px', height: '250px', border: '2px solid blue'}} src={props.image} onError={onErrorImg} alt=""/></a>
+            <a href={props.url}><img style={{ width: '200px', height: '250px' , padding : '5px'}} src={props.image} onError={onErrorImg} alt=""/></a>
+            </div>  
+            <div style={{ textAlign : 'center'}} >
+                {/* 배우이름과 배역 */}
+                <b style={{color: 'blue'}}>{props.actor} </b>
+                <br/><b style={{color: 'black'}} >as </b><b style={{color: 'red'}}>{props.character}</b>
             </div>
-            <div style={{width: '240px'}} >
-            {/* 배우이름과 배역 */}
-            <b style={{color: 'blue'}}>{props.actor} </b>
-            <br/><b style={{color: 'black'}} >as </b><b style={{color: 'red'}}>{props.character}</b></div>
         </div>
         </div>
     );

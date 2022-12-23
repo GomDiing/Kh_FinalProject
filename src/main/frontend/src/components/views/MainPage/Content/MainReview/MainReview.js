@@ -43,9 +43,21 @@ const MainReviewContainer = styled.div`
     .title{
         margin-left: 10px;
         font-weight: bold;
+        white-space: normal;
+        word-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
     .content{
         margin-left: 30px;
+        white-space: normal;
+        word-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
     .textbox{
         padding: 10px;
@@ -95,7 +107,7 @@ const MainReview = () =>{
                 {isFinish && reviewItem.map ((reviewItem , index) =>(
                     <ul className="itemInfoContainer" key={index}>
                         <div style={{display :'flex'}}>
-                        <img src={reviewItem.thumb_poster_url}></img>
+                        <img src={reviewItem.thumb_poster_url} alt=''></img>
                     
                             <div className="textbox">                        
                                 <li className="itemInfo">

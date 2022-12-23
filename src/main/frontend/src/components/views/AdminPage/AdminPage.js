@@ -14,7 +14,7 @@ import NoticeList from './Notice/NoticeList';
 import Inquiry from './Inquiry/Inquiry';
 import UpdateNotice from './Notice/UpdateNotice';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const HeaderBlock=styled.div`
   background-color: #92A9BD;
@@ -33,6 +33,15 @@ const HeaderBlock=styled.div`
     }
 `;
 function AdminPage() {
+  const userInfo = useSelector((state) => state.user.info);
+
+  if(!userInfo.userEmail) {
+    // 상세 url 주소로 바꿔야함 나중에
+    alert("어딜 감히")
+    document.location.href="http://localhost:3000"
+    // document.location.href="http://localhost:8100"
+  } 
+  
   return (
     <div style={{display : "flex", flexDirection:"column", flex : 1, height : '100vh', width : "100%", minWidth : '1024px'}}>
       <Header/>

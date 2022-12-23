@@ -89,7 +89,7 @@ const PostManagement=()=>{
         <PostBlock>
         <TopBar name="전시회 게시물 관리"/>
           <div className="exhibition-container">
-          <Table striped bordered hover>
+          <Table striped bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "40px">

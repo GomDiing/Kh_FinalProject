@@ -93,12 +93,12 @@ const RList = () => {
         )
       }
     ];
-    
+
   return(
     <>
     {modalOpen && <ReserveDetailModal open={open} ticket={ticket} close={close} body={<Body />}/>}
     <Divider>예매 내역</Divider>
-    <Table columns={columns} dataSource={selectList} size="middle" />
+    <Table columns={columns} dataSource={selectList} size="middle" style={{width: '880px'}} />
     </>
   );
 };

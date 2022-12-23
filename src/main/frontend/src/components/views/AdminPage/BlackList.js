@@ -107,7 +107,7 @@ const BlackList=()=>{
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
         <div className="blackList-container">
-            <Table striped bordered hover>
+            <Table striped bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "30px">

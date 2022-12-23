@@ -50,6 +50,14 @@ const MainNoticeContainer = styled.div`
         margin-left: 20px;
         margin-right: 10px;
     }
+    span{
+        white-space: normal;
+        word-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
     `
 
 const MainNotice = () =>{
