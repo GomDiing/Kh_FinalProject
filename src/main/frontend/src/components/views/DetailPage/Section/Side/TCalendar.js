@@ -79,7 +79,7 @@ const Styleside = styled.div`
  * Detail에서 props로 전달 받기 
  */
 function TCalendar (props) {
-    const { dim, code, userInfo, title, seat } = props;
+    const { dim, code, userInfo, title, seat , handleTop} = props;
     
     const [date, setDate] = useState(new Date());
     const [modalOpen, setModalOpen] = useState(false);
@@ -115,6 +115,7 @@ function TCalendar (props) {
         alert('회차를 선택해주세요.');
         e.preventDefault();
       } else if(turn > 0) {
+        handleTop();
         setModalOpen(true);
       }
     }
@@ -189,7 +190,7 @@ function TCalendar (props) {
 
     return (
         <SideWrap>
-            <h3 className='text-center' style={{margin: '1.5rem 0'}}>관람일</h3>
+            <h3 className='text-center' style={{fontSize : '21px' , fontWeight : 'bolder' , margin: '15px 0'}}>관람일</h3>
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => moment(date).format("DD")}

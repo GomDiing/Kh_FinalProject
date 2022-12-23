@@ -115,7 +115,7 @@ const CategorySearch = () => {
     const [selectCategory, setSelectCategory] = useState(window.localStorage.getItem("categoryName"));
     const [SearchData , setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
-
+    
     const Navigate = useNavigate();
     // 화면에 선택한 랭킹 , 카테고리 보여주기위한 함수
     const clickRanking = (e ,a) =>{
@@ -132,8 +132,7 @@ const CategorySearch = () => {
         setSelectCategory(a);
     }
 
-    useEffect(() => {
-        
+    useEffect(() => {   
         const SearchAsync = async() =>{
             try{
                 if(ranking === 'rankingWeek'){
@@ -162,6 +161,7 @@ const CategorySearch = () => {
         }
         setIsFinish(false);
         SearchAsync();
+        window.localStorage.setItem("category" ,'')
     },[selectRanking,category,window.localStorage.getItem("category")])
 // console.log(SearchData);
     return(
