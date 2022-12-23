@@ -194,23 +194,23 @@ function Detail() {
     reviewData();
   }, [pCode]);
 
-  // // 최상단 스크롤
-  // const handleFollow = () => {
-  //   setScrollY(window.pageYOffset);
-  //   if(ScrollY > 100) {
-  //     setBtnStatus(true);
-  //   } else {
-  //     setBtnStatus(false);
-  //   }
-  // }
-  // const handleTop = () => {
-  //   window.scrollTo({
-  //     top: 0,
-  //     behavior: "smooth"
-  //   });
-  //   setScrollY(0);
-  //   setBtnStatus(false);
-  // }
+  // 최상단 스크롤
+  const handleFollow = () => {
+    setScrollY(window.pageYOffset);
+    if(ScrollY > 100) {
+      setBtnStatus(true);
+    } else {
+      setBtnStatus(false);
+    }
+  }
+  const handleTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+    setScrollY(0);
+    setBtnStatus(false);
+  }
 
   useEffect(() => {
     const watch = () => {

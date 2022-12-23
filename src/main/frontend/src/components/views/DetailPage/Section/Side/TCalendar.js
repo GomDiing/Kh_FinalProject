@@ -25,11 +25,13 @@ const SideWrap = styled.div`
                 color: black;
             }
         }
-    }
-`
+      }
+
+      `
 const Styleside = styled.div`
+      
     .side-header{
-        text-align: center;
+      text-align: center;
         font-size: 14px;
     }
 
@@ -73,6 +75,11 @@ const Styleside = styled.div`
     .text-center {
         margin-bottom: 0;
     }
+    p{
+      font-weight: bold;
+    }
+    
+    
 `;
 
 /** 
@@ -264,7 +271,7 @@ function TCalendar (props) {
                         );
                     })
                     :
-                    <small>해당 상품은 캐스팅 정보가 없습니다.</small>
+                    <p>해당 상품은 캐스팅 정보가 없습니다.</p>
                     }
                   </div>
                 );
@@ -299,7 +306,7 @@ function TCalendar (props) {
                       );
                   })
                   :
-                    <small>해당 상품은 캐스팅 정보가 없습니다.</small>
+                    <p>해당 상품은 캐스팅 정보가 없습니다.</p>
                   }
                   </div>
                 );

@@ -65,7 +65,7 @@ const MemberList=()=>{
         <MemberBlock>
           <TopBar name="일반회원관리"/>
           <div className="memberList-container">
-          <Table striped bordered hover>
+          <Table striped bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "30px">
@@ -110,6 +110,7 @@ export default MemberList;
 const MemberBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
+  
   .memberList-container {
     width: 70vw;
     margin : 10px;
