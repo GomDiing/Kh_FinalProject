@@ -5,7 +5,7 @@ const TCAT_DOMAIN = "http://localhost:8100";
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
     sendComment : async function(memberIndex,inputTitle, inputContent, rate, productCode){
-        console.log("찍히는 값 : " + memberIndex,inputTitle, inputContent, rate, productCode);
+        console.log("후기 작성 찍히는 값 : " + memberIndex,inputTitle, inputContent, rate, productCode);
         const params = {
             memberIndex : memberIndex,
             title : inputTitle,
@@ -38,8 +38,8 @@ const DetailApi={
     },
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
-        console.log("api 찍힌 값 : " + commentIndex, memberIndex);
-        debugger;
+        console.log("삭제 api 찍힌 값 : " + commentIndex, memberIndex);
+        // debugger;
         const params = {
             index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
@@ -54,7 +54,7 @@ const DetailApi={
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
         console.log("신고 api 찍힌값 : " + suspectIndex,victimIndex,reason,reviewIndex,);
-        debugger;
+        // debugger;
         const params = {
             memberIndexSuspect : suspectIndex, // 신고당한사람 (글작성자)
             memberIndexVictim : victimIndex, // 신고한사람 (로그인한 회원)
@@ -64,9 +64,6 @@ const DetailApi={
     },
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
-        const memberIndex = {
-            memberIndex : 322
-        }
         return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자

@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
-import Detail from "../../../Detail";
+import { useNavigate} from "react-router-dom";
+
 
 // 댓글 작성
 const ChildReview=(props)=>{
@@ -15,6 +16,7 @@ const ChildReview=(props)=>{
     const loginMember = userInfo.userId; // 댓글 삭제시 작성 회원만 버튼 보이게
 
     console.log(props.child_comment_list);
+    const navigate = useNavigate();
 
     const [inputContent, setInputContent] = useState('');
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
@@ -25,19 +27,22 @@ const ChildReview=(props)=>{
       e.preventDefault(); //새로고침 막기
       setDisplay(!display);
     }
-
+    // 댓글 삭제 
     const onClickDeleteReply=async(index)=>{
+      console.log("댓글 인덱스" + index);
       try{
         const res = await DetailApi.deleteComment(index, memberIndex);
         // 여기서 왜 index 값이 고유글 인덱스가 아니라 해당 글 index 번째 값 나옴 
         if(res.data.statusCode === 200){
-          console.log("댓글이 삭제되었습니다.");
-          alert("댓글이 삭제되었습니다.")
+          alert(res.data.message)
+          navigate(0);
+        } 
+    }catch(e){
+        if(e.res.data.statusCode === 400){
+          alert(e.res.data.message);
         } else{
-          console.log("댓글을 삭제할 수 없습니다.");
+          console.log(e);
         }
-      } catch(e){
-        console.log(e);
       }
     };
 
@@ -65,29 +70,28 @@ const ChildReview=(props)=>{
       {display &&
       <div>
         <div className="sec-input-container">
-         
         <Form.Control type="text" placeholder="Enter Reply" value={inputContent} onChange={onChangeContent}/>
          <Button className="child-submit-btn" variant="dark" type="submit" 
            onClick={onClickSubmit}>
               등록
           </Button>
         </div>
-      {props.child_comment_list&&props.child_comment_list.map((comment,index,memberId)=>
+      {props.child_comment_list&&props.child_comment_list.map((reply,index)=>
         <div key={index}>
           <Alert variant="light" className="reply-container">
             <div className="reply-title-container">
-              <div className="reply-top-left">{comment.memberId}</div>
+              <div className="reply-top-left">{reply.memberId}</div>
               <div className="reply-top-right">
-              <div>{comment.createTime}</div>
-              {memberId !== loginMember && (
+              <div>{reply.createTime}</div>
+              {reply.memberId === loginMember && (
                 <>
-              {/* 로그인회원이랑 댓글 작성자랑 같아야 삭제 버튼 뜨는건데 왜.. */}
-              <button className="delete-reply-btn" onClick={()=>onClickDeleteReply(index)}>삭제</button>
+              <button className="delete-reply-btn" 
+              onClick={()=>onClickDeleteReply(reply.index)}>삭제</button>
               </>
             )}
             </div>
             </div>
-            <div className="reply-content">{comment.content}</div>
+            <div className="reply-content">{reply.content}</div>
           </Alert>
         </div>
         )}

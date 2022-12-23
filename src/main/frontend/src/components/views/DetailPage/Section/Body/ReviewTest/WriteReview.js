@@ -7,8 +7,6 @@ import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
 import { useNavigate} from "react-router-dom";
 
-
-
 const WriteReview=(props)=>{
     // 로그인 유저 정보를 리덕스에서 가져옴
     const userInfo = useSelector((state) => state.user.info)
@@ -19,12 +17,11 @@ const WriteReview=(props)=>{
     const [inputContent, setInputContent] = useState('');
     const navigate = useNavigate();
 
-
     const onChangeRate =(e)=>{setRate(e);}
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
-    console.log("해당 공연 정보는?" + props.code);
+    console.log("해당 공연 코드 : " + props.code);
 
     // 후기 작성
     const onClickSubmit=async()=>{
@@ -36,7 +33,7 @@ const WriteReview=(props)=>{
           } 
         } catch(e){
           if(e.response.data.statusCode === 500){
-            alert(e.response.data.message)
+            alert("평점, 제목, 내용을 입력해 주세요")
           }else if(e.response.data.statusCode === 400){
             alert(e.response.data.message);
           }else{
