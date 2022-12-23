@@ -151,7 +151,7 @@ function Social() {
         const email = params.get('email')
         const provider_type = params.get('providerType')
         const join = params.get('isJoin');
-        if(join === 1) {
+        if(join == 1) {
             const data = {
                 userName : name,
                 userEmail : email,
