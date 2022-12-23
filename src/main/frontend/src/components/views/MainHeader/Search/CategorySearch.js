@@ -122,16 +122,18 @@ const CategorySearch = () => {
         setRanking(e);
         setSelectRanking(a);
     }
-    const clickCategory = (e ,a) =>{
-        setCategory(e);
-        setSelectCategory(a);
-    }
     // 아이탬 선택시 상세페이지 이동
     const clickItem = (e) =>{
         Navigate(`/detail/${e}`)
     }
     // 선택한 카테고리별 or 랭킹별 useEffect
+    const clickCategory = (e ,a) =>{
+        setCategory(e);
+        setSelectCategory(a);
+    }
+
     useEffect(() => {
+        
         const SearchAsync = async() =>{
             try{
                 if(ranking === 'rankingWeek'){
@@ -160,7 +162,7 @@ const CategorySearch = () => {
         }
         setIsFinish(false);
         SearchAsync();
-    },[selectRanking,category])
+    },[selectRanking,category,window.localStorage.getItem("category")])
 // console.log(SearchData);
     return(
         // 버튼영역

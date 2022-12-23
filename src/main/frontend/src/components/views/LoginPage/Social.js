@@ -116,13 +116,13 @@ const SignWrap = styled.div`
 } 
 `
 const postCodeStyle = {
-display: "block",
-position: "relative",
-top: "2%",
-right: "2%",
-width: "500px",
-height: "500px",
-padding: "7px",
+    // display: "block",
+    position: "absolute",
+    top : "20%",
+    left : "37%",
+    width: "500px",
+    height: "500px",
+    // padding: "7px",
 };
 
 function Social() {
@@ -150,20 +150,33 @@ function Social() {
         // console.log(Join);
         setType(params.get('providerType'));
         console.log(type);
-        const name = params.get('name')
+        // const name = params.get('name')
         const email = params.get('email')
         const provider_type = params.get('providerType')
         const join = params.get('isJoin');
         if(join == 1) {
-            const data = {
-                userName : name,
-                userEmail : email,
-                userProvider_type : provider_type,
-            }
-            dispatch(loginActions.setUserInfo({data}));
-            
+            const getInfo = async() => {
+                try {
+                    const res = await MemberApi.searchId2(email, provider_type);
+                    if(res.data.statusCode === 200) {
+                        const data = {
+                            userIndex : res.data.results.index,
+                            userId : res.data.results.id,
+                            userPoint : res.data.results.point,
+                            userName : res.data.results.name,
+                            userEmail : res.data.results.email,
+                            userProvider_type : res.data.results.provider_type,
+                            userRole : res.data.results.rile
+                        }
+                        dispatch(loginActions.setUserInfo({data}));
+                    }
+                    } catch (e) {
+                    console.log(e);
+                    }
+                }
             alert('로그인 성공')
             Navigate('/')
+            getInfo();
         } 
     },[])
 
@@ -255,10 +268,13 @@ function Social() {
             <div className='addrContainer' id='popupDom'>
                 <div>
                 <div className='AddrBtn'>
+                    {isOpen ? 
+                    <button className='btn btn--primary' onClick={onClose} type='button'>Close</button>
+                    :    
                     <button className="btn btn--primary" type='button' onClick={onOpen}>Address</button>
+                }
                 {isOpen && (
                     <>
-                    <button className='btn btn--primary' onClick={onClose} type='button'>닫기</button>
                     <PopupDom>
                         <DaumPostcodeEmbed style={postCodeStyle} onComplete={handlePostCode} />
                     </PopupDom>

@@ -40,13 +40,13 @@ const InfoStyle = styled.div`
   }
 `
 const postCodeStyle = {
-  display: "block",
-  position: "relative",
-  top: "2%",
-  right: "2%",
+  // display: "block",
+  position: "absolute",
+  top : "16%",
+  left : "42%",
   width: "500px",
   height: "500px",
-  padding: "7px",
+  // padding: "7px",
 };
 
 const InfoUpdate = () => {
@@ -180,14 +180,20 @@ const InfoUpdate = () => {
         <label>이메일</label>
           <input type='email' value={inputEmail} onChange={onChangeEmail} />
         <label>주소</label>
-          <input type='address' readOnly value={fullAddress}/><span><button onClick={onOpen}>주소 검색</button></span>
+          <input type='address' readOnly value={fullAddress}/>
+          
+          {isOpen ? 
+          <button className='btn btn--primary' style={{alignItem: 'center'}} onClick={onClose} type='button'>닫기</button>
+          :  
+          <span><button onClick={onOpen}>주소 검색</button></span>
+        }
+            
           <br/>
           <div id='popupDom'>
             {isOpen && (
               <div>
                 <PopupDom>
                   <DaumPostcodeEmbed style={postCodeStyle} onComplete={handlePostCode} />
-                  <button className='btn btn--primary' style={{alignItem: 'center'}} onClick={onClose} type='button'>닫기</button>
                 </PopupDom>
               </div>
               )}

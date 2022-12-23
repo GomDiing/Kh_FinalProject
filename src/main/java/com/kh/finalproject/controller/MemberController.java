@@ -36,6 +36,10 @@ public class MemberController {
     public ResponseEntity<Object> searchActiveMemberList(Pageable pageable){
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
+
         PagingMemberDTO searchMemberList = memberService.searchAllActiveMember(pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_ACTIVE, searchMemberList), HttpStatus.OK);
     }
@@ -47,6 +51,9 @@ public class MemberController {
     public ResponseEntity<Object> blackList(Pageable pageable){
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
+
         PagingMemberDTO searchMemberList = memberService.searchAllBlackMember(pageable);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBERS_BLACKLIST, searchMemberList), HttpStatus.OK);
     }
@@ -55,7 +62,7 @@ public class MemberController {
      * 블랙리스트 회원 탈퇴(체크박스)
      */
     @PostMapping("/delete/checkbox")
-    public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@RequestBody MemberCheckListDTO memberCheckListDTO){
+    public ResponseEntity<DefaultResponse<Object>> deleteCheckMember(@Validated @RequestBody MemberCheckListDTO memberCheckListDTO){
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         List<CheckMemberDTO> checkMemberList = memberCheckListDTO.getMemberDTOCheckList();
@@ -73,8 +80,6 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> memberSign(@Validated @RequestBody SignupDTO signupDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
-        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
-        memberService.updateStatusByCount();
         memberService.signup(signupDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_JOIN_MEMBER), HttpStatus.OK);
@@ -100,6 +105,9 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> findMemberId(@Validated @RequestBody FindIdMemberDTO findIdMemberDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
+
         Map<String, String> memberId = memberService.findMemberId(findIdMemberDTO.getName(), findIdMemberDTO.getEmail());
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_ID_BY_EMAIL_AND_NAME, memberId), HttpStatus.OK);
@@ -113,6 +121,9 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> findPassword(@Validated @RequestBody FindPwdMemberDTO findPwdMemberDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
+
         Map<String, String> password = memberService.findPassword(findPwdMemberDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_MEMBER_PWD_BY_ID_EMAIL_NAME, password), HttpStatus.OK);
@@ -126,6 +137,9 @@ public class MemberController {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
         memberService.editMemberInfoByHome(editMemberInfoDTO);
+
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_UPDATE_MEMBER), HttpStatus.OK);
     }
@@ -158,9 +172,12 @@ public class MemberController {
      * 로그인 컨트롤러
      */
     @PostMapping("/signin")
-    public ResponseEntity<Object> signin(@RequestBody SigninRequestDTO signinRequestDTO) {
+    public ResponseEntity<Object> signin(@Validated @RequestBody SigninRequestDTO signinRequestDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
+
         SigninResponseDTO signinResponseDTO = memberService.signIn(signinRequestDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_LOGIN, signinResponseDTO), HttpStatus.OK);
@@ -174,6 +191,8 @@ public class MemberController {
     public ResponseEntity<DefaultResponse<Object>> deleteCancel(@Validated @RequestBody DeleteCancelDTO deleteCancelDTO) {
         // 탈퇴하기 전에 먼저 1주일이 지난 회원을 다 unregister 변경
         memberService.unregisterCheck();
+        /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
+        memberService.updateStatusByCount();
         memberService.deleteCancelMember(deleteCancelDTO);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_DELETE_CANCEL), HttpStatus.OK);

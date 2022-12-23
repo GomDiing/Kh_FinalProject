@@ -4,33 +4,37 @@ import Form from 'react-bootstrap/Form';
 import DetailApi from '../../../../../../api/DetailApi';
 import { useSelector } from 'react-redux';
 
-
 const AccuseModal= (props)=> {
     const userInfo = useSelector((state) => state.user.info)
     const victimIndex= userInfo.userIndex;
 
-    console.log("신고할 후기 글 index: " + props.index);
-    console.log("신고작성글 아이디 : " + props.memberIndex);
+    console.log("신고할 글 index: " + props.index);
+    console.log("신고할 아이디 : " + props.memberIndex);
 
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-    const { open, close, header,index} = props;
-    
+    const { open, close, header} = props;
+
     const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
+
 
     const onClickAccuse=async()=>{
         try{
             const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
-            console.log(res.data.message);
-            console.log(res.request.response);
             if(res.data.statusCode === 200) {
-                console.log("신고 완료");
+                alert(props.title+" "+res.data.message);
                 close();
-            }
+            }else {
+                console.log(res.data.message);
+                alert("중복신고되었습니다.")
+            } 
         }catch(e){
             if(e.response.data.statusCode === 400){
-                alert(e.response.data.message)
-                close();
+                if(e.response.data.errors == null){
+                    alert(e.response.data.message);
+                } else if(e.response.data.errors !== null){
+                    alert("로그인 후 이용 바랍니다.")
+                }
             }else{
                 console.log(e);
             }
@@ -58,7 +62,7 @@ const AccuseModal= (props)=> {
                 {/* {body} */}
             </main>
             <footer className='modal-footer'>
-                <button className='submit' onClick={()=>onClickAccuse(index)}>Submit</button>
+                <button className='submit' onClick={()=>onClickAccuse(props.index)}>Submit</button>
                 <button className='close' onClick={close}>close</button>
             </footer>
             </section>
@@ -79,7 +83,7 @@ const AccuseModalBlock=styled.div`
         bottom: 0;
         left: 0;
         z-index: 30;
-        /* background-color: rgba(0, 0, 0, 0.6); */
+        background-color: rgba(0, 0, 0, 0.6);
     }
     .modal button {
         outline: none;

@@ -8,5 +8,6 @@ import javax.validation.constraints.NotNull;
 public class SearchByIdDTO {
     private String id;
     private String email;
+    @NotNull(message = "가입 주체는 필수 입력값입니다")
     private String providerType;
 }

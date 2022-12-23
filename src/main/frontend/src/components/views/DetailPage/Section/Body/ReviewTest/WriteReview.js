@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Rate } from "antd";
 import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
-
+import { useNavigate} from "react-router-dom";
 
 const WriteReview=(props)=>{
     // 로그인 유저 정보를 리덕스에서 가져옴
@@ -15,22 +15,33 @@ const WriteReview=(props)=>{
     const [rate, setRate] = useState('');
     const [inputTitle, setInputTitle] = useState('');
     const [inputContent, setInputContent] = useState('');
+    const navigate = useNavigate();
 
     const onChangeRate =(e)=>{setRate(e);}
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
-    console.log("해당 공연 정보는?" + props.code);
+    console.log("해당 공연 코드 : " + props.code);
 
+    // 후기 작성
     const onClickSubmit=async()=>{
+      try{
         const res = await DetailApi.sendComment(memberIndex,inputTitle,inputContent,rate, props.code);
         if(res.data.statusCode === 200){
-          console.log("후기 작성 완료 후 목록으로 이동");
-          alert("공연 후기 작성 성공")
-        } else{
-          console.log("공지사항 작성 실패");
+          alert(res.data.message);
+          navigate(0);
+          } 
+        } catch(e){
+          if(e.response.data.statusCode === 500){
+            alert("평점, 제목, 내용을 입력해 주세요")
+          }else if(e.response.data.statusCode === 400){
+            alert("로그인 후 이용하시기 바랍니다.");
+          }else{
+            console.log(e);
+          }
         }
-      }
+      };
+
     return(
         <WriteReviewBlock>
         <Form className="write-review-container">
@@ -42,7 +53,7 @@ const WriteReview=(props)=>{
         <Form.Group className="mb-3">
         <Form.Control className="write-review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
       </Form.Group>
-      <Button className="write-review-btn" variant="primary" type="submit" onClick={onClickSubmit}>
+      <Button className="write-review-btn" variant="primary" onClick={onClickSubmit}>
         후기 작성하기
       </Button>
     </Form>
