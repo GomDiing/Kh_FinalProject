@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Rate } from "antd";
 import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
+import { useNavigate} from "react-router-dom";
+
 
 
 const WriteReview=(props)=>{
@@ -15,6 +17,8 @@ const WriteReview=(props)=>{
     const [rate, setRate] = useState('');
     const [inputTitle, setInputTitle] = useState('');
     const [inputContent, setInputContent] = useState('');
+    const navigate = useNavigate();
+
 
     const onChangeRate =(e)=>{setRate(e);}
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
@@ -28,15 +32,18 @@ const WriteReview=(props)=>{
         const res = await DetailApi.sendComment(memberIndex,inputTitle,inputContent,rate, props.code);
         if(res.data.statusCode === 200){
           alert(res.data.message);
+          navigate(0);
           } 
         } catch(e){
-          if(e.res.data.statusCode === 500){
-            alert(e.res.data.message)
+          if(e.response.data.statusCode === 500){
+            alert(e.response.data.message)
+          }else if(e.response.data.statusCode === 400){
+            alert(e.response.data.message);
           }else{
             console.log(e);
           }
         }
-      }
+      };
 
     return(
         <WriteReviewBlock>
@@ -49,7 +56,7 @@ const WriteReview=(props)=>{
         <Form.Group className="mb-3">
         <Form.Control className="write-review-content" type="text" placeholder="Enter review" value={inputContent} onChange={onChangeContent}/>
       </Form.Group>
-      <Button className="write-review-btn" variant="primary" type="submit" onClick={onClickSubmit}>
+      <Button className="write-review-btn" variant="primary" onClick={onClickSubmit}>
         후기 작성하기
       </Button>
     </Form>

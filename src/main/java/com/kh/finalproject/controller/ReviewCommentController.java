@@ -34,7 +34,7 @@ public class ReviewCommentController {
     @PostMapping("/write")
     public ResponseEntity<Object> writeReview(@RequestBody CreateReviewCommentDTO createReviewCommentDTO){
         reviewCommentService.create(createReviewCommentDTO);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_ADD_REVIEW), HttpStatus.OK);
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_CREATE_REVIEW), HttpStatus.OK);
     }
 
     /*공연 후기 대댓글 작성*/

@@ -39,7 +39,7 @@ const DetailApi={
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
         console.log("api 찍힌 값 : " + commentIndex, memberIndex);
-        // debugger;
+        debugger;
         const params = {
             index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
@@ -53,12 +53,12 @@ const DetailApi={
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
-        console.log("api 찍힌값 : " + suspectIndex,victimIndex,reason,reviewIndex,);
-        // debugger;
+        console.log("신고 api 찍힌값 : " + suspectIndex,victimIndex,reason,reviewIndex,);
+        debugger;
         const params = {
             memberIndexSuspect : suspectIndex, // 신고당한사람 (글작성자)
             memberIndexVictim : victimIndex, // 신고한사람 (로그인한 회원)
-            reason : reason //신고사유
+            reason : reason, //신고사유
         }
         return await axios.post(TCAT_DOMAIN+`/api/accuse/${(reviewIndex)}`,params, HEADER)
     },

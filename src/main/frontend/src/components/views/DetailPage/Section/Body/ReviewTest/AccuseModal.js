@@ -9,11 +9,13 @@ const AccuseModal= (props)=> {
     const userInfo = useSelector((state) => state.user.info)
     const victimIndex= userInfo.userIndex;
 
-    console.log("신고할 후기 글 index: " + props.index);
-    console.log("신고작성글 아이디 : " + props.memberIndex);
+    console.log("신고할 글 index: " + props.index);
+    console.log("신고할 아이디 : " + props.memberIndex);
 
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-    const { open, close, header,index} = props;
+    const { open, close, header} = props;
+    // const { open, close, header,index,memberIndex} = props;
+
     
     const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
@@ -21,6 +23,8 @@ const AccuseModal= (props)=> {
     const onClickAccuse=async()=>{
         try{
             const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
+            // const res = await DetailApi.accuseComment(memberIndex,victimIndex,reason,index,);
+
             if(res.data.statusCode === 200) {
                 console.log("신고 완료");
                 close();
@@ -28,10 +32,7 @@ const AccuseModal= (props)=> {
         }catch(e){
             if(e.response.data.statusCode === 400){
                 alert(e.response.data.message)
-<<<<<<< HEAD
-=======
                 close();
->>>>>>> d58f3b6074e354ad00494e686a920dfad3dee510
             }else{
                 console.log(e);
             }
@@ -59,7 +60,7 @@ const AccuseModal= (props)=> {
                 {/* {body} */}
             </main>
             <footer className='modal-footer'>
-                <button className='submit' onClick={()=>onClickAccuse(index)}>Submit</button>
+                <button className='submit' onClick={()=>onClickAccuse(props.index)}>Submit</button>
                 <button className='close' onClick={close}>close</button>
             </footer>
             </section>

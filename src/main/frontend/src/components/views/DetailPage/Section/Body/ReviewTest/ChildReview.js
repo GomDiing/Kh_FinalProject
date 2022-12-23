@@ -42,20 +42,21 @@ const ChildReview=(props)=>{
     };
 
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
+    // 후기 작성
     const onClickSubmit=async()=>{
       try{
         const res = await DetailApi.childComment(userInfo.userIndex,group,inputContent,props.code);
         if(res.data.statusCode === 200){
-          console.log("댓글 작성 완료 후 목록으로 이동");
-          alert("댓글 작성 성공!")
-          return;
-        } else{
-          console.log("댓글 작성 실패");
+          alert(res.data.message);
+        } 
+      }catch(e){
+        if(e.res.data.statusCode === 400){
+          alert(e.res.data.message)
+        }else{
+          console.log(e);
         }
-      } catch(e){
-        console.log(e);
-    }
-  }
+      }
+  };
 
     return(
       <ChildReviewInputBlock>
