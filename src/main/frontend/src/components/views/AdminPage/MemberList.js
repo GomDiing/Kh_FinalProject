@@ -65,7 +65,7 @@ const MemberList=()=>{
         <MemberBlock>
           <TopBar name="일반회원관리"/>
           <div className="memberList-container">
-          <Table striped bordered hover style={{width : '1350px'}}>
+          <Table bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "30px">
@@ -76,12 +76,13 @@ const MemberList=()=>{
                     <th width = "100px">아이디</th>
                     <th width = "100px">이름</th>
                     <th width = "150px">이메일</th>
-                    <th width = "150px">가입일</th>
+                    <th width = "120px">가입일</th>
                     <th width = "150px">주소</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {memberList.map(({index,id, name, email, road,jibun,detail, createTime}) => (<tr key={index}>
+                  {memberList.map(({index,id, name, email, road,jibun,detail, createTime}) =>
+                  (<tr key={index} className ="member-tr">
                   <td><input type='checkbox' name={`select-${index}`} onChange={(e) => handleSingleCheck(e.target.checked, index)}
                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
                   checked={checkItems.includes(index) ? true : false} />
@@ -112,11 +113,19 @@ const MemberBlock=styled.div`
   box-sizing: border-box;
   
   .memberList-container {
+    align-items: center;
     width: 70vw;
     margin : 10px;
     display: flex;
     height: 60%;
     flex-direction: column;
     text-align: center;
+    td{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	max-width:100px;
+}
   }
+ 
 `;

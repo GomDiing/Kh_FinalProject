@@ -5,6 +5,7 @@ import AdminApi from '../../../../../api/AdminApi';
 
 const FeaturedInfo=()=>{
     const [chartData, setChartData] = useState([]);
+    
     useEffect(() => {
         const getChartData = async()=> {
             try {

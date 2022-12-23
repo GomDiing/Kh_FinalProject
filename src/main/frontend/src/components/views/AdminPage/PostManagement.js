@@ -89,7 +89,7 @@ const PostManagement=()=>{
         <PostBlock>
         <TopBar name="전시회 게시물 관리"/>
           <div className="exhibition-container">
-          <Table striped bordered hover style={{width : '1350px'}}>
+          <Table bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "40px">
@@ -116,14 +116,14 @@ const PostManagement=()=>{
                 ))}
                 </tbody>
             </Table>
-            </div>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
              current={currentPage} 
              pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); setList([]);}} //숫자 누르면 해당 페이지로 이동
-            />
+             />
             <div className="post-btn-container"><button className="postBtn" onClick={onClickDelete}>삭제하기</button></div>
+             </div>
         </PostBlock>
     );
 }
@@ -133,13 +133,21 @@ const PostBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
   .exhibition-container {
+    align-items: center;
     width: 70vw;
     margin : 10px;
     display: flex;
     height: 60%;
     flex-direction: column;
     text-align: center;
+    text-overflow: ellipsis;
+    td{
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	/* max-width:100px;?} */
   }
+}
   .post-btn-container{
     float: right;
   }

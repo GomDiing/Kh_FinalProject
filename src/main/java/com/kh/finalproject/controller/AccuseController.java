@@ -31,6 +31,7 @@ public class AccuseController {
                                                                 @Validated @RequestBody CreateAccuseDTO createAccuseDTO) {
         //후기 index 랑 유저 정보 service 넘겨주기
         accuseService.create(createAccuseDTO, index);
+
         /*신고 횟수 5회 이상인 회원 블랙리스트 회원으로 변환*/
         memberService.updateStatusByCount();
 

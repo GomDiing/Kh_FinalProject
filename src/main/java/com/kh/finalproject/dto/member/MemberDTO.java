@@ -2,6 +2,7 @@ package com.kh.finalproject.dto.member;
 
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +39,11 @@ public class MemberDTO {
      */
     public MemberDTO toDTO(Member member, Address address) {
         this.index = member.getIndex();
-        this.id = member.getId();
+//        this.id = member.getId();
+        //홈 회원이면 ID, 소셜 회원이면 이메일 노출
+        if (member.getProviderType() == MemberProviderType.HOME) this.id = member.getId();
+        else this.id = member.getEmail();
+
         this.name = member.getName();
         if (Objects.isNull(member.getPassword())) {
             this.pwd = "null";
@@ -73,6 +78,9 @@ public class MemberDTO {
         else this.unregisterTime = member.getUnregister().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.memberAccuseCount = member.getAccuseCount();
         this.providerType = member.getProviderType().name();
+
+
+
 
         return this;
     }
