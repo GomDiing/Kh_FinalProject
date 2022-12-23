@@ -8,6 +8,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class CheckMemberDTO {
-    @NotNull(message = "필수값이어야합니다")
+    @NotNull(message = "회원 인덱스는 필수값 입나다")
     private Long index;
 }

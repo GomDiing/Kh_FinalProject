@@ -51,6 +51,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_MOVIE_SEARCH = "영화 검색이 완료되었습니다";
     public static final String SUCCESS_MOVIE_INQUIRE = "영화 조회가 완료되었습니다";
     public static final String SUCCESS_SEARCH_REVIEW = "전체 리뷰 조회가 완료되었습니다";
+    public static final String SUCCESS_SEARCH_REVIEW_TOP_FOUR = "상위 4개 전체 리뷰 조회가 완료되었습니다";
     public static final String SUCCESS_ADD_REVIEW = "리뷰 추가가 완료되었습니다";
     public static final String SUCCESS_DELETE_REVIEW = "리뷰 삭제가 완료되었습니다"; //추가
     public static final String SUCCESS_UPDATE_REVIEW = "리뷰 수정이 완료되었습니다"; //추가

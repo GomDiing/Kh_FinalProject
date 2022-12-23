@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class QnAController {
 
     //    qna 답장하기(관리자)
     @PostMapping("/reply")
-    public ResponseEntity<DefaultResponse<Object>> qnaReply(@RequestBody ResponseQnADTO responseQnADTO) {
+    public ResponseEntity<DefaultResponse<Object>> qnaReply(@Validated @RequestBody ResponseQnADTO responseQnADTO) {
         qnAService.response(responseQnADTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_REPLY_QNA), HttpStatus.OK);
     }
@@ -45,7 +46,7 @@ public class QnAController {
 
         /*qna 작성하기*/
     @PostMapping("/write")
-    public ResponseEntity<DefaultResponse<Object>> writeQna(@RequestBody CreateQnADTO createQnADTO){
+    public ResponseEntity<DefaultResponse<Object>> writeQna(@Validated @RequestBody CreateQnADTO createQnADTO){
         qnAService.create(createQnADTO);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEND_QNA), HttpStatus.OK);
     }

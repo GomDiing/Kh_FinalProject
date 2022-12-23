@@ -3,12 +3,9 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
-import com.kh.finalproject.dto.reviewComment.CreateReviewCommentDTO;
-import com.kh.finalproject.dto.reviewComment.RemoveReviewCommentDTO;
 import com.kh.finalproject.dto.reviewComment.UpdateReviewCommentDTO;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import lombok.Getter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -144,6 +141,17 @@ public class ReviewComment extends BaseTimeEntity {
         }
 
         this.like += 1;
+    }
+
+    //후기 수정
+    public void updateEditReview(UpdateReviewCommentDTO updateReviewCommentDTO) {
+        this.content = updateReviewCommentDTO.getContent();
+        if (Objects.isNull(updateReviewCommentDTO.getRate())) this.rate = updateReviewCommentDTO.getRate();
+    }
+
+    //댓글 수정
+    public void updateEditContent(UpdateReviewCommentDTO updateReviewCommentDTO) {
+        this.content = updateReviewCommentDTO.getContent();
     }
 
     public void updateOrder(Integer order) {

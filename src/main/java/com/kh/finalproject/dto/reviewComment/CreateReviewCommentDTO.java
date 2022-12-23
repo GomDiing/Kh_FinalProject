@@ -12,17 +12,22 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class CreateReviewCommentDTO {
-    private Long index;
+    @NotNull(message = "후기/댓글 작성자 인덱스는 필수 입력값 입니다")
     private Long memberIndex;
-    private String memberId;
+
     private String title;
+
     @NotNull(message = "평점은 필수 값 입니다")
     private Float rate;
+
+    @NotNull(message = "후기/댓글 내용은 필수 입력값 입니다")
     private String content;
+
     private Long group;
+
     private Integer layer;
-    private Integer order;
-    private String reviewCommentStatus;
+
+    @NotNull(message = "후기 작성 상품 코드는 필수 입력값 입니다")
     @JsonProperty("code")
     private String productCode;
 }
