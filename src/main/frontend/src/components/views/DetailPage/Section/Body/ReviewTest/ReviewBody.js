@@ -138,7 +138,7 @@ const ReviewBodyBlock = styled.div`
   background-color: #f5f5f5;
 }
 .review-head-container{
-  display: flexbox;
+  /* display: flexbox; */
   justify-content: space-between;
 
 }

@@ -16,13 +16,15 @@ const InfoStyle = styled.div`
         margin-left: 1.5rem;
     }
     .name {
-        width: 110px;
     }
     .price {
         color: #ED4037;
         margin-left: 1.5rem;
         font-weight: bold;
-        width: 60px;
+    }
+    td{
+        width: 150px;
+        height: 35px;
     }
     .info {
         padding: 0 0 0 32px;

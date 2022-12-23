@@ -23,10 +23,21 @@ const { Content, Sider } = Layout;
 
 const DWrap = styled.div`
 width: 100%;
-min-width: 970px;
-background-color: #f5f5f5;
-/* min-width: 1024px; */
+background-color: #d2d2d2;
+min-width: 930px;
 /* border: 1px solid black; */
+.DetailContainer{
+  width: 80%;
+  margin:0 auto;
+  background-color: white
+}
+.detailInfoContainer{
+  img{
+    /* margin-left: 20px; */
+    padding: 20px;
+    width: 80%;
+  }
+}
 .topBtn {
   position: fixed; 
   opacity: 0; 
@@ -55,38 +66,49 @@ background-color: #f5f5f5;
   border-radius: 1.2rem;
   background-color: silver;
   overflow: auto;
-  /* height: auto; */
+  height: auto;
   position: fixed; 
-  left: 70%;
+  left: 80%;
   /* top: 6.5rem; */
   /* bottom: 0; */
-  /* bottom: 100px; */
-  padding: 0 1px;
+  /* bottom: 200px; */
+  top : 100px;
   padding-bottom: 30px;
 
 }
 .ItemContainer2{
-  padding: 40px 0;
-  width: 100%;
+  padding: 40px 20px;
   display: flex;
   background-color: white;
+  width: 100%;
 }
-
 @media (max-width: 1225px){
+  .DetailContainer{
+    width:100%;
+  }
+  .detailInfoContainer{
+    width: 90%;
+    img{
+      width: 100%;
+    }
+  }
   .ItemContainer2{
     display: block;
-    min-width: 520px;
+    width: 100%;
+  }
+  .ItemContainer{
   }
   .posterCon {
-    min-width: 520px;
+    width:550px;
+    h3{
+      margin-left: 25px;
+    }
   }
   .site-layout-background{
   }
   .detailSiderContainer{
-    left: 500px;
-    position: sticky;
-    height: 720px;
-    
+    left: 650px;
+    position: absolute;
   }
 .info {
   margin-left: 4.8rem;
@@ -116,6 +138,7 @@ function Detail() {
   
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
+    
   const [reviewList, setReviewList] = useState([]);
 
   // console.log(code);
@@ -189,26 +212,26 @@ function Detail() {
   //   setBtnStatus(false);
   // }
 
-  // useEffect(() => {
-  //   const watch = () => {
-  //     window.addEventListener('scroll', handleFollow)
-  //   }
-  //   watch();
-  //   return () => {
-  //     window.removeEventListener('scroll', handleFollow)
-  //   }
-  // })
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener('scroll', handleFollow)
+    }
+    watch();
+    return () => {
+      window.removeEventListener('scroll', handleFollow)
+    }
+  })
   
   return (
     <DWrap>
       {/* 스크롤 */}
-      {/* <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
+      <button className={BtnStatus ? "topBtn active" : "topBtn"} onClick={handleTop} type='button'>
       <BsArrowUpCircle className='arrow'/>
-        </button> */}
+        </button>
         {/* 해더 */}
       <MainHeader/>
         {/* 바디 */}
-      <Layout style={{width: '80%', height: '100%' ,margin:'0 auto', backgroundColor: 'white'}}>
+      <Layout className='DetailContainer'>
         <Content >
           <Layout className="site-layout-background" >
             <div className='ItemContainer2'>
@@ -224,16 +247,16 @@ function Detail() {
             </Content>
             </div>
               {/* 사이드 */}
-            <Sider className="detailSiderContainer" width={310}>
+            <Sider className="detailSiderContainer" width={320}>
               {open && <TCalendar userInfo={userInfo} dateList={dateList} title={comList.title} code={comList.code}
-              cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month}/>}
+              cast={ckList.is_info_casting} seat={seat} reserve={ckList.is_next_reserve} dim={ckList.reserve_day_in_month} handleTop={handleTop}/>}
             </Sider>
           </Layout>
           <br/>
 
           {/* 상세내용 */}
         <Content>
-          <div style={{width: '70%'}}>
+          <div className='detailInfoContainer'>
           <Tabs
             id="controlled-tab-example"
             activeKey={key}
@@ -245,29 +268,29 @@ function Detail() {
               <Contents image={comList.detail_poster_url} stat={stat}/>
             </Tab>
             
-            <Tab eventKey="cast" title="캐스팅 정보">
+            <Tab eventKey="cast" title="캐스팅 정보" >
             {castInfo === false ? <h2 style={{margin: '2rem'}}>캐스팅 정보가 없습니다.</h2> : 
-              <>
+              <div >
               {cast && cast.map((cast, id) => (
               <React.Fragment key={id}>
               <GridCards image={cast.image_url} character={cast.character} actor={cast.actor} url={cast.info_url}/>
               </React.Fragment>
-              ))}</>
+              ))}</div>
             }
             </Tab>
             
             <Tab eventKey="profile" title="관람후기">
               <WriteReview code={comList.code}/>
               <ReviewBody reviewList={reviewList}
-            code={comList.code}
+              code={comList.code}
             />
             </Tab>
           </Tabs>
           </div>
         </Content>
         </Content>
-        <Footer/>
       </Layout>
+        <Footer/>
     </DWrap>
   )
 }
