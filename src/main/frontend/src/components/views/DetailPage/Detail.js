@@ -154,8 +154,6 @@ function Detail() {
     getData();
   }, [pCode]);
 
-
-
   // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
@@ -171,8 +169,8 @@ function Detail() {
       }
     };
     reviewData();
-  }, [pCode]); 
-  
+  }, [pCode]);
+
   // // 최상단 스크롤
   // const handleFollow = () => {
   //   setScrollY(window.pageYOffset);

@@ -182,6 +182,8 @@ const PayReady = (title, total, tax, value) => {
         && date1.getDate() === date2.getDate();
     }
 
+    console.log(isSameDate(viewTime, today));
+
     const [data, setData] = useState({
       // 티켓 가격
       amount : ticket.final_amount / ticket.count,
@@ -206,8 +208,8 @@ const PayReady = (title, total, tax, value) => {
         if(isSameDate(new Date(view_time), today)) {
           setCancelTry(false);
           openModal();
-          // 5% 수수료 3일 전
-        } else if (new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
+          // 월이 같을 때 일로 비교 5% 수수료 3일 전
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
@@ -218,8 +220,8 @@ const PayReady = (title, total, tax, value) => {
             }
           }));
           setCancelTry(true);
-          // 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
-        } else if (new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
+          // 월이 같을 때 일로 비교 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
@@ -227,6 +229,30 @@ const PayReady = (title, total, tax, value) => {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
               cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 10)
+            }
+          }));
+          setCancelTry(true);
+          // 월이 같을 경우 4일 ~~ 쭉
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(viewTime).getDate() - today.getDate() > 3) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount
+            }
+          }));
+          setCancelTry(true);
+          // 연도 === 연도 && 공연날짜1월 < 현재2월 무료
+        } else if (new Date(viewTime).getFullYear() === today.getFullYear() && new Date(viewTime).getMonth() < today.getMonth()) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount
             }
           }));
           setCancelTry(true);
