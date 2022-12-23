@@ -174,6 +174,8 @@ const PayReady = (title, total, tax, value) => {
     const viewTime = ticket.view_time;
     const today = new Date();
 
+    console.log(viewTime);
+
     const isSameDate = (date1, date2) => {
       return date1.getFullYear() === date2.getFullYear()
         && date1.getMonth() === date2.getMonth()
@@ -204,7 +206,8 @@ const PayReady = (title, total, tax, value) => {
         if(isSameDate(new Date(view_time), today)) {
           setCancelTry(false);
           openModal();
-        } else if (new Date(view_time).getDate() - today.getDate() >= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
+          // 5% 수수료 3일 전
+        } else if (new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
@@ -214,10 +217,8 @@ const PayReady = (title, total, tax, value) => {
               cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 20)
             }
           }));
-          console.log('3일 전');
           setCancelTry(true);
-
-          // 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고 
+          // 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
         } else if (new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
@@ -225,7 +226,7 @@ const PayReady = (title, total, tax, value) => {
             params : {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
-              cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 20)
+              cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 10)
             }
           }));
           setCancelTry(true);
@@ -237,6 +238,7 @@ const PayReady = (title, total, tax, value) => {
     // payCancel 들어오면 결제 취소 ! ! !
     useEffect(() => {
       const { params } = data;
+      console.log(params);
       // 트루일 때만 요청 ㄱ ㄱ 
         cancelTry && axios({
             url: "https://kapi.kakao.com/v1/payment/cancel",
