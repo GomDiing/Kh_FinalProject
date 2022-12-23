@@ -248,7 +248,6 @@ function Sign() {
         Navigate('/login');
       }
     } catch (e) {
-      // 예외처리
       if(e.response.data.statusCode === 400){
         alert(e.response.data.message)
       }else{
