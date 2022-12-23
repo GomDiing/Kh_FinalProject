@@ -34,7 +34,7 @@ const PosterStyle = styled.div `
 function Poster(props) {
     const userInfo = useSelector((state) => state.user.info)
     // 별점
-    const [value, setValue] = useState(props.rate);
+    // const [value, setValue] = useState(props.rate);
     const [pCode, setPcode] = useState(props.code);
     
     // 찜하기
@@ -45,11 +45,10 @@ function Poster(props) {
     const wishAddHandler = () => {
         setIsWishAdd(!isWishAdd)
     }
-
+console.log(props.rate);
     useEffect(() => {
-        setValue(props.rate);
         setPcode(props.code);
-    }, [props.code, props.rate])
+    }, [props.code])
 
     console.log(props.code);
 
@@ -93,8 +92,8 @@ function Poster(props) {
                         <img className='poster-box-top' src={props.image} alt='포스터 이미지'/>
                             <div className='poster-box-bottom'>
                                 <div>
-                                    <Rate allowHalf value={value} style={{ fontSize: '1.8rem'}}/>
-                                    <span style={{marginLeft: '6px', fontSize: 'medium'}}>{value}</span>
+                                    <Rate allowHalf value={props.rate} style={{ fontSize: '1.8rem'}}/>
+                                    <span style={{marginLeft: '6px', fontSize: 'medium'}}>{props.rate}</span>
                                 </div>
                                 <div>
                                     <WishBt like={like} onClick={wishHandler}/>

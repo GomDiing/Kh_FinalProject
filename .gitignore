@@ -51,6 +51,8 @@ crawling
 ###
 **/src/main/resources/*.properties
 **/src/main/resources/*.yml
+**/src/main/resources/static/index.html
+**/src/main/resources/static/asset-manifest.json
 
 # dependencies
 src/main/frontend/node_modules
