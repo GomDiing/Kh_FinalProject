@@ -8,7 +8,9 @@ import com.kh.finalproject.entity.enumurate.QnAStatus;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Lob;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * 문의 DTO
@@ -35,7 +37,9 @@ public class QnADTO {
         this.qnaStatus=qna.getStatus().getDescription();
         this.reply = qna.getReply();
 //        this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        this.createTime = qna.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        if(Objects.isNull(qna.getReplyTime()))this.replyTime = "미응답";
+        else this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+
         //홈 회원이면 ID, 소셜 회원이면 이메일 노출
         if (qna.getMember().getProviderType() == MemberProviderType.HOME) this.id = qna.getMember().getId();
         else this.id = qna.getMember().getEmail();

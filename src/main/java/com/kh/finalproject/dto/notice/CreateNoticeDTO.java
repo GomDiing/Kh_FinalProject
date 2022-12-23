@@ -3,6 +3,7 @@ package com.kh.finalproject.dto.notice;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
