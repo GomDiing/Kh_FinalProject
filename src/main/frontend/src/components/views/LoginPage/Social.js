@@ -118,8 +118,8 @@ const SignWrap = styled.div`
 const postCodeStyle = {
     // display: "block",
     position: "absolute",
-    top : "20%",
-    left : "37%",
+    top : "5%",
+    left : "35%",
     width: "500px",
     height: "500px",
     // padding: "7px",
@@ -165,8 +165,8 @@ function Social() {
                             userPoint : res.data.results.point,
                             userName : res.data.results.name,
                             userEmail : res.data.results.email,
-                            userProvider_type : res.data.results.provider_type,
-                            userRole : res.data.results.rile
+                            userProvider_type : res.data.results.providerType,
+                            userRole : res.data.results.memberRoleType
                         }
                         dispatch(loginActions.setUserInfo({data}));
                     }

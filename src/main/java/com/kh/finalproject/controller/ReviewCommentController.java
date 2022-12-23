@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
 import com.kh.finalproject.response.StatusCode;
+import com.kh.finalproject.service.ProductService;
 import com.kh.finalproject.service.ReviewCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -25,6 +25,7 @@ public class SearchRefundCancelReserveDTO {
 //    private String reserveStatus;
     //결제 완료 시간 (시/분/초 단위)
     private String reserveStatus;
+    private Integer totalRefundAmount;
 
     public SearchRefundCancelReserveDTO toDTO(Reserve reserve, Integer count) {
         this.reserveTime = reserve.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -33,6 +34,7 @@ public class SearchRefundCancelReserveDTO {
         this.viewTime = reserve.getReserveTime().getTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
         this.count = count;
         this.reserveStatus = reserve.getStatus().name();
+        this.totalRefundAmount = reserve.getTotalRefundAmount();
 
         return this;
     }

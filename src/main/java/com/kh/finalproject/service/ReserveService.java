@@ -18,7 +18,7 @@ public interface ReserveService {
      * 예매 환불/취소 메서드
      * 적절한 처리 후 상태 변경
      */
-    RefundReserveCancelDTO refundCancel(String reserveId, ReserveStatus status);
+    RefundReserveCancelDTO refundCancel(String reserveId, ReserveStatus status, Integer totalRefundAmount);
 
     /**
      * 예매 취소 메서드
