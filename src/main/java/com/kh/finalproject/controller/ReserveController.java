@@ -40,11 +40,12 @@ public class ReserveController {
     /**
      * 환불 진행 컨트롤러
      */
-    @GetMapping("/refund/{ticket}")
-    public ResponseEntity<DefaultResponse<Object>> refundReserve(@PathVariable String ticket){
+    @GetMapping("/refund/{ticket}/{refund-amount}")
+    public ResponseEntity<DefaultResponse<Object>> refundReserve(@PathVariable String ticket,
+                                                                 @PathVariable("refund-amount") Integer refundAmount){
 
         //예매 환불
-        RefundReserveCancelDTO refund = reserveService.refundCancel(ticket, ReserveStatus.REFUND);
+        RefundReserveCancelDTO refund = reserveService.refundCancel(ticket, ReserveStatus.REFUND, refundAmount);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", refund), HttpStatus.OK);
     }
@@ -56,7 +57,7 @@ public class ReserveController {
     public ResponseEntity<DefaultResponse<Object>> cancelReserve(@PathVariable String ticket){
 
         //예매 취소
-        RefundReserveCancelDTO cancel = reserveService.refundCancel(ticket, ReserveStatus.CANCEL);
+        RefundReserveCancelDTO cancel = reserveService.refundCancel(ticket, ReserveStatus.CANCEL, 0);
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅 중", cancel), HttpStatus.OK);
     }

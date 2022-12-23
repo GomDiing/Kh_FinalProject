@@ -166,6 +166,17 @@ public class ReviewCommentImpl implements ReviewCommentService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_REVIEW_COMMENT));
 //        Integer updateCount = reviewCommentRepository.updateReviewComment(new ReviewComment().UpdateReviewComment(updateReviewCommentDTO), LocalDateTime.now());
         if (findReviewComment.getLayer() == 0) {            // 후기이면
+            //변경된 평점 점수가 있다면 평점 점수 갱신
+            if (!Objects.isNull(findReviewComment.getRate())) {
+                Float oldRate = findReviewComment.getRate();
+                Product changeRateProduct = findReviewComment.getProduct();
+//                log.info("updateReviewCommentDTO.getRate() = {}", updateReviewCommentDTO.getRate());
+//                log.info("oldRate = {}", oldRate);
+                float diffRate =  updateReviewCommentDTO.getRate() - oldRate;
+//                log.info("diffRate = {}", diffRate);
+                changeRateProduct.updateChangeRate(diffRate);
+            }
+            //후기 수정
             findReviewComment.updateEditReview(updateReviewCommentDTO);
         } else if (findReviewComment.getLayer() == 1) {     // 댓글이면
             findReviewComment.updateEditContent(updateReviewCommentDTO);

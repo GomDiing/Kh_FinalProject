@@ -110,15 +110,33 @@ public class Product {
 
     /**
      * 예매 관련 데이터가 null인지 확인하고
-     * 현재 데이터 0 초기화
+     * 평점 회원수, 총 평점, 평균 평점 갱신
      */
     public void updateRate(Float rateTotal) {
+        //null값이면 0으로 초기화
+        updateInit();
+        ++this.rateMemberCount;
+        this.rateTotal += rateTotal;
+        this.rateAverage = this.rateTotal / this.rateMemberCount;
+    }
+
+    /**
+     * 현재 rateTotal이 null이면 0으로 초기화
+     * nullable이 아니라서 초기화 필요
+     */
+    public void updateInit() {
         if (Objects.isNull(this.rateTotal)) {
             this.rateTotal = (float) 0;
             this.rateMemberCount = 0;
         }
-        ++this.rateMemberCount;
-        this.rateTotal += rateTotal;
+    }
+
+    /**
+     * 평점 변경시(후기 변경 등) 평균 평점 다시 계산
+     * @param changeRate: 이전 평점 - 변경 평점
+     */
+    public void updateChangeRate(Float changeRate) {
+        this.rateTotal += changeRate;
         this.rateAverage = this.rateTotal / this.rateMemberCount;
     }
 }

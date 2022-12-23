@@ -20,23 +20,26 @@ public class RefundReserveCancelDTO {
     private String kakaoTID;
     //카카오페이 면세 금액
     private Integer kakaoTaxFreeAmount;
+    private Integer totalRefundAmount;
 
-    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method, String kakaoTID, Integer kakaoTaxFreeAmount) {
+    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method, String kakaoTID, Integer kakaoTaxFreeAmount, Integer totalRefundAmount) {
         this.amount = amount;
         this.discount = discount;
         this.finalAmount = finalAmount;
         this.method = method;
         this.kakaoTID = kakaoTID;
         this.kakaoTaxFreeAmount = kakaoTaxFreeAmount;
+        this.totalRefundAmount = totalRefundAmount;
 
         return this;
     }
 
-    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method) {
+    public RefundReserveCancelDTO toDTO(Integer amount, Integer discount, Integer finalAmount, String method, Integer totalRefundAmount) {
         this.amount = amount;
         this.discount = discount;
         this.finalAmount = finalAmount;
         this.method = method;
+        this.totalRefundAmount = totalRefundAmount;
 
         return this;
     }
