@@ -35,7 +35,7 @@ const WriteReview=(props)=>{
           if(e.response.data.statusCode === 500){
             alert("평점, 제목, 내용을 입력해 주세요")
           }else if(e.response.data.statusCode === 400){
-            alert(e.response.data.message);
+            alert("로그인 후 이용하시기 바랍니다.");
           }else{
             console.log(e);
           }

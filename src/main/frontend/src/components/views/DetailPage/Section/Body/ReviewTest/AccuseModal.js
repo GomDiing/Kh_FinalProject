@@ -26,7 +26,7 @@ const AccuseModal= (props)=> {
             }
         }catch(e){
             if(e.response.data.statusCode === 400){
-                alert(e.response.data.message)
+                alert("로그인 후 이용하시기 바랍니다.")
                 close();
             }else{
                 console.log(e);

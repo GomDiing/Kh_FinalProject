@@ -38,8 +38,8 @@ const ChildReview=(props)=>{
           navigate(0);
         } 
     }catch(e){
-        if(e.res.data.statusCode === 400){
-          alert(e.res.data.message);
+        if(e.response.data.statusCode === 400){
+          alert(e.response.data.message);
         } else{
           console.log(e);
         }
@@ -47,6 +47,7 @@ const ChildReview=(props)=>{
     };
 
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
+    
     // 후기 작성
     const onClickSubmit=async()=>{
       try{
@@ -55,8 +56,8 @@ const ChildReview=(props)=>{
           alert(res.data.message);
         } 
       }catch(e){
-        if(e.res.data.statusCode === 400){
-          alert(e.res.data.message)
+        if(e.response.data.statusCode === 400){
+          alert("로그인 후 이용하시기 바랍니다.")
         }else{
           console.log(e);
         }
@@ -71,7 +72,7 @@ const ChildReview=(props)=>{
       <div>
         <div className="sec-input-container">
         <Form.Control type="text" placeholder="Enter Reply" value={inputContent} onChange={onChangeContent}/>
-         <Button className="child-submit-btn" variant="dark" type="submit" 
+         <Button className="child-submit-btn" variant="dark" 
            onClick={onClickSubmit}>
               등록
           </Button>

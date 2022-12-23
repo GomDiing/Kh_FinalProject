@@ -63,8 +63,8 @@ const ReviewBody=(props)=>{
           navigate(0);
         }
       } catch(e){
-        if(e.res.data.statusCode === 400){
-          alert(e.res.data.message);
+        if(e.response.data.statusCode === 400){
+          alert(e.response.data.message);
         } else{
           console.log(e);
         }
