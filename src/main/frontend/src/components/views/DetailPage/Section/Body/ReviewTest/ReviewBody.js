@@ -14,7 +14,6 @@ import { useNavigate} from "react-router-dom";
 
 
 const ReviewBody=(props)=>{
-
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
   const memberIndex = userInfo.userIndex;
@@ -28,7 +27,6 @@ const ReviewBody=(props)=>{
 
   const [reviews, setReviews] = useState(props.reviewList);
   const navigate = useNavigate();
-
 
   // 댓글 데이터 받아서 페이지값 넘기기
   useEffect(() => {
@@ -57,17 +55,22 @@ const ReviewBody=(props)=>{
     const open = () => setModalOpen(true);
     const close = () => setModalOpen(false);
 
+    // 후기 글 삭제
     const onClickDelete=async(index)=>{
       try{
         const res = await DetailApi.deleteComment(index, memberIndex);
         if(res.data.statusCode === 200){
-          alert("댓글이 삭제되었습니다.")
+          alert(res.data.message)
           navigate(0);
         }
       } catch(e){
-        console.log(e);
+        if(e.res.data.statusCode === 400){
+          alert(e.res.data.message);
+        } else{
+          console.log(e);
+        }
       }
-    }
+    };
 
     return(
         <ReviewBodyBlock>

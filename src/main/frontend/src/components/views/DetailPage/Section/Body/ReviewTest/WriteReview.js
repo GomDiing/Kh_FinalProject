@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Rate } from "antd";
 import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
@@ -22,15 +22,22 @@ const WriteReview=(props)=>{
 
     console.log("해당 공연 정보는?" + props.code);
 
+    // 후기 작성
     const onClickSubmit=async()=>{
+      try{
         const res = await DetailApi.sendComment(memberIndex,inputTitle,inputContent,rate, props.code);
         if(res.data.statusCode === 200){
-          console.log("후기 작성 완료 후 목록으로 이동");
-          alert("공연 후기 작성 성공")
-        } else{
-          console.log("공지사항 작성 실패");
+          alert(res.data.message);
+          } 
+        } catch(e){
+          if(e.res.data.statusCode === 500){
+            alert(e.res.data.message)
+          }else{
+            console.log(e);
+          }
         }
       }
+
     return(
         <WriteReviewBlock>
         <Form className="write-review-container">

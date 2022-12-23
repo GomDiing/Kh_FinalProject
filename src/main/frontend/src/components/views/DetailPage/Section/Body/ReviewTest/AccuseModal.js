@@ -21,8 +21,6 @@ const AccuseModal= (props)=> {
     const onClickAccuse=async()=>{
         try{
             const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
-            console.log(res.data.message);
-            console.log(res.request.response);
             if(res.data.statusCode === 200) {
                 console.log("신고 완료");
                 close();
