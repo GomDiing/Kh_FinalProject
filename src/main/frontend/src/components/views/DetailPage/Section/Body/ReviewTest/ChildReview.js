@@ -8,19 +8,17 @@ import Alert from 'react-bootstrap/Alert';
 import Detail from "../../../Detail";
 
 // 댓글 작성
-
 const ChildReview=(props)=>{
     // 로그인 유저 정보를 리덕스에서 가져옴
     const userInfo = useSelector((state) => state.user.info)
     const memberIndex = userInfo.userIndex;
     const loginMember = userInfo.userId; // 댓글 삭제시 작성 회원만 버튼 보이게
 
-    const [reviews2, setReviews2] = useState(props.reviews);
-
-    const childResult = reviews2.filter(item=>item.layer>0 &&(item.group === props.index)); // 댓글
+    console.log(props.child_comment_list);
 
     const [inputContent, setInputContent] = useState('');
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
+    const [display, setDisplay] = useState(false);
 
     // 댓글 토글 창
     const onClickDisplay=(e)=>{
@@ -44,10 +42,9 @@ const ChildReview=(props)=>{
     };
 
     const group = props.index; // 부모댓글 글 index = 자식 댓글 group
-
     const onClickSubmit=async()=>{
       try{
-        const res = await DetailApi.childComment(memberIndex,group,inputContent,props.code);
+        const res = await DetailApi.childComment(userInfo.userIndex,group,inputContent,props.code);
         if(res.data.statusCode === 200){
           console.log("댓글 작성 완료 후 목록으로 이동");
           alert("댓글 작성 성공!")
@@ -59,8 +56,6 @@ const ChildReview=(props)=>{
         console.log(e);
     }
   }
-
-      const [display, setDisplay] = useState(false);
 
     return(
       <ChildReviewInputBlock>
@@ -76,7 +71,7 @@ const ChildReview=(props)=>{
               등록
           </Button>
         </div>
-      {childResult.map((comment,index,memberId)=>
+      {props.child_comment_list&&props.child_comment_list.map((comment,index,memberId)=>
         <div key={index}>
           <Alert variant="light" className="reply-container">
             <div className="reply-title-container">

@@ -116,7 +116,6 @@ function Detail() {
   
   // 로그인 유저 정보를 리덕스에서 가져옴
   const userInfo = useSelector((state) => state.user.info)
-    
   const [reviewList, setReviewList] = useState([]);
 
   // console.log(code);
