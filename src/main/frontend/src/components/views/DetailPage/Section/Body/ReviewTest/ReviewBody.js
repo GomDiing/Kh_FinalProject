@@ -118,7 +118,7 @@ const ReviewBody=(props)=>{
         </Alert>
         </div>
         ))}
-        <Pagination className="d-flex justify-content-center"
+        <Pagination className="reply-pagination"
              total={totalCount}  //총 데이터 갯수
              current={currentPage} 
              pageSize={pageSize}
@@ -176,4 +176,8 @@ hr{
   color: red;
 
 }
+.reply-pagination{
+  
+}
+
 `;
