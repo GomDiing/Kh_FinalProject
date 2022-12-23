@@ -17,7 +17,7 @@ const AccuseModal= (props)=> {
     const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
 
-    
+
     const onClickAccuse=async()=>{
         try{
             const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
@@ -30,13 +30,12 @@ const AccuseModal= (props)=> {
             } 
         }catch(e){
             if(e.response.data.statusCode === 400){
-                if(e.response.data.error == null){
+                if(e.response.data.errors == null){
                     alert(e.response.data.message);
-                } else if(e.response.data.error !== null){
+                } else if(e.response.data.errors !== null){
                     alert("로그인 후 이용 바랍니다.")
                 }
             }else{
-                alert("로그인 후 이용 바랍니다.");
                 console.log(e);
             }
         }
