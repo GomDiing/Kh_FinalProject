@@ -50,7 +50,7 @@ const Inquiry=(props)=>{
         <TopBar name="큐앤에이 관리"/>
         {/* <p>{qnaList[5].qnaStatus}</p> */}
           <div className="admin-qnalist-container">
-          <Table bordered hover>
+          <Table bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                     <th width = "120px">문의유형</th>

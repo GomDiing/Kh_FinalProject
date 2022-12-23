@@ -174,8 +174,6 @@ const PayReady = (title, total, tax, value) => {
     const viewTime = ticket.view_time;
     const today = new Date();
 
-    console.log(viewTime);
-
     const isSameDate = (date1, date2) => {
       return date1.getFullYear() === date2.getFullYear()
         && date1.getMonth() === date2.getMonth()
@@ -198,16 +196,17 @@ const PayReady = (title, total, tax, value) => {
       }
     });
 
+    // 년도가 크고 월이 작다 일ㅇ;
+    // 예를 들어 22.12.31현재 날짜 공연 날짜가 23.01.01 하루 전이면..
     // 맨처음에 한 번만 실행
-    // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
     useEffect(() => {
       const onPayCancelDate = (view_time, today) => {
         // 년 월 일이 같으면 안댐
         if(isSameDate(new Date(view_time), today)) {
           setCancelTry(false);
           openModal();
-          // 5% 수수료 3일 전
-        } else if (new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
+          // 월이 같을 때 일로 비교 5% 수수료 3일 전
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
@@ -218,8 +217,8 @@ const PayReady = (title, total, tax, value) => {
             }
           }));
           setCancelTry(true);
-          // 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
-        } else if (new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
+          // 월이 같을 때 일로 비교 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
           setData((prevstate) => ({
             // 데이터 객체를 복사
             ...prevstate,
@@ -227,6 +226,18 @@ const PayReady = (title, total, tax, value) => {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
               cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 10)
+            }
+          }));
+          setCancelTry(true);
+          // 나머지는 다 무료
+        } else {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount
             }
           }));
           setCancelTry(true);

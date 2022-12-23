@@ -94,7 +94,7 @@ const NoticeList=()=>{
         <NoticeBlock>
         <TopBar name="공지사항 관리"/>
           <div className="notice-list-container">
-          <Table striped bordered hover>
+          <Table striped bordered hover style={{width : '1350px'}}>
                 <thead>
                   <tr>
                   <th width = "50px">

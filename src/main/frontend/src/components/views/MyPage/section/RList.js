@@ -93,7 +93,7 @@ const RList = () => {
         )
       }
     ];
-    
+
   return(
     <>
     {modalOpen && <ReserveDetailModal open={open} ticket={ticket} close={close} body={<Body />}/>}
