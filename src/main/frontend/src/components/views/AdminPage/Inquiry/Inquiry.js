@@ -50,7 +50,7 @@ const Inquiry=(props)=>{
         <TopBar name="큐앤에이 관리"/>
         {/* <p>{qnaList[5].qnaStatus}</p> */}
           <div className="admin-qnalist-container">
-          <Table striped bordered hover>
+          <Table bordered hover>
                 <thead>
                   <tr>
                     <th width = "120px">문의유형</th>
@@ -69,8 +69,8 @@ const Inquiry=(props)=>{
                     <td>{qnaList.id}</td>
                     <td>{qnaList.createTime}</td>
                     {qnaList.qnaStatus === '응답 완료' 
-                     ? <td style={{color : "olive"}}>{qnaList.qnaStatus}</td> 
-                     : <td style={{color : "red"}}>{qnaList.qnaStatus}</td> 
+                     ? <td style={{color : "black"}}>{qnaList.qnaStatus}</td> 
+                     : <td style={{backgroundColor : "#fdf72d"}}>{qnaList.qnaStatus}</td> 
                     }
                     <td>
                       {qnaList.reply === null && (
