@@ -27,7 +27,7 @@ function WishList() {
         <>
             {wishLish && wishLish.map((list, index) => (
             <React.Fragment key={index}>
-            <GridCards2 image={list.thumb_poster_url} title={list.product_title} />
+            <GridCards2 image={list.thumb_poster_url} title={list.product_title} code={list.product_code}/>
             </React.Fragment>
             ))}
         </>

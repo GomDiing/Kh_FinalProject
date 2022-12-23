@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NowLoading from '../../../util/Loading';
 import xbox from "../../../images/sad.jpg";
+import { Link } from 'react-router-dom';
 
 // 찜목록
 function GridCards2(props) {
@@ -16,10 +17,12 @@ function GridCards2(props) {
         <div lg={6} md={8} xs={24}  style={{paddingBottom: '10px'}}>
             <div>
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
-            <a href={props.url}><img style={{ width: '200px', height: '250px', border: '2px solid blue'}} src={props.image} onError={onErrorImg} alt=""/></a>
+            <Link to={`/detail/${props.code}`} >
+                <img style={{ width: '200px', height: '250px', border: '2px solid blue'}} src={props.image} onError={onErrorImg} alt=""/>
+            </Link>
             </div>
             <div style={{width: '240px'}} >
-            <b style={{color: 'blue'}}>{props.title} </b>
+            <b style={{color: 'blue'}}>{props.title}</b>
             </div>
         </div>
         </div>

@@ -98,7 +98,9 @@ function Agree () {
   const onClickSign = () => {
     if(check2 && check3) {
       navigate('/sign');
-    }    
+    } else {
+      alert("약관 동의 필수 사항은 다 동의하셔야 회원가입 진행이 가능합니다.")
+    }
   }
 
   return(
