@@ -136,7 +136,7 @@ function Sign() {
     // display: "block",
     position: "absolute",
     top : "20%",
-    left : "37%",
+    left : "35%",
     width: "500px",
     height: "500px",
     // padding: "7px",

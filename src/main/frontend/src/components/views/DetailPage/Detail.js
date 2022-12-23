@@ -149,7 +149,7 @@ function Detail() {
       try {
         const res = await DetailApi.getDetail(pCode);
         if(res.data.statusCode === 200){
-          console.log(res.data.results.compact_list.perf_time_break);
+          console.log(res.data.results.compact_list);
           // checkList 특정 요소의 유무 판단
           setCkList(res.data.results.check_list);
           setCastInfo(res.data.results.check_list.is_info_casting);
@@ -177,8 +177,6 @@ function Detail() {
     getData();
   }, [pCode]);
 
-
-
   // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
@@ -194,25 +192,25 @@ function Detail() {
       }
     };
     reviewData();
-  }, [pCode]); 
-  
-  // 최상단 스크롤
-  const handleFollow = () => {
-    setScrollY(window.pageYOffset);
-    if(ScrollY > 100) {
-      setBtnStatus(true);
-    } else {
-      setBtnStatus(false);
-    }
-  }
-  const handleTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-    setScrollY(0);
-    setBtnStatus(false);
-  }
+  }, [pCode]);
+
+  // // 최상단 스크롤
+  // const handleFollow = () => {
+  //   setScrollY(window.pageYOffset);
+  //   if(ScrollY > 100) {
+  //     setBtnStatus(true);
+  //   } else {
+  //     setBtnStatus(false);
+  //   }
+  // }
+  // const handleTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth"
+  //   });
+  //   setScrollY(0);
+  //   setBtnStatus(false);
+  // }
 
   useEffect(() => {
     const watch = () => {
@@ -239,7 +237,7 @@ function Detail() {
             <div className='ItemContainer2'>
             {/* 포스터 */}
             <Content className='posterCon'>
-              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_averrage} code={comList.code}/>
+              <Poster image={`${comList.thumb_poster_url}`} title={comList.title} rate={comList.rate_average} code={comList.code}/>
             </Content>
             {/* 공연정보 */}
             <Content className='DetailInfoContainer' style={{width: '60%' }}>

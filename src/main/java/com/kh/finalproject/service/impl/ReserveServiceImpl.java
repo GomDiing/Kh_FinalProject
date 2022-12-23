@@ -173,7 +173,7 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Transactional
     @Override
-    public RefundReserveCancelDTO refundCancel(String ticket, ReserveStatus status) {
+    public RefundReserveCancelDTO refundCancel(String ticket, ReserveStatus status, Integer totalRefundAmount) {
         //예매ID와 결제 완료된 상태인 예매 조회
         List<Reserve> reserveList = reserveRepository.findByTicketAndStatus(ticket, ReserveStatus.PAYMENT)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
@@ -196,6 +196,7 @@ public class ReserveServiceImpl implements ReserveService {
             //상태 변경 및 환불 시간 갱신
             reserve.updateStatus(status);
             reserve.updateRefundTime(status, LocalDateTime.now());
+            reserve.updateTotalRefundAmount(totalRefundAmount);
 
             //수량 증가 (단일 환불임으로 1만 증가)
             reserveTimeSeatPrice.addQuantity(1);
@@ -212,10 +213,10 @@ public class ReserveServiceImpl implements ReserveService {
 
         }
         if (Objects.isNull(kakaoPay)) {
-            return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod());
+            return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), totalRefundAmount);
 
         }
-        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), kakaoPay.getKakaoTID(), kakaoPay.getKakaoTaxFreeAmount());
+        return new RefundReserveCancelDTO().toDTO(cumuAmount, cumuDiscount, cumuFianlAmount, reserveList.get(0).getMethod(), kakaoPay.getKakaoTID(), kakaoPay.getKakaoTaxFreeAmount(), totalRefundAmount);
     }
 
     @Transactional

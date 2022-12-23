@@ -104,12 +104,19 @@ function TCalendar (props) {
     // 캐스팅 유무
     const [isCasting, setIsCasting] = useState(false);
     const [isTimeCasting, setIsTimeCasting] = useState(false);
-    
+
     // 선택한 날짜
     const selectDay = moment(date, 'YYYY-MM-DD')._d.toLocaleDateString();
     // 1일 전
     const cancelday = moment(date, 'YYYY-MM-DD').subtract(1, 'day')._d.toLocaleDateString();
-
+    function parse(str) {
+      var y = str.substr(0, 4);
+      var m = str.substr(5, 2);
+      var d = str.substr(8, 2);
+      return new Date(y,m-1,d);
+  }
+    // 예매 가능한 첫 날짜
+    const [firstDay, setFirstDay] = useState('');
     const openModal = e => {
       if(turn === 0) {
         alert('회차를 선택해주세요.');
@@ -150,6 +157,8 @@ function TCalendar (props) {
             setSelect([...res.data.results.check_list.reserve_day_in_month]);
             // 캐스팅 정보가 있는지 받음
             setIsCasting(res.data.results.check_list.is_info_casting);
+            // 조회한 달 내에 첫번 째 요소가 최초로 예매 가능 한 날
+            setFirstDay(res.data.results.calendar_list[0].date);
             // 캐스팅 정보가 있을 경우 시간 캐스팅 정보 유무 확인
             isCasting && setIsTimeCasting(res.data.results.check_list.is_info_time_casting);
           } else {
@@ -161,8 +170,8 @@ function TCalendar (props) {
       } catch(e) {
         console.log(e);
       }
-
     }, [isCasting, month, pCode, year]);
+
     useEffect(() => {
       try {
         const chagneReserveDay = async () => {
@@ -200,6 +209,7 @@ function TCalendar (props) {
             prev2Label={null}
             minDetail={month}
             onClickDay={clickDay}
+            activeStartDate={parse(firstDay)}
             onActiveStartDateChange={({ action, activeStartDate, view }) => {
               setYear(activeStartDate.getFullYear());
               setMonth(activeStartDate.getMonth() + 1);

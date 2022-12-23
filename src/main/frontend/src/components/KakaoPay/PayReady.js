@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
 import { ADMIN_KEY } from "../Config";
-import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
+import FindModal from "../views/LoginPage/FindModal";
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
 
@@ -28,11 +28,11 @@ const PayReady = (title, total, tax, value) => {
       // 상품 비과세
       tax_free_amount: tax,
       // 결제 성공 URL
-      approval_url: "http://localhost:3000/payresult",
+      approval_url: "http://localhost:8100/payresult",
       // 결제 실패 URL
-      fail_url: "http://localhost:3000/resultfalse",
+      fail_url: "http://localhost:8100/resultfalse",
       // 결제 취소 URL
-      cancel_url: "http://localhost:3000/resultfalse"
+      cancel_url: "http://localhost:8100/resultfalse"
   }
   });
 
@@ -56,8 +56,8 @@ const PayReady = (title, total, tax, value) => {
       }).catch(error => {
         console.log(error);
       });
-  }, []);
-}
+    }, []);
+  }
 
   const PayResult = () => {
     const [isTrue, setIsTrue] = useState(false);
@@ -72,7 +72,7 @@ const PayReady = (title, total, tax, value) => {
       method : ''
     });
     const [modalOpen, setModalOpen] = useState(true);
-    let search = window.location.search;
+    let search = window.location.search;  
     const data = {
       params: {
         cid: "TC0ONETIME",
@@ -148,10 +148,9 @@ const PayReady = (title, total, tax, value) => {
             </div>
         );
     }
-    
     return(
         <div>
-            {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
+            {modalOpen && <FindModal open={openModal} close={closeModal} body={<Body />} />}
         </div>
     );
   };
@@ -160,116 +159,184 @@ const PayReady = (title, total, tax, value) => {
     const location = useLocation();
     // 넘어온 티켓 정보.
     const ticket = location.state.ticket;
-    console.log(ticket);
     const [cancelTry, setCancelTry] = useState(false);
+    const [canclelTry2, setCancelTry2] = useState(false);
+
+    const navigate = useNavigate();
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => {
+      setModalOpen(false);
+      navigate('/', {replace:true});
+    }
+    
     // 공연 날짜 계산해서 수수료 하는 것은 나중에 ...
     const viewTime = ticket.view_time;
     const today = new Date();
+
+    console.log(viewTime);
+
     const isSameDate = (date1, date2) => {
       return date1.getFullYear() === date2.getFullYear()
         && date1.getMonth() === date2.getMonth()
         && date1.getDate() === date2.getDate();
     }
 
-    const [cancel, setCancel] = useState({
-      // 상품 금액 === 총 금액 / 수량
+    console.log(isSameDate(viewTime, today));
+
+    const [data, setData] = useState({
+      // 티켓 가격
       amount : ticket.final_amount / ticket.count,
-      // 총 금액
-      final_amount : ticket.final_amount,
-      // 상품 수량
+      // 수량
       count : ticket.count,
-      // 상품 비과세
-      tax_free_amount : ticket.kakaoTaxFreeAmount,
-      // 상품 tid
-      tid : ticket.kakaoTID,
+      params: {
+        cid: "TC0ONETIME",
+        // 고유 결제 TID
+        tid : ticket.kakaoTID,
+        // 취소 요청 금액
+        cancel_amount	: 0,
+        // 취소 요청 비과세
+        cancel_tax_free_amount : ticket.kakaoTaxFreeAmount,
+      }
     });
 
+    // 맨처음에 한 번만 실행
     // 공연 날짜랑 현재 날짜랑 당일 취소 x 일단 이번년도는 쉬운데 달 년도 바뀌면 망할 듯.. 임시
-    // useEffect(() => {
-    //   const onPayCancelDate = (reserveTime, today) => {
-    //     if(isSameDate(new Date(reserveTime), today)) {
-    //       setCancelTry(false);
-    //     } else if (new Date(reserveTime).getDate() - today.getDate() >= 3 && new Date(reserveTime).getDate() - today.getDate() > 1) {
-    //       // 3일 전이면 총 금액은 수수료 5% 떼고 취소
-    //     } else if (new Date(reserveTime).getDate() - today.getDate() === 1 && new Date(reserveTime).getDate() - today.getDate() > 0) {
-    //       // 하루 전이면 총 금액 수수료 10% 떼고 취소
-    //       setCancel(state => ({
-    //         ...state,
-    //         final_amount : state.final_amount - Math.floor(state.final_amount / 10)
-    //       }));
-    //     }
-    //   }
-    //   onPayCancelDate(viewTime, today);
-    // }, [viewTime]);
-      const navigate = useNavigate();
-      const [modalOpen, setModalOpen] = useState(false);
-      const openModal = () => setModalOpen(true);
-      const closeModal = () => {
-        setModalOpen(false);
-        navigate('/', {replace:true});
-      }
-      const data = {
-        params: {
-          cid: "TC0ONETIME",
-          tid : cancel.tid,
-          // 취소 가능 금액 결제한 금액만큼 가능 더 크면 -710 Axios Error ! !  
-          cancel_amount	: cancel.final_amount,
-          // 취소 가능 비과세 금액 결제한 비과세 금액만큼 가능 더 크면 위와 동일한 에러 ! ! 
-          cancel_tax_free_amount : cancel.tax_free_amount,
-        }
-      };
-      // payCancel 들어오면 결제 취소 ! ! !
-      useEffect(() => {
-        const { params } = data;
-          axios({
-              url: "https://kapi.kakao.com/v1/payment/cancel",
-              method: "POST",
-              headers: {
-                  Authorization: `KakaoAK ${ADMIN_KEY}`,
-                  "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-              },
-              params,
-          }).then(response => {
-            console.log(response);
-          }).catch(error => {
-            console.log('취소 실패');
-            console.log(error);
-        });
-      }, []);
-
-      useEffect(() => {
-        const payCancel = async () => {
-          try {
-            const response = await PayApi.payCancel(ticket.reserve_ticket);
-            console.log(response);
-            if(response.data.statusCode === 200) {
+    useEffect(() => {
+      const onPayCancelDate = (view_time, today) => {
+        // 년 월 일이 같으면 안댐
+        if(isSameDate(new Date(view_time), today)) {
+          setCancelTry(false);
+          openModal();
+          // 월이 같을 때 일로 비교 5% 수수료 3일 전
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 20)
             }
-          } catch (e) {
-            console.log(ticket.reserve_ticket);
-            console.log(e);
-            console.log('에러!!!');
-          }
+          }));
+          setCancelTry(true);
+          // 월이 같을 때 일로 비교 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 10)
+            }
+          }));
+          setCancelTry(true);
+          // 월이 같을 경우 4일 ~~ 쭉
+        } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(viewTime).getDate() - today.getDate() > 3) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount
+            }
+          }));
+          setCancelTry(true);
+          // 연도 === 연도 && 공연날짜1월 < 현재2월 무료
+        } else if (new Date(viewTime).getFullYear() === today.getFullYear() && new Date(viewTime).getMonth() < today.getMonth()) {
+          setData((prevstate) => ({
+            // 데이터 객체를 복사
+            ...prevstate,
+            params : {
+              // 데이터 안에 params 객체를 복사
+              ...prevstate.params,
+              cancel_amount : ticket.final_amount
+            }
+          }));
+          setCancelTry(true);
         }
-        payCancel();
-        openModal();
-      }, []);
-
-      const Body = () => {
-        return(
-          <div>
-            <h1>환불신청이 정상 처리되었습니다.</h1>
-            <h2>환불기간은 3 ~ 7일 이내로 입금됩니다.</h2>
-            <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
-            <Link replace={true} to='/MyPage/RList'>취소 내역 보러가기</Link>
-          </div>
-        );
       }
-      
+      onPayCancelDate(viewTime, today);
+    }, []);
+
+    // payCancel 들어오면 결제 취소 ! ! !
+    useEffect(() => {
+      const { params } = data;
+      console.log(params);
+      // 트루일 때만 요청 ㄱ ㄱ 
+        cancelTry && axios({
+            url: "https://kapi.kakao.com/v1/payment/cancel",
+            method: "POST",
+            headers: {
+                Authorization: `KakaoAK ${ADMIN_KEY}`,
+                "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+            },
+            params,
+        }).then(response => {
+          console.log(response);
+          // 요청이 완료되면 백엔드에도 전송하기 위해 트루
+          setCancelTry2(true);
+        }).catch(error => {
+          setCancelTry(false);
+          setCancelTry2(false);
+          openModal();
+          console.log(error);
+      });
+    }, [cancelTry, data]);
+    
+    useEffect(() => {
+      console.log(data.params);
+      const payCancel = async () => {
+        try {
+          const response = await PayApi.payCancel(ticket.reserve_ticket, data.params.cancel_amount);
+          console.log(response);
+          if(response.data.statusCode === 200) {
+            setCancelTry2(true);
+          } else {
+            setCancelTry(false);
+            setCancelTry2(false);
+            openModal();
+          }
+        } catch (e) {
+          console.log(e);
+          console.log('에러!!!');
+        }
+      }
+      cancelTry && canclelTry2 && payCancel();
+      openModal();
+    }, [cancelTry, canclelTry2, data.params, ticket.reserve_ticket]);
+
+    const Body = () => {
       return(
         <div>
-          {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
+          <h3>환불신청이 정상 처리되었습니다.</h3>
+          <h4>환불기간은 3 ~ 7일 이내로 입금됩니다.</h4>
+          <h5>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h5>
+          <Link replace={true} to='/MyPage/CList'>취소 내역 보러가기</Link>
         </div>
       );
-    };
+    }
+
+    const Body2 = () => {
+      return(
+        <div>
+          <p style={{fontSize: '22px', color : 'silver'}}>환불신청이 처리되지 않았습니다.</p>
+          <p style={{fontSize: '22px', color : 'silver'}}>회원님이 예매하신 공연이 당일이라 취소가 불가능합니다..</p>
+          <p style={{fontSize: '22px', color : 'silver'}}>문의 사항이 있으시면 아래 링크를 통해 문의 부탁드립니다.</p>
+          <p><Link replace={true} to='/MyPage/Contact'>문의하러 가기</Link></p>
+          <p><Link replace={true} to='/MyPage/CList'>취소 내역 보러가기</Link></p>
+        </div>
+      );
+    }
+      
+    return(
+      <div>
+        {modalOpen && cancelTry && canclelTry2 && <FindModal open={openModal} close={closeModal} body={<Body />} />}
+        {modalOpen && !cancelTry && <FindModal open={openModal} close={closeModal} body={<Body2 />} />}
+      </div>
+    );
+  };
 
 export { PayReady, PayResult, PayCancel };

@@ -3,6 +3,7 @@ package com.kh.finalproject.dto.reviewComment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
@@ -33,7 +34,9 @@ public class ReviewCommentDTO {
     public ReviewCommentDTO toDTO(ReviewComment reviewComment, Member member){
         this.index = reviewComment.getIndex();
         this.memberIndex = reviewComment.getMember().getIndex();
-        this.memberId = reviewComment.getMember().getId();
+        //홈 회원이면 ID, 소셜 회원이면 이메일 노출
+        if (reviewComment.getMember().getProviderType() == MemberProviderType.HOME) this.memberId = reviewComment.getMember().getId();
+        else this.memberId = reviewComment.getMember().getEmail();
         this.title = reviewComment.getTitle();
         this.like = reviewComment.getLike();
         this.rate = reviewComment.getRate();

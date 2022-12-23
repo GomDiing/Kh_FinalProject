@@ -118,8 +118,8 @@ const SignWrap = styled.div`
 const postCodeStyle = {
     // display: "block",
     position: "absolute",
-    top : "20%",
-    left : "37%",
+    top : "5%",
+    left : "35%",
     width: "500px",
     height: "500px",
     // padding: "7px",
@@ -150,20 +150,33 @@ function Social() {
         // console.log(Join);
         setType(params.get('providerType'));
         console.log(type);
-        const name = params.get('name')
+        // const name = params.get('name')
         const email = params.get('email')
         const provider_type = params.get('providerType')
         const join = params.get('isJoin');
         if(join == 1) {
-            const data = {
-                userName : name,
-                userEmail : email,
-                userProvider_type : provider_type,
-            }
-            dispatch(loginActions.setUserInfo({data}));
-            
+            const getInfo = async() => {
+                try {
+                    const res = await MemberApi.searchId2(email, provider_type);
+                    if(res.data.statusCode === 200) {
+                        const data = {
+                            userIndex : res.data.results.index,
+                            userId : res.data.results.id,
+                            userPoint : res.data.results.point,
+                            userName : res.data.results.name,
+                            userEmail : res.data.results.email,
+                            userProvider_type : res.data.results.providerType,
+                            userRole : res.data.results.memberRoleType
+                        }
+                        dispatch(loginActions.setUserInfo({data}));
+                    }
+                    } catch (e) {
+                    console.log(e);
+                    }
+                }
             alert('로그인 성공')
             Navigate('/')
+            getInfo();
         } 
     },[])
 

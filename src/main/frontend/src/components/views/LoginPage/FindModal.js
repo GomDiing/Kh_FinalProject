@@ -55,7 +55,7 @@ const ModalStyle = styled.div`
         text-align: right;
     }
     .close {
-        padding: 6px 12px;
+        /* padding: 6px 12px; */
         color: black;
         background-color: #dee2e6;
         border-radius: 5px;
@@ -90,7 +90,7 @@ const ModalStyle = styled.div`
 
 function FindModal (props) {
     // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-    const { open, close, type, deleteCancel, deleteClick, footer, header, body } = props;
+    const { open, close, type, deleteCancel, footer, header, body } = props;
     return (
     // 모달이 열릴때 openModal 클래스가 생성된다.
     <ModalStyle>
@@ -108,7 +108,7 @@ function FindModal (props) {
                 {footer}
                 {type === "DELETE" && <button className="close" onClick={deleteCancel}>확인</button>}
                 <button className="close" onClick={close} >
-                취소
+                Close
                 </button>
             </footer>
             </section>

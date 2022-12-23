@@ -146,7 +146,10 @@ public class ReviewComment extends BaseTimeEntity {
     //후기 수정
     public void updateEditReview(UpdateReviewCommentDTO updateReviewCommentDTO) {
         this.content = updateReviewCommentDTO.getContent();
-        if (Objects.isNull(updateReviewCommentDTO.getRate())) this.rate = updateReviewCommentDTO.getRate();
+        //변경된 평점이 있다면 현 후기 평점 변경
+        if (!Objects.isNull(updateReviewCommentDTO.getRate())) {
+            this.rate = updateReviewCommentDTO.getRate();
+        }
     }
 
     //댓글 수정
