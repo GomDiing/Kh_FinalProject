@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
 import { ADMIN_KEY } from "../Config";
-import PayPopup from "../views/DetailPage/Section/Popup/PayPopup";
+import FindModal from "../views/LoginPage/FindModal";
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
 
@@ -56,8 +56,8 @@ const PayReady = (title, total, tax, value) => {
       }).catch(error => {
         console.log(error);
       });
-  }, []);
-}
+    }, []);
+  }
 
   const PayResult = () => {
     const [isTrue, setIsTrue] = useState(false);
@@ -72,7 +72,7 @@ const PayReady = (title, total, tax, value) => {
       method : ''
     });
     const [modalOpen, setModalOpen] = useState(true);
-    let search = window.location.search;
+    let search = window.location.search;  
     const data = {
       params: {
         cid: "TC0ONETIME",
@@ -150,7 +150,7 @@ const PayReady = (title, total, tax, value) => {
     }
     return(
         <div>
-            {modalOpen && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
+            {modalOpen && <FindModal open={openModal} close={closeModal} body={<Body />} />}
         </div>
     );
   };
@@ -251,34 +251,41 @@ const PayReady = (title, total, tax, value) => {
           // 요청이 완료되면 백엔드에도 전송하기 위해 트루
           setCancelTry2(true);
         }).catch(error => {
+          setCancelTry(false);
+          setCancelTry2(false);
+          openModal();
           console.log(error);
       });
     }, [cancelTry, data]);
-
+    
     useEffect(() => {
+      console.log(data.params);
       const payCancel = async () => {
         try {
-          const response = await PayApi.payCancel(ticket.reserve_ticket);
+          const response = await PayApi.payCancel(ticket.reserve_ticket, data.params.cancel_amount);
           console.log(response);
           if(response.data.statusCode === 200) {
             setCancelTry2(true);
+          } else {
+            setCancelTry(false);
+            setCancelTry2(false);
+            openModal();
           }
         } catch (e) {
-          console.log(ticket.reserve_ticket);
           console.log(e);
           console.log('에러!!!');
         }
       }
       cancelTry && canclelTry2 && payCancel();
       openModal();
-    }, [cancelTry, canclelTry2, ticket.reserve_ticket]);
+    }, [cancelTry, canclelTry2, data.params, ticket.reserve_ticket]);
 
     const Body = () => {
       return(
         <div>
-          <h1>환불신청이 정상 처리되었습니다.</h1>
-          <h2>환불기간은 3 ~ 7일 이내로 입금됩니다.</h2>
-          <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
+          <h3>환불신청이 정상 처리되었습니다.</h3>
+          <h4>환불기간은 3 ~ 7일 이내로 입금됩니다.</h4>
+          <h5>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h5>
           <Link replace={true} to='/MyPage/CList'>취소 내역 보러가기</Link>
         </div>
       );
@@ -287,19 +294,19 @@ const PayReady = (title, total, tax, value) => {
     const Body2 = () => {
       return(
         <div>
-          <h1>환불신청이 처리되지 않았습니다.</h1>
-          <h2>회원님이 예매하신 공연이 당일이라 취소가 불가능합니다..</h2>
-          <h3>문의 사항이 있으시면 아래 링크를 통해 문의 부탁드립니다.</h3>
-          <Link replace={true} to='/MyPage/Contact'>문의하러 가기</Link>
-          <Link replace={true} to='/MyPage/CList'>취소 내역 보러가기</Link>
+          <p style={{fontSize: '22px', color : 'silver'}}>환불신청이 처리되지 않았습니다.</p>
+          <p style={{fontSize: '22px', color : 'silver'}}>회원님이 예매하신 공연이 당일이라 취소가 불가능합니다..</p>
+          <p style={{fontSize: '22px', color : 'silver'}}>문의 사항이 있으시면 아래 링크를 통해 문의 부탁드립니다.</p>
+          <p><Link replace={true} to='/MyPage/Contact'>문의하러 가기</Link></p>
+          <p><Link replace={true} to='/MyPage/CList'>취소 내역 보러가기</Link></p>
         </div>
       );
     }
       
     return(
       <div>
-        {modalOpen && cancelTry && canclelTry2 && <PayPopup open={openModal} close={closeModal} body={<Body />} />}
-        {modalOpen && !cancelTry && <PayPopup open={openModal} close={closeModal} body={<Body2 />} />}
+        {modalOpen && cancelTry && canclelTry2 && <FindModal open={openModal} close={closeModal} body={<Body />} />}
+        {modalOpen && !cancelTry && <FindModal open={openModal} close={closeModal} body={<Body2 />} />}
       </div>
     );
   };
