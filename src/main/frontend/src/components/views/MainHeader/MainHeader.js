@@ -112,7 +112,6 @@ const MainHeader = () =>{
     const clickCategory = (e ,a) =>{
         window.localStorage.setItem("category" , e)
         window.localStorage.setItem("categoryName" , a)
-    
     }
     // 앤터키 누르면 검색
     const EnterKeypress = () =>{

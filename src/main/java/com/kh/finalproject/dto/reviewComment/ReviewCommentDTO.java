@@ -41,7 +41,7 @@ public class ReviewCommentDTO {
         this.group = reviewComment.getGroup();
         this.layer = reviewComment.getLayer();
         this.order = reviewComment.getOrder();
-        this.reviewCommentStatus = reviewComment.getStatus().getStatus();
+        this.reviewCommentStatus = reviewComment.getStatus().name();
         this.accuseCount = reviewComment.getAccuseCount();
         this.productCode = reviewComment.getProduct().getCode();
         this.createTime = reviewComment.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));

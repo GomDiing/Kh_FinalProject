@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form';
 import DetailApi from '../../../../../../api/DetailApi';
 import { useSelector } from 'react-redux';
 
-
 const AccuseModal= (props)=> {
     const userInfo = useSelector((state) => state.user.info)
     const victimIndex= userInfo.userIndex;
@@ -14,24 +13,23 @@ const AccuseModal= (props)=> {
 
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
     const { open, close, header} = props;
-    // const { open, close, header,index,memberIndex} = props;
 
-    
     const [reason, setReason] = useState("광고");
     const onChangeSelect=(e)=>{setReason(e.target.value);}
 
     const onClickAccuse=async()=>{
         try{
             const res = await DetailApi.accuseComment(props.memberIndex,victimIndex,reason,props.index,);
-            // const res = await DetailApi.accuseComment(memberIndex,victimIndex,reason,index,);
-
             if(res.data.statusCode === 200) {
-                console.log("신고 완료");
+                alert(props.title+" "+res.data.message);
                 close();
-            }
+            }else {
+                console.log(res.data.message);
+                alert("중복신고되었습니다.")
+            } 
         }catch(e){
             if(e.response.data.statusCode === 400){
-                alert(e.response.data.message)
+                alert("로그인 후 이용하시기 바랍니다.")
                 close();
             }else{
                 console.log(e);
@@ -81,7 +79,7 @@ const AccuseModalBlock=styled.div`
         bottom: 0;
         left: 0;
         z-index: 30;
-        /* background-color: rgba(0, 0, 0, 0.6); */
+        background-color: rgba(0, 0, 0, 0.6);
     }
     .modal button {
         outline: none;

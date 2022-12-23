@@ -39,8 +39,6 @@ const ReviewBody=(props)=>{
           setTotalCount(res.data.results.totalResults); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
           setCurrentPage(res.data.results.page);
-        } else {
-          alert("리스트 조회가 안됩니다.")
         } 
       } catch (e) {
         console.log(e);
@@ -54,20 +52,7 @@ const ReviewBody=(props)=>{
     const [modalOpen, setModalOpen] = useState(false);
     // const open = () => setModalOpen(true);
     const open = (index) => setModalOpen(index);
-
     const close = () => setModalOpen(false);
-
-    // const openModal = (index, member) => {
-    //   console.log("모달" + index, member);
-    //   setModalOpen(true);
-    //   // <AccuseModal
-    //   //   // props 넘겨줄것들
-    //   //   open={true} 
-    //   //   close={false}
-    //   //   index={index}
-    //   //   memberIndex={member}
-    //   //    />
-    // }
 
     // 후기 글 삭제
     const onClickDelete=async(index)=>{
@@ -78,8 +63,8 @@ const ReviewBody=(props)=>{
           navigate(0);
         }
       } catch(e){
-        if(e.res.data.statusCode === 400){
-          alert(e.res.data.message);
+        if(e.response.data.statusCode === 400){
+          alert(e.response.data.message);
         } else{
           console.log(e);
         }
@@ -101,16 +86,14 @@ const ReviewBody=(props)=>{
                   <Form.Label className="review-id">{createTime}</Form.Label>
                   {/* 신고 */}
                   <AlertOutlined style={{alignItem: 'baseline', color: 'red', fontSize: '1.5rem'}}
-                  onClick={()=>open(index)
-
-                  }/>
-
+                  onClick={()=>open(index)}/>
                   {modalOpen === index &&<AccuseModal
                   // props 넘겨줄것들
                   open={open} 
                   close={close}
                   index={index}
                   memberIndex={memberIndex}
+                  title={title}
                    />}
                   {/* <Form.Label className="review-like">{like}</Form.Label> */}
               </div>

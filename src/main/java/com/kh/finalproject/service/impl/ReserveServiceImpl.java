@@ -178,6 +178,10 @@ public class ReserveServiceImpl implements ReserveService {
         List<Reserve> reserveList = reserveRepository.findByTicketAndStatus(ticket, ReserveStatus.PAYMENT)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
 
+        if (reserveList.isEmpty()) {
+            throw new CustomException(CustomErrorCode.EMPTY_RESERVE);
+        }
+
         KakaoPay kakaoPay = null;
 
         Integer cumuAmount = 0;

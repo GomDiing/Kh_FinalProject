@@ -116,13 +116,13 @@ const SignWrap = styled.div`
 } 
 `
 const postCodeStyle = {
-display: "block",
-position: "relative",
-top: "2%",
-right: "2%",
-width: "500px",
-height: "500px",
-padding: "7px",
+    // display: "block",
+    position: "absolute",
+    top : "20%",
+    left : "37%",
+    width: "500px",
+    height: "500px",
+    // padding: "7px",
 };
 
 function Social() {
@@ -268,10 +268,13 @@ function Social() {
             <div className='addrContainer' id='popupDom'>
                 <div>
                 <div className='AddrBtn'>
+                    {isOpen ? 
+                    <button className='btn btn--primary' onClick={onClose} type='button'>Close</button>
+                    :    
                     <button className="btn btn--primary" type='button' onClick={onOpen}>Address</button>
+                }
                 {isOpen && (
                     <>
-                    <button className='btn btn--primary' onClick={onClose} type='button'>닫기</button>
                     <PopupDom>
                         <DaumPostcodeEmbed style={postCodeStyle} onComplete={handlePostCode} />
                     </PopupDom>

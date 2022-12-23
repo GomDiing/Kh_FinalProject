@@ -46,6 +46,7 @@ public enum CustomErrorCode {
     EMPTY_CASTING(StatusCode.BAD_REQUEST, "CA001", "조회한 캐스팅 정보가 없습니다"),
     EMPTY_RESERVE_TIME(StatusCode.BAD_REQUEST, "RT001", "조회한 예매 정보가 없습니다"),
     ERROR_LAYER(StatusCode.BAD_REQUEST, "RC001", "레이어값이 올바르지 않습니다"),
+    ERROR_RATE(StatusCode.BAD_REQUEST, "RC002", "후기 작성이 평점 입력은 필수입니다"),
 
     EMPTY_RESERVE_TIME_CASTING(StatusCode.BAD_REQUEST, "RTC001", "조회한 시간별 예매 정보가 없습니다"),
     ERROR_REMAIN_QUANTITY(StatusCode.BAD_REQUEST, "RTC002", "잔여 좌석이 부족합니다"),
