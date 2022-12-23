@@ -45,7 +45,7 @@ const ReviewBody=(props)=>{
         if(res.data.statusCode === 200) {
           setReviewList2([reviewList2, res.data.results]);
           // 페이징 시작
-          setTotalCount(props.reviewList[1].length); 
+          // setTotalCount(props.reviewList[1].length); 
           // db에서 잘라준 size 별로 잘랐을때 나온 페이지 수
           setCurrentPage(1);
         } else {
@@ -85,7 +85,7 @@ const ReviewBody=(props)=>{
 
     return(
         <ReviewBodyBlock>
-        {motherResult&&motherResult.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
+        {reviews&&reviews.map(({index,memberIndex,memberId, title, content, rate, like,group,productCode,createTime})=>(
           // 배열 key 값 index로 잡음(글 고유 index)
         <div key={index}>
           <Alert variant="secondary" className="first-comment-container">

@@ -27,7 +27,7 @@ const DetailApi={
         }
         return await axios.post(TCAT_DOMAIN+"/api/review/add", params, HEADER);
     },
-    // 공연 후기 수정
+    // 공연 후기 수정 (프론트 수정은 없음)
     updateComment : async function(memberIndex,commentIndex,content){
         const params = {
             memberIndex : memberIndex,
@@ -48,7 +48,8 @@ const DetailApi={
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode,currentPage ,setPageSize){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}`, HEADER)
+        // ?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex,victimIndex,reason,reviewIndex,){
