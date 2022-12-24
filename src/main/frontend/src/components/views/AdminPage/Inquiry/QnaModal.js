@@ -126,7 +126,6 @@ const QnaModal = (props) => {
             alert('문의 답변이 정상적으로 전송 되었습니다.');
             close(true);
             navigate(0);
-            
         } else {
             alert('문의 답변이 전송이 실패 하였습니다.');
             e.preventDefault();

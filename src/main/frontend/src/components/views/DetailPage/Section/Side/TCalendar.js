@@ -14,9 +14,11 @@ const SideWrap = styled.div`
         font-size: medium;
     }
     // a태그 속성제거 (모바일)
-    a {
-        color: black;
-        text-decoration: none;
+    button {
+      a {
+          color: black;
+          text-decoration: none;
+      }
     }
     .react-calendar__navigation {
         button {
@@ -45,11 +47,13 @@ const Styleside = styled.div`
         border-bottom-right-radius: 0.6rem;
         border-top-left-radius: 0.6rem;
         border-bottom-left-radius: 0.6rem;
-        width: 120px;
+        width: 140px;
         height: 45px;
         background-color: white;
         margin-left: 0.15rem;
         margin-right: 0.15rem;
+        font-size: large;
+        font-weight: bold;
     }
     .button:focus {
         color: #EF3F43;

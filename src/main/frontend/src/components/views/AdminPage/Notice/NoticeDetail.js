@@ -97,6 +97,7 @@ const DetailBlock=styled.div`
         /* display: block; */
         height: 500px;
         border-bottom: 1px solid #dae0e9;
+        overflow: hidden;
     }
     .buttonWrap{
         text-align: center;
@@ -106,9 +107,9 @@ const DetailBlock=styled.div`
       border: none;
       margin: 15px 0;
       margin: 20px 10px;
-      background-color: #f5f5f5;
+      background-color: #92A9BD;
       border-radius: 5px;
       width: 150px;
-      height: 50px;
+      height: 35px;
     }
 `;

@@ -35,12 +35,12 @@ const HeaderBlock=styled.div`
 function AdminPage() {
   const userInfo = useSelector((state) => state.user.info);
 
-  if(!userInfo.userEmail) {
-    // 상세 url 주소로 바꿔야함 나중에
-    alert("어딜 감히")
-    document.location.href="http://localhost:3000"
-    // document.location.href="http://localhost:8100"
-  } 
+  // if(!userInfo.userEmail) {
+  //   // 상세 url 주소로 바꿔야함 나중에
+  //   alert("어딜 감히")
+  //   document.location.href="http://localhost:3000"
+  //   // document.location.href="http://localhost:8100"
+  // } 
   
   return (
     <div style={{display : "flex", flexDirection:"column", flex : 1, height : '100vh', width : "100%", minWidth : '1024px'}}>
@@ -91,7 +91,7 @@ function SideMenu() {
                     {label : "블랙리스트", key:"/admin/black"}], icon:<UserOutlined/>},
         {label:"게시물관리", key:"/admin/enroll", icon:<LayoutOutlined />},
         {label:"광고관리", key:"/admin/ad", icon:<BulbOutlined />},
-        {label:"공지사항 관리", key:"/admin/noticeList", icon:<SolutionOutlined/>},
+        {label:"공지관리", key:"/admin/noticeList", icon:<SolutionOutlined/>},
         {label:"1대1 문의", key:"/admin/inquiry", icon:<WhatsAppOutlined />},
         {label:"로그아웃", key:'로그아웃', icon:<PoweroffOutlined/>,danger:true},
     ]}>

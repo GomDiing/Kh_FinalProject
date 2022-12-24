@@ -44,7 +44,7 @@ const WriteNotice=()=>{
                     </div>
                     <div className="buttonWrap">
                         <button className="noticeBtn" onClick={()=>{navigate('/admin/noticeList')}}>뒤로가기</button>
-                        <button className="noticeBtn" onClick={onClickSubmit}>등록하기</button>
+                        <button className="noticeBtn" onClick={onClickSubmit}>작성</button>
                     </div>
                 </div>
         </WriteBlock>
@@ -75,6 +75,7 @@ const WriteBlock=styled.div`
             height: 50px;
             width: 60vw;
             padding-left: 20px;
+            border-radius: 5px;
         }
     }
     .notice-write-content{
@@ -88,6 +89,8 @@ const WriteBlock=styled.div`
             padding-left: 20px;
             padding-top: 20px;
             resize: none;
+            border-radius: 5px;
+            /* border: #f5f5f5 4px; */
         }
     }
     .buttonWrap{
@@ -98,10 +101,10 @@ const WriteBlock=styled.div`
         border: none;
         margin: 15px 0;
         margin: 20px 10px;
-        background-color: #f5f5f5;
+        background-color: #92A9BD;
         border-radius: 5px;
-        width: 150px;
-        height: 50px;
+        width: 100px;
+        height: 35px;
     }
 
 `;
