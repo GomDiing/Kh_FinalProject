@@ -117,11 +117,11 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   },
   // 회원탈퇴
-  deleteMmeber : async function(id, password, providerType) {
+  deleteMmeber : async function(id, password) {
     const delteMemberObj = {
       id : id,
       password : password,
-      providerType : providerType
+      providerType : 'HOME'
     }
     return await axios.post(TCAT_DOMAIN + '/api/member/delete', delteMemberObj, HEADER);
   }
