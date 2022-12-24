@@ -1,10 +1,16 @@
+
 /*global kakao*/
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 
 const MapModalBodyContainer = styled.div`
     .Map{
-        margin-bottom: 55px;
+        div{
+            margin: 0;
+        }
+        padding: 0;
+        margin-top: 0;
+        margin-bottom: 50px;
     }
     main {
         padding: 0;
@@ -72,8 +78,8 @@ const MapModalBody = (props) =>{
     }, [mapL.y, mapL.x])
 
     return(
-        <MapModalBodyContainer>
-            <div className="Map" id="map" style={{ width: "665px", height: "600px"}}></div>
+        <MapModalBodyContainer >
+            <div className="Map" id="map" style={{ width: "665px", height: "500px" }}></div>
         </MapModalBodyContainer>
     )
 }

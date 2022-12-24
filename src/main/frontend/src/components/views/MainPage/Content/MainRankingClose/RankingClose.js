@@ -69,6 +69,9 @@ const MainPoster2Container = styled.div`
         width: 230px;
         margin: 0 5px;
     }
+    li:hover{
+        font-weight: bold;
+    }
     p{
         text-align: center;
         margin:0px;

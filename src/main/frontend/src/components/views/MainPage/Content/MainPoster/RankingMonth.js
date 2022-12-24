@@ -35,6 +35,9 @@ const PosterImgContainer = styled.div`
         height: 280px;
         margin:0 15px;
     }
+    li:hover{
+        font-weight: bold;
+    }
     p{
         width: 110px;
         margin-top:10px;
