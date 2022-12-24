@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = {'Content-Type' :  'application/json'}
-const TCAT_DOMAIN = "http://www.tcat.pe.kr:8100";
+const TCAT_DOMAIN = "https://tcats.tk";
 
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
