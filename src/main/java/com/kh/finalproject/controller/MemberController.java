@@ -25,7 +25,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/member")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MemberController {
     private final MemberService memberService;
 

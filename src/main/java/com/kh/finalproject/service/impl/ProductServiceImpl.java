@@ -267,8 +267,6 @@ public class ProductServiceImpl implements ProductService {
         //오늘 이후 첫번째 예매 정보 조회
         ReserveTime findFirstReserveTime = reserveTimeRepository.findFirstByProductAndTimeAfter(findProduct, LocalDateTime.now())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
-
-        //한정 - 상시 상품 판단
         if (findFirstReserveTime.getTurn() == 0) {
             isLimit = false;
         }
@@ -330,7 +328,6 @@ public class ProductServiceImpl implements ProductService {
         //즉, 월 내 예매 정보 추출
         List<ReserveTime> findReserveTimeWithinMonth = reserveTimeRepository.findAllByProductAndTimeBetween(findProduct, firstPositionOfMonth, lastPositionOfMonth)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
-
         //월 내 예매 정보 Entity 리스트 -> DTO 리스트
         //첫 예매 가능 월 내 예매 가능 날짜 리스트 추가
         for (ReserveTime reserveTime : findReserveTimeWithinMonth) {

@@ -28,11 +28,11 @@ const PayReady = (title, total, tax, value) => {
       // 상품 비과세
       tax_free_amount: tax,
       // 결제 성공 URL
-      approval_url: "http://localhost:8100/payresult",
+      approval_url: "https://tcats.tk/payresult",
       // 결제 실패 URL
-      fail_url: "http://localhost:8100/resultfalse",
+      fail_url: "https://tcats.tk/resultfalse",
       // 결제 취소 URL
-      cancel_url: "http://localhost:8100/resultfalse"
+      cancel_url: "https://tcats.tk/resultfalse"
   }
   });
 
@@ -143,7 +143,7 @@ const PayReady = (title, total, tax, value) => {
         return(
             <div>
                 <h1>결제가 정상 진행 되었습니다.</h1>
-                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT'></img>
+                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT' style={{width: '500px', height: '450px'}}></img>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>
             </div>

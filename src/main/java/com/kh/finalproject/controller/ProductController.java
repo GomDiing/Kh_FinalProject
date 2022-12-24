@@ -22,7 +22,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/product")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
     private final ProductService productService;
