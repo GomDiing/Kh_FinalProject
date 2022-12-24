@@ -49,8 +49,8 @@ const MapModalBody = (props) =>{
             level: 2
         };
         var map = new kakao.maps.Map(mapContainer, mapOption);
-        var imageSrc = 'https://ifh.cc/g/XS4tdd.jpg',
-        imageSize = new kakao.maps.Size(64, 69),
+        var imageSrc = 'https://ifh.cc/g/TVr0T4.png',
+        imageSize = new kakao.maps.Size(70, 75),
         imageOption = {offset: new kakao.maps.Point(27, 69)};
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
@@ -63,23 +63,23 @@ const MapModalBody = (props) =>{
 
         marker.setMap(map);  
 
-        var content = '<div class="customoverlay">' +
-            '    <p class="title">TCAT</p>' +
-            '</div>';
+    //     var content = '<div class="customoverlay">' +
+    //         '    <p class="title">TCAT</p>' +
+    //         '</div>';
 
         var position = new kakao.maps.LatLng(mapL.y, mapL.x);  
 
-        var customOverlay = new kakao.maps.CustomOverlay({
-            map: map,
-            position: position,
-            content: content,
-            yAnchor: 1
-        });
+    //     var customOverlay = new kakao.maps.CustomOverlay({
+    //         map: map,
+    //         position: position,
+    //         content: content,
+    //         yAnchor: 1
+    //     });
     }, [mapL.y, mapL.x])
 
     return(
-        <MapModalBodyContainer >
-            <div className="Map" id="map" style={{ width: "665px", height: "500px" }}></div>
+        <MapModalBodyContainer>
+            <div className="Map" id="map" style={{ width: "665px", height: "500px"}}></div>
         </MapModalBodyContainer>
     )
 }
