@@ -1,6 +1,6 @@
 import axios from "axios";
 const HEADER = {'Content-Type' : 'application/json'}
-const TCAT_DOMAIN = "http://localhost:8100";
+const TCAT_DOMAIN = "http://www.tcat.pe.kr:8100";
 
 const WishLikeApi = {
     addWish : async function(memberIndex, pCode) {
