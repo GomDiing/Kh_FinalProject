@@ -1,6 +1,7 @@
 import axios from "axios";
 const HEADER = {'Content-Type' :  'application/json'}
-const TCAT_DOMAIN = "https://tcats.tk";
+// const TCAT_DOMAIN = "https://tcats.tk";
+const TCAT_DOMAIN = "http://localhost:8100";
 
 const PayApi = {
   // 결제 요청
