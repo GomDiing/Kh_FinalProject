@@ -65,8 +65,8 @@ const MemberList=()=>{
         <MemberBlock>
           <TopBar name="일반회원관리"/>
           <div className="memberList-container">
-          <Table bordered hover style={{width : '1350px'}}>
-                <thead>
+          <Table bordered hover >
+                <thead style={{backgroundColor : '#f5f5f5'}}>
                   <tr>
                   <th width = "30px">
                     <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
@@ -111,6 +111,7 @@ export default MemberList;
 const MemberBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
+  font-family: sans-serif;
   
   .memberList-container {
     align-items: center;

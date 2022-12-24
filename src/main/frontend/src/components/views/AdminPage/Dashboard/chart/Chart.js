@@ -67,9 +67,9 @@ const Chart = (props) => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="income" fill="skyblue" />
-          <Bar dataKey="discount" fill="olive" />
-          <Bar dataKey="all" fill="orange" />
+          <Bar dataKey="income" fill="#FD8A8A" />
+          <Bar dataKey="discount" fill="#F1F7B5" />
+          <Bar dataKey="all" fill="#A8D1D1" />
         </BarChart>
       </ResponsiveContainer>
       </div>
