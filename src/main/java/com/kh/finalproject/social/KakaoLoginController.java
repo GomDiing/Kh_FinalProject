@@ -120,8 +120,8 @@ public class KakaoLoginController {
         } catch (Exception e) {
             throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
-        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
-//        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+//        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
+        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                 .queryParam("socialSuccess", 0)
                 .queryParam("providerType", MemberProviderType.KAKAO.name())
                 .build()
