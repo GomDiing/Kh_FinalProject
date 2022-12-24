@@ -53,7 +53,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByIdAndNameAndEmailAndStatusNotAndProviderType(String id, String name, String email, MemberStatus status, MemberProviderType providerType);
 
-    Optional<List<Member>> findAllByAccuseCountGreaterThan(Integer count);
+    Optional<List<Member>> findAllByStatusAndAccuseCountGreaterThan(MemberStatus status,Integer count);
 
     Optional<Member> findByIdAndPasswordAndStatusNotAndProviderType(String id, String password, MemberStatus status, MemberProviderType providerType);
 

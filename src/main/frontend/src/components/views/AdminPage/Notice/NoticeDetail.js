@@ -87,10 +87,13 @@ const DetailBlock=styled.div`
         border-bottom: 1px solid #dae0e9;
         height: 90px;
         padding: 0 20px;
+        /* width: 80%; */
         line-height: 70px;
     }
     .notice-detail-date{
         float: right;
+        font-weight: bold;
+        margin-left: 10px;
     }
     .notice-detail-content{
         margin-top : 20px;

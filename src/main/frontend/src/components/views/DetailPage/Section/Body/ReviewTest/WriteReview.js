@@ -18,6 +18,7 @@ const WriteReview=(props)=>{
     const navigate = useNavigate();
 
     const onChangeRate =(e)=>{setRate(e);}
+    console.log("평점" + rate);
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
@@ -34,13 +35,18 @@ const WriteReview=(props)=>{
         } catch(e){
           if(e.response.data.statusCode === 400){
             console.log(e.response.data.errors[0].field);
-            if(e.response.data.errors !== null){
-              alert("평점 입력은 필수 입력값입니다.")
+            if(e.response.data.code === 'C001'){
+              alert("로그인해라 ㅋ")
             } 
+            // else{
+            //   alert("후기 제대로 쓰셈")
+            // }
             // else if(e.response.data.errors.field === "memberIndex"){
             //   alert("로그인 후 이용하시기 바랍니다.")
             // }
-          }else if(e.response.data.code === 'C001'){
+          }
+          // else if(e.response.data.code === 'C001'){
+            else{
             alert("로그인하라고 ㅋ")
             console.log(e);
           }

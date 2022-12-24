@@ -40,7 +40,7 @@ const QWrap = styled.div`
 }
 .modal > section > header button {
     position: absolute;
-    top: 15px;
+    top: 10px;
     right: 15px;
     width: 30px;
     font-size: 21px;
@@ -160,3 +160,4 @@ const QnaModal = (props) => {
     );
 };
 export default QnaModal;
+
