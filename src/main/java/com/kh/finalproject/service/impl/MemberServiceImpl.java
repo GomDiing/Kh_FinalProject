@@ -310,7 +310,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 아이디 패스워드로 조회 성공하면
         Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(
-                deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
+                deleteMemberDTO.getId(), deleteMemberDTO.getPassword(), MemberStatus.DELETE, MemberProviderType.valueOf(deleteMemberDTO.getProviderType()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.ERROR_UPDATE_UNREGISTER_MEMBER));
 
         // 조회한 회원의 정보를 DELETE 업데이트 !!
