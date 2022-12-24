@@ -136,6 +136,7 @@ const ReviewBodyBlock = styled.div`
   margin: 0 20px ;
   margin-bottom: 35px;
   background-color: #f5f5f5;
+  overflow: hidden;
 }
 .review-head-container{
   /* display: flexbox; */

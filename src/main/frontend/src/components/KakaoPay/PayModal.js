@@ -99,9 +99,9 @@ function FindModal (props) {
             <section>
             <header>
                 {header}
-                <button className="close" onClick={close}>
+                {/* <button className="close" onClick={close}>
                 &times;
-                </button>
+                </button> */}
             </header>
             <main>{body}</main>
             <footer className='modal-footer'>

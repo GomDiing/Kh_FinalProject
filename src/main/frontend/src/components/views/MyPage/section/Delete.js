@@ -1,4 +1,3 @@
-import Password from "antd/es/input/Password";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,7 @@ function Delete() {
   const handleChangePassword = e => setInputPwd(e.target.value);
   const handelDeleteMember = async () => {
     if(userInfo.userProvider_type !== 'HOME') {
-      alert('소셜 로그인은 회원가입이 불가능합니다.');
+      alert('소셜 로그인은 회원탈퇴가 불가능합니다.');
       navigate('/Mypage');
     } else {
       try {
@@ -20,7 +19,6 @@ function Delete() {
           alert('회원탈퇴 성공 ! ! !');
         } else {
           alert('회원님의 비밀번호가 일치하지 않습니다.');
-          navigate('./');
         }
       } catch(e) {
         console.log('error ! ! !');
@@ -38,8 +36,8 @@ function Delete() {
         <li>탈퇴신청 1주일이 지나면 영구탈퇴가 되므로 주의바랍니다.</li>
       </ul>
       <div style={{display : 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <input style={{width : '300px', height: '40px'}} value={inputPwd} onChange={handleChangePassword} type='text' placeholder='패스워드를 입력 후 확인을 눌러주세요' />
-        <button onClick={handelDeleteMember} type='button'>확인</button>
+        <input style={{width : '280px', height: '40px', margin: '0 5px'}} value={inputPwd} onChange={handleChangePassword} type='text' placeholder='패스워드를 입력 후 확인을 눌러주세요' />
+        <button onClick={handelDeleteMember} style={{padding: '8px 16px', color: '#fff', backgroundColor: '#6c757d', borderRadius: '5px', fontSize: '16px', border: '0px'}} type='button'>확인</button>
       </div>
     </div>
   ); 

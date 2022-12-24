@@ -13,8 +13,8 @@ function GridCards(props) {
     }
     return (
         
-        <div style={{ zIndex: '-1' , display : 'inline-block' , margin : '20px 55px' }}>
-        <div  style={{paddingBottom: '10px'}}>
+        <div style={{ zIndex: '-1' , display : 'inline-block' , margin : '20px' }}>
+        <div >
             <div>
             {/* 렌더링 전 로딩중일시 보이게 */}
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
@@ -22,8 +22,8 @@ function GridCards(props) {
             </div>  
             <div style={{ textAlign : 'center'}} >
                 {/* 배우이름과 배역 */}
-                <b style={{color: 'blue'}}>{props.actor} </b>
-                <br/><b style={{color: 'black'}} >as </b><b style={{color: 'red'}}>{props.character}</b>
+                <br/><b style={{color: 'black'}}>{props.character}</b>
+                <b style={{color: '#9E9E9E'}}>{props.actor}</b>
             </div>
         </div>
         </div>

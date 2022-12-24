@@ -35,7 +35,7 @@ min-width: 930px;
   img{
     /* margin-left: 20px; */
     padding: 20px;
-    width: 80%;
+    width: 77%;
   }
 }
 .topBtn {
@@ -68,12 +68,12 @@ min-width: 930px;
   overflow: auto;
   height: auto;
   position: fixed; 
-  left: 80%;
+  left: 73%;
   /* top: 6.5rem; */
   /* bottom: 0; */
   /* bottom: 200px; */
-  top : 100px;
-  padding-bottom: 30px;
+  top : 70px;
+  padding-bottom: 10px;
 
 }
 .ItemContainer2{
@@ -81,6 +81,10 @@ min-width: 930px;
   display: flex;
   background-color: white;
   width: 100%;
+}
+.castContainer{
+  width: 90%;
+  margin-bottom: 150px;
 }
 @media (max-width: 1225px){
   .DetailContainer{
@@ -117,7 +121,11 @@ min-width: 930px;
 .poster-box-bottom {
   min-width: 520px;
 }
+.castContainer{
+  width: 100%;
 }
+}
+
 `
 
 // 상세페이지
@@ -270,7 +278,7 @@ function Detail() {
             
             <Tab eventKey="cast" title="캐스팅 정보" >
             {castInfo === false ? <h2 style={{margin: '2rem'}}>캐스팅 정보가 없습니다.</h2> : 
-              <div >
+              <div className='castContainer'>
               {cast && cast.map((cast, id) => (
               <React.Fragment key={id}>
               <GridCards  character={cast.character} actor={cast.actor} url={cast.info_url} image={cast.image_url ? `${cast.image_url}` : NoImage}/>
@@ -279,7 +287,8 @@ function Detail() {
             }
             </Tab>
             
-            <Tab eventKey="profile" title="관람후기">
+  
+            <Tab eventKey="profile" title="관람후기" style={{marginBottom : '150px'}}>
               <WriteReview code={comList.code}/>
               <ReviewBody reviewList={reviewList}
               code={comList.code}

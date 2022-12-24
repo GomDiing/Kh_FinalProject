@@ -4,6 +4,7 @@ import styled from "styled-components";
 import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer";
 import MainHeader from "../MainHeader";
+import { LoadingOutlined } from "@ant-design/icons/lib/icons";
 
 const SearchContainer = styled.div`
     width: 100%;
@@ -115,7 +116,8 @@ const CategorySearch = () => {
     const [selectCategory, setSelectCategory] = useState(window.localStorage.getItem("categoryName"));
     const [SearchData , setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
-    
+    const [nowLoading ,setNowLoading] = useState(true);
+
     const Navigate = useNavigate();
     // 화면에 선택한 랭킹 , 카테고리 보여주기위한 함수
     const clickRanking = (e ,a) =>{
@@ -132,7 +134,8 @@ const CategorySearch = () => {
         setSelectCategory(a);
     }
 
-    useEffect(() => {   
+    useEffect(() => {
+        setNowLoading(true);
         const SearchAsync = async() =>{
             try{
                 if(ranking === 'rankingWeek'){
@@ -158,7 +161,8 @@ const CategorySearch = () => {
                 console.log(e);
             }
             setIsFinish(true)
-        }
+        } 
+        setNowLoading(false);
         setIsFinish(false);
         SearchAsync();
         window.localStorage.setItem("category" ,'')
@@ -183,8 +187,8 @@ const CategorySearch = () => {
                     </div>
                 </div>
                 
-
-            {/* 아이탬영역 */}
+            {/* 아이템영역 */}
+                {nowLoading && <LoadingOutlined style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '300px', marginTop: '100px'}} />}
                 <table>
                     <th></th>
                     <th>상품명</th>
@@ -192,7 +196,7 @@ const CategorySearch = () => {
                     <th>기간</th>
                     {isFinish && SearchData.map((SearchData , index)=>(
                     <tr key={index} onClick={()=>{clickItem(SearchData.code)}}>
-                        <td className="imgContainer"><img src={SearchData.product.poster_url}></img></td>
+                        <td className="imgContainer"><img src={SearchData.product.poster_url} alt=''></img></td>
                         <td className="titleContainer">{SearchData.product.title}</td>
                         <td className="addrContainer">{SearchData.product.location}</td>
                         <td className="dayContainer">

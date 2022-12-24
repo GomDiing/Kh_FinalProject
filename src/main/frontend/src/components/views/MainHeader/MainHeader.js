@@ -1,5 +1,4 @@
 import styled from "styled-components";
-// import {UserOutlined} from "@ant-design/icons";
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -9,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../../util/Redux/Slice/userSlice";
 import { RiLoginBoxLine , RiLogoutBoxLine } from "react-icons/ri";
-import { useEffect } from "react";
 
 const HeaderContainer = styled.div`
     @media (max-width : 911px){
