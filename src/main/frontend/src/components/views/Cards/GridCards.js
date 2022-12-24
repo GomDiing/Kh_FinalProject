@@ -13,8 +13,8 @@ function GridCards(props) {
     }
     return (
         
-        <div style={{ zIndex: '-1' , display : 'inline-block' , margin : '20px 55px' }}>
-        <div  style={{paddingBottom: '10px'}}>
+        <div style={{ zIndex: '-1' , display : 'inline-block' , margin : '20px' }}>
+        <div >
             <div>
             {/* 렌더링 전 로딩중일시 보이게 */}
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
