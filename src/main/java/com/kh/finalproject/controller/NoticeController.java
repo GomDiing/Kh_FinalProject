@@ -19,7 +19,8 @@ import java.util.Objects;
 @RestController
 @Slf4j
 @RequestMapping("/api/notice")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class NoticeController {
 
     private final NoticeService noticeService;

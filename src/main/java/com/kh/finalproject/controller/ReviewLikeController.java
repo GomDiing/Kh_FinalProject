@@ -19,7 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/review-like")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewLikeController {
 
     private final ReviewLikeService reviewLikeService;

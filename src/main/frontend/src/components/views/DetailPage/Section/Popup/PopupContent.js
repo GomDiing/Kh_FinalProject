@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice";
-import { loginActions } from "../../../../../util/Redux/Slice/userSlice";
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
 const BodyStyle = styled.div`
