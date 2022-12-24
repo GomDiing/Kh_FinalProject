@@ -1,7 +1,7 @@
 import TopBar from "../Tool/TopBar";
 import styled from "styled-components";
 import { useState, useEffect} from "react";
-import { Link, useNavigate,useParams} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import AdminApi from "../../../../api/AdminApi";
 import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
@@ -9,7 +9,6 @@ import Table from 'react-bootstrap/Table';
 
 const NoticeList=()=>{
   const [loading, setLoading] = useState(false);
-  const params = useParams().index;
   const navigate = useNavigate();
 
   //  리액트 페이지네이션 변수 
@@ -79,7 +78,7 @@ const NoticeList=()=>{
       if(checkItems.length<1){
         alert("체크박스 한개 이상 체크해주세요")
         navigate(0);
-      } else{
+      } else {
         const res = await AdminApi.noticeCheck(checkItems);
         console.log(checkItems);
         alert("공지가 삭제되었습니다.")
@@ -125,15 +124,15 @@ const NoticeList=()=>{
             </Table>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
-             current={currentPage} 
-             pageSize={pageSize}
-             onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
-             />
-            <div className="buttonWrap">
-                <button className="noticeBtn" onClick={onClickDelete}>글삭제</button>
-                <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>글쓰기</button>
+              current={currentPage} 
+              pageSize={pageSize}
+              onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
+              />
+              <div className="buttonWrap">
+                  <button className="noticeBtn" onClick={onClickDelete}>글삭제</button>
+                  <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>글쓰기</button>
+              </div>
             </div>
-             </div>
         </NoticeBlock>
     );
 }

@@ -6,7 +6,6 @@ import AdminApi from "../../../api/AdminApi";
 import { useNavigate} from "react-router-dom";
 import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
 
 const BlackList=()=>{
   const navigate = useNavigate();

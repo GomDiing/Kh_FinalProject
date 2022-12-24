@@ -3,9 +3,6 @@ import RecentComment from "./recentComment/RecentComment";
 import FeaturedInfo from "./featuredInfo/FeaturedInfo";
 import Chart from "./chart/Chart";
 import Profile from "./profile/Profile";
-import { useEffect, useState } from "react";
-import AdminApi from "../../../../api/AdminApi";
-
 
 
 const AdminBlock=styled.div`

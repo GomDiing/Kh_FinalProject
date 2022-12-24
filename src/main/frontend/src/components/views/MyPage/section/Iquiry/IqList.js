@@ -1,8 +1,6 @@
 import React from 'react';
 import { useState,useEffect } from "react";
-import styled from "styled-components";
 import { Divider,Pagination} from 'antd';
-import { useNavigate } from 'react-router-dom';
 import MemberApi from '../../../../../api/MemberApi';
 import IqModal from '../../../../views/MyPage/section/Iquiry/IqModal'
 import { Table } from 'react-bootstrap';
@@ -23,34 +21,8 @@ const IqList=()=> {
   const [modalOpen, setModalOpen] = useState(false);
   const open = () => setModalOpen(true);
   const close = () => setModalOpen(false);
-  const navigate = useNavigate();
 
   const userInfo = useSelector((state) => state.user.info)
-
-//   const columns = [
-//     {
-//       title: '문의유형',
-//       dataIndex: 'category',
-//     },
-//     {
-//         title: '문의내용',
-//         dataIndex: 'content',
-//     },
-//     {
-//         title: '문의 날짜',
-//         dataIndex: 'createTime',
-//     },
-//     {
-//         title: '상태',
-//         dataIndex: 'qnaStatus',
-//     },
-//     {
-//         title: '답장',
-//         dataIndex: 'modal',
-//         key: 'modal',
-//         render: () => <button onClick={()=>{setModalOpen(true)}}>답장</button>
-//     }
-// ];
 
   /** qna 목록을 가져오는 useEffect */
   useEffect(() => {
@@ -119,8 +91,6 @@ console.log(qnaList);
         </Table>
       </IqModal>
 
-    {/* {modalOpen && <IqModal open={open} close={close} index={index}/>}
-    <Table columns={columns} dataSource={qnaList} size="middle"/> */}
     <Pagination className="d-flex justify-content-center"
     total={totalCount}  //총 데이터 갯수
     current={currentPage} 
@@ -132,27 +102,4 @@ console.log(qnaList);
 }
 
 export default IqList;
-
-const MypageQnaBlock = styled.div`
-    margin:0 auto;
-    box-sizing: border-box;
-tr{
-    height: 35px;
-}
-.qnaBtn{
-  border: none;
-  background-color: transparent;
-}
-.table-container{
-  text-align: center;
-  justify-content: center; //왜 중앙으로 안바뀌냐 
-}
-.reply-tr{
-  margin: 20px;
-  text-align: center;
-}
-.reply-th{
-  width: 100px;
-}
-`;
 

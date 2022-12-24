@@ -1,4 +1,3 @@
-import TopBar from '../../Tool/TopBar';
 import './profile.css';
 import '../adminButton.css';
 
@@ -40,7 +39,7 @@ const Profile=()=>{
     return(
         <>
         <div className="profile-container">
-        <button class="button-53" role="button">관리자</button>
+        <button class="button-53" type="button">관리자</button>
             {data.map(p=>(
         <ul className='profile-list'>
             <li className='listItem'>

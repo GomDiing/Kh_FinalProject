@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useNavigate,useParams} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TopBar from "../Tool/TopBar";
 import { useState } from "react";
 import AdminApi from "../../../../api/AdminApi";

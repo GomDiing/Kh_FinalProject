@@ -2,12 +2,10 @@ import styled from "styled-components";
 import TopBar from "./Tool/TopBar";
 import { useState, useEffect } from "react";
 import AdminApi from "../../../api/AdminApi";
-import { useNavigate} from "react-router-dom";
 import { Pagination } from "antd";
 import Table from 'react-bootstrap/Table';
 
 const MemberList=()=>{
-  const navigate = useNavigate();
   // 페이지네이션 변수
   const [memberList, setMemberList] = useState([]);
   const [pageSize, setPageSize] = useState(8); // 한페이지에 몇개씩 있을건지
@@ -126,7 +124,6 @@ const MemberBlock=styled.div`
 	white-space:nowrap;
 	text-overflow:ellipsis;
 	max-width:100px;
-}
+    }
   }
- 
 `;

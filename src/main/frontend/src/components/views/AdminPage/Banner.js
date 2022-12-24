@@ -10,12 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const Banner=()=>{
-    // 배너 제목, 링크 클릭시 이동 주소 담는 값
-    const [title, setTitle] = useState("");
-    const [adUrl, setAdUrl] = useState("");
-    const[image, setImage] = useState("");
-    // 사진 업로드 하고 담는 값
-
     // const StudyWrite = (studyObj) => {
         const [attachment, setAttachment] = useState("");
         const [imageList, setImageList] =useState([]);
@@ -96,7 +90,7 @@ const Banner=()=>{
                 console.log("삭제실패");
             }
         }
-       
+
     return(
         <BannerBlock>
             <div className="BannerContainer">
@@ -121,21 +115,7 @@ const Banner=()=>{
                     <li><img src={url} alt="" onClick={()=>{onSelecet(url)}}/></li>
                 </ul>
         ))} 
-        
-        {/* <button className="uploadAd">배너 등록하기</button>
-        <h3>이미지 미리보기</h3> */}
 
-        {/* <input className="form-control" type="file" id="formFile" onChange={imgChange} />
-        <button type="button" className="btn btn-light" style={{ "float": "right" }} onClick={onSubmit}>업로드하기</button>
-
-        <div className="preview">
-            
-        {imageList.map((url,idx) => (<ul>
-            <li><img src={url} alt=""/>
-            </li></ul>
-        ))} 
-
-        {/* </div> */}
         </div>
         </div>
         </BannerBlock>
@@ -186,35 +166,4 @@ const BannerBlock=styled.div`
         margin: 20px;
         list-style: none;
     }
-    /* width: 100%;
-    box-sizing: border-box;
-    border: 1px solid black;
-  .banner-container {
-    width: 100vw;
-    margin : 10px;
-    display: flex;
-    border: 1px solid black;
-    height: 60%;
-    flex-direction: column;
-    text-align: center;
-    padding: 3rem;
-  }
-.preview{
-    align-items: center;
-    flex-direction: column;
-    ul{
-        list-style: none;
-    }
-    li{
-    float: left;
-}
-}
-    img{
-        width: 300px;
-        height: 200px;
-        margin: 10px;
-    }
-    .ItemList{
-        display: flex;
-    } */
 `;

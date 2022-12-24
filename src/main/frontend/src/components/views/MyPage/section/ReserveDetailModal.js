@@ -100,12 +100,12 @@ const ModalStyle2 = styled.div`
 
 const Body = () => {
     return(
-      <div style={{textAlign: 'center'}}>
-        <h3>정말 취소하시겠습니까?</h3>
-          <div>공연 취소 시 환불 되기까지 3일 ~ 7일 정도의 시간이 소요됩니다.</div>
-      </div>
-    )
-  }
+        <div style={{textAlign: 'center'}}>
+            <h3>정말 취소하시겠습니까?</h3>
+            <div>공연 취소 시 환불 되기까지 3일 ~ 7일 정도의 시간이 소요됩니다.</div>
+        </div>
+        )
+    }
 
 function ReserveDetailModal (props) {
       // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴

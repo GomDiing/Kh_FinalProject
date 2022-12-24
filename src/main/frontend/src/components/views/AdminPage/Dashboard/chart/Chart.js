@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import styled from 'styled-components';
 import AdminApi from '../../../../../api/AdminApi';
 
@@ -49,7 +49,7 @@ const Chart = (props) => {
     return (
         <ChartBlock>
         <div className='chart'>
-        <button class="button-53" role="button">누적 차트</button>
+        <button class="button-53" type="button">누적 차트</button>
         <ResponsiveContainer width="100%" aspect={4/1}>
         <BarChart
           // width={500}

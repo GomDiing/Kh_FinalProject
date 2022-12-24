@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import TopBar from "../Tool/TopBar";
-import React, { useState, useEffect, useHistory} from "react";
-import { useNavigate, useParams, Link} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams} from "react-router-dom";
 import AdminApi from "../../../../api/AdminApi";
 
 

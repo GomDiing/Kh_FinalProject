@@ -115,8 +115,6 @@ function Info(props) {
                     </span>
                 </li>
                 <br/>
-                {/* <div className='hr'>
-                </div> */}
             
                 <li className="infoItem infoPrice">
                     <strong className="infoLabel">가격</strong>
