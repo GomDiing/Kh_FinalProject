@@ -14,30 +14,45 @@ const SideWrap = styled.div`
         font-size: medium;
     }
     // a태그 속성제거 (모바일)
-    a {
-        color: black;
-        text-decoration: none;
+    button {
+      a {
+          color: black;
+          text-decoration: none;
+      }
     }
     .react-calendar__navigation {
         button {
             &:disabled {
                 background-color: white;
                 color: black;
+              }
             }
-        }
+          }
+    .text-center2 {
+        display : flex;
+        align-items: center;
+        justify-content: center;
+        margin: 7px;
       }
-
+      hr{
+        margin: 0;
+      }
       `
 const Styleside = styled.div`
       
     .side-header{
       text-align: center;
         font-size: 14px;
+        font-weight:  bold;
     }
 
     .side-content {
         padding: 0 1.5rem;
         text-align: center;
+      }
+    .CalenderInfo{
+        font-size: 13px;
+        opacity: 60%;
     }
     .button {
         border: 1px solid #EF3F43;
@@ -45,11 +60,13 @@ const Styleside = styled.div`
         border-bottom-right-radius: 0.6rem;
         border-top-left-radius: 0.6rem;
         border-bottom-left-radius: 0.6rem;
-        width: 120px;
-        height: 45px;
+        width: 140px;
+        height: 35px  ;
         background-color: white;
         margin-left: 0.15rem;
         margin-right: 0.15rem;
+        font-size: large;
+        font-weight: bold;
     }
     .button:focus {
         color: #EF3F43;
@@ -71,9 +88,6 @@ const Styleside = styled.div`
     .remain {
         margin-left: 1rem;
         padding-top: 20px;
-    }
-    .text-center {
-        margin-bottom: 0;
     }
     p{
       font-weight: bold;
@@ -211,7 +225,7 @@ function TCalendar (props) {
 
     return (
         <SideWrap>
-            <h3 className='text-center' style={{fontSize : '21px' , fontWeight : 'bolder' , margin: '15px 0'}}>관람일</h3>
+            <h3 className='text-center' style={{fontSize : '19px' , fontWeight : 'bolder' , margin: '10px 0'}}>관람일</h3>
             <div className='calendar-container'>
             <Calendar onChange={setDate} value={date}
             formatDay={(locale, date) => moment(date).format("DD")}
@@ -233,15 +247,15 @@ function TCalendar (props) {
             }}
             />
             </div>
-            <div className='text-center'>
-            <br/>
+            <div className='text-center2'>
+            {/* <br/> */}
             <span className='bold'>선택한 날짜 : </span>{' '}
             <strong className='select-date'>{date.toLocaleString("kr", {month:"short", day: "numeric"})}</strong>
-            <hr />
             </div>
+            <hr />
             <Styleside>
             <div className='side-container'>
-              <h4 className='side-header'>회차</h4>
+              <h4 className='side-header'style={{marginTop : '5px'}}>회차</h4>
               <div className='side-content'>
               {/* 1회차 정보. */}
               {/* 기본으로 1회차 정보 보여주고 1회차 클릭 1회차 정보 2회차 클릭 2회차 정보 나오게 둘다 나오면 너무 커지기 때문 이거 내일 오전에 수정 */}
@@ -258,7 +272,7 @@ function TCalendar (props) {
                     </div>
                     {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
                       return(
-                        <div style={{display: 'inline'}} key={seat.index}>
+                        <div style={{display: 'inline'}} key={seat.index} className = "CalenderInfo">
                           {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
                         </div>
                       );
@@ -269,7 +283,7 @@ function TCalendar (props) {
                       reserve.compact_casting.map((cast, id) => {
                         return(
                         <>
-                          <div style={{display: 'inline'}} key={id} >
+                          <div style={{display: 'inline'}} key={id} className = "CalenderInfo">
                           <span>{cast}, </span>
                           </div>
                         </>
@@ -293,7 +307,7 @@ function TCalendar (props) {
                     </div>
                     {reserve.reserve_seat_time && reserve.reserve_seat_time.map(seat => {
                       return(
-                        <div style={{display: 'inline'}} key={seat.index}>
+                        <div style={{display: 'inline'}} key={seat.index} className = "CalenderInfo">
                           {seat.is_reserve && <span>{seat.seat} {seat.remain_quantity} / </span>}
                         </div>
                       );
@@ -304,7 +318,7 @@ function TCalendar (props) {
                     reserve.compact_casting.map((cast, id) => {
                       return(
                       <>
-                        <div style={{display: 'inline'}} key={id} >
+                        <div style={{display: 'inline'}} key={id} className = "CalenderInfo">
                         <span>{cast}, </span>
                         </div>
                       </>

@@ -61,6 +61,7 @@ const MainReviewContainer = styled.div`
     }
     .textbox{
         padding: 10px;
+        overflow: hidden;
     }
     @media(max-width : 1024px){
         .ReviewContents{

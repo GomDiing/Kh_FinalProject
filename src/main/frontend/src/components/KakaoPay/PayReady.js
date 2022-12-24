@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate} from "react-router-dom";
 import PayApi from "../../api/PayApi";
 import { ADMIN_KEY } from "../Config";
-import FindModal from "../views/LoginPage/FindModal";
+import PayModal from "./PayModal";
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
 
@@ -143,6 +143,7 @@ const PayReady = (title, total, tax, value) => {
         return(
             <div>
                 <h1>결제가 정상 진행 되었습니다.</h1>
+                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT'></img>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>
             </div>
@@ -150,7 +151,7 @@ const PayReady = (title, total, tax, value) => {
     }
     return(
         <div>
-            {modalOpen && <FindModal open={openModal} close={closeModal} body={<Body />} />}
+            {modalOpen && <PayModal open={openModal} close={closeModal} body={<Body />} />}
         </div>
     );
   };
@@ -318,8 +319,8 @@ const PayReady = (title, total, tax, value) => {
       
     return(
       <div>
-        {modalOpen && cancelTry && canclelTry2 && <FindModal open={openModal} close={closeModal} body={<Body />} />}
-        {modalOpen && !cancelTry && <FindModal open={openModal} close={closeModal} body={<Body2 />} />}
+        {modalOpen && cancelTry && canclelTry2 && <PayModal open={openModal} close={closeModal} body={<Body />} />}
+        {modalOpen && !cancelTry && <PayModal open={openModal} close={closeModal} body={<Body2 />} />}
       </div>
     );
   };

@@ -313,8 +313,11 @@ const IdStyle = styled.div`
         </div>
       );
     }
+    const providerType = "HOME";
+
+
     const onClickDeleteCancel = async () => {
-      const response = await MemberApi.deleteCancel(inputId, inputPwd);
+      const response = await MemberApi.deleteCancel(inputId, inputPwd, providerType);
       if(response.data.statusCode === 200) {
         alert('탈퇴신청이 정상 취소 되었습니다.');
         setOpen(false);
@@ -325,7 +328,6 @@ const IdStyle = styled.div`
       }
     }
 
-    const providerType = "HOME";
 
     const onClickLogin = async () => {
       try {

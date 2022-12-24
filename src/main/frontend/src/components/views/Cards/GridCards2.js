@@ -18,11 +18,11 @@ function GridCards2(props) {
             <div>
             {Loading && <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><NowLoading/></div>}
             <Link to={`/detail/${props.code}`} >
-                <img style={{ width: '200px', height: '250px', border: '2px solid blue'}} src={props.image} onError={onErrorImg} alt=""/>
+                <img style={{ width: '200px', height: '250px'}} src={props.image} onError={onErrorImg} alt=""/>
             </Link>
             </div>
             <div style={{width: '240px'}} >
-            <b style={{color: 'blue'}}>{props.title}</b>
+            <b style={{color: 'black'}}>{props.title}</b>
             </div>
         </div>
         </div>

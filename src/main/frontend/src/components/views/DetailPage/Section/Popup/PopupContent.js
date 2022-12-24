@@ -119,7 +119,7 @@ function PopupContent (props) {
           setStuValue(0);
           setType('event');
           totalPayChange(tickets, values, taxs, totals, openEvent);
-           break;
+          break;
         default:
           alert('오류');
       }
@@ -155,7 +155,7 @@ function PopupContent (props) {
             <tbody>
               <tr>
                 <td>{seats.seat}</td>
-                <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={e => {
+                <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={(e) => {
                   // 선택한 좌석의 이름
                   setSeatList(seats.seat);
                   // 필터를 걸쳐 테스트를 통과한 것을 배열로 다시 만들어줌
@@ -283,7 +283,7 @@ function PopupContent (props) {
     const { seatNumber, seat, cancelday, hour, minute, title, date, turn, value, ticket, tax, total, userInfo, price } = props;
     // 가격과 수량을 선택 했을 때만 불려짐 
     if(value > 0 && price > 0 && total > 0) {
-     PayReady(title, total, tax, value, seatNumber, userInfo, price);
+    PayReady(title, total, tax, value, seatNumber, userInfo, price);
     }
     const payUrl = window.localStorage.getItem('url');
 

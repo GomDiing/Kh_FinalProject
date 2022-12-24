@@ -1,12 +1,12 @@
 import Spinner from 'react-bootstrap/Spinner';
 
 // 로딩중 표시 위한 Spinner
-function NowLoading() {
+function Loading() {
   return (
     <>
-      <Spinner animation="border" variant="warning" />
+      <Spinner animation="border" variant="secondary" />
     </>
   );
 }
 
-export default NowLoading;
+export default Loading;

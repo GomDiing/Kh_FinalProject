@@ -334,8 +334,8 @@ public class MemberServiceImpl implements MemberService {
         for(Member deleteMember : deleteListMember) {
             if (now.isAfter(deleteMember.getUnregister().plusDays(7))) {
                 // 1주일이 지난 회원들은 다 unregister status Change
-            }                deleteMember.changeMemberStatusToUnregister();
-
+                deleteMember.changeMemberStatusToUnregister();
+            }
         }
     }
 
@@ -484,9 +484,16 @@ public class MemberServiceImpl implements MemberService {
                 throw new CustomException(CustomErrorCode.EMPTY_PASSWORD);
             }
             //회원 조회
-            Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(signinRequestDTO.getId(),
-                            signinRequestDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.HOME)
-                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//            Member findMember = memberRepository.findByIdAndPasswordAndStatusNotAndProviderType(signinRequestDTO.getId(),
+//                            signinRequestDTO.getPassword(), MemberStatus.UNREGISTER, MemberProviderType.HOME)
+//                     .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
+//            return new SigninResponseDTO().toDTO(findMember);
+
+            // 회원 조회 멤버 상태는 따로 구분해서 조회 안해도 프론트에서 막아놔서 이렇게 수정했습니다
+            // 언레지스터인 사람이 들어오면 영구탈퇴라고 보여주게 해놨습니다. 혹시나 수정했는데 에러사항 있으시면 말씀 부탁드립니다.
+            Member findMember = memberRepository.findByIdAndPasswordAndProviderType(signinRequestDTO.getId(),
+                            signinRequestDTO.getPassword(), MemberProviderType.HOME)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_MEMBER));
             return new SigninResponseDTO().toDTO(findMember);
         //소셜 로그인 가입 회원일 시
         } else {

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ScheduleOutlined, DeleteOutlined, WhatsAppOutlined, GithubFilled, EditOutlined, BookOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { ScheduleOutlined, DeleteOutlined, WhatsAppOutlined, GithubFilled, EditOutlined, BookOutlined, UserDeleteOutlined} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import MainHeader from '../MainHeader/MainHeader';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import MemberApi from '../../../api/MemberApi';
 import { useSelector } from 'react-redux';
 import WishList from './section/WishList';
-import FindModal from '../LoginPage/FindModal';
+import Delete from './section/Delete';
 
 const MyInfoStyle = styled.div`
   width: 100%;
@@ -82,7 +82,6 @@ const MyInfoStyle = styled.div`
 
 function MyPage() {
   const userInfo = useSelector((state) => state.user.info);
-  const Navigate = useNavigate();
 
 if(!userInfo.userEmail) {
   // 상세 url 주소로 바꿔야함 나중에
@@ -94,9 +93,6 @@ if(!userInfo.userEmail) {
   const { Content, Sider } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   const [info, SetInfo] = useState('');
-  const [open, setOpen] = useState(false);
-  const onClickDeleteMember = () => setOpen(true);
-  const onCloseDeleteMember = () => setOpen(false);
 
 
   useEffect(() => {
@@ -152,7 +148,8 @@ if(!userInfo.userEmail) {
       getItem('문의 조회', '/MyPage/IqList'),
     ]),
     getItem('회원 정보 변경', '/MyPage/InfoUpdate', <EditOutlined />),
-    getItem('내가 찜한 목록', '/MyPage/WishList', <BookOutlined />)
+    getItem('내가 찜한 목록', '/MyPage/WishList', <BookOutlined />),
+    getItem('회원탈퇴', '/MyPage/delete', <UserDeleteOutlined />)
   ];
   const navigate = useNavigate();
   
@@ -172,11 +169,6 @@ if(!userInfo.userEmail) {
               <div className='userInfo'>
                 <div className='Contain1'>
                   <GithubFilled style={{fontSize: '10rem', margin: '2rem'}} />
-                  <div style={{display : 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '12px'}}>
-                    {/* <button onClick={onClickDeleteMember} style={{boder : 'none'}}>회원탈퇴</button>
-                    {open && <FindModal open={onClickDeleteMember} deleteClick={onClickDeleteModal} close={onCloseDeleteMember}
-                    body={<DeleteModalBody user={userInfo} delete={onClickDeleteModal}/>} />} */}
-                  </div>
                 </div>
                   <div className='info-des'>
                     <div className='description'>
@@ -208,6 +200,7 @@ const MyBody = () => (
       <Route path='/Contact' element={<Contact/>}/>
       <Route path='/IqLIst' element={<IqList/>}/>
       <Route path='/WishList' element={<WishList/>}/>
+      <Route path='/delete' element={<Delete />}/>
       <Route exact path='/InfoUpdate' element={<InfoUpdate />} />
     </Routes>
     </>

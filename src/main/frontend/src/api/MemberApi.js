@@ -96,10 +96,11 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/signin", loginObj, HEADER);
   },
   // 복구
-  deleteCancel : async function(id, password) {
+  deleteCancel : async function(id, password, provider_type) {
     const cancelObj = {
       id : id,
-      password : password
+      password : password,
+      providerType : provider_type
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/delete/cancel", cancelObj, HEADER);
   },

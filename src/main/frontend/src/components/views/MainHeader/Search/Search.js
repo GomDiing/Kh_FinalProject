@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer"
 import MainHeader from "../MainHeader"
+import { LoadingOutlined } from "@ant-design/icons";
 
 const NoresultContainer = styled.div`
     width: 100%;
@@ -105,10 +106,12 @@ const Search = () =>{
     const text = window.localStorage.getItem("searchText")
     const [SearchData, setSearchData] = useState('');
     const [isFinish , setIsFinish] = useState(false);
+    const [nowLoading ,setNowLoading] = useState(true);
     const Navigate = useNavigate();
     
     useEffect(() => {
         const SearchAsync = async() =>{
+            setNowLoading(true);
             try{
                 const res = await MainApi.mainsearch(text)
                 // console.log(res.data)
@@ -116,6 +119,7 @@ const Search = () =>{
                     console.log("성공")
                     setSearchData(res.data.results.content);
                     setIsFinish(true);
+                    setNowLoading(false);
                 }
             }catch(e){
                 console.log(e)
@@ -135,16 +139,18 @@ const Search = () =>{
 
             {isFinish && SearchData.length === 0 ?
                 <>
-                        {/* 검색결과 없는경우 */}
+                {nowLoading && <LoadingOutlined style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '300px', marginTop: '100px'}} />}
+                    {/* 검색결과 없는경우 */}
                     <NoresultContainer>
                         <div className="Content">    
-                            <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'}></img></div>
+                            <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=''></img></div>
                             <div className="item"><p>검색 결과가 없습니다.</p></div>
                         </div>
                     </NoresultContainer>
                 </>
                 :
                 <>
+                    {nowLoading && <LoadingOutlined style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '300px', marginTop: '100px'}} />}
                     <div className="Content">
                         <span className="searchtext">{text}</span><span> 검색결과</span>
                     </div>
@@ -155,10 +161,9 @@ const Search = () =>{
                                 <th>장소</th>
                                 <th>기간</th>
                             {/* 검색결과 있는경우 */}
-                            
                             {isFinish && SearchData.map((SearchData , index)=>(
                                 <tr key={index} onClick={()=>ClickItem(SearchData.code)}>
-                                    <td className="imgContainer"><img src={SearchData.poster_url}></img></td>
+                                    <td className="imgContainer"><img src={SearchData.poster_url} alt=''></img></td>
                                     <td className="titleContainer">{SearchData.title}</td>
                                     <td className="addrContainer">{SearchData.location}</td>
                                     <td className="dayContainer">
