@@ -4,10 +4,7 @@ import com.kh.finalproject.dto.ranking.RankProductDTO;
 import com.kh.finalproject.dto.ranking.RankingCloseDTO;
 import com.kh.finalproject.dto.ranking.RankingMonDTO;
 import com.kh.finalproject.dto.ranking.RankingWeekDTO;
-import com.kh.finalproject.entity.Product;
-import com.kh.finalproject.entity.RankingCloseSoon;
-import com.kh.finalproject.entity.RankingMonth;
-import com.kh.finalproject.entity.RankingWeek;
+import com.kh.finalproject.entity.*;
 import com.kh.finalproject.entity.enumurate.ProductCategory;
 import com.kh.finalproject.entity.enumurate.RankStatus;
 import com.kh.finalproject.repository.ProductRepository;
@@ -22,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,8 +50,17 @@ public class RankingServiceImpl implements RankingService {
             Optional<Product> productList = productRepository.findByCode(rankingCode.getCode());
 
             if(productList.isPresent()) {
-                RankProductDTO rankProductDTO = new RankProductDTO().toDTO(productList.get());
-                weekDTOList.add(new RankingWeekDTO().toDTO(rankingCode, rankProductDTO));
+                List<ReserveTime> reserveTimeList = productList.get().getReserveTimeList();
+                boolean isReserveProduct = false;
+                for (ReserveTime reserveTime : reserveTimeList) {
+                    if (reserveTime.getTime().isAfter(LocalDateTime.now())) {
+                        isReserveProduct = true;
+                    }
+                }
+                if (isReserveProduct) {
+                    RankProductDTO rankProductDTO = new RankProductDTO().toDTO(productList.get());
+                    weekDTOList.add(new RankingWeekDTO().toDTO(rankingCode, rankProductDTO));
+                }
             }
         }
 
@@ -68,12 +75,22 @@ public class RankingServiceImpl implements RankingService {
         List<RankingMonDTO> monDTOList = new ArrayList<>();
         List<RankingMonth> rankingMonthList = rankingMonRepository.findAllByRankStatusAndProductCategoryOrderByOrder(RankStatus.COMPLETE, ProductCategory.valueOf(category), pageSize);
 
-        for(RankingMonth rankingMonth : rankingMonthList) {
-            Optional<Product> product = productRepository.findByCode(rankingMonth.getCode());
+        for (RankingMonth rankingCode : rankingMonthList) {
+            // 랭킹 코드에서 가져온 코드에 맞는 상품 정보를 다 가져옴
+            Optional<Product> productList = productRepository.findByCode(rankingCode.getCode());
 
-            if(product.isPresent()) {
-                RankProductDTO rankProductDTO = new RankProductDTO().toDTO(product.get());
-                monDTOList.add(new RankingMonDTO().toDTO(rankingMonth, rankProductDTO));
+            if(productList.isPresent()) {
+                List<ReserveTime> reserveTimeList = productList.get().getReserveTimeList();
+                boolean isReserveProduct = false;
+                for (ReserveTime reserveTime : reserveTimeList) {
+                    if (reserveTime.getTime().isAfter(LocalDateTime.now())) {
+                        isReserveProduct = true;
+                    }
+                }
+                if (isReserveProduct) {
+                    RankProductDTO rankProductDTO = new RankProductDTO().toDTO(productList.get());
+                    monDTOList.add(new RankingMonDTO().toDTO(rankingCode, rankProductDTO));
+                }
             }
         }
         return monDTOList;
@@ -83,11 +100,22 @@ public class RankingServiceImpl implements RankingService {
     public List<RankingCloseDTO> searchAllAboutCloseSoon(String category, Pageable pageSize) {
         List<RankingCloseDTO> rankingCloseDTOS = new ArrayList<>();
         List<RankingCloseSoon> rankingCloseSoonList = rankingCloseRepository.findAllByRankStatusAndProductCategoryOrderByOrder(RankStatus.COMPLETE, ProductCategory.valueOf(category), pageSize);
-        for(RankingCloseSoon rankingCloseSoon : rankingCloseSoonList) {
-            Optional<Product> product = productRepository.findByCode(rankingCloseSoon.getCode());
-            if(product.isPresent()) {
-                RankProductDTO rankProductDTO = new RankProductDTO().toDTO(product.get());
-                rankingCloseDTOS.add(new RankingCloseDTO().toDTO(rankingCloseSoon, rankProductDTO));
+        for (RankingCloseSoon rankingCode : rankingCloseSoonList) {
+            // 랭킹 코드에서 가져온 코드에 맞는 상품 정보를 다 가져옴
+            Optional<Product> productList = productRepository.findByCode(rankingCode.getCode());
+
+            if(productList.isPresent()) {
+                List<ReserveTime> reserveTimeList = productList.get().getReserveTimeList();
+                boolean isReserveProduct = false;
+                for (ReserveTime reserveTime : reserveTimeList) {
+                    if (reserveTime.getTime().isAfter(LocalDateTime.now())) {
+                        isReserveProduct = true;
+                    }
+                }
+                if (isReserveProduct) {
+                    RankProductDTO rankProductDTO = new RankProductDTO().toDTO(productList.get());
+                    rankingCloseDTOS.add(new RankingCloseDTO().toDTO(rankingCode, rankProductDTO));
+                }
             }
         }
         return rankingCloseDTOS;

@@ -19,7 +19,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/ranking")
 public class RankingController {
 

@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 @Controller
 @RequestMapping("/login/oauth2/code")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class KakaoLoginController {
 
 
@@ -106,7 +106,8 @@ public class KakaoLoginController {
                 int isJoinParam = 0;
                 if (isJoin) isJoinParam = 1;
 
-                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
+//                return "redirect:" + UriComponentsBuilder.fromUriString("https://tacts.tk/social")
                         .queryParam("name", nickname)
                         .queryParam("email", email)
                         .queryParam("isJoin",isJoinParam)
@@ -119,7 +120,8 @@ public class KakaoLoginController {
         } catch (Exception e) {
             throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
-        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
+//        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                 .queryParam("socialSuccess", 0)
                 .queryParam("providerType", MemberProviderType.KAKAO.name())
                 .build()

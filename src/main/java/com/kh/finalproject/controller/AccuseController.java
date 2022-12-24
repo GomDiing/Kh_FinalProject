@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping("/api/accuse")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AccuseController {
     private final AccuseService accuseService;
     private final MemberService memberService;

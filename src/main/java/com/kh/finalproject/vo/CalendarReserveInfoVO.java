@@ -45,4 +45,9 @@ public class CalendarReserveInfoVO {
 
         return this;
     }
+
+    public CalendarReserveInfoVO toVO() {
+
+        return null;
+    }
 }
