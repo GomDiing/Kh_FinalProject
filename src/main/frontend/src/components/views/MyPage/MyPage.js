@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ScheduleOutlined, DeleteOutlined, WhatsAppOutlined, GithubFilled, EditOutlined, BookOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { ScheduleOutlined, DeleteOutlined, WhatsAppOutlined, GithubFilled, EditOutlined, BookOutlined, UserDeleteOutlined} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import MainHeader from '../MainHeader/MainHeader';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import styled from 'styled-components';
 import MemberApi from '../../../api/MemberApi';
 import { useSelector } from 'react-redux';
 import WishList from './section/WishList';
-import FindModal from '../LoginPage/FindModal';
 import Delete from './section/Delete';
 
 const MyInfoStyle = styled.div`
@@ -83,7 +82,6 @@ const MyInfoStyle = styled.div`
 
 function MyPage() {
   const userInfo = useSelector((state) => state.user.info);
-  const Navigate = useNavigate();
 
 if(!userInfo.userEmail) {
   // 상세 url 주소로 바꿔야함 나중에
@@ -151,7 +149,7 @@ if(!userInfo.userEmail) {
     ]),
     getItem('회원 정보 변경', '/MyPage/InfoUpdate', <EditOutlined />),
     getItem('내가 찜한 목록', '/MyPage/WishList', <BookOutlined />),
-    getItem('회원탈퇴', '/MyPage/delete', <BookOutlined />)
+    getItem('회원탈퇴', '/MyPage/delete', <UserDeleteOutlined />)
   ];
   const navigate = useNavigate();
   
