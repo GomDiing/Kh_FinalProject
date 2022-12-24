@@ -14,7 +14,7 @@ const NoticeList=()=>{
 
   //  리액트 페이지네이션 변수 
   const [noticeList, setNoticeList] = useState([]); //db 에서 정보 받아오기(배열에  담기)
-  const [pageSize, setPageSize] = useState(6); // 한페이지에 몇개씩 있을건지
+  const [pageSize, setPageSize] = useState(8); // 한페이지에 몇개씩 있을건지
   const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
   const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
@@ -94,8 +94,8 @@ const NoticeList=()=>{
         <NoticeBlock>
         <TopBar name="공지사항 관리"/>
           <div className="notice-list-container">
-          <Table striped bordered hover style={{width : '1350px'}}>
-                <thead>
+          <Table bordered hover >
+                <thead style={{backgroundColor : '#f5f5f5'}}>
                   <tr>
                   <th width = "50px">
                     <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
@@ -116,7 +116,7 @@ const NoticeList=()=>{
                   checked={checkItems.includes(index) ? true : false} />
                   </td>
                     <td>{index}</td>
-                    <td><Link to={`/admin/noticeDetail/${index}`} style={{ textDecoration: 'none' }}>{title}</Link></td>
+                    <td><StyledLink to={`/admin/noticeDetail/${index}`}>{title}</StyledLink></td>
                     <td>관리자</td>
                     <td>{createTime}</td>
                 </tr>
@@ -130,8 +130,8 @@ const NoticeList=()=>{
              onChange={(page) => {setCurrentPage(page); setNoticeList([]);}} //숫자 누르면 해당 페이지로 이동
              />
             <div className="buttonWrap">
-                <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>작성하기</button>
-                <button className="noticeBtn" onClick={onClickDelete}>삭제하기</button>
+                <button className="noticeBtn" onClick={onClickDelete}>글삭제</button>
+                <button className="noticeBtn" onClick={()=>{navigate('/admin/writeNotice')}}>글쓰기</button>
             </div>
              </div>
         </NoticeBlock>
@@ -142,6 +142,7 @@ export default NoticeList;
 const NoticeBlock=styled.div`
     margin:0 auto;
   box-sizing: border-box;
+  font-family: sans-serif;
   .notice-list-container {
     align-items: center;
     width: 70vw;
@@ -157,21 +158,32 @@ const NoticeBlock=styled.div`
 	text-overflow:ellipsis;
 	max-width:100px;
 }
-  }
-
-    .buttonWrap{
-        text-align: center;
-        justify-content: center;
+.buttonWrap{
+        /* text-align: center; */
+        /* justify-content: center; */
+        float: right;
+        /* margin-right: 0; */
     }
+  }
     .noticeBtn{
       border: none;
       margin: 15px 0;
       margin: 20px 10px;
       background-color: #92A9BD;
       border-radius: 5px;
-      width: 150px;
-      height: 50px;
+      width: 100px;
+      height: 35px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      /* color: #f5f5f5; */
     }
-    
+
+`;
+const StyledLink= styled(Link)`
+  text-decoration : none;
+  color: inherit;
+  &:hover{
+    color: #92A9BD;
+  }
 
 `;

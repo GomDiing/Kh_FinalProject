@@ -66,15 +66,20 @@ const BlackList=()=>{
   }, [currentPage]);
 
   const onClickDelete=async()=>{
-    try{
-      const res = await AdminApi.deleteMemberAdmin(checkItems);
-      if(res.data.statusCode === 200){
-        alert(res.data.message);
-        navigate(0);
-      }
-    } catch(e){
-      console.log(e);
-    }
+    if(checkItems.length<1){
+      alert("체크박스 한개 이상 체크해주세요")
+    }else{
+        try{
+          const res = await AdminApi.deleteMemberAdmin(checkItems);
+          if(res.data.statusCode === 200){
+            alert(res.data.message);
+            navigate(0);
+          }
+       }
+      catch(e){
+        console.log(e);
+    } 
+  }
     setCheckItems({}); // 삭제버튼 누르고 데이터 넘기면 초기화
   };
   
@@ -107,8 +112,8 @@ const BlackList=()=>{
         <MemberBlock>
         <TopBar name="블랙리스트 관리"/>
         <div className="blackList-container">
-            <Table striped bordered hover style={{width : '1350px'}}>
-                <thead>
+            <Table bordered hover>
+                <thead style={{backgroundColor : '#f5f5f5'}}>
                   <tr>
                   <th width = "30px">
                     <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
@@ -155,6 +160,7 @@ export default BlackList;
 const MemberBlock=styled.div`
   margin:0 auto;
   box-sizing: border-box;
+  font-family: sans-serif;
   .blackList-container {
     align-items: center;
     width: 70vw;
@@ -180,7 +186,9 @@ const MemberBlock=styled.div`
     margin: 20px 10px;
     background-color: #92A9BD;
     border-radius: 5px;
-    width: 150px;
-    height: 50px;
+    width: 100px;
+    height: 35px;
+    font-weight: bold;
+    font-size: 0.9rem;
   }
 `;

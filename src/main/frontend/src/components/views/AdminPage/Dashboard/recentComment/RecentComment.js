@@ -18,13 +18,11 @@ const RecentComment=()=>{
         if(res.data.statusCode === 200){
           setReviewList(res.data.results);
           console.log(res.data.results);
-        }else{
-          alert("리스트 조회가 안됩니다.")
-      } 
-    }catch (e) {
+        }
+      }catch(e){
         console.log(e);
       }
-    };
+    }
     reviewData();
   }, []);
 
@@ -71,6 +69,9 @@ const RecentWrap = styled.div`
     box-shadow: 0px 0px 12px -1px #000000;
     padding: 20px;
     margin-right: 20px;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    /* white-space: nowrap; */
 }
 .MainReviewContents{
     border: 1px solid silver;

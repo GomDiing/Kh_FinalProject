@@ -11,6 +11,10 @@ const TopBlock=styled.div`
         display : flex;
         justify-content : center;
         align-items : center;
+        overflow: hidden;
+        font-family: sans-serif;
+        /* font-weight: bold; */
+        font-size: 1.3rem;
     }
 `;
 const TopBar=(props)=>{

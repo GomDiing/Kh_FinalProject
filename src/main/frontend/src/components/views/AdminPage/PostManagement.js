@@ -89,8 +89,8 @@ const PostManagement=()=>{
         <PostBlock>
         <TopBar name="전시회 게시물 관리"/>
           <div className="exhibition-container">
-          <Table bordered hover style={{width : '1350px'}}>
-                <thead>
+          <Table bordered hover >
+                <thead style={{backgroundColor : '#f5f5f5'}}>
                   <tr>
                   <th width = "40px">
                     <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
@@ -157,7 +157,8 @@ const PostBlock=styled.div`
     margin: 20px 10px;
     background-color: #92A9BD;
     border-radius: 5px;
-    width: 150px;
-    height: 50px;
+    width: 100px;
+    height: 35px;
+    font-size: 0.9rem;
   }
 `;
