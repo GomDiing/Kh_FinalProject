@@ -96,10 +96,11 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/signin", loginObj, HEADER);
   },
   // 복구
-  deleteCancel : async function(id, password) {
+  deleteCancel : async function(id, password, provider_type) {
     const cancelObj = {
       id : id,
-      password : password
+      password : password,
+      providerType : provider_type
     }
     return await axios.post(TCAT_DOMAIN + "/api/member/delete/cancel", cancelObj, HEADER);
   },
@@ -117,11 +118,11 @@ const MemberApi = {
     return await axios.post(TCAT_DOMAIN + "/api/member/sign", signMember, HEADER);
   },
   // 회원탈퇴
-  deleteMmeber : async function(id, password) {
+  deleteMmeber : async function(id, password, providerType) {
     const delteMemberObj = {
       id : id,
       password : password,
-      providerType : 'HOME'
+      providerType : providerType
     }
     return await axios.post(TCAT_DOMAIN + '/api/member/delete', delteMemberObj, HEADER);
   }
