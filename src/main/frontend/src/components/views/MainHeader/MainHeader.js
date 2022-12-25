@@ -130,6 +130,7 @@ const MainHeader = () =>{
         }
         dispatch(loginActions.setUserInfo({data}));
         alert('정상적으로 로그아웃 되었습니다.')
+        Navigate('/');
     }
     // 확인용
     const userInfo = useSelector((state) => state.user.info)

@@ -47,6 +47,7 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_PRODUCT_MONTH = "월간 랭킹 상품이 조회가 완료되었습니다";
     public static final String SUCCESS_PRODUCT_WEEK = "주간 랭킹 상품이 조회가 완료되었습니다";
     public static final String SUCCESS_PRODUCT_CLOSE = "마감 임박 상품이 조회가 완료되었습니다";
+    public static final String SUCCESS_PRODUCT_REGION = "특정 지역 상품이 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_UPCOMING = "곧 개봉예정 영화 목록 조회가 완료되었습니다";
     public static final String SUCCESS_MOVIE_SEARCH = "영화 검색이 완료되었습니다";
     public static final String SUCCESS_MOVIE_INQUIRE = "영화 조회가 완료되었습니다";

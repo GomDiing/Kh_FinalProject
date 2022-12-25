@@ -49,7 +49,7 @@ function WishList() {
                 <NoresultContainer>
                 <div className="Content">    
                     <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCAT_02.png'} alt=''></img></div>
-                    <div className="item"><p>검색 결과가 없습니다.</p></div>
+                    <div className="item"><p>찜 목록이 없습니다.</p></div>
                 </div>
                 </NoresultContainer>
                 :

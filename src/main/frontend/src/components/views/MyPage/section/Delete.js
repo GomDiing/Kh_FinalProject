@@ -1,27 +1,38 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MemberApi from "../../../../api/MemberApi";
+import { loginActions } from "../../../../util/Redux/Slice/userSlice";
 
 function Delete() {
   const userInfo = useSelector((state) => state.user.info);
+  const dispatch = useDispatch('');
   const navigate = useNavigate();
   const [inputPwd, setInputPwd] = useState('');
   const handleChangePassword = e => setInputPwd(e.target.value);
   const handelDeleteMember = async () => {
     if(userInfo.userProvider_type !== 'HOME') {
-      alert('소셜 로그인은 회원탈퇴가 불가능합니다.');
+      alert('소셜 로그인회원은 회원탈퇴가 불가능합니다.');
       navigate('/Mypage');
     } else {
       try {
         const res = await MemberApi.deleteMmeber(userInfo.userId, inputPwd, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
-          alert('회원탈퇴 성공 ! ! !');
-        } else {
-          alert('회원님의 비밀번호가 일치하지 않습니다.');
+          const data = {
+            userIndex : undefined,
+            userId : undefined,
+            userPoint : 0,
+            userName : undefined,
+            userEmail : undefined,
+            userProvider_type : undefined,
+            userRole : undefined
+          }
+          dispatch(loginActions.setUserInfo({data}));
+          alert('TCAT을 이용해 주셔서 감사합니다. 다음에 또 만나요.');
+          navigate('/');
         }
       } catch(e) {
-        console.log('error ! ! !');
+        alert('회원님의 비밀번호가 일치하지 않습니다.');
         console.log(e);
       }
     }
