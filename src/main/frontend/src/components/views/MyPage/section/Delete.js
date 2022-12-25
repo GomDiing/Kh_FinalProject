@@ -10,13 +10,13 @@ function Delete() {
   const handleChangePassword = e => setInputPwd(e.target.value);
   const handelDeleteMember = async () => {
     if(userInfo.userProvider_type !== 'HOME') {
-      alert('소셜 로그인은 회원탈퇴가 불가능합니다.');
+      alert('소셜 로그인회원은 회원탈퇴가 불가능합니다.');
       navigate('/Mypage');
     } else {
       try {
         const res = await MemberApi.deleteMmeber(userInfo.userId, inputPwd, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
-          alert('회원탈퇴 성공 ! ! !');
+          alert('TCAT을 이용해 주셔서 감사합니다. 다음에 또 만나요.');
         } else {
           alert('회원님의 비밀번호가 일치하지 않습니다.');
         }

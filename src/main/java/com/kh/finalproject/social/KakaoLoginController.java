@@ -106,7 +106,7 @@ public class KakaoLoginController {
                 int isJoinParam = 0;
                 if (isJoin) isJoinParam = 1;
 
-                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
 //                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                         .queryParam("name", nickname)
                         .queryParam("email", email)
