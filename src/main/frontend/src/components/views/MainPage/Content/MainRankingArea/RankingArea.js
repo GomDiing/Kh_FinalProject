@@ -163,7 +163,7 @@ const RankingArea = () =>{
                             {ItemData.map((ItemData , index)=>(
                                 <div className="MainPoster2Contan" key={index}>
                                     <li>
-                                        <Link to={`/detail/${ItemData.code}`} >
+                                        <Link to={`/detail/${ItemData.product_code}`} >
                                         <img src={ItemData.poster_url}alt="이미지오류"/>
                                         <p>{ItemData.title}</p>
                                         </Link>
