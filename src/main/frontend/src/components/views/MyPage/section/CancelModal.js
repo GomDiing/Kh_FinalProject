@@ -38,7 +38,7 @@ const ModalStyle2 = styled.div`
     }
     .modal > section > header button {
         position: absolute;
-        top: -10px;
+        top: -20px;
         right: 0;
         width: 30px;
         font-size: 21px;

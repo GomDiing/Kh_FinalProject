@@ -4,7 +4,6 @@ import FeaturedInfo from "./featuredInfo/FeaturedInfo";
 import Chart from "./chart/Chart";
 import Profile from "./profile/Profile";
 
-
 const AdminBlock=styled.div`
         width: 85%;
         margin: 0 auto;
@@ -22,6 +21,8 @@ const AdminBlock=styled.div`
 
 
 const AdminHome=()=>{
+
+
     return(
         <AdminBlock>
         <div className="home">

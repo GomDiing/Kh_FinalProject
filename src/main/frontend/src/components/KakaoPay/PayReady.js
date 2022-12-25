@@ -145,9 +145,12 @@ const PayReady = (title, total, tax, value) => {
     const Body = () => {
         return(
             <div>
-                <h1>결제가 정상 진행 되었습니다.</h1>
-                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT' style={{width: '500px', height: '450px'}}></img>
+                <h1>TCAT 결제가 완료되었습니다.</h1>
+                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT' style={{width: '500px', height: '400px'}}></img>
+                <br/>
+                <br/>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
+                <br/>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>
             </div>
         );
