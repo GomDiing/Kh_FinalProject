@@ -86,8 +86,8 @@ function MyPage() {
 if(!userInfo.userEmail) {
   // 상세 url 주소로 바꿔야함 나중에
   alert("어딜 감히")
-  document.location.href="http://www.tcat.pe.kr:8100"
-  // document.location.href="http://localhost:8100"
+  // document.location.href="http://www.tcat.pe.kr:8100"
+  document.location.href="http://localhost:8100"
 } 
 
   const { Content, Sider } = Layout;

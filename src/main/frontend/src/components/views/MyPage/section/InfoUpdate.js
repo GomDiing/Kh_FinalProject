@@ -154,14 +154,13 @@ const InfoUpdate = () => {
       const response = await MemberApi.memberUpdate(inputId, inputPwd, inputName, inputEmail, road, jibun, address, postCode, userInfo.userProvider_type);
       if(response.data.statusCode === 200) {
       alert("회원정보 변경 완료");
-    } Navigate('/Mypage');
+    } Navigate(0);
     } catch (e) {
       if(e.response.data.results.statusCode === 400){
         alert("회원 정보가 올바르게 입력되지 않았습니다.")
         console.log(e.response.data.results)
       }else{
         console.log(e)
-        alert("이러지마.....ㅠㅠ");
       }
     }
   }

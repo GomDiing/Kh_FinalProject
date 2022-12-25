@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Routes, Route, useNavigate} from "react-router-dom";
 import {Menu} from 'antd';
 import {HomeOutlined, PoweroffOutlined,UserOutlined,SolutionOutlined,LayoutOutlined,BulbOutlined,WhatsAppOutlined} from "@ant-design/icons/lib/icons";
@@ -35,12 +35,13 @@ const HeaderBlock=styled.div`
 function AdminPage() {
   const userInfo = useSelector((state) => state.user.info);
   const Navigate = useNavigate();
+  console.log(userInfo.userRole);
 
-  if(!userInfo.userEmail) {
-    // 상세 url 주소로 바꿔야함 나중에
-    Navigate('/');    // document.location.href="http://localhost:3000"
-    // document.location.href="http://localhost:8100"
-  } 
+  useEffect(() => {
+      if(userInfo.userRole !== "ROLE_ADMIN") {
+      alert("접근 권한이 없습니다.")
+      Navigate('/');
+  } })  
   
   return (
     <div style={{display : "flex", flexDirection:"column", flex : 1, height : '100vh', width : "100%", minWidth : '1024px'}}>

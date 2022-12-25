@@ -4,7 +4,7 @@ import { GOOGLE_URL, KAKAO_AUTH_URL } from '../../Config';
 import FindModal from './FindModal';
 import MemberApi from '../../../api/MemberApi';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
 
 const LoginWrap = styled.div`
@@ -243,8 +243,8 @@ const IdStyle = styled.div`
   }
 
   function Login() {
+    const userInfo = useSelector((state) => state.user.info);
 
-    
     // 카카오 로그인
     const KakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
@@ -336,7 +336,6 @@ const IdStyle = styled.div`
           console.log(response.data)
           switch(response.data.results.status) {
             case "ACTIVE" :
-              
             const data = {
                 userIndex : response.data.results.index,
                 userId : response.data.results.id,
@@ -347,6 +346,9 @@ const IdStyle = styled.div`
                 userRole : response.data.results.role
               }
               dispatch(loginActions.setUserInfo({data}));
+              if(response.data.results.role === "ROLE_ADMIN") {
+                navigate('/admin');
+              } else 
               navigate('/');
               break;
             case "DELETE" :
@@ -376,7 +378,7 @@ const IdStyle = styled.div`
         console.log('오류');
       }
     }
-
+  
     const onKeyPress = e => {
       if(e.key === "Enter") {
           onClickLogin();

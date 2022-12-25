@@ -18,8 +18,8 @@ const ModalStyle = styled.div`
     }
     .modal > section {
         width: 90%;
-        max-width: 450px;
-        width: 525px;
+        max-width: 700px;
+        width: 700px;
         height: auto;
         margin: 0 auto;
         border-radius: 0.3rem;
@@ -27,6 +27,8 @@ const ModalStyle = styled.div`
         /* 팝업이 열릴때 스르륵 열리는 효과 */
         animation: modal-show 0.3s;
         overflow: hidden;
+        text-align: center;
+        align-items: center;
     }
     .modal > section > header {
         position: relative;
