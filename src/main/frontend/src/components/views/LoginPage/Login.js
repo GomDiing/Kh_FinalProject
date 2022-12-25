@@ -364,7 +364,7 @@ const IdStyle = styled.div`
               break;
             case "BLACKLIST" :
               setColor('red');
-              setMessage('당신은 이러이러한 이유로 인해 저희 사이트 블랙리스트 대상입니다.');
+              setMessage('회원님은 TCAT을 소중히 여기지 않았지... 블랙리스트를 시작하지');
               setOpen(true);
               break;
             default : 

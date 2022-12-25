@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MemberApi from "../../../../api/MemberApi";
+import { loginActions } from "../../../../util/Redux/Slice/userSlice";
 
 function Delete() {
   const userInfo = useSelector((state) => state.user.info);
+  const dispatch = useDispatch('');
   const navigate = useNavigate();
   const [inputPwd, setInputPwd] = useState('');
   const handleChangePassword = e => setInputPwd(e.target.value);
@@ -16,12 +18,21 @@ function Delete() {
       try {
         const res = await MemberApi.deleteMmeber(userInfo.userId, inputPwd, userInfo.userProvider_type);
         if(res.data.statusCode === 200) {
+          const data = {
+            userIndex : undefined,
+            userId : undefined,
+            userPoint : 0,
+            userName : undefined,
+            userEmail : undefined,
+            userProvider_type : undefined,
+            userRole : undefined
+          }
+          dispatch(loginActions.setUserInfo({data}));
           alert('TCAT을 이용해 주셔서 감사합니다. 다음에 또 만나요.');
-        } else {
-          alert('회원님의 비밀번호가 일치하지 않습니다.');
+          navigate('/');
         }
       } catch(e) {
-        console.log('error ! ! !');
+        alert('회원님의 비밀번호가 일치하지 않습니다.');
         console.log(e);
       }
     }
