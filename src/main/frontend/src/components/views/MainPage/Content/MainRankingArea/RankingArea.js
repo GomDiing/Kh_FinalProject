@@ -120,7 +120,7 @@ const area = [
     
 ]
 
-const RankingClose = () =>{
+const RankingArea = () =>{
     const [regionCode , setRegionCode] = useState(0);
     const [ItemData , setItemData] = useState([]);
     
@@ -163,10 +163,10 @@ const RankingClose = () =>{
                             {ItemData.map((ItemData , index)=>(
                                 <div className="MainPoster2Contan" key={index}>
                                     <li>
-                                        {/* <Link to={`/detail/${ItemData.code}`} > */}
+                                        <Link to={`/detail/${ItemData.code}`} >
                                         <img src={ItemData.poster_url}alt="이미지오류"/>
                                         <p>{ItemData.title}</p>
-                                        {/* </Link> */}
+                                        </Link>
                                     </li>
                                 </div>
                             ))}
@@ -178,4 +178,4 @@ const RankingClose = () =>{
 )
 }
 
-export default RankingClose
+export default RankingArea

@@ -12,7 +12,8 @@ const PosterImgContainer = styled.div`
     align-items: center;
     /* padding: 0px 30px; */
     /* border: solid 1px black; */
-    
+    overflow-x: auto;
+    overflow-y: hidden;
     img{
         width: 110px;
         height: 130px;
@@ -23,7 +24,6 @@ const PosterImgContainer = styled.div`
         list-style: none;
         margin: 0px;
         padding: 0px;
-        overflow : auto;	
     }
     li{
         align-items: center;
@@ -141,7 +141,7 @@ const RankingMonth = () =>{
                     </div>
                 </PosterCategoryContainer>
                 <div>
-                    <HorizontalScroll>
+                                <HorizontalScroll>
                         <PosterImgContainer>
                             <ul>
                                 {ItemData.map((ItemData , index)=>(
@@ -154,7 +154,7 @@ const RankingMonth = () =>{
                                 ))}
                             </ul>
                         </PosterImgContainer>
-                    </HorizontalScroll>
+                                </HorizontalScroll>
                 </div>
             </>
     )
