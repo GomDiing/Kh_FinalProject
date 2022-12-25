@@ -1,7 +1,7 @@
 import axios from "axios";
 const HEADER = {'Content-Type' : 'application/json'}
-// const TCAT_DOMAIN = "http://localhost:8100";
-const TCAT_DOMAIN = "http://3.37.94.106:8102";
+const TCAT_DOMAIN = "http://localhost:8100";
+// const TCAT_DOMAIN = "http://3.37.94.106:8102";
 
 
 const MemberApi = {
