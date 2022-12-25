@@ -49,8 +49,8 @@ const MapModalBody = (props) =>{
             level: 2
         };
         var map = new kakao.maps.Map(mapContainer, mapOption);
-        var imageSrc = 'https://ifh.cc/g/TVr0T4.png',
-        imageSize = new kakao.maps.Size(70, 75),
+        var imageSrc = 'https://ifh.cc/g/H7DtZR.png',
+        imageSize = new kakao.maps.Size(36, 36),
         imageOption = {offset: new kakao.maps.Point(27, 69)};
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
