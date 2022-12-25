@@ -50,19 +50,23 @@ const ChildReview=(props)=>{
 
     // 후기 작성
     const onClickSubmit=async()=>{
-      try{
-        const res = await DetailApi.childComment(userInfo.userIndex,group,inputContent,props.code);
-        if(res.data.statusCode === 200){
-          alert(res.data.message);
-          navigate(0);
-        } 
-      }catch(e){
-        if(e.response.data.statusCode === 400){
-          alert("로그인 후 이용하시기 바랍니다.")
-        }else{
-          console.log(e);
+      if(inputContent.length<=1){
+        alert("1글자 이상 댓글을 입력해주시기 바랍니다.")
+      }else{
+        try{
+          const res = await DetailApi.childComment(userInfo.userIndex,group,inputContent,props.code);
+          if(res.data.statusCode === 200){
+            alert(res.data.message);
+            navigate(0);
+          } 
+        }catch(e){
+          if(e.response.data.code === 'C001'){
+            alert("로그인 후 이용 바랍니다.")
+          } else{
+           console.log(e);
         }
       }
+    }
   };
 
     return(

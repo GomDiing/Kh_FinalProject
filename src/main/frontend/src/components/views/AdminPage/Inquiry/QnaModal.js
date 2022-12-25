@@ -111,25 +111,29 @@ const QnaModal = (props) => {
 
     // 문의 답장 값을 담아줌
     const onChangeReply=(e)=>{setInputReply(e.target.value);}
-    
+
     // 문의 답장 전송 호출
     const onClickReply=async(e)=>{
         if(inputReply.length <= 5 || inputReply.length >= 1000) {
         alert('관리자 인데 정성껏 길게 답변하세요. 10글자 이상');
         e.preventDefault();
     } else {
-        const res = await AdminApi.qnaReply(inputReply, index);
-        // console.log("답장 : " + inputReply + index);
-        if(res.data.statusCode === 200) {
-            alert('문의 답변이 정상적으로 전송 되었습니다.');
-            close(true);
-            navigate(0);
-        } else {
-            alert('문의 답변이 전송이 실패 하였습니다.');
-            e.preventDefault();
+            try{
+            const res = await AdminApi.qnaReply(inputReply, index);
+            if(res.data.statusCode === 200) {
+                alert('문의 답변이 정상적으로 전송 되었습니다.');
+                close(true);
+                navigate(0);
+            }
+        } catch(e){
+            if(e.response.data.code === 'C001'){
+                alert("문의 답변 전송이 실패 하였습니다.")
+            }else{
+                console.log(e);
+            }
         }
     }
-}
+};
     const { open, close, header, index} = props;
 
     return (

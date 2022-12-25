@@ -26,14 +26,15 @@ const AccuseModal= (props)=> {
                 close();
             }
         }catch(e){
-            if(e.response.data.statusCode === 400){
-                if(e.response.data.errors == null){
-                    alert("중복신고 되었습니다.");
-                    close();
-                } else if(e.response.data.errors !== null){
-                    alert("로그인 후 이용 바랍니다.")
-                }
-            }else{
+            if(e.response.data.code === 'RC002'){
+                alert("중복신고 되었습니다.");
+                close();
+            }else if(e.response.data.code === 'M002'){
+                alert("이미 탈퇴 처리 된 회원의 글입니다.");
+                close();
+            }else if(e.response.data.code === 'RC002'){
+                alert("신고할 후기를 찾을 수 없습니다.");
+            }   else{
                 console.log(e);
                 close();
             }
