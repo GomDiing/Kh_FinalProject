@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import MainApi from "../../../../../api/MainApi";
 import { Link } from "react-router-dom";
 
+
 const PosterImgContainer = styled.div`        
     background-color: #f5f5f5;
     display: flex;
@@ -22,12 +23,8 @@ const PosterImgContainer = styled.div`
         list-style: none;
         margin: 0px;
         padding: 0px;
-        /* overflow-x: auto; */
-        overflow: hidden;
+        overflow : auto;	
     }
-    /* ul::-webkit-scrollbar {
-        display: none;
-    } */
     li{
         align-items: center;
         list-style: none;
@@ -146,16 +143,16 @@ const RankingMonth = () =>{
                 <div>
                     <HorizontalScroll>
                         <PosterImgContainer>
-                    <ul>
-                        {ItemData.map((ItemData , index)=>(
-                            <li key={index} >
-                            <Link to={`/detail/${ItemData.code}`} >
-                            <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                            <p>{ItemData.product.title}</p>
-                            </Link>
-                        </li>
-                        ))}
-                    </ul>
+                            <ul>
+                                {ItemData.map((ItemData , index)=>(
+                                    <li key={index} >
+                                    <Link to={`/detail/${ItemData.code}`} >
+                                    <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                                    <p>{ItemData.product.title}</p>
+                                    </Link>
+                                </li>
+                                ))}
+                            </ul>
                         </PosterImgContainer>
                     </HorizontalScroll>
                 </div>
