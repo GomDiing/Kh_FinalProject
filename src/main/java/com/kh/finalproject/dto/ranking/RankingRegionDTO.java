@@ -10,6 +10,7 @@ public class RankingRegionDTO {
     private String location;
     private String period_start;
     private String period_end;
+    private String product_code;
 
     public RankingRegionDTO toDTO(Product product) {
         this.poster_url = product.getThumbPosterUrl();
@@ -17,6 +18,7 @@ public class RankingRegionDTO {
         this.location = product.getLocation();
         this.period_start = product.getPeriodStart();
         this.period_end = product.getPeriodEnd();
+        this.product_code = product.getCode();
 
         if(product.getPeriodEnd() == null) {
             this.period_end = "당일 공연";
