@@ -42,7 +42,7 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute } = props;
+  const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute, nextClick, backClick } = props;
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [type, setType] = useState('');
@@ -94,6 +94,7 @@ function PopupContent (props) {
           setStuValue(0);
           setType('basic');
           totalPayChange(tickets, values, taxs, totals, price);
+          nextClick();
           break;
         case 'student':
           setStuValue(values);
@@ -102,6 +103,7 @@ function PopupContent (props) {
           setEveValue(0);
           setType('student');
           totalPayChange(tickets, values, taxs, totals, student);
+          nextClick();
           break;
         case 'double':
           setDouValue(values);
@@ -110,6 +112,7 @@ function PopupContent (props) {
           setStuValue(0);
           setType('double');
           totalPayChange(tickets, values, taxs, totals, double);
+          nextClick();
           break;
         case 'event':
           setEveValue(values);
@@ -118,9 +121,11 @@ function PopupContent (props) {
           setStuValue(0);
           setType('event');
           totalPayChange(tickets, values, taxs, totals, openEvent);
+          nextClick();
           break;
         default:
           alert('오류');
+          backClick();
       }
     }
 
@@ -162,10 +167,9 @@ function PopupContent (props) {
                   // 만들어진 배열에서 필요한 값을 추출..
                   setSeatNumber(res[0].index);
                   setPrice(seats.price);
-                  console.log(seatNumber);
-                  console.log(price)
                   // 리덕스에 값 저장
                   dispatch(seatIndexAction.setSeatInfo(res[0].index));
+                  nextClick();
                   }}/>
                   </td>
               </tr>
@@ -264,10 +268,10 @@ function PopupContent (props) {
       </>
       }
       {index === 3 && <FinalModal
-        seatNumber={seatNumber} seat={seatList} cancelday={cancelday} 
-        title={title} date={date} value={valueSelect()} ticket={ticket}
-        price={selectPrice} tax={tax} total={total} userInfo={userInfo} 
-        hour={hour} minute={minute}  turn={turn}/>}
+        seatNumber={seatNumber} seat={seatList} cancelday={cancelday}
+        title={title} date={date} value={valueSelect()}
+        ticket={ticket} price={selectPrice} tax={tax} total={total}
+        userInfo={userInfo} hour={hour} minute={minute}  turn={turn}/>}
       </>
   );
 
@@ -291,7 +295,6 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} hour={hour} point={userInfo.userPoint} minute={minute} turn={turn} cancelday={cancelday}  title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          {/* <Link to={'/payready'}>카카오페이 가자</Link> */}
           <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
         </div>
     </div>
@@ -331,8 +334,9 @@ function PopupContent (props) {
             <th className="sh">취소 수수료</th>
             <td>티켓 금액의 0 ~ 30% <small onClick={onTogle}><strong><u>상세 보기</u></strong></small>
               {open && <>
-              <br /><small>공연 당일 하루 전까지는 수수료 없이 무료 환불이 가능합니다.</small>
-              <br /><small>공연 당일 취소를 신청할 경우 환불 시 수수료가 10% 발생합니다.</small>
+              <br /><small>공연 당일은 환불이 불가능합니다.</small>
+              <br /><small>공연 하루 전 취소를 신청할 경우 환불 시 수수료가 10% 발생합니다.</small>
+              <br /><small>공연 3일 전 취소를 신청할 경우 환불 시 수수료가 5% 발생합니다.</small>
               </>}
             </td>
           </tr>
