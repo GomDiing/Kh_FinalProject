@@ -63,18 +63,6 @@ const MapModalBody = (props) =>{
 
         marker.setMap(map);  
 
-    //     var content = '<div class="customoverlay">' +
-    //         '    <p class="title">TCAT</p>' +
-    //         '</div>';
-
-        var position = new kakao.maps.LatLng(mapL.y, mapL.x);  
-
-    //     var customOverlay = new kakao.maps.CustomOverlay({
-    //         map: map,
-    //         position: position,
-    //         content: content,
-    //         yAnchor: 1
-    //     });
     }, [mapL.y, mapL.x])
 
     return(

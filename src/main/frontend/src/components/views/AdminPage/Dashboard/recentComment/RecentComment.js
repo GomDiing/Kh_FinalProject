@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import AdminApi from '../../../../../api/AdminApi'
 import { Rate } from "antd";
-import {HeartOutlined} from "@ant-design/icons/lib/icons";
 import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 

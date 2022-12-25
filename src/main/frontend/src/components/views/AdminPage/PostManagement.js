@@ -118,12 +118,12 @@ const PostManagement=()=>{
             </Table>
             <Pagination className="d-flex justify-content-center"
              total={totalCount}  //총 데이터 갯수
-             current={currentPage} 
-             pageSize={pageSize}
-             onChange={(page) => {setCurrentPage(page); setList([]);}} //숫자 누르면 해당 페이지로 이동
-             />
-            <div className="post-btn-container"><button className="postBtn" onClick={onClickDelete}>삭제하기</button></div>
-             </div>
+              current={currentPage} 
+              pageSize={pageSize}
+              onChange={(page) => {setCurrentPage(page); setList([]);}} //숫자 누르면 해당 페이지로 이동
+              />
+              <div className="post-btn-container"><button className="postBtn" onClick={onClickDelete}>삭제하기</button></div>
+              </div>
         </PostBlock>
     );
 }

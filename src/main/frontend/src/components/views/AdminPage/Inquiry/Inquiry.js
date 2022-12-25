@@ -1,4 +1,4 @@
-import { useState,useEffect,useParams } from "react";
+import { useState,useEffect } from "react";
 import styled from "styled-components";
 import TopBar from "../Tool/TopBar";
 import AdminApi from "../../../../api/AdminApi";

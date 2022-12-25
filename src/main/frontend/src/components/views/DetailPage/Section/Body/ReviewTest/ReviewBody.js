@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styled from "styled-components";
 import { Rate } from "antd";
@@ -25,7 +24,6 @@ const ReviewBody=(props)=>{
     const [totalCount, setTotalCount] = useState(0); // 총 데이터 숫자
     const [currentPage, setCurrentPage] = useState(1); // 현재 몇번째 페이지인지
 
-  const [reviews, setReviews] = useState(props.reviewList);
   const navigate = useNavigate();
 
   // 댓글 데이터 받아서 페이지값 넘기기

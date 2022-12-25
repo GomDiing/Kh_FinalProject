@@ -4,11 +4,15 @@
     box-shadow: 0px 0px 12px -1px #000000;
     padding: 20px;
     text-align: center;
+<<<<<<< HEAD
     padding-top: 40px; 
     padding-bottom: 40px; 
     /* margin-top: 40px; */
     /* margin-bottom: 40px; */
      
+=======
+    padding-top: 40px;
+>>>>>>> 526e29fb1aaa6722304b8b8ffbae27c104e9e3d3
 }
 
 .profile-title{

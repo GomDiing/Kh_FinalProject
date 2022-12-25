@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Form, Input,Select} from 'antd';
+import React from 'react';
+import { Button, Form, Input} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import MemberApi from '../../../../../api/MemberApi';
@@ -49,15 +49,6 @@ const Contact = () => {
             <option>취소/환불</option>
             <option>신고</option>
         </select>
-        {/* antd select 라이브러리 쓰면 value 값을 못읽음 */}
-            {/* <Select style={{ width: 220 }} value={inputSelect} onChange={onChangeSelect}>
-                {data.map((item)=>
-                // <Select.Option value={JSON.stringify(item)} key={item}>
-                <Select.Option value={item} key={item.id}>
-                    {item}
-                </Select.Option>
-            )}
-            </Select> */}
         </Form.Item>
                 <Form.Item label="문의 제목">
                     <Input type='text' onChange={onChangeQnaTitle} value={inputQnaTitle}/>

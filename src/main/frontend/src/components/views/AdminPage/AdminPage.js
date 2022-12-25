@@ -34,13 +34,13 @@ const HeaderBlock=styled.div`
 `;
 function AdminPage() {
   const userInfo = useSelector((state) => state.user.info);
+  const Navigate = useNavigate();
 
-  // if(!userInfo.userEmail) {
-  //   // 상세 url 주소로 바꿔야함 나중에
-  //   alert("어딜 감히")
-  //   document.location.href="http://localhost:3000"
-  //   // document.location.href="http://localhost:8100"
-  // } 
+  if(!userInfo.userEmail) {
+    // 상세 url 주소로 바꿔야함 나중에
+    Navigate('/');    // document.location.href="http://localhost:3000"
+    // document.location.href="http://localhost:8100"
+  } 
   
   return (
     <div style={{display : "flex", flexDirection:"column", flex : 1, height : '100vh', width : "100%", minWidth : '1024px'}}>

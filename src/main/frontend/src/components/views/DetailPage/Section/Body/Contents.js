@@ -5,10 +5,9 @@ import { FcBusinessman,FcBusinesswoman } from "react-icons/fc";
 // 공연 정보
 function Contents(props) {
 
-  // console.log(props.stat);
+
   const data = [
     {
-      // index: props.stat.product_code,
       10: props.stat.teen,
       20: props.stat.twenties,
       30: props.stat.thirties,

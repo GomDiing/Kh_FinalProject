@@ -106,8 +106,6 @@ const QWrap = styled.div`
 `
 
 const QnaModal = (props) => {
-    const [disabled, setDisabled] = useState(true);
-
     const navigate = useNavigate();
     const [inputReply, setInputReply] = useState("");
 

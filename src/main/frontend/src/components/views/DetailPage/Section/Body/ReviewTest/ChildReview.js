@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DetailApi from "../../../../../../api/DetailApi";
 import { useSelector } from 'react-redux';
 import Alert from 'react-bootstrap/Alert';

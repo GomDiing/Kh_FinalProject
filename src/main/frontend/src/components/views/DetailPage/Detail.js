@@ -16,7 +16,6 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewBody from './Section/Body/ReviewTest/ReviewBody';
 import WriteReview from './Section/Body/ReviewTest/WriteReview';
-import ChildReview from './Section/Body/ReviewTest/ChildReview';
 import NoImage from '../../../util/NoImage';
 
 const { Content, Sider } = Layout;
