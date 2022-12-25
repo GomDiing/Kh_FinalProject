@@ -23,6 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     Optional<Product> findByReserveTimeListContaining(ReserveTime reserveTime);
 
+    Page<Product> findByDetailLocationStartsWith(String regionName, Pageable pageable);
+    Page<Product> findByDetailLocationStartsWithAndDetailLocationNotContaining(String regionName, String regionNameNotContain, Pageable pageable);
+
 
     @Query("select distinct rt.product from Product p, ReserveTime rt where rt.time > :now and rt.product.title like %:title%")
     Page<Product> browseByTitle(@Param("title")String title, @Param("now")LocalDateTime now, Pageable pageable);
