@@ -18,6 +18,7 @@ const WriteReview=(props)=>{
     const navigate = useNavigate();
 
     const onChangeRate =(e)=>{setRate(e);}
+    console.log("평점" + rate);
     const onChangeTitle=(e)=>{setInputTitle(e.target.value);}
     const onChangeContent=(e)=>{setInputContent(e.target.value);}
 
@@ -32,16 +33,15 @@ const WriteReview=(props)=>{
           navigate(0);
           } 
         } catch(e){
-          if(e.response.data.statusCode === 400){
-            console.log(e.response.data.errors[0].field);
-            if(e.response.data.errors !== null){
-              alert("평점 입력은 필수 입력값입니다.")
-            } 
-            // else if(e.response.data.errors.field === "memberIndex"){
-            //   alert("로그인 후 이용하시기 바랍니다.")
-            // }
-          }else if(e.response.data.code === 'C001'){
-            alert("로그인하라고 ㅋ")
+          if(e.response.data.code === 'RC002'){
+            alert("평점을 입력하시기 바랍니다.")
+          } else if(e.response.data.code === 'C001'){
+            alert("로그인해라 ㅋ")
+          } else if(e.resonse.data.code === 'M002'){
+            alert("조회한 회원이 없습니다.");
+          } else if(e.response.data.code === 'P001'){
+            alert("해당 상품코드를 참을 수 없습니다.");
+          } else{
             console.log(e);
           }
         }

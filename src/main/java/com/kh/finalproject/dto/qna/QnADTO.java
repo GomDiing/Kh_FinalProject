@@ -39,6 +39,7 @@ public class QnADTO {
 //        this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         if(Objects.isNull(qna.getReplyTime()))this.replyTime = "미응답";
         else this.replyTime = qna.getReplyTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createTime=qna.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
 
         //홈 회원이면 ID, 소셜 회원이면 이메일 노출
         if (qna.getMember().getProviderType() == MemberProviderType.HOME) this.id = qna.getMember().getId();

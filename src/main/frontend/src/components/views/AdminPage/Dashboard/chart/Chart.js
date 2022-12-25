@@ -15,6 +15,9 @@ const ChartBlock=styled.div`
 .chartTitle{
     margin-bottom: 30px;
 }
+.button-53{
+  margin-bottom: 10px;
+}
 
 `;
 const Chart = (props) => {

@@ -3,6 +3,7 @@ package com.kh.finalproject.dto.member;
 import com.kh.finalproject.entity.Address;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.enumurate.MemberProviderType;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.format.DateTimeFormatter;
@@ -86,6 +87,7 @@ public class MemberDTO {
     }
     public MemberDTO toDTOByCount(Member member){
         this.index = member.getIndex();
+//        if(member.getStatus() == MemberStatus.ACTIVE) this.memberStatus = member.getStatus().getStatus();
         this.memberStatus = member.getStatus().name();
         this.memberAccuseCount = member.getAccuseCount();
         this.providerType = member.getProviderType().name();

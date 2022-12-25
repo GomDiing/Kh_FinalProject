@@ -445,8 +445,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberDTO> updateStatusByCount() {
-        //신고횟수 5회 이상 회원 조회
-        Optional<List<Member>> findMemberList = memberRepository.findAllByAccuseCountGreaterThan(4);
+        //신고횟수 5회 이상 회원 조회(일반회원인 경우에만 조회 => 아니면 unregister 회원도 같이 계산되는거 같음=>아님 그래도 오류)
+        Optional<List<Member>> findMemberList = memberRepository.findAllByStatusAndAccuseCountGreaterThan(MemberStatus.ACTIVE,4);
 
         if (findMemberList.isEmpty())
             throw new CustomException(CustomErrorCode.EMPTY_MEMBER_ACCUSE_COUNT);

@@ -70,6 +70,8 @@ const RecentWrap = styled.div`
     margin-right: 20px;
     text-overflow: ellipsis;
     overflow:hidden;
+    padding-top: 40px;
+    font-family: sans-serif;
     /* white-space: nowrap; */
 }
 .MainReviewContents{
@@ -127,13 +129,19 @@ img{
   display: flex;
 }
 .review-image-container{
-    flex: 1;
+  flex: 1;
   flex-direction: column;
 
 }
 .review-text-container{
-    flex: 5;
+  flex: 5;
   flex-direction: column;
+  margin-right: 20px;
+  margin-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 
 }
 
