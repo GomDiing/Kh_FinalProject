@@ -3,6 +3,7 @@ package com.kh.finalproject.controller;
 
 import com.kh.finalproject.dto.ranking.RankingCloseDTO;
 import com.kh.finalproject.dto.ranking.RankingMonDTO;
+import com.kh.finalproject.dto.ranking.RankingRegionDTO;
 import com.kh.finalproject.dto.ranking.RankingWeekDTO;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -52,6 +53,15 @@ public class RankingController {
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_CLOSE, rankingCloseDTOList), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/region")
+    public ResponseEntity<DefaultResponse<Object>> regionProduct(@RequestParam Integer regionCode,
+                                                                 @PageableDefault(size = 500) Pageable size) {
+
+        List<RankingRegionDTO> rankingRegionDTOList = rankingService.searchAllAboutRegion(regionCode, size);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_REGION, rankingRegionDTOList), HttpStatus.OK);
     }
 }
 
