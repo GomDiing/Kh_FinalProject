@@ -62,10 +62,10 @@ const MyInfoStyle = styled.div`
 }
   .MypageMainContainer{
     height : 100%;
-    /* height: 70%; */
+    /* width: 65%; */
   }
   .MypageDataContainer{
-    width: 60%;
+    width: 65%;
     margin: 23px auto;
     min-width: 660px;
     min-height: 400px;
@@ -84,8 +84,7 @@ function MyPage() {
   const userInfo = useSelector((state) => state.user.info);
 
 if(!userInfo.userEmail) {
-  // 상세 url 주소로 바꿔야함 나중에
-  alert("어딜 감히")
+  alert("로그인 후 이용해주세요.")
   // document.location.href="http://www.tcat.pe.kr:8100"
   document.location.href="http://localhost:8100"
 } 

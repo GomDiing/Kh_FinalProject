@@ -314,7 +314,7 @@ eXpert 서비스 및 eXpert 센터 가입 등록정보 : 신청일로부터 6개
       경우, 개별 서비스에 대해 별도 수신 동의를 받을 수 있으며, 이때에도 수신 동의에 대해 별도로 안내하고 동의를 받습니다. <p  />
       </div>
       <div className="buttonBox">
-        <span><Link to='/login'><button className="back-button">취소</button></Link></span><span><button onClick={onClickSign} className="ok-button" disabled={check2 && check3 ? false : true}>확인</button></span>
+        <span><Link to='/login'><button className="back-button">취소</button></Link></span><span><button onClick={onClickSign} className="ok-button" >확인</button></span>
       </div>
     </div>
     </AgreeStyle>

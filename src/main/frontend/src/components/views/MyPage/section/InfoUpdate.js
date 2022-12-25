@@ -169,7 +169,7 @@ const InfoUpdate = () => {
   return(
     <InfoStyle>
       <div className="info-container">
-        <h3>회원 정보 업데이트</h3>
+        <h3>회원 정보 변경</h3>
         <label>아이디</label>
           <input type='text' value={inputId} readOnly/>
         <label>비밀번호</label>
