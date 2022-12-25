@@ -36,7 +36,7 @@ const WriteReview=(props)=>{
           if(e.response.data.code === 'RC002'){
             alert("평점을 입력하시기 바랍니다.")
           } else if(e.response.data.code === 'C001'){
-            alert("로그인해라 ㅋ")
+            alert("로그인 후 작성 바랍니다.")
           } else if(e.resonse.data.code === 'M002'){
             alert("조회한 회원이 없습니다.");
           } else if(e.response.data.code === 'P001'){

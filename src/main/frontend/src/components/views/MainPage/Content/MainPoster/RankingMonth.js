@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import MainApi from "../../../../../api/MainApi";
 import { Link } from "react-router-dom";
 
+
 const PosterImgContainer = styled.div`        
     background-color: #f5f5f5;
     display: flex;
@@ -11,7 +12,8 @@ const PosterImgContainer = styled.div`
     align-items: center;
     /* padding: 0px 30px; */
     /* border: solid 1px black; */
-    
+    overflow-x: auto;
+    overflow-y: hidden;
     img{
         width: 110px;
         height: 130px;
@@ -22,12 +24,7 @@ const PosterImgContainer = styled.div`
         list-style: none;
         margin: 0px;
         padding: 0px;
-        /* overflow-x: auto; */
-        overflow: hidden;
     }
-    /* ul::-webkit-scrollbar {
-        display: none;
-    } */
     li{
         align-items: center;
         list-style: none;
@@ -144,20 +141,20 @@ const RankingMonth = () =>{
                     </div>
                 </PosterCategoryContainer>
                 <div>
-                    <HorizontalScroll>
+                                <HorizontalScroll>
                         <PosterImgContainer>
-                    <ul>
-                        {ItemData.map((ItemData , index)=>(
-                            <li key={index} >
-                            <Link to={`/detail/${ItemData.code}`} >
-                            <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                            <p>{ItemData.product.title}</p>
-                            </Link>
-                        </li>
-                        ))}
-                    </ul>
+                            <ul>
+                                {ItemData.map((ItemData , index)=>(
+                                    <li key={index} >
+                                    <Link to={`/detail/${ItemData.code}`} >
+                                    <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
+                                    <p>{ItemData.product.title}</p>
+                                    </Link>
+                                </li>
+                                ))}
+                            </ul>
                         </PosterImgContainer>
-                    </HorizontalScroll>
+                                </HorizontalScroll>
                 </div>
             </>
     )

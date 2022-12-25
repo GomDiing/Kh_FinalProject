@@ -228,7 +228,7 @@ function Detail() {
       window.removeEventListener('scroll', handleFollow)
     }
   })
-  
+
   return (
     <DWrap>
       {/* 스크롤 */}

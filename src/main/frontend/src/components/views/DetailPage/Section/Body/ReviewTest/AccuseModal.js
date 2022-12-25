@@ -26,6 +26,7 @@ const AccuseModal= (props)=> {
                 close();
             }
         }catch(e){
+            console.log(e.response.data.code);
             if(e.response.data.code === 'RC002'){
                 alert("중복신고 되었습니다.");
                 close();
@@ -34,7 +35,11 @@ const AccuseModal= (props)=> {
                 close();
             }else if(e.response.data.code === 'RC002'){
                 alert("신고할 후기를 찾을 수 없습니다.");
-            }   else{
+                close();
+            }else if(e.response.data.code === 'C001') {
+                alert("로그인 후 이용하시기 바랍니다.");
+                close();
+            } else{
                 console.log(e);
                 close();
             }
