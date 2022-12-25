@@ -40,8 +40,8 @@ min-width: 930px;
 .topBtn {
   position: fixed; 
   opacity: 0; 
-  bottom: 80px; 
-  right: 55px;
+  bottom: 70px; 
+  right: 15px;
   z-index: -10; 
   border: 0 none;
   background: none;
