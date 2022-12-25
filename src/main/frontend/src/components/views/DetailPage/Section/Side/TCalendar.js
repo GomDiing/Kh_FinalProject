@@ -39,7 +39,6 @@ const SideWrap = styled.div`
       }
       `
 const Styleside = styled.div`
-      
     .side-header{
       text-align: center;
         font-size: 14px;
@@ -54,7 +53,7 @@ const Styleside = styled.div`
         font-size: 13px;
         opacity: 60%;
     }
-    .button {
+    .button-select {
         border: 1px solid #EF3F43;
         border-top-right-radius: 0.6rem;
         border-bottom-right-radius: 0.6rem;
@@ -68,7 +67,7 @@ const Styleside = styled.div`
         font-size: large;
         font-weight: bold;
     }
-    .button:focus {
+    .button-select:focus {
         color: #EF3F43;
         font-weight: 750;
     }
@@ -92,8 +91,6 @@ const Styleside = styled.div`
     p{
       font-weight: bold;
     }
-    
-    
 `;
 
 /** 
@@ -266,7 +263,7 @@ function TCalendar (props) {
                   reserve.turn === 1 &&
                   <div key={reserve.index}>
                     <div>
-                      <button className='button select' onClick={onClickTurn} name='turn1' type='button'>
+                      <button className='button-select' onClick={onClickTurn} name='turn1' type='button'>
                         {reserve.turn}회 {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
                       </button>
                     </div>
@@ -301,7 +298,7 @@ function TCalendar (props) {
                   reserve.turn === 2 &&
                   <div key={reserve.index}>
                     <div>
-                      <button className='button select' onClick={onClickTurn} name='turn2' type='button'>
+                      <button className='button-select' onClick={onClickTurn} name='turn2' type='button'>
                         {reserve.turn}회 {reserve.hour}:{reserve.minute === 0 ? '00' : reserve.minute}
                       </button>
                     </div>
