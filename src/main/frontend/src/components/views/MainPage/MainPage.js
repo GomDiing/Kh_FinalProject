@@ -9,8 +9,8 @@ import Footer from "../Footer/Footer";
 import { useEffect, useState } from "react";
 import { BsArrowUpCircle } from "react-icons/bs";
 import MainPoster from "./Content/MainPoster/MainPoster";
-import RankingClose from "./Content/MainRankingClose/RankingClose";
 import MainReview from "./Content/MainReview/MainReview";
+import RankingArea from "./Content/MainRankingArea/RankingArea";
 
 
 const ItemContainer = styled.div`
@@ -106,7 +106,7 @@ const MainPage = () =>{
                         <MainNotice/>
                         {/* <hr></hr> */}
                         <MainBanner/>
-                        <RankingClose/>
+                        <RankingArea/>
 
                         <MainReview/>
                         <hr></hr>

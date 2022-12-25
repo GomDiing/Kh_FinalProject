@@ -56,7 +56,7 @@ const MainPoster2Container = styled.div`
     }
     ul{
         width: 100%;
-        overflow: hidden;
+        /* overflow: hidden; */
         display: flex;
         /* justify-content: space-between; */
         margin: 0 20px;
@@ -96,37 +96,42 @@ const MainPoster2Container = styled.div`
 `
 
 
-const categories = [
+const area = [
     {
-        name : 'MUSICAL',
-        text : '뮤지컬'
+        regionCode : '0',
+        text : '서울'
     },
     {
-        name : 'CLASSIC',
-        text : '클래식 / 무용'
+        regionCode : '1',
+        text : '경기'
     },
     {
-        name : 'DRAMA',
-        text : '연극'
+        regionCode : '2',
+        text : '대전'
     },
     {
-        name : 'EXHIBITION',
-        text : '전시회'
-    }
+        regionCode : '3',
+        text : '부산'
+    },
+    {
+        regionCode : '4',
+        text : '경남'
+    },
+    
 ]
 
-const RankingClose = () =>{
-    const [category , setCategory] = useState('MUSICAL');
+const RankingArea = () =>{
+    const [regionCode , setRegionCode] = useState(0);
     const [ItemData , setItemData] = useState([]);
     
     const onSelect = (e) =>{
-        setCategory(e)
+        setRegionCode(e)
     }
 
     useEffect(() => {
         const PosterAsunc = async() =>{
             try{
-                const res = await MainApi.rankingClose(category, 10);
+                const res = await MainApi.rankingArea(regionCode, 10);
                 if(res.data.statusCode === 200){
                     setItemData(res.data.results)
                 }
@@ -135,18 +140,19 @@ const RankingClose = () =>{
             }
         }
         PosterAsunc();
-    }, [category])
-    
+    }, [regionCode])
+
+    console.log(ItemData);
     return(
         <>
             <PosterCategoryContainer>
             <div className="PosterTitle">
-                <h2>종료임박</h2>
-            {categories.map((categories , index)=>(
+                <h2>지역별</h2>
+            {area.map((regionCode,index)=>(
                 <li 
                     key={index}
-                    onClick={()=>onSelect(categories.name)}
-                >{categories.text}</li>
+                    onClick={()=>onSelect(regionCode.regionCode)}
+                >{regionCode.text}</li>
             ))}
             </div>
         </PosterCategoryContainer>
@@ -157,9 +163,9 @@ const RankingClose = () =>{
                             {ItemData.map((ItemData , index)=>(
                                 <div className="MainPoster2Contan" key={index}>
                                     <li>
-                                        <Link to={`/detail/${ItemData.code}`} >
-                                        <img src={ItemData.product.poster_url} code={ItemData.code} alt="이미지오류"/>
-                                        <p>{ItemData.product.title}</p>
+                                        <Link to={`/detail/${ItemData.product_code}`} >
+                                        <img src={ItemData.poster_url}alt="이미지오류"/>
+                                        <p>{ItemData.title}</p>
                                         </Link>
                                     </li>
                                 </div>
@@ -172,4 +178,4 @@ const RankingClose = () =>{
 )
 }
 
-export default RankingClose
+export default RankingArea

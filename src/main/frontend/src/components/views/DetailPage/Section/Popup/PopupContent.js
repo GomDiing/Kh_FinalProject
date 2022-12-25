@@ -5,14 +5,74 @@ import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice"
 import { PayReady } from "../../../../KakaoPay/PayReady";
 
 const BodyStyle = styled.div`
-  table ,tr {
-    border: 1px solid black;
+h3{
+  margin: 10px 0;
+  font-size: 25px;
+  font-weight: 600;
+}
+p{
+  font-size :15px;
+  margin :0 0 7px 10px;
+}
+table{
+  
+}
+th{
+  padding : 5px 10px;
+}
+td{
+  width: 230px;
+  padding: 5px 15px;
+}
+.tableHader{
+  th{
+    border-bottom: 1.5px solid silver;  
   }
+  td{
+    border-bottom: 1px solid silver;  
+  }
+  input{
+    margin-left: 2px;
+  }
+}
+.Mytable{
+  th{
+    border-bottom: 1px solid silver;  
+  }
+  td{
+    border-bottom: 1px solid silver;  
+  }
+  .total{
+    /* width: 230px; */
+    font-weight: bold;
+    font-size : 16px;
+    border-bottom: 0px solid silver;  
+  }
+}
+.selectTable{
+  th{
+    width: 100px;
+    border-bottom: 1px solid silver;  
+  }
+  td{
+    border-bottom: 1px solid silver;  
+  }
+}
+.BuyOption{
+  .text{
+    margin-top: 10px;
+  }
+}
+  /* table{
+    border : 1px solid black;
+  }
+  
   td {
     width: 230px;
     border-left: 1px solid silver;
     padding-right: 1rem;
     padding-left: 0.5rem;
+    padding : 0 5px;
   }
   th {
     width: 100px;
@@ -38,7 +98,7 @@ const BodyStyle = styled.div`
   .sh {
     border-left: 1px solid black;
   }
-  
+   */
 `;
 
 function PopupContent (props) {
@@ -140,18 +200,18 @@ function PopupContent (props) {
     <>
     {index === 1 &&
     <div>
-      <h2>좌석 선택 <p style={{fontSize : '14px'}}><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></p></h2>
+      <h3 >좌석 선택</h3>
+        <p>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</p>
       <div className='seat-container'>
-        {seat && seat.map((seats, key) => (
-          <table style={{border: 'none'}} key={key}>
-            <thead>
-              <tr>
-                <th style={{border : 'none'}}
-                >등급</th>
-                <th style={{border : 'none'}}>가격</th>
+          <table className = 'tableHader'>
+            <thead >
+              <tr  >
+                <th>등급</th>
+                <th>가격</th>
               </tr>
             </thead>
-            <tbody>
+        {seat && seat.map((seats, key) => (
+            <tbody key={key}>
               <tr>
                 <td>{seats.seat}</td>
                 <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={(e) => {
@@ -170,21 +230,21 @@ function PopupContent (props) {
                   </td>
               </tr>
             </tbody>
-          </table>
         ))}
+        </table>
       </div>
-        <hr />
+        {/* <hr /> */}
         <MyInfo seat={seatList} hour={hour} turn={turn} point={userInfo.userPoint} minute={minute} index={index} price={price} title={title} date={date} cancelday={cancelday} />
     </div>
     }
     {index === 2 &&
     <>
     <div>
-      <h2>가격</h2>
+      <h3>가격</h3>
         <div>
-          <strong>중복 할인 불가입니다. 하나의 유형으로만 선택해주세요.</strong>
+          <p>중복 할인 불가입니다. 하나의 유형으로만 선택해주세요.</p>
         </div>
-        <table>
+        <table className="selectTable">
           <tbody>
           <tr>
             <th className='BorderBottom'>기본가</th>
@@ -254,9 +314,11 @@ function PopupContent (props) {
       <div className='BuyOption'>
         <li>장애인, 국가유공자 할인가격 예매 시 현장수령만 가능하며 증빙된서류 미지참시 할인 불가능합니다.</li>
         <li>관람일 전일 아래시간까지만 취소 가능하며 당일 관람 상품 예매 시에는 취소 불가능 합니다.</li>
-        <p> - 공연전일 평일/일요일/공휴일 오후 5시, 토요일 오전 11시단,토요일 공휴일인 경우는 오전 11시</p>
-        <p> - 당일관람 상품예매시는 취소불가능합니다.</p>
-        <p> - 취소수수료와 취소가능일자는 상품별로 다르니, 오른쪽 하단 My예매정보를 확인해주시기 바랍니다.</p>
+        <div className="text">
+          <p> - 공연전일 평일/일요일/공휴일 오후 5시, 토요일 오전 11시단,토요일 공휴일인 경우는 오전 11시</p>
+          <p> - 당일관람 상품예매시는 취소불가능합니다.</p>
+          <p> - 취소수수료와 취소가능일자는 상품별로 다르니, 오른쪽 하단 My예매정보를 확인해주시기 바랍니다.</p>
+        </div>
         <li>동일 상품에 대해서 회차, 좌석 가격, 결제 등 일부 변경을 원하시는 경우, 기존 예매 건을 취소하시고 재예매 하셔야 합니다.
         단, 취소 시점에 따라 예매수수료가 환불 되지 않으며, 취소 수수료가 부과될 수 있습니다.</li>
       </div>
@@ -303,8 +365,8 @@ function PopupContent (props) {
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);
     return(
-      <div>
-        <h2>My예매정보</h2>
+      <div className="Mytable">
+        <h3>My예매정보</h3>
         <table>
           <tbody>
           <tr>
@@ -337,8 +399,8 @@ function PopupContent (props) {
             </td>
           </tr>
           <tr>
-            <th>총 결제금액</th>
-            <td>{index === 1 ? price : total}</td>
+            <th className="total">총 결제금액</th>
+            <td className="total">{index === 1 ? price : total}</td>
           </tr>
           </tbody>
         </table>

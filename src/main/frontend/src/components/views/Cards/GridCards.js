@@ -22,8 +22,9 @@ function GridCards(props) {
             </div>  
             <div style={{ textAlign : 'center'}} >
                 {/* 배우이름과 배역 */}
-                <br/><b style={{color: 'black'}}>{props.character}</b>
-                <b style={{color: '#9E9E9E'}}>{props.actor}</b>
+                <br/><b style={{color: 'black', fontSize: '16px'}}>{props.actor}</b>
+                <br/>
+                <b style={{color: '#9E9E9E', fontSize: '16px'}}>{props.character}</b>
             </div>
         </div>
         </div>

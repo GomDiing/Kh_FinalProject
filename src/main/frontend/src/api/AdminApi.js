@@ -3,6 +3,8 @@ const HEADER = {'Content-Type' :  'application/json'}
 // const TCAT_DOMAIN = "https://tcats.tk";
 const TCAT_DOMAIN = "http://localhost:8100";
 
+
+
 const AdminApi={
     //공지사항 쓰기 api
     writing : async function(inputTitle, inputDetail){

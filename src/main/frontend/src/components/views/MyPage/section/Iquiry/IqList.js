@@ -50,7 +50,7 @@ console.log(qnaList);
     <Divider>문의 내역</Divider>
     <div>
     <Table hover className='table-container'>
-      <thead>
+      <thead >
         <tr>
           <th width = "130px">문의유형</th>
           <th width = "*">제목</th>
@@ -62,10 +62,10 @@ console.log(qnaList);
       <tbody>
       {qnaList&&qnaList.map((qnaList, id) => (
         <tr key={id}>
-          <td>{qnaList.category}</td>
-          <td>{qnaList.title}</td>
-          <td>{qnaList.createTime}</td>
-          <td>{qnaList.qnaStatus}</td>
+          <td  style={{ padding : '11px'}} >{qnaList.category}</td>
+          <td  style={{ padding : '11px'}}>{qnaList.title}</td>
+          <td  style={{ padding : '11px'}}>{qnaList.createTime}</td>
+          <td  style={{ padding : '11px'}}>{qnaList.qnaStatus}</td>
           <td><button className='qnaBtn' onClick={()=>{setModalText(qnaList); setModalOpen(true); setIndex(qnaList.index);}}>답변 확인</button>
             {modalOpen && <IqModal setModalOpen={setModalOpen} />}
           </td>
