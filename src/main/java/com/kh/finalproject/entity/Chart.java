@@ -56,4 +56,8 @@ public class Chart extends BaseTimeEntity {
         this.finalAmount += (cumuAmount - cumuDiscount);
         this.totalReserve += totalReserve;
     }
+
+    public void updateMember(Long totalMember) {
+        this.totalMember += totalMember;
+    }
 }

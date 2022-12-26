@@ -2,13 +2,17 @@ package com.kh.finalproject.service.impl;
 
 import com.kh.finalproject.dto.member.*;
 import com.kh.finalproject.entity.Address;
+import com.kh.finalproject.entity.Chart;
 import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.Reserve;
 import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.repository.AddressRepository;
+import com.kh.finalproject.repository.ChartRepository;
 import com.kh.finalproject.repository.MemberRepository;
+import com.kh.finalproject.repository.ReserveRepository;
 import com.kh.finalproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +32,10 @@ import java.util.*;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+
+    private final ChartRepository chartRepository;
+
+    private final ReserveRepository reserveRepository;
 
     /**
      * 회원 가입 메서드
@@ -100,6 +110,79 @@ public class MemberServiceImpl implements MemberService {
         //주소 정보 저장
         Address signAddress = new Address().toEntity(signupDto, savedMember);
         addressRepository.save(signAddress);
+
+
+        //관리자 차트 메서드
+        int nowYear = LocalDateTime.now().getYear();
+        int nowMonth = LocalDateTime.now().getMonthValue();
+
+        //관리자 차트 이름 생성
+        String charId;
+        if (nowMonth < 10) charId = nowYear + "/0" + nowMonth;
+        else charId = nowYear + "/" + nowMonth;
+
+        LocalDateTime todayTime = LocalDateTime.now();
+        LocalDateTime beforeMonthTime = todayTime.minusMonths(0);
+        beforeMonthTime = LocalDateTime.of(beforeMonthTime.getYear(), beforeMonthTime.getMonth(), beforeMonthTime.with(lastDayOfMonth()).getDayOfMonth(), 23, 59, 59);
+
+        //현재 개월의 차트 존재 유무
+        boolean isChartExist = chartRepository.findById(charId).isPresent();
+
+        //현재 월의 차트 정보가 없다면
+        if (!isChartExist) {
+            //차트 생성
+            processCreateChart(charId, beforeMonthTime);
+        }
+
+        //현재 월의 차트 정보가 있다면
+        else {
+            //차트 조회
+            Chart chart = chartRepository.findById(charId)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
+
+            //해당 차트 정보 갱신
+            chart.updateMember(1L);
+        }
+    }
+
+    public void processCreateChart(String charId, LocalDateTime beforeMonthTime) {
+
+        //지난 거래내역 존재하는지 확인
+        boolean isReserveExist = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
+                .isEmpty();
+
+        //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
+//        log.info("debug!!! beforMonthTime = {}", beforeMonthTime);
+        Integer memberCount = memberRepository.countAllByCreateTimeBefore(beforeMonthTime);
+
+        //거래내역이 존재하지 않다면
+        if (isReserveExist) {
+            //현재 회원수만 기록한 관리자 차트 생성 및 저장
+            Chart chart = new Chart().toEntity(charId, 0L, 0L, 0L, (long) memberCount, 0L);
+            chartRepository.save(chart);
+        }
+        //거래내역이 존재한다면
+        else {
+            //이전 모든 거래내역 조회
+            List<Reserve> findAllReserveListBefore = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE));
+
+            Long cumuAmount = 0L;
+            Long cumuDiscount = 0L;
+            Long finalAmount = 0L;
+            Long totalMember = (long) memberCount;
+            Long totalReserve = (long) findAllReserveListBefore.size();
+
+            for (Reserve reserve : findAllReserveListBefore) {
+                cumuAmount += reserve.getAmount();
+                cumuDiscount += reserve.getDiscount();
+                finalAmount += reserve.getAmount() - reserve.getDiscount();
+            }
+
+            //차트 생성 및 저장
+            Chart chart = new Chart().toEntity(charId, cumuAmount, cumuDiscount, finalAmount, totalMember, totalReserve);
+            chartRepository.save(chart);
+        }
     }
 
     /**
