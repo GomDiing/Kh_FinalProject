@@ -91,7 +91,7 @@ function Info(props) {
                     <span span='true' className="infoDesc">
                     {openR === "OPENRUN" ? 
                     <span className="infoText">{props.start} ~ 오픈런</span> :
-                    <span className="infoText">{props.start} ~ {props.end}</span>
+                    <span className="infoText">{props.start} ~ {props.end === 'null' ? '당일 공연' : props.end}</span>
                     }
                 </span>
                 </li>

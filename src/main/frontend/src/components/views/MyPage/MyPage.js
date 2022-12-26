@@ -30,7 +30,7 @@ const MyInfoStyle = styled.div`
   .userInfo {
     display: flex;
     border: 1px solid black;
-    width: 60%;
+    width: 50%;
     min-width: 660px;
     /* height: 350px; */
     margin: 0 auto;
@@ -65,9 +65,9 @@ const MyInfoStyle = styled.div`
     /* width: 65%; */
   }
   .MypageDataContainer{
-    width: 65%;
+    width: 50%;
     margin: 23px auto;
-    min-width: 660px;
+    min-width: 800px;
     min-height: 400px;
   }
   @media(max-width : 1024px){
@@ -75,7 +75,7 @@ const MyInfoStyle = styled.div`
       width: 80%;
     }
     .MypageDataContainer{
-      width: 80%;
+      width: 70%;
     }
 }
 `;

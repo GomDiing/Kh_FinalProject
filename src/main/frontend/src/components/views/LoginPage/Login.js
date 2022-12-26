@@ -164,9 +164,9 @@ const IdStyle = styled.div`
       } catch (e) {
         if(e.response.data.statusCode === 400){
           setIsShowId(false);
-          alert('조회 가능한 회원이 없습니다.');
+          alert(e.response.data.message);
         }else{
-          console.log(e.response);
+          console.log(e);
           console.log('통신 오류...')
         }
       }
@@ -210,9 +210,10 @@ const IdStyle = styled.div`
           setIsShowPwd(true);
         }
       } catch (e) {
-        if(e.response.data.results.statusCode === 400){
+        console.log(e);
+        if(e.response.data.statusCode === 400){
           setIsShowPwd(false);
-          alert(e.response.data.results.message);  
+          alert(e.response.data.message);
         }else {
           console.log(e);
           console.log('통신 오류...')
@@ -258,14 +259,15 @@ const IdStyle = styled.div`
     const [modalOpen, setModalOpen] = useState(false);
     const [id, setId] = useState(1);
     const openModal = e => {
-    setModalOpen(true);
-    let test = e.target.id;
-    if(test === 'id') {
-      setId(1);
-    } else if(test === 'pwd') {
-      setId(2);
+      setModalOpen(true);
+      let test = e.target.id;
+      if(test === 'id') {
+        setId(1);
+      } else if(test === 'pwd') {
+        setId(2);
+      }
     }
-    }
+
     const closeModal = () => setModalOpen(false);
 
     const [inputId, setInputId] = useState("");
@@ -316,19 +318,30 @@ const IdStyle = styled.div`
     const providerType = "HOME";
 
 
+    //탈퇴신청 취소 -> DELETE인 회원한테는 복구하는 모달이 보여서 누르면 복구 ! ! !
     const onClickDeleteCancel = async () => {
       const response = await MemberApi.deleteCancel(inputId, inputPwd, providerType);
       if(response.data.statusCode === 200) {
         alert('탈퇴신청이 정상 취소 되었습니다.');
+        const data = {
+            userIndex : undefined,
+            userId : undefined,
+            userPoint : 0,
+            userName : undefined,
+            userEmail : undefined,
+            userProvider_type : undefined,
+            userRole : undefined
+          }
+          dispatch(loginActions.setUserInfo({data}));
+        navigate(0);
         setOpen(false);
-        navigate('/');
       } else {
+        alert('탈퇴신청이 불가능한 상태입니다.');
         console.log('error...');
-        alert('이미 탈퇴신청이 완료..');
       }
     }
 
-
+    // 로그인 함수
     const onClickLogin = async () => {
       try {
         const response = await MemberApi.login(inputId, inputPwd, providerType);
@@ -351,24 +364,26 @@ const IdStyle = styled.div`
               } else 
               navigate('/');
               break;
+              // 탈퇴신청한지 1주일이 지나지 않은 회원
             case "DELETE" :
               setColor('green');
               setMessage('탈퇴신청을 하신 회원입니다 다시 처리를 취소하려면 확인을 누르시면 됩니다.');
               setOpen(true);
               setType('DELETE');
               break;
+              // 영구탈퇴 회원
             case "UNREGISTER" :
               setColor('silver');
               setMessage('회원님은 탈퇴하신지 1주일이 지나 영구탈퇴가 되었습니다.');
               setOpen(true);
               break;
+              // 블랙리스트 회원
             case "BLACKLIST" :
               setColor('red');
-              setMessage('회원님은 TCAT을 소중히 여기지 않았지... 블랙리스트를 시작하지');
+              setMessage('회원님은 저희 사이트에 위반하는 행위를 하셔서 블랙리스트로 전환되었습니다.');
               setOpen(true);
               break;
             default : 
-              alert('누구냐 넌..');
               break;
           }
         }

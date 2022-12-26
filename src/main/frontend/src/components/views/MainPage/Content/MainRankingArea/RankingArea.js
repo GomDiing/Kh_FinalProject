@@ -113,10 +113,10 @@ const area = [
         regionCode : '3',
         text : '부산'
     },
-    {
-        regionCode : '4',
-        text : '경남'
-    },
+    // {
+    //     regionCode : '4',
+    //     text : '경남'
+    // },
     
 ]
 

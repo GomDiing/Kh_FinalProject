@@ -8,6 +8,7 @@ import PayModal from "./PayModal";
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
 
+// 카카오페이 결제 3번 모달에서 값을 넘겨 받음
 const PayReady = (title, total, tax, value) => {
   let [data, setData] = useState({
   next_redirect_pc_url: "",
@@ -29,16 +30,17 @@ const PayReady = (title, total, tax, value) => {
       tax_free_amount: tax,
       // 결제 성공 URL
       approval_url: "http://localhost:8100/payresult",
-      // approval_url: "https://tcats.tk/payresult",
+      // approval_url: "http://www.tcat.pe.kr:8100",
       // 결제 실패 URL
       fail_url: "http://localhost:8100/resultfalse",
-      // fail_url: "https://tcats.tk/resultfalse",
+      // fail_url: "http://www.tcat.pe.kr:8100",
       // 결제 취소 URL
       cancel_url: "http://localhost:8100/resultfalse"
-      // cancel_url: "https://tcats.tk/resultfalse"
+      // cancel_url: "http://www.tcat.pe.kr:8100",
   }
   });
 
+  // 3번 모달에서 호출해서 응답 값으로 next_redirect_pc_url을 받음 200이 뜨고 이 url로 가야지 실질적인 결제가 가능
   useEffect(() => {
       const { params } = data;
       axios({
@@ -53,7 +55,9 @@ const PayReady = (title, total, tax, value) => {
         const {
             data: { next_redirect_pc_url, tid },
         } = response;
+        // 결제 고유번호 tid를 저장
         window.localStorage.setItem("tid", tid);
+        // 결제 페이지를 위한 url을 저장 모달 3번에서 버튼 클릭 시 불러줌
         window.localStorage.setItem('url', next_redirect_pc_url);
         setData({ next_redirect_pc_url, tid });
       }).catch(error => {
@@ -62,23 +66,38 @@ const PayReady = (title, total, tax, value) => {
     }, []);
   }
 
+  // 결제를 하면 잘 결제했는지 승인해주는 카카오 결제 승인 함수
   const PayResult = () => {
     const [isTrue, setIsTrue] = useState(false);
+    // 회원 정보를 받아옴
     const user = useSelector((state) => state.user.info);
+    // 선택한 좌석의 인덱스를 받아옴
     const seatIndex = useSelector((state) => state.seat.index);
+    // 초기값 세팅 그리고 위에서 결제한 결제 고유번호를 세팅 이건 백에다 넘길 정보 카카오랑 어쩌다보니 따로 구분됨
     const [payment, setPayment] = useState({
+      // 가격
       price : 0,
+      // 총 가격
       total : 0,
+      // 수량
       quantity : 0,
+      // 카카오 비과세 취소할 때 필요해서 결제할 때 백에다 정보를 넘겨주고 취소할 때 필요하면 다시 받아서 취소
       kakaoTaxFreeAmount : 0,
+      // 위에서 받아옴
       tid : window.localStorage.getItem('tid'),
+      // 결제 타입
       method : ''
     });
+    // 결제 후 띄울 모달
     const [modalOpen, setModalOpen] = useState(true);
+    // 위에 결제승인 token을 받기 위해
     let search = window.location.search;  
+    // 키키오페이 결제 승인 요청에 보낼 정보
     const data = {
       params: {
+        // 가맹점 번호
         cid: "TC0ONETIME",
+        // 결제 고유번호
         tid : payment.tid,
         partner_order_id: "partner_order_id",
         // 가맹점 회원 id
@@ -89,12 +108,15 @@ const PayReady = (title, total, tax, value) => {
     };
     const navigate = useNavigate();
     const openModal = () => setModalOpen(true);
+    // 모달 닫으면 자동으로 메인으로 넘어가게 replace:true는 설정하면 이전 페이지로 돌아오지 못함
     const closeModal = () => {
     setModalOpen(false);
     navigate('/', {replace:true});
     }
     
+    // 카카오페이에 결제 승인을 요청하는 실질적인 로직
     useEffect(() => {
+      // data 안에 params를 가져옴
         const { params } = data;
         axios({
             url: "https://kapi.kakao.com/v1/payment/approve",
@@ -105,52 +127,61 @@ const PayReady = (title, total, tax, value) => {
             },
             params,
         }).then(response => {
-            console.log(response);
+          // 응답을 받으면 위에 백에다 보낼 정보를 세팅해줌
             setPayment((state) => ({
               ...state,
+              // 티켓 기본 가격 정보를 따로 안넘겨줘서 총 가격 / 수량
               price : response.data.amount.total / response.data.quantity,
+              // 총 가격
               total : response.data.amount.total,
+              // 수량
               quantity : response.data.quantity,
+              // 결제 고유번호
               tid : response.data.tid,
+              // 카카오 비과세
               kakaoTaxFreeAmount : response.data.amount.tax_free,
               // CARD OR MONEY 둘 중 하나의 방식이면 백에서 받을 때 KAKAOPAY라고 알려주기 위하여 KAKAOPAY로 변환해서 넘겨줌 둘 다 아니면 에러
               method : response.data.payment_method_type === 'CARD' || response.data.payment_method_type === 'MONEY' ? 'KAKAOPAY' : 'ERROR'
             }));
+            // 성공이면 모달 오픈
             setIsTrue(true);
+            // 그리고 url은 지워줌 왜냐하면 잘못되면 나중에 전에 url로 다시 이 결제로 돌아올 수 있기 때문이다.
             window.localStorage.removeItem('url');
         }).catch(error => {
+            // 실패하면 결제 고유번호를 지워줌 똑같은 중복 결제 방지 위랑 비슷하다.
             window.localStorage.removeItem('tid');
             console.log(error);
         });
     }, []);
 
+    // 백에다 보내는 실질적인 로직 일단 카카오에서 승인이 받았기에 웬만하면 그 값 그대로 넘겨주기에 백엔드에도 문제가 없이 값이 잘 넘어간다
       useEffect(() => {
+        // 비동기 통신
         const PayReadySubmit = async () => {
-          console.log(payment);
           try {
+            // 위에 정보
             const response = await PayApi.payReady(user.userIndex, seatIndex, payment.quantity, payment.price, user.userPoint, payment.method, payment.tid, payment.total, payment.kakaoTaxFreeAmount);
-            console.log(response);
+            // 200이면 결제 tid 다시 지워줌 어차피 DB에 TID값이 저장됨
             if(response.data.statusCode === 200) {
               window.localStorage.removeItem('tid');
             }
           } catch (e) {
+            // 마찬가지로 실패여도 지워준다
             window.localStorage.removeItem('tid');
             console.log(e);
-            console.log('에러!!!');
           }
         }
+        // 이게 뭐냐면 혹시 카카오페이에서는 승인이 실패할 수도 있는데 백에만 정보가 넘어가면 안되기에 위에서 먼저 카카오페이가 성공이면 TRUE 값이 넘오와서 그 때만 실행되게 하였다
         isTrue && PayReadySubmit();
       }, [isTrue, seatIndex, payment, user]);
 
+      // 결제 완료 모달
     const Body = () => {
         return(
             <div>
-                <h1>TCAT 결제가 완료되었습니다.</h1>
-                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT' style={{width: '500px', height: '400px'}}></img>
-                <br/>
-                <br/>
+                <h1>결제가 정상 진행 되었습니다.</h1>
+                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT'></img>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
-                <br/>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>
             </div>
         );
@@ -162,7 +193,9 @@ const PayReady = (title, total, tax, value) => {
     );
   };
 
+  // 카카오페이 결제 취소 함수
   const PayCancel = () => {
+    // 예매정보에서 navigate를 통하여 값을 받은 걸 useLocation으로 꺼냄
     const location = useLocation();
     // 넘어온 티켓 정보.
     const ticket = location.state.ticket;
@@ -176,23 +209,27 @@ const PayReady = (title, total, tax, value) => {
       setModalOpen(false);
       navigate('/', {replace:true});
     }
-    
-    // 공연 날짜 계산해서 수수료 하는 것은 나중에 ...
+   
+    // 공연 시작일
     const viewTime = ticket.view_time;
     const today = new Date();
 
+    // 년 월 일 같은지 체크
     const isSameDate = (date1, date2) => {
       return date1.getFullYear() === date2.getFullYear()
         && date1.getMonth() === date2.getMonth()
         && date1.getDate() === date2.getDate();
     }
 
+    // 위에 백 따로 카카오페이 따로 객체를 만들었는데 솔직히 비효율적이다 하나로 만들어서 쓰면 된다..
     const [data, setData] = useState({
       // 티켓 가격
       amount : ticket.final_amount / ticket.count,
       // 수량
       count : ticket.count,
+      // 카카오페이에 넘겨줄 정보
       params: {
+        // 가맹점 번호
         cid: "TC0ONETIME",
         // 고유 결제 TID
         tid : ticket.kakaoTID,
@@ -208,10 +245,12 @@ const PayReady = (title, total, tax, value) => {
     // 맨처음에 한 번만 실행
     useEffect(() => {
       const onPayCancelDate = (view_time, today) => {
-        // 년 월 일이 같으면 안댐
+        // 년 월 일이 같으면 안댐 당일 취소 금지
         if(isSameDate(new Date(view_time), today)) {
+          // 이 때는 환불이 안돼서 false
           setCancelTry(false);
           openModal();
+
           // 월이 같을 때 일로 비교 5% 수수료 3일 전
         } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() <= 3 && new Date(view_time).getDate() - today.getDate() > 1) {
           setData((prevstate) => ({
@@ -220,10 +259,13 @@ const PayReady = (title, total, tax, value) => {
             params : {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
+              // 5% 빼기
               cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 20)
             }
           }));
+          // 환불가능 true
           setCancelTry(true);
+
           // 월이 같을 때 일로 비교 하루 전이면 수수료 cancel.final_amount -> 10% 수수료 뺴고
         } else if (new Date(viewTime).getMonth() === today.getMonth() && new Date(view_time).getDate() - today.getDate() === 1 && new Date(view_time).getDate() - today.getDate() > 0) {
           setData((prevstate) => ({
@@ -232,11 +274,14 @@ const PayReady = (title, total, tax, value) => {
             params : {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
+              // 10% 빼기
               cancel_amount : ticket.final_amount - Math.floor(ticket.final_amount / 10)
             }
           }));
+          // 환불가능 true
           setCancelTry(true);
-          // 나머지는 다 무료
+
+          // 나머지는 다 무료 아마 이게 정확하지는 않는데 일단 급하게 만들어서..이 정도면 97%는 잘 돌아감
         } else {
           setData((prevstate) => ({
             // 데이터 객체를 복사
@@ -244,20 +289,22 @@ const PayReady = (title, total, tax, value) => {
             params : {
               // 데이터 안에 params 객체를 복사
               ...prevstate.params,
+              // 티켓 전액 그대로 취소
               cancel_amount : ticket.final_amount
             }
           }));
+          // 환불 가능
           setCancelTry(true);
         }
       }
+      // 매개변수로 공연날짜랑, 당일 날짜 받아옴
       onPayCancelDate(viewTime, today);
     }, []);
 
-    // payCancel 들어오면 결제 취소 ! ! !
+    // 카카오페이 취소 실질적인 로직 
     useEffect(() => {
       const { params } = data;
-      console.log(params);
-      // 트루일 때만 요청 ㄱ ㄱ 
+      // 트루일 때만 요청 가능함 왜냐 false일 경우는 당일이기 때문에 당일 취소를 막음
         cancelTry && axios({
             url: "https://kapi.kakao.com/v1/payment/cancel",
             method: "POST",
@@ -267,26 +314,29 @@ const PayReady = (title, total, tax, value) => {
             },
             params,
         }).then(response => {
-          console.log(response);
           // 요청이 완료되면 백엔드에도 전송하기 위해 트루
           setCancelTry2(true);
         }).catch(error => {
           setCancelTry(false);
           setCancelTry2(false);
+          // 아니ㅕㄴ 결제 실패 모달
           openModal();
           console.log(error);
       });
     }, [cancelTry, data]);
     
+    // 실질적인 백에다 보내는 취소 정보
     useEffect(() => {
-      console.log(data.params);
+      // 비동기 통신
       const payCancel = async () => {
         try {
+          // 위에서 세팅한 티켓 정보
           const response = await PayApi.payCancel(ticket.reserve_ticket, data.params.cancel_amount);
-          console.log(response);
+          // 200이면 성공
           if(response.data.statusCode === 200) {
             setCancelTry2(true);
           } else {
+            // 실패하면 실패 모달로 이동 이거 예외처리를 좀 잘못했습니다. 하나라도 안되면 다 안되야 하는 것이 맞는데 실수.. 되돌리기엔 좀 늦었습니다.
             setCancelTry(false);
             setCancelTry2(false);
             openModal();
@@ -300,6 +350,8 @@ const PayReady = (title, total, tax, value) => {
       openModal();
     }, [cancelTry, canclelTry2, data.params, ticket.reserve_ticket]);
 
+
+    // 환불 완료 되었을 때
     const Body = () => {
       return(
         <div>
@@ -311,6 +363,7 @@ const PayReady = (title, total, tax, value) => {
       );
     }
 
+    // 환불 실패..
     const Body2 = () => {
       return(
         <div>
