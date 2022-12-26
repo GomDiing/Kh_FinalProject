@@ -71,7 +71,7 @@ min-width: 930px;
   /* top: 6.5rem; */
   /* bottom: 0; */
   /* bottom: 200px; */
-  top : 70px;
+  top : 100px;
   padding-bottom: 10px;
 
 }

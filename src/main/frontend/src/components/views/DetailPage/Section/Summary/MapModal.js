@@ -50,7 +50,7 @@ const MapModalBody = (props) =>{
         };
         var map = new kakao.maps.Map(mapContainer, mapOption);
         var imageSrc = 'https://ifh.cc/g/H7DtZR.png',
-        imageSize = new kakao.maps.Size(36, 36),
+        imageSize = new kakao.maps.Size(42, 42),
         imageOption = {offset: new kakao.maps.Point(27, 69)};
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),

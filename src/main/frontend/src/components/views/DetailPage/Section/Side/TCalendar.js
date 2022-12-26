@@ -161,7 +161,7 @@ function TCalendar (props) {
       var m = str.substr(5, 2);
       var d = str.substr(8, 2);
       return new Date(y,m-1,d);
-   }
+    }
     // 예매 가능한 첫 날짜
     const [firstDay, setFirstDay] = useState('');
     const openModal = e => {
