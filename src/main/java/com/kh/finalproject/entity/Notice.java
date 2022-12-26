@@ -24,6 +24,7 @@ public class Notice extends BaseTimeEntity {
     @Column(name = "notice_title", nullable = false)
     private String title;
 
+    @Lob
     @Column(name = "notice_content", nullable = false)
     private String content;
 

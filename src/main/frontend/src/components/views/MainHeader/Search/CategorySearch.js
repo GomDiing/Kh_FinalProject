@@ -83,10 +83,10 @@ const rankings = [
         name : 'rankingMonth',
         text : '월간랭킹',
     },
-    {
-        name : 'rankingClose',
-        text : '종료임박',
-    },
+    // {
+    //     name : 'rankingClose',
+    //     text : '종료임박',
+    // },
     
 ]
 
@@ -150,13 +150,15 @@ const CategorySearch = () => {
                         console.log("월간랭킹")
                         setSearchData(res.data.results)
                     }
-                }else if(ranking === 'rankingClose'){
-                    const res = await MainApi.rankingClose(category, 20);
-                    if(res.data.statusCode === 200){
-                        console.log("종료임박")
-                        setSearchData(res.data.results)
-                    }
-                }else console.log("실패")
+                }
+                // else if(ranking === 'rankingClose'){
+                //     const res = await MainApi.rankingArea(category, 20);
+                //     if(res.data.statusCode === 200){
+                //         console.log("종료임박")
+                //         setSearchData(res.data.results)
+                //     }
+                // }
+                else console.log("실패")
             }catch(e){
                 console.log(e);
             }

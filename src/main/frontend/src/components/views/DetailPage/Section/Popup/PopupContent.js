@@ -208,7 +208,7 @@ function PopupContent (props) {
           </tr>
           <tr>
             <th rowSpan={3}>기본 할인</th>
-            <td>학생 할인(10%)</td>
+            <td>크리스마스 할인(10%)</td>
             <td>{student}</td>
             <td className='select-box'>
               <select name='student' value={stuValue} onChange={changeValue}>
