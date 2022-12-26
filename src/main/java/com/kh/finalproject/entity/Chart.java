@@ -58,6 +58,6 @@ public class Chart extends BaseTimeEntity {
     }
 
     public void updateMember(Long totalMember) {
-        this.totalMember = totalMember;
+        this.totalMember += totalMember;
     }
 }
