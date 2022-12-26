@@ -32,7 +32,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 //    List<ReviewComment> selectAll(Pageable size);
 
     /*후기 최근글 조회할때 부모 댓글만 볼 수 있게 layer=0*/
-    List<ReviewComment> searchAllByLayerAndStatus(Integer layer,ReviewCommentStatus status,Pageable size);
+    List<ReviewComment> searchAllByLayerAndStatus(Integer layer,ReviewCommentStatus status);
 
     List<ReviewComment> findAllByProduct(Product productCode);
 
