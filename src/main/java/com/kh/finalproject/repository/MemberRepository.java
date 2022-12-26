@@ -24,6 +24,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 //    Optional<List<Member>> findAllByCreate_timeBeforeAndStatusNot(LocalDateTime now, MemberStatus status);
     Integer countAllByStatusNotAndCreateTimeBefore(MemberStatus status, LocalDateTime before);
+    Integer countAllByCreateTimeBefore(LocalDateTime before);
 
     /**
      * 체크박스 삭제시 회원 상태 탈퇴회원으로 변환
