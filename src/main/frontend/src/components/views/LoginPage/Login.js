@@ -10,12 +10,15 @@ import { loginActions } from '../../../util/Redux/Slice/userSlice';
 const LoginWrap = styled.div`
   width: 100%;
   min-width: 930px;
-  background-color: #d2d2d2;
+  background: url(https://images.unsplash.com/photo-1512389055488-8d82cb26ba6c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fGNocmlzbWFzJTIwYmFja2dyb3VuZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60);
+  background-size: contain;
+  font-weight: bold;
+  /* background-color: #d2d2d2; */
   .loginwrap{
     min-height: 100vh;
     margin: 0 auto;
     width: 70%;
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,6 +52,9 @@ const LoginWrap = styled.div`
     width: 350px;
     height: 40px;
     border: 0px solid black;
+  }
+  input:focus {
+    border: 1px solid white;
   }
   .btn-group{
     display: flex;

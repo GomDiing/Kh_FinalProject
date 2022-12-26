@@ -118,7 +118,7 @@ const ReviewBody=(props)=>{
         ))}
         <Pagination className="reply-pagination"
              total={totalCount}  //총 데이터 갯수
-             current={currentPage} 
+             current={currentPage}
              pageSize={pageSize}
              onChange={(page) => {setCurrentPage(page); 
               setReviewList2([]);}} //숫자 누르면 해당 페이지로 이동

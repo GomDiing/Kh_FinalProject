@@ -370,6 +370,7 @@ public class MemberServiceImpl implements MemberService {
 
         List<Member> memberList = pageMemberList.getContent();
         Integer totalPages = pageMemberList.getTotalPages();
+        System.out.println(totalPages);
         Integer page = pageMemberList.getNumber()+1;
         Long totalResults = pageMemberList.getTotalElements();
 
