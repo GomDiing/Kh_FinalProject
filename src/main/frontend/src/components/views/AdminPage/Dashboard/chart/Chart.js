@@ -68,12 +68,12 @@ const Chart = (props) => {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="index"/>
-          <YAxis />
+          {/* <YAxis yAxisId="left" /> */}
           <Tooltip />
           <Legend />
-          <Bar dataKey="income" fill="#FD8A8A" />
-          <Bar dataKey="discount" fill="#F1F7B5" />
-          <Bar dataKey="all" fill="#A8D1D1" />
+          <Bar yAxisId="left" dataKey="income" fill="#FD8A8A" />
+          <Bar yAxisId="left" dataKey="discount" fill="#F1F7B5" />
+          <Bar yAxisId="left" dataKey="all" fill="#A8D1D1" />
         </BarChart>
       </ResponsiveContainer>
       </div>

@@ -7,31 +7,31 @@ const Profile=()=>{
         {
             id : "1",
             img : "https://itimg.chosun.com/sitedata/image/201809/07/2018090702435_0.jpg",
-            name : "하정목",
+            name : "HJM",
             position : "Detail/MyPage/Sign/Login"
         },
         {
             id : "2",
             img : "https://itimg.chosun.com/sitedata/image/201809/07/2018090702435_0.jpg",
-            name : "김성탁",
+            name : "KST",
             position : "BackEnd"
         },
         {
             id : "3",
             img : "https://itimg.chosun.com/sitedata/image/201809/07/2018090702435_0.jpg",
-            name : "박하린",
+            name : "PHR",
             position : "AdminPage"
         },
         {
             id : "4",
             img : "https://itimg.chosun.com/sitedata/image/201809/07/2018090702435_0.jpg",
-            name : "지민",
+            name : "JM",
             position : "Detail/MyPage/Sign/Login"
         },
         {
             id : "5",
             img : "https://itimg.chosun.com/sitedata/image/201809/07/2018090702435_0.jpg",
-            name : "김승렬",
+            name : "KSR",
             position : "Main / Menu / CSS"
         },
 

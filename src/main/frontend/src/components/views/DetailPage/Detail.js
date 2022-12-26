@@ -34,7 +34,7 @@ min-width: 930px;
   img{
     /* margin-left: 20px; */
     padding: 20px;
-    width: 77%;
+    width: 69%;
   }
 }
 .topBtn {

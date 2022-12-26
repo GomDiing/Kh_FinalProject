@@ -16,7 +16,7 @@ function Contents(props) {
     },
   ]
   return (
-    <div className='contentsWrap' style={{marginLeft: '2rem', marginTop: '1.5rem' , marginBottom : '150px'}}>
+    <div className='contentsWrap' style={{marginLeft: '5rem', marginTop: '1.5rem' , marginBottom : '150px'}}>
     <div className='main'>
       <img src={props.image} alt='공연 상세 정보가 없습니다.'></img>
     </div>
