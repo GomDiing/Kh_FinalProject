@@ -5,7 +5,7 @@ const BodyContainer = styled.div`
     
     img{
         width: 100%;
-        height: 230px;
+        height: 200px;
     }
 `
 const CancelModalBody = () => {
@@ -14,7 +14,7 @@ const CancelModalBody = () => {
         <BodyContainer>
             <div>
                 <div>
-                    <img src={process.env.PUBLIC_URL + '/images/Cancel1.jpg'}/>
+                    <img src={process.env.PUBLIC_URL + '/images/Cancel1.png'}/>
                     <p>1. 로그인 후 예매내역을 선택합니다</p>
                 </div>
                 <div>
@@ -22,7 +22,7 @@ const CancelModalBody = () => {
                     <p>2. 예매내역에서 취소를 원하는 공연의 상세보기를 클릭합니다.</p>
                 </div>
                 <div>
-                    <img src={process.env.PUBLIC_URL + '/images/Cancel3.jpg'}/>
+                    <img src={process.env.PUBLIC_URL + '/images/Cancel3.png'}/>
                     <p>3. 선택하신 정보가 맞으시다면, 결제 취소하기 버튼을 눌러 진행합니다.</p>
                 </div>
             </div>
