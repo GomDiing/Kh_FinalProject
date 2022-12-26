@@ -203,7 +203,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
     @Override
     public List<ReviewCommentDTO> searchAll(Pageable pageSize) {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
-        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayerAndStatus(0, ReviewCommentStatus.ACTIVE);
+        List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayerAndStatusOrderByCreateTimeDesc(0, ReviewCommentStatus.ACTIVE);
 
         List<ReviewComment> reviewCommentDisplayList = new LinkedList<>();
 
