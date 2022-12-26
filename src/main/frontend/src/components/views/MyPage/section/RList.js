@@ -9,6 +9,7 @@ import PayApi from '../../../../api/PayApi';
 
 const Style = styled.div`
   table, th, tr, td {
+    min-width: 800px;
     border: 1px solid black;
   }
 `;
