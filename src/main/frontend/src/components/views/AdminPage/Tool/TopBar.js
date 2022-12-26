@@ -15,6 +15,9 @@ const TopBlock=styled.div`
         font-family: sans-serif;
         /* font-weight: bold; */
         font-size: 1.3rem;
+        min-width: 250px;
+    }
+    .title {
     }
 `;
 const TopBar=(props)=>{

@@ -152,7 +152,7 @@ const MainHeader = () =>{
                         <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('DRAMA' , "연극")}}>연극</Link>
                         <Link to ='/categorySearch' className = "HeaderMenu" onClick={()=>{clickCategory('EXHIBITION' , "전시회")}}>전시회</Link>
                         {/* 관리자 조건부 랜더링 */}
-                        {userInfo.userRole === "Admin" ? 
+                        {userInfo.userRole === "ROLE_ADMIN" ? 
                         <Link to = "/admin" className = "HeaderMenu">관리자</Link> : ""}
                         
                     </Nav>
