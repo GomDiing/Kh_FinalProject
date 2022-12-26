@@ -139,7 +139,7 @@ public class ReserveServiceImpl implements ReserveService {
 
         //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
 //        log.info("debug!!! beforMonthTime = {}", beforeMonthTime);
-        Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
+        Integer memberCount = memberRepository.countAllByCreateTimeBefore(beforeMonthTime);
 
         //거래내역이 존재하지 않다면
         if (isReserveExist) {

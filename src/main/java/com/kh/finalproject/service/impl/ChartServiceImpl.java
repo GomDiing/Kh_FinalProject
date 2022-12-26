@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -78,7 +79,7 @@ public class ChartServiceImpl implements ChartService {
                     .isEmpty();
 
             //UNREGISTER 상태가 아니고 조회 이전 월 이전 총 회원수 조회
-            Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
+            Integer memberCount = memberRepository.countAllByCreateTimeBefore(beforeMonthTime);
 
             //거래내역이 존재하지 않다면
             if (isReserveExist) {
@@ -123,7 +124,7 @@ public class ChartServiceImpl implements ChartService {
     @Transactional
     @Override
     public List<ChartDTO> searchChartList(Integer listCount) {
-        List<ChartDTO> chartDTOList = new ArrayList<>();
+        List<ChartDTO> chartDTOList = new LinkedList<>();
         for (int i = 0; i < listCount; i++) {
             //관리자 차트 이름 생성
             LocalDateTime todayTime = LocalDateTime.now();
@@ -160,8 +161,8 @@ public class ChartServiceImpl implements ChartService {
         boolean isReserveExist = reserveRepository.findAllByCreateTimeBefore(beforeMonthTime)
                 .isEmpty();
 
-        //UNREGISTER 상태가 아니고 (조회 직전 월) 이전의 총 회원수 조회
-        Integer memberCount = memberRepository.countAllByStatusNotAndCreateTimeBefore(MemberStatus.UNREGISTER, beforeMonthTime);
+        //(조회 직전 월) 이전의 총 회원수 조회
+        Integer memberCount = memberRepository.countAllByCreateTimeBefore(beforeMonthTime);
 
         //거래내역이 존재하지 않다면
         if (isReserveExist) {
