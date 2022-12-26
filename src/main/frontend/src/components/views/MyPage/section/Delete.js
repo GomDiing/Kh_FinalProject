@@ -47,7 +47,7 @@ function Delete() {
         <li>탈퇴신청 1주일이 지나면 영구탈퇴가 되므로 주의바랍니다.</li>
       </ul>
       <div style={{display : 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <input style={{width : '280px', height: '40px', margin: '0 5px'}} value={inputPwd} onChange={handleChangePassword} type='text' placeholder='패스워드를 입력 후 확인을 눌러주세요' />
+        <input style={{width : '280px', height: '40px', margin: '0 5px'}} value={inputPwd} onChange={handleChangePassword} type='password' placeholder='패스워드를 입력 후 확인을 눌러주세요' />
         <button onClick={handelDeleteMember} style={{padding: '8px 16px', color: '#fff', backgroundColor: '#6c757d', borderRadius: '5px', fontSize: '16px', border: '0px'}} type='button'>확인</button>
       </div>
     </div>

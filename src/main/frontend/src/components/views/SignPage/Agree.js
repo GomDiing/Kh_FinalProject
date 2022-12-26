@@ -84,10 +84,10 @@ function Agree () {
   const [check4, setCheck4] = useState(false);
 
   const onCheckAll = () => {
-    setCheck1(!check1);
-    setCheck2(!check2);
-    setCheck3(!check3);
-    setCheck4(!check4);
+    setCheck1(true);
+    setCheck2(true);
+    setCheck3(true);
+    setCheck4(true);
   }
   const onCheck2 = () => setCheck2(!check2);
   const onCheck3 = () => setCheck3(!check3);
