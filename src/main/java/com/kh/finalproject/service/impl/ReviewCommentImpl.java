@@ -4,6 +4,7 @@ import com.kh.finalproject.dto.reviewComment.*;
 import com.kh.finalproject.entity.Member;
 import com.kh.finalproject.entity.Product;
 import com.kh.finalproject.entity.ReviewComment;
+import com.kh.finalproject.entity.enumurate.MemberStatus;
 import com.kh.finalproject.entity.enumurate.ReviewCommentStatus;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
@@ -204,7 +205,15 @@ public class ReviewCommentImpl implements ReviewCommentService {
         List<ReviewCommentDTO> reviewCommentDTOList = new ArrayList<>();
         List<ReviewComment> reviewCommentList = reviewCommentRepository.searchAllByLayerAndStatus(0, ReviewCommentStatus.ACTIVE, pageSize);
 
-        for (ReviewComment e : reviewCommentList) {
+        List<ReviewComment> reviewCommentDisplayList = new LinkedList<>();
+
+        for (ReviewComment reviewComment : reviewCommentList) {
+            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE || reviewComment.getMember().getStatus() == MemberStatus.BLACKLIST) {
+                reviewCommentDisplayList.add(reviewComment);
+            }
+        }
+
+        for (ReviewComment e : reviewCommentDisplayList) {
             ReviewCommentDTO reviewCommentDTO = new ReviewCommentDTO().toDTO(e, e.getMember());
             reviewCommentDTOList.add(reviewCommentDTO);
         }
@@ -218,12 +227,19 @@ public class ReviewCommentImpl implements ReviewCommentService {
         //후기만 조회
         Page<ReviewComment> reviewCommentPage = reviewCommentRepository.findByProductCodeAndStatusAndLayer(productCode, ReviewCommentStatus.ACTIVE, pageable, 0);
 
+        List<ReviewComment> reviewCommentDisplayList = new LinkedList<>();
+
         List<ReviewComment> reviewCommentList = reviewCommentPage.getContent();
+        for (ReviewComment reviewComment : reviewCommentList) {
+            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE || reviewComment.getMember().getStatus() == MemberStatus.BLACKLIST) {
+                reviewCommentDisplayList.add(reviewComment);
+            }
+        }
         Integer totalPages = reviewCommentPage.getTotalPages();
         Integer page = reviewCommentPage.getNumber() + 1;
         Long totalResults = reviewCommentPage.getTotalElements();
 
-        for(ReviewComment reviewComment : reviewCommentList){
+        for(ReviewComment reviewComment : reviewCommentDisplayList){
             ParentReviewDTO parentReviewDTO = new ParentReviewDTO().toDTO(reviewComment);
             //댓글 조회 (해당 상품 + 상태(ACTIVE) + 레이어=1 + 후기가 아니고(인덱스가 후기 인덱스가 아니고) + 그룹이 후기 그룹인 댓글 조회
             List<ReviewComment> findCommentList = reviewCommentRepository.findByProductCodeAndStatusAndLayerAndIndexNotAndGroup(productCode, ReviewCommentStatus.ACTIVE, 1, reviewComment.getIndex(), reviewComment.getGroup());

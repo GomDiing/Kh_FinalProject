@@ -30,13 +30,13 @@ const PayReady = (title, total, tax, value) => {
       tax_free_amount: tax,
       // 결제 성공 URL
       approval_url: "http://localhost:8100/payresult",
-      // approval_url: "https://tcats.tk",
+      // approval_url: "https://tcats.tk/payresult",
       // 결제 실패 URL
       fail_url: "http://localhost:8100/resultfalse",
-      // fail_url: "https://tcats.tk",
+      // fail_url: "https://tcats.tk/resultfalse",
       // 결제 취소 URL
       cancel_url: "http://localhost:8100/resultfalse"
-      // cancel_url: "https://tcats.tk",
+      // cancel_url: "https://tcats.tk/resultfalse",
   }
   });
 
