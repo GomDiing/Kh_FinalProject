@@ -182,6 +182,7 @@ function TCalendar (props) {
         setModalOpen(false);
         setIndex(1);
         setTurn(0);
+        setIsNext(false);
     }
 
     useEffect(() => {

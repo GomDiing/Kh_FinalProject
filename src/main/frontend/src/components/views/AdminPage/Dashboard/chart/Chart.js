@@ -32,7 +32,7 @@ const Chart = (props) => {
             setChartData([...chartData, ...res.data.results]);
             console.log(res.data.results);
             if(chart.length === 0) {
-              const mapChart = chartData.map((data) => {
+              const mapChart = chartData.reverse().map((data) => {
                 return {
                   index: data.id,
                   income: data.cumuAmount,
@@ -48,6 +48,7 @@ const Chart = (props) => {
       }
       getChartData();
   }, [chart]);
+  console.log(chart);
 
     return (
         <ChartBlock>

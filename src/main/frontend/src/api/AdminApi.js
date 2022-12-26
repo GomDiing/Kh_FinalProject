@@ -86,7 +86,7 @@ const AdminApi={
     },
     // 차트 정보
     getChart : async function() {
-        return await axios.get(TCAT_DOMAIN + "/admin/chart", HEADER)
+        return await axios.get(TCAT_DOMAIN + "/admin/chart/3", HEADER)
     },
 
     /* 배너 등록하기(관리자) 아직 미구현   */ 

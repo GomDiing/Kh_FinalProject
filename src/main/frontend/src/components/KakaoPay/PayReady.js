@@ -180,7 +180,7 @@ const PayReady = (title, total, tax, value) => {
         return(
             <div>
                 <h1>결제가 정상 진행 되었습니다.</h1>
-                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} alt='TCAT'></img>
+                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} style={{width: '500px', margin: '20px 0'}} alt='TCAT'></img>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>
             </div>

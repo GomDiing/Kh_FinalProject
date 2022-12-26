@@ -11,7 +11,7 @@ const FeaturedInfo=()=>{
             try {
                 const res = await AdminApi.getChart();
                 if(res.data.statusCode === 200){
-                    setChartData(res.data.results[0]);
+                    setChartData(res.data.results[1]);
                     console.log(res.data.results);
                 } 
                 } catch (e) {
