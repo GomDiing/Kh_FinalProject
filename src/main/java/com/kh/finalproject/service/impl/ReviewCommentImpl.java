@@ -208,7 +208,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
         List<ReviewComment> reviewCommentDisplayList = new LinkedList<>();
 
         for (ReviewComment reviewComment : reviewCommentList) {
-            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE || reviewComment.getMember().getStatus() == MemberStatus.BLACKLIST) {
+            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE) {
                 reviewCommentDisplayList.add(reviewComment);
             }
         }
@@ -231,7 +231,7 @@ public class ReviewCommentImpl implements ReviewCommentService {
 
         List<ReviewComment> reviewCommentList = reviewCommentPage.getContent();
         for (ReviewComment reviewComment : reviewCommentList) {
-            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE || reviewComment.getMember().getStatus() == MemberStatus.BLACKLIST) {
+            if (reviewComment.getMember().getStatus() == MemberStatus.ACTIVE) {
                 reviewCommentDisplayList.add(reviewComment);
             }
         }
