@@ -25,4 +25,13 @@ public class ReviewLike extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_index", nullable = false)
     private Member member;
+
+    public ReviewLike toEntity(ReviewComment reviewComment, Member member) {
+        this.member = member;
+        member.getReviewLikeList().add(this);
+        this.reviewComment = reviewComment;
+        reviewComment.getReviewLikeList().add(this);
+
+        return this;
+    }
 }

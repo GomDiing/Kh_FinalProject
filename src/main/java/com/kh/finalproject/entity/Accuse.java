@@ -1,10 +1,11 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.accuse.CreateAccuseDTO;
 import com.kh.finalproject.entity.enumurate.AccuseStatus;
 import lombok.Getter;
-
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 신고 테이블과 연결된 엔티티
@@ -27,10 +28,10 @@ public class Accuse extends BaseTimeEntity {
     @JoinColumn(name = "member_index_victim", nullable = false)
     private Member memberVictim;
 
-    @Column(name = "accuse_reason", nullable = false)
+    @Column(name = "accuse_reason",nullable = false)
     private String reason;
-
-    @Column(name = "accuse_process", nullable = false)
+//, nullable = false
+    @Column(name = "accuse_process")
     private String process;
 
     @Column(name = "accuse_status", nullable = false)
@@ -40,4 +41,18 @@ public class Accuse extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_component_index")
     private ReviewComment reviewComment;
+
+//    신고할때 신고자, 피해자, 리뷰index
+    public Accuse createAccuse(Member memberSuspect,Member memberVictim,ReviewComment reviewComment,String reason){
+        this.memberSuspect = memberSuspect;
+        memberSuspect.getAccuseListSuspectList().add(this);
+        this.memberVictim = memberVictim;
+        memberVictim.getAccuseListVictimList().add(this);
+        this.reviewComment = reviewComment;
+        this.status = AccuseStatus.WAIT;
+        this.reason = reason;
+        return this;
+    }
+
+
 }

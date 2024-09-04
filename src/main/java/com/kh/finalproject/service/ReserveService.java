@@ -1,6 +1,7 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.reserve.*;
+import com.kh.finalproject.entity.enumurate.ReserveStatus;
 
 import java.util.List;
 
@@ -11,24 +12,28 @@ public interface ReserveService {
     /**
      * 예매 결제 메서드
      */
-    void payment(PaymentReserveDTO paymentReserveDTO);
+    void createReserve(PaymentReserveDTO paymentReserveDTO);
 
     /**
-     * 예매 환불 메서드
+     * 예매 환불/취소 메서드
      * 적절한 처리 후 상태 변경
      */
-    void refund(RefundReserveDTO refundReserveDTO);
+    RefundReserveCancelDTO refundCancel(String reserveId, ReserveStatus status, Integer totalRefundAmount);
 
     /**
      * 예매 취소 메서드
      * 적절한 처리 후 상태 변경
      */
-    void cancel(CancelReserveDTO cancelReserveDTO);
+//    RefundReserveDTO cancel(String reserveId);
+
+//    void cancel(CancelReserveDTO cancelReserveDTO);
 
     /**
      * 회원 인덱스로 예매 조회 메서드
      */
-    ReserveDTO searchByMember(Long memberIndex);
+    List<SearchPaymentReserveDTO> searchAllPayment(Long memberIndex);
+
+    List<SearchRefundCancelReserveDTO> searchAllRefundCancel(Long memberIndex);
 
     /**
      * 예매 전체 조회 메서드

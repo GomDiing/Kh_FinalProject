@@ -1,5 +1,6 @@
 package com.kh.finalproject.entity;
 
+import com.kh.finalproject.dto.statistics.StatisticsDTO;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -40,4 +41,19 @@ public class Statistics {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code", nullable = false)
     private Product product;
+
+//    public Statistics toEntity(StatisticsDTO statisticsDTO, Product product) {
+//        this.male = statisticsDTO.getMale();
+//        this.female = statisticsDTO.getFemale();
+//        this.teen = statisticsDTO.getTeen();
+//        this.twenties = statisticsDTO.getTwenties();
+//        this.thirties = statisticsDTO.getThirties();
+//        this.forties = statisticsDTO.getForties();
+//        this.fifties = statisticsDTO.getFifties();
+//        this.product = product;
+//        product.code(this);
+//        return this;
+//    }
+
+
 }

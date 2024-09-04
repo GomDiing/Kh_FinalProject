@@ -1,5 +1,6 @@
 package com.kh.finalproject.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -28,9 +30,11 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
     //생성시간
     @CreatedDate
-    protected LocalDateTime create_time;
+    @JsonProperty("create_time")
+    protected LocalDateTime createTime;
 
     //수정시간
     @LastModifiedDate
-    protected  LocalDateTime update_time;
+    @JsonProperty("update_time")
+    protected  LocalDateTime updateTime;
 }

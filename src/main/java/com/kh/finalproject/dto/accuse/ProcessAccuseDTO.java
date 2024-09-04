@@ -7,4 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class ProcessAccuseDTO {
+    private Long id;
+    private Long reviewCommentIndex;
+    private String accuseStatus;
+    private String memberStatus;
+    private Integer accuseCount;
+
 }

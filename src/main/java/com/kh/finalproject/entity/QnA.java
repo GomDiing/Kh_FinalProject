@@ -1,10 +1,13 @@
 package com.kh.finalproject.entity;
 
 import com.kh.finalproject.common.BaseTimeEntity;
+import com.kh.finalproject.dto.member.UnregisterDTO;
+import com.kh.finalproject.dto.qna.ResponseQnADTO;
 import com.kh.finalproject.entity.enumurate.QnAStatus;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 1대1 문의 테이블과 연결된 엔티티
@@ -44,4 +47,41 @@ public class QnA extends BaseTimeEntity {
 
     @Column(name = "qna_order", nullable = false)
     private Integer order;
+
+    @Column(name = "qna_reply")
+    private String reply;
+
+    @Column(name = "qna_reply_time")
+    private LocalDateTime replyTime;
+
+    public QnA toEntity(ResponseQnADTO responseQnADTO){
+        this.index=responseQnADTO.getIndex();
+        this.reply =responseQnADTO.getReply();
+//        this.replyTime = LocalDateTime.now();
+
+        return this;
+    }
+
+    public void updateQna(ResponseQnADTO responseQnADTO) {
+        this.reply = responseQnADTO.getReply();
+        this.status = QnAStatus.COMPLETE;
+        this.replyTime = LocalDateTime.now();
+    }
+
+    //디버깅용 코드
+    public QnA createQnA(Member member, String title, String category, String content) {
+        this.title = title;
+        this.category = category;
+        this.content = content;
+        this.status = QnAStatus.WAIT;
+        this.group = 0L;
+        this.layer = 0;
+        this.order = 0;
+
+        //연관관계 편의 메서드
+        this.member = member;
+        member.getQnAList().add(this);
+
+        return this;
+    }
 }

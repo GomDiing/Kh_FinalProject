@@ -1,8 +1,12 @@
 package com.kh.finalproject.service;
 
 import com.kh.finalproject.dto.product.BrowseKeywordDTO;
+import com.kh.finalproject.dto.product.BrowseKeywordPageDTO;
+import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.product.DetailProductDTO;
-import com.kh.finalproject.dto.product.ProductDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
+import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -13,15 +17,20 @@ public interface ProductService {
     /**
      * 상품 검색 메서드
      */
-    ProductDTO browseByKeyword(BrowseKeywordDTO browseKeywordDTO);
+    BrowseKeywordPageDTO browseByKeyword(String keyword, Pageable pageable);
 
     /**
      * 상품 전체 조회 메서드
      */
-    List<ProductDTO> searchAll();
+    public PagingProductDTO searchAll(Pageable pageable);
+
 
     /**
      * 상품 상세페이지 메서드
      */
-    DetailProductDTO detailProductPage(Long productCode);
+    DetailProductDTO detailProductPage(String productCode, Long index);
+
+    DetailProductDTO reserveCalendarMonth(String productCode, Integer year, Integer month);
+
+    DetailProductReserveTimeSetDTO reserveCalendarDay(String productCode, Integer year, Integer month, Integer day);
 }

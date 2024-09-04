@@ -1,9 +1,11 @@
 package com.kh.finalproject.repository;
 
 import com.kh.finalproject.entity.Address;
+import com.kh.finalproject.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
 public interface AddressRepository extends JpaRepository<Address, Long> {
+    Address findByMember(Member member);
 }

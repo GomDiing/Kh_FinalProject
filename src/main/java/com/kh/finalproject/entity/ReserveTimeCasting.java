@@ -24,3 +24,4 @@ public class ReserveTimeCasting {
     @JoinColumn(name = "reserve_time_index", nullable = false)
     private ReserveTime reserveTime;
 }
+

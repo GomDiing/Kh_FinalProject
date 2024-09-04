@@ -1,8 +1,14 @@
 package com.kh.finalproject.service;
 
+import com.kh.finalproject.dto.notice.PagingNoticeDTO;
 import com.kh.finalproject.dto.qna.*;
+import com.kh.finalproject.entity.Member;
+import com.kh.finalproject.entity.QnA;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 1대1 문의 서비스 인터페이스
@@ -12,7 +18,7 @@ public interface QnAService {
      * 문의 생성 메서드
      * 문의 상태를 '질문 대기'로 생성
      */
-    void create(CreateQnADTO createQnADTO);
+    Map<String,String> create(CreateQnADTO createQnADTO);
 
     /**
      * 문의 수정 메서드
@@ -29,12 +35,12 @@ public interface QnAService {
     /**
      * 회원 인덱스로 문의 조회 메서드
      */
-    QnADTO searchByMember(Long memberIndex);
+    PagingQnaDTO searchByMember(Long index,Pageable pageable);
 
     /**
      * 문의 전체 조회 메서드
      */
-    List<QnADTO> searchAll();
+    PagingQnaDTO searchAll(Pageable pageable);
 
     /**
      * 문의 응답 메서드

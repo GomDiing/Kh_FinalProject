@@ -14,9 +14,8 @@ import javax.persistence.*;
 @Table(name = "chart")
 public class Chart extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chart_index")
-    private Long index;
+    @Column(name = "chart_id")
+    private String id;
 
     @Column(name = "cumu_amount", nullable = false)
     private Long cumuAmount;
@@ -32,4 +31,33 @@ public class Chart extends BaseTimeEntity {
 
     @Column(name = "total_reserve", nullable = false)
     private Long totalReserve;
+
+    /**
+     * 관리자 차트 생성
+     */
+    public Chart toEntity(String charId, Long cumuAmount, Long cumuDiscount, Long finalAmount, Long totalMember ,Long totalReserve) {
+        this.id = charId;
+        this.cumuAmount = cumuAmount;
+        this.cumuDiscount = cumuDiscount;
+        this.finalAmount = finalAmount;
+        this.totalMember = totalMember;
+        this.totalReserve = totalReserve;
+
+        return this;
+    }
+
+    /**
+     * 관리자 차트 갱신
+     * 거래할때마다 갱신되도록
+     */
+    public void updateChart(Long cumuAmount, Long cumuDiscount, Long totalReserve) {
+        this.cumuAmount += cumuAmount;
+        this.cumuDiscount += cumuDiscount;
+        this.finalAmount += (cumuAmount - cumuDiscount);
+        this.totalReserve += totalReserve;
+    }
+
+    public void updateMember(Long totalMember) {
+        this.totalMember += totalMember;
+    }
 }
