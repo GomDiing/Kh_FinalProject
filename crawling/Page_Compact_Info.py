@@ -5,11 +5,19 @@ from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def extractCompactInfo(browser):
+
+# 간단 정보 추출 메서드
+# 타이틀, 한정 / 상시 상품, 썸네일 포스터 주소 추출
+def extractCompactInfo(browser, productDataList):
     # 상품 타이틀 추출
     title = extractTitle(browser)
+
+    # $$$ 상품 타이틀 데이터 리스트 추가
+    productDataList['product_title'] = title
+
     print("\n<<<&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==---&=-*$#==--->>>")
     print("=========================================================================================================")
+    print('product_code: ' + productDataList['product_code'])
     print('타이틀: ' + title)
 
     # 한정 혹은 상시 상품 판단
@@ -21,6 +29,9 @@ def extractCompactInfo(browser):
 
     # 포스터 주소 추출
     posterUrl = extractPosterUrl(browser)
+
+    # $$$ 썸네일 포스터 url 데이터 리스트 추가
+    productDataList['product_thumb_poster_url'] = posterUrl
     print('포스터 주소 URL: ' + posterUrl)
 
     return limitedOrAlways
@@ -36,7 +47,18 @@ def isLimitedOrAlways(browser):
     # 상시 판매일 경우 sideContent, 그렇지 않으면 sideHeader
     isRegularSale = browser.find_element(By.CSS_SELECTOR, Constants.limitedOrAlwaysCss).get_attribute('class')
     if isRegularSale == 'sideContent':
-        return 'always'
+        try:
+            isCloseProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > strong').text
+            if isCloseProduct == '판매종료':
+                return 'close'
+            if isCloseProduct == '상시상품':
+                return 'always'
+            if isCloseProduct == '판매예정':
+                return 'not_open'
+        except NoSuchElementException:
+            isNotOpenProduct = browser.find_element(By.CSS_SELECTOR, '#productSide > div > div.sideMain > div > div > div > div > p').text
+            if isNotOpenProduct == '티켓오픈안내':
+                return 'not_open'
     else:
         return 'limited'
 

@@ -1,39 +1,88 @@
 import re
 import Constants
 
-from Common import initChromBrowser, waitUntilElementLocated
+from Common import initChromBrowser, waitUntilElementLocated, commitRankingDataList, crawlingRankingFromDBMain
 from selenium.webdriver.common.by import By
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# 인터파크 장르별 랭크 추출 메서드
-def crawlingRankingUrlList():
+# 인터파크 카테고리 랭크 추출 메서드
+def crawlingRankingMain():
+    for count in range(0, 4):
+        # 반환할 데이터 딕셔너리 선언, Url 리스트 / 카테고리 / 순위 유형 를 담을 예정
+        rankingDataList = {}
+
+        # 크롬 브라우저 옵션 설정 및 실행 메서드
+        browser = initChromBrowser()
+
+        crawlingRankingMainDetail(count, rankingDataList, browser)
+
+        # return rankingDataList
+
+
+# 인터파크 순위 유형 별 랭크 추출 메서드
+def crawlingRankingMainDetail(count, rankingDataList, browser):
+    # 공통 Url 경로
     allBaseListUrl = 'http://ticket.interpark.com/TPGoodsList.asp'
 
     # 뮤지컬
-    # allRankingListUrl = allBaseListUrl + '?Ca=Mus'
+    if count == 0:
+        rankingDataList['product_category'] = 'MUSICAL'
+        rankingDataList['ranking_url'] = allBaseListUrl + '?Ca=Mus'
     # 연극
-    # allRankingListUrl = allBaseListUrl + '?Ca=Dra'
+    if count == 1:
+        rankingDataList['product_category'] = 'DRAMA'
+        rankingDataList['ranking_url'] = allBaseListUrl + '?Ca=Dra'
     # 클래식
-    allRankingListUrl = allBaseListUrl + '?Ca=Cla&SubCa=ClassicMain'
+    if count == 2:
+        rankingDataList['product_category'] = 'CLASSIC'
+        rankingDataList['ranking_url'] = allBaseListUrl + '?Ca=Cla&SubCa=ClassicMain'
     # 전시
-    # allRankingListUrl = allBaseListUrl + '?Ca=Eve&SubCa=Eve_O'
+    if count == 3:
+        rankingDataList['product_category'] = 'EXHIBITION'
+        rankingDataList['ranking_url'] = allBaseListUrl + '?Ca=Eve&SubCa=Eve_O'
 
-    todayRanking = allRankingListUrl + '&Sort=1'
-    weekRanking = allRankingListUrl + '&Sort=2'
-    monthRanking = allRankingListUrl + '&Sort=3'
-    sortByNameAsc = allRankingListUrl + '&Sort=4'
-    closeSoonAsc = allRankingListUrl + '&Sort=5'
+    if count is None:
+        raise Exception('No Ranking Data List!!!')
+
+    for index in range(0, 3):
+        crawlingRankingUrlList(index, rankingDataList, browser)
+
+# 인터파크 순위 페이지 접근해 순위 url 리스트 획득하는 메서드
+def crawlingRankingUrlList(index, rankingDataList, browser):
+
+    rankingFullUrl = None
+
+    # todayRanking = allRankingListUrl + '&Sort=1'
+    # sortByNameAsc = allRankingListUrl + '&Sort=4'
+
+    # 주간 랭킹
+    if index == 0:
+        rankingDataList['product_ranking_category'] = 'Week'
+        rankingFullUrl = rankingDataList['ranking_url'] + '&Sort=2'
+
+    # 월간 랭킹
+    if index == 1:
+        rankingDataList['product_ranking_category'] = 'Month'
+        rankingFullUrl = rankingDataList['ranking_url'] + '&Sort=3'
+
+    # 곧 종료 예정 랭킹
+    if index == 2:
+        rankingDataList['product_ranking_category'] = 'CloseSoon'
+        rankingFullUrl = rankingDataList['ranking_url'] + '&Sort=5'
+
+    if rankingFullUrl is None:
+        raise Exception('No Ranking Full Url!!!')
 
     print('<<< Start --- Crawling Interpark >>>')
     print('========================================')
 
     # 크롬 브라우저 옵션 설정 및 실행 메서드
-    browser = initChromBrowser()
+    # browser = initChromBrowser()
 
-    browser.get(closeSoonAsc)
+    browser.get(rankingFullUrl)
 
     # 해당 요소가 발생할 때까지 대기
     waitUntilElementLocated(browser, 10, By.CLASS_NAME, 'RK_total2')
@@ -65,3 +114,17 @@ def crawlingRankingUrlList():
 
     print('총 key 수: ' + str(len(currentUrlKeyList)))
     print('key 조회 :' + str(currentUrlKeyList))
+
+    rankingDataList['product_url_list'] = currentUrlKeyList
+
+    commitRankingDataList(rankingDataList)
+
+
+def browseRankingFromDB():
+    for count in range(0, 3):
+
+        rankingDataList = []
+
+        crawlingRankingFromDBMain(count, rankingDataList)
+
+        return rankingDataList

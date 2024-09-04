@@ -1,3 +1,4 @@
+import copy
 import time
 import Constants
 import datetime
@@ -10,33 +11,56 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 # 네비게이션 메뉴 탐색 메서드
-def extractNaviInfo(browser):
+def extractNaviInfo(browser, productDataList):
+    # 탐색 결과 담을 dict 객체
+    resultNaviInfo = {}
+
+    # isExistTimeCasting = False
+    resultNaviInfo['isExistTimeCasting'] = False
+
     # 네비게이션 메뉴 선택
     naviItemList = browser.find_element(By.CLASS_NAME, 'navList').find_elements(By.CSS_SELECTOR, 'li')
 
-    # 정보 탭
-    navLinkOfDetailList = ['공연정보', '이용정보']
-
     # 네비게이션 메뉴 순회
     for naviItem in naviItemList:
-
+        # 정보 탭
+        naviLinkOfDetailList = ['공연정보', '이용정보']
         # 현 네비 탭 이름이 정보 탭 리스트에 존재할 경우
-        if navLinkOfDetailList.count(naviItem.text) != 0:
-            extractNaviTabOfDetail(naviItem, browser)
+        if naviItem.text in naviLinkOfDetailList:
+            extractNaviTabOfDetail(naviItem, browser, productDataList)
 
         # 현 네비 탭 이름이 캐스팅 정보인 경우
         if naviItem.text == '캐스팅정보':
+            resultNaviInfo['isExistTimeCasting'] = True
+            # 시간별 캐스팅 정보 유무 데이터 리스트 추가
+            productDataList['product_isInfoTimeCasting'] = True
             # 캐스팅 테이블 정보 탐색 메서드
-            extractNaviTabOfCasting(naviItem, browser)
+            reserveTimeDataList = extractNaviTabOfCasting(naviItem, browser, productDataList)
+            if reserveTimeDataList is False:
+                print('debug!!!')
+                resultNaviInfo['isExistTimeCasting'] = False
+            resultNaviInfo['reserveTimeDataList'] = reserveTimeDataList
 
-            time.sleep(1)
+    time.sleep(1)
+
+    # return isExistTimeCasting
+    return resultNaviInfo
 
 
 # 공연정보 / 이용정보 탭 > 공연 상세 이미지 탐색 메서드
-def extractNaviTabOfDetailAboutPoster(browser):
-    # 이미지 상세 정보가 표시될 때 까지 대기
-    WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Constants.contentImgDescCss)))
+def extractNaviTabOfDetailAboutPoster(browser, productDataList):
+    # $$$ 상세 정보 포스터 및 캐스팅 정보 포스터 URL 데이터 리스트 초기화
+    productDataList['product_detail_poster_url'] = None
+    productDataList['product_casting_poster_url'] = None
+
+    try:
+        # 이미지 상세 정보가 표시될 때 까지 대기
+        WebDriverWait(browser, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, Constants.contentImgDescCss)))
+    except TimeoutException:
+        productDataList['product_detail_poster_url'] = 'null'
+        productDataList['product_casting_poster_url'] = None
+        return
 
     # 상세 정보 이미지 링크
     contentImagePathList = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_elements(
@@ -50,17 +74,38 @@ def extractNaviTabOfDetailAboutPoster(browser):
         # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
         for contentImagePath in contentImagePathList[:2]:
             index = index + 1
+            # $$$ 상세 정보 포스터 및 캐스팅 정보 포스터 URL 데이터 리스트 추가
+            if index == 1:
+                productDataList['product_detail_poster_url'] = contentImagePath.get_attribute('src')
+            if index == 2:
+                productDataList['product_casting_poster_url'] = contentImagePath.get_attribute('src')
             print(str(index) + '번째 상세 정보 이미지 링크: ' + contentImagePath.get_attribute('src'))
     else:
-        # 구조가 첫번째와 다를 경우 (이미지가 1 이상 존재하지 않은 경우)
-        # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
-        contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
-            By.CSS_SELECTOR, Constants.detailImgStrucV2Css)
-        print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+        try:
+            # 구조가 첫번째와 다를 경우 (이미지가 1 이상 존재하지 않은 경우)
+            # 상세 이미지 주소, 상세 캐스팅 이미지 주소 2개 추출
+            contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
+                By.CSS_SELECTOR, Constants.detailImgStrucV2Css)
+            # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
+            productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
+            productDataList['product_casting_poster_url'] = None
+            print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+        except NoSuchElementException:
+            try:
+                contentSingeImagePath = browser.find_element(By.CSS_SELECTOR, Constants.contentImgDescCss).find_element(
+                    By.CSS_SELECTOR, Constants.detailImgStrucV3Css)
+                # $$$ 상세 정보 포스터 URL 데이터 리스트 추가
+                productDataList['product_detail_poster_url'] = contentSingeImagePath.get_attribute('src')
+                productDataList['product_casting_poster_url'] = None
+                print('단독 상세 정보 이미지 링크: ' + contentSingeImagePath.get_attribute('src'))
+            except NoSuchElementException:
+                productDataList['product_detail_poster_url'] = 'null'
+                productDataList['product_casting_poster_url'] = None
+                print('$$$$$ 단독 상세 정보 이미지 링크가 존재하지 않습니다 $$$$$')
 
 
 # 네비게이션 메뉴 탐색 > 정보 탭 일 경우 탐색 메서드
-def extractNaviTabOfDetail(naviItem, browser):
+def extractNaviTabOfDetail(naviItem, browser, productDataList):
     # 정보 탭 클릭
     naviItem.find_element(By.CSS_SELECTOR, 'a').click()
 
@@ -69,7 +114,10 @@ def extractNaviTabOfDetail(naviItem, browser):
 
     # 정보 탭 내 캐스팅 정보가 있을 경우
     if castingInfoTotalList is not False:
+        # $$$ 캐스팅 정보 유무 데이터 리스트 추가
+        productDataList['product_isInfoCasting'] = True
         for castingInfoList in castingInfoTotalList:
+            productDataList['castingInfoTotalList'] = castingInfoTotalList
             index = 0
             print('*=&*=&*=&*=&*=&*=&*=&*=&*')
             for castingInfo in castingInfoList:
@@ -82,13 +130,16 @@ def extractNaviTabOfDetail(naviItem, browser):
                 if index == 3:
                     print('캐스팅 이미지 링크: ' + castingInfo)
                 index = index + 1
+    else:
+        # $$$ 캐스팅 정보 유무 / 시간별 캐스팅 정보 유무 데이터 리스트 추가
+        productDataList['product_isInfoCasting'] = False
+        # productDataList['product_isInfoTimeCasting'] = False
 
     # 정보 탭 내 공연 상세 이미지 탐색 메서드
-    extractNaviTabOfDetailAboutPoster(browser)
+    extractNaviTabOfDetailAboutPoster(browser, productDataList)
 
     # 정보 탭 내 예매자 통계
-    extractNaviTabOfDetailAboutStatics(browser)
-
+    extractNaviTabOfDetailAboutStatics(browser, productDataList)
 
     time.sleep(1)
 
@@ -110,8 +161,12 @@ def extractNaviTabOfDetailAboutCasting(browser):
 
     # 캐스팅 정보 선택, 없다면 False
     try:
+        # 캐스팅 정보 확인 유무
+        browser.find_element(By.CSS_SELECTOR, Constants.existCastingContentCss)
+
         # 캐스팅 정보 선택
-        castingList = browser.find_element(By.CSS_SELECTOR, Constants.castingContentCss).find_elements(By.CSS_SELECTOR, Constants.castingListCss)
+        castingList = browser.find_element(By.CSS_SELECTOR, Constants.castingContentCss).find_elements(By.CSS_SELECTOR,
+                                                                                                       Constants.castingListCss)
 
         # 캐스팅 정보를 리스트에 담고 해당 리스트를 통합 리스트에 담는다
         for casting in castingList:
@@ -149,19 +204,22 @@ def saveNaviTabOfDetailAboutCasting(castingInfoList, casting):
     castingInfoList.insert(3, castingImgUrl)
 
 
-
-
 # 네비게이션 메뉴 탐색 > 캐스팅 탭 탐색 메서드
-def extractNaviTabOfCasting(naviItem, browser):
+def extractNaviTabOfCasting(naviItem, browser, productDataList):
+    # 공연 시간 / 시간별 배우 정보 담을 리스트
+    reserveTimeDataList = []
+
     print('==**==**==**==**==**==**==**==**==**==')
 
     naviItem.find_element(By.CSS_SELECTOR, 'a').click()
 
     time.sleep(0.5)
-
-    # 캐스팅 상세 테이블 정보가 표시될 때 까지 대기
-    WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, Constants.castingDetailTableCss)))
+    try:
+        # 캐스팅 상세 테이블 정보가 표시될 때 까지 대기
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, Constants.castingDetailTableCss)))
+    except TimeoutException:
+        return False
 
     # 캐스팅 테이블 경로
     castingDetailTable = browser.find_element(By.CSS_SELECTOR, Constants.castingDetailTableCss)
@@ -175,6 +233,9 @@ def extractNaviTabOfCasting(naviItem, browser):
     # 배역 정보가 몇 개가 있는지 확인하는 인덱스
     countRecordList = 0
 
+    # 회차 계산 리스트 선언
+    turnIndexList = []
+
     # 캐스팅 테이블 정보 추출
     # 캐스팅 테이블 > 모든 행(row)의 행 1개씩 순회
     for rowList in elementList:
@@ -186,7 +247,10 @@ def extractNaviTabOfCasting(naviItem, browser):
 
         # 헤더 배역 정보 제외한 정보 추출 (공연 시간, 배우 탐색 메서드)
         else:
-            addListOfTableAboutDateTimeActor(rowList, actingCharacterList)
+            reserveTimeDataRecord = addListOfTableAboutDateTimeActor(rowList, actingCharacterList, productDataList, turnIndexList)
+            reserveTimeDataList.append(reserveTimeDataRecord)
+
+    return reserveTimeDataList
 
 
 # 네비게이션 메뉴 탐색 > 캐스팅 탭 > 캐스팅 테이블 > 극 중 역 탐색 메서드
@@ -204,14 +268,16 @@ def addListOfTableAboutCharacter(rowList, actingCharacterList):
     return actingCharacterList
 
 
-
-
 # 네비게이션 메뉴 탐색 > 캐스팅 탭 > 캐스팅 테이블 > 공연 시간, 배우 탐색 메서드
-def addListOfTableAboutDateTimeActor(rowList, actingCharacterList):
+def addListOfTableAboutDateTimeActor(rowList, actingCharacterList, productDataList, turnIndexList):
+    # 예매 시간 / 회차 / 가격 담을 dict 객체
+    reserveTimeDataRecord = {}
+    reserveTimeActorList = []
     # 관람일과 시간, 그 외 배역 정보를 나누기 위한 인덱스
     index = 0
     # 해당 행(row)의 모든 속성 값(column) 선택
     recordList = rowList.find_elements(By.CSS_SELECTOR, 'td')
+
     print('=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=')
     for record in recordList:
         index = index + 1
@@ -226,49 +292,127 @@ def addListOfTableAboutDateTimeActor(rowList, actingCharacterList):
 
             # 월 데이터 추출
             month = re.search(r'\d+', isYear[0]).group(0)
+            reserveTimeDataRecord['reserve_time_month'] = str(month)
             # 일 데이터 추출
             day = re.search(r'\d+', isYear[1]).group(0)
+            reserveTimeDataRecord['reserve_time_day'] = str(day)
             # 요일 데이터 추출
             dayOfWeek = re.search(r'\((.*?)\)', record.text).group(1)
 
             # 표시된 월 데이터가 현재 월 데이터보다 낮은 경우 다음 해 데이터로 인식
             if int(month) < now.month:
                 year = now.year + 1
+                reserveTimeDataRecord['reserve_time_year'] = str(year)
             else:
                 year = now.year
+                reserveTimeDataRecord['reserve_time_year'] = str(year)
             print(str(year) + '년 ' + month + '월 ' + day + '일 ' + dayOfWeek + '요일')
+
+            # 연도/월/일 계산
+            timeDate = reserveTimeDataRecord['reserve_time_year'] + '/' + \
+                       reserveTimeDataRecord['reserve_time_month'] + '/' + \
+                       reserveTimeDataRecord['reserve_time_day']
+
+            reserveTimeDataRecord['reserve_time_date'] = timeDate
+
+            # 해당 회차 정보 리스트에 추가
+            turnIndexList.append(timeDate)
+
+            # 회차 계산, 리스트 내 중복 개수 계산
+            turnCount = turnIndexList.count(timeDate)
+
+            # 중복개수 + 1 하여 회차 계산
+            reserveTimeDataRecord['reserve_time_turn'] = int(turnCount)
 
         # 상영시간 추출
         if index == 2:
             # 상연 시간은 |00:00| 구성
             openTime = record.text.split(':')
             print('상영 시간(시): ' + openTime[0])
+            reserveTimeDataRecord['reserve_time_hour'] = str(openTime[0])
             print('상영 시간(분): ' + openTime[1])
+            reserveTimeDataRecord['reserve_time_min'] = str(openTime[1])
         # 배역 정보일 경우
         if index > 2:
+            reserveTimeActorRecord = {}
+            reserveTimeActorRecord['Character'] = copy.deepcopy(actingCharacterList[index - 3])
+            reserveTimeActorRecord['Actor'] = copy.deepcopy(record.text)
+
+            reserveTimeActorList.append(reserveTimeActorRecord)
+
             print(actingCharacterList[index - 3] + '역은 ' + record.text)
+
+    # 예약 날짜 계산 (TimeStamp)
+    reserveTimeString = reserveTimeDataRecord['reserve_time_year'] + '-' + reserveTimeDataRecord['reserve_time_month'] + '-' + \
+                        reserveTimeDataRecord['reserve_time_day'] + ' ' + reserveTimeDataRecord['reserve_time_hour'] + ':' + \
+                        reserveTimeDataRecord['reserve_time_min'] + ':' + '00.000'
+
+    # String 을 TimeStamp 변환
+    reserveTimeTimeStamp = datetime.datetime.strptime(reserveTimeString, '%Y-%m-%d %H:%M:%S.%f')
+
+    # 타임존 설정 (대한민국 시간인 UTC +09:00)
+    timezone_kst = datetime.timezone(datetime.timedelta(hours=9))
+    reserveTimeUTC = reserveTimeTimeStamp.replace(tzinfo=timezone_kst)
+
+    # print('Type: TimeZoneSetting' + str(type(reserveTimeUTC)))
+    # print('String: TimeZoneSetting' + str(reserveTimeUTC))
+
+    reserveTimeDataRecord['reserve_time'] = reserveTimeUTC
+    reserveTimeDataRecord['reserveTimeActorList'] = reserveTimeActorList
+
+    return reserveTimeDataRecord
+
 
 
 # 공연정보 / 이용정보 탭 > 예매자 통계 탐색 메서드
-def extractNaviTabOfDetailAboutStatics(browser):
-    # 예매자 공통 경로
-    statusInfo = browser.find_element(By.CSS_SELECTOR, Constants.commonStatisticsCss)
-    # 예매자 > 성별 경로
-    statOfGenderList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.genderStatisticsCss)
-    # 예매자 > 나이 경로
-    statOfAgeList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.ageStatisticsCss)
+def extractNaviTabOfDetailAboutStatics(browser, productDataList):
+    # 예매 정보 담을 dict 객체 생성
+    statisticsRecord = {}
+    statisticsRecord['product_code'] = productDataList['product_code']
+    try:
+        # 예매자 공통 경로
+        statusInfo = browser.find_element(By.CSS_SELECTOR, Constants.commonStatisticsCss)
 
-    # 예매자 > 성별 > 남성/여성 통계 조회
-    for statOfGender in statOfGenderList:
-        isGender = statOfGender.find_element(By.CLASS_NAME, 'statGenderName').text
-        isValue = statOfGender.find_element(By.CLASS_NAME, 'statGenderValue').text
-        if isGender == '남자':
-            print('예매자 통계 > 남자 : ' + isValue)
-        else:
-            print('예매자 통계 > 여자 : ' + isValue)
+        # 예매자 > 성별 경로
+        statOfGenderList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.genderStatisticsCss)
+        # 예매자 > 나이 경로
+        statOfAgeList = statusInfo.find_elements(By.CSS_SELECTOR, Constants.ageStatisticsCss)
 
-    # 예매자 > 성별 > 나이대 별 통계 조회
-    for statOfAge in statOfAgeList:
-        ageName = re.sub('대', '', statOfAge.find_element(By.CLASS_NAME, 'statAgeName').text)
-        agePercent = re.sub('%', '', statOfAge.find_element(By.CLASS_NAME, 'statAgePercent').text)
-        print(ageName + '(대) 예약율 : ' + agePercent + '(% 단위)')
+        # 예매자 > 성별 > 남성/여성 통계 조회
+        for statOfGender in statOfGenderList:
+            isGender = statOfGender.find_element(By.CLASS_NAME, 'statGenderName').text
+            isValue = statOfGender.find_element(By.CLASS_NAME, 'statGenderValue').text
+            if isGender == '남자':
+                statisticsRecord['statistics_male'] = copy.deepcopy(float(isValue.replace('%', '')))
+                print('예매자 통계 > 남자 : ' + isValue)
+            else:
+                statisticsRecord['statistics_female'] = copy.deepcopy(float(isValue.replace('%', '')))
+                print('예매자 통계 > 여자 : ' + isValue)
+
+        # 예매자 > 성별 > 나이대 별 통계 조회
+        for statOfAge in statOfAgeList:
+            ageName = re.sub('대', '', statOfAge.find_element(By.CLASS_NAME, 'statAgeName').text)
+            agePercent = re.sub('%', '', statOfAge.find_element(By.CLASS_NAME, 'statAgePercent').text)
+            if ageName == '10':
+                statisticsRecord['statistics_teen'] = copy.deepcopy(float(agePercent))
+            if ageName == '20':
+                statisticsRecord['statistics_twenties'] = copy.deepcopy(float(agePercent))
+            if ageName == '30':
+                statisticsRecord['statistics_thirties'] = copy.deepcopy(float(agePercent))
+            if ageName == '40':
+                statisticsRecord['statistics_forties'] = copy.deepcopy(float(agePercent))
+            if ageName == '50':
+                statisticsRecord['statistics_fifties'] = copy.deepcopy(float(agePercent))
+            print(ageName + '(대) 예약율 : ' + agePercent + '(% 단위)')
+    except NoSuchElementException:
+        statisticsRecord['statistics_male'] = 0
+        statisticsRecord['statistics_female'] = 0
+        statisticsRecord['statistics_teen'] = 0
+        statisticsRecord['statistics_twenties'] = 0
+        statisticsRecord['statistics_thirties'] = 0
+        statisticsRecord['statistics_forties'] = 0
+        statisticsRecord['statistics_fifties'] = 0
+
+        # productDataList['statisticsRecord'] = statisticsRecord
+
+    productDataList['statisticsRecord'] = statisticsRecord
