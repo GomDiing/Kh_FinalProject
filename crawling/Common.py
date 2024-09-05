@@ -3,6 +3,9 @@ import time
 import traceback
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from webdriver_manager.chrome import ChromeDriverManager
 
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -42,13 +45,16 @@ Base = declarative_base()
 # 크롬 브라우저 옵션 설정 및 실행 메서드
 def initChromBrowser():
     # <<< 크롬 옵션 설정 >>> #
-    chromeOptions = webdriver.ChromeOptions()
+    chromeOptions = ChromeOptions()
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--window-size=1280,720')
     chromeOptions.add_argument('--no-sandbox')
 
+    # chromeService = ChromeService(executable_path='./chromedriver')
+    chromeService = ChromeService(executable_path=ChromeDriverManager().install())
+
     # <<< 크롬 브라우저 실행 >>> #
-    browser = webdriver.Chrome('./chromedriver', chrome_options=chromeOptions)
+    browser = webdriver.Chrome(service=chromeService, options=chromeOptions)
 
     return browser
 
