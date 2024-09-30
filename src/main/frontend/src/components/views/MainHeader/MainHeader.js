@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../../util/Redux/Slice/userSlice";
 import { RiLoginBoxLine , RiLogoutBoxLine } from "react-icons/ri";
+import logoImage from '../../../images/TCat.jpg'
 
 const HeaderContainer = styled.div`
     @media (max-width : 911px){
@@ -143,7 +144,8 @@ const MainHeader = () =>{
             <HeaderContainer>
                 <Navbar expand="lg">
                 <Container fluid>
-                    <Navbar.Brand><Link to = "/"><img className="Logo" src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=""/></Link></Navbar.Brand>
+                    {/*<Navbar.Brand><Link to = "/"><img className="Logo" src={`${process.env.PUBLIC_URL}/images/TCat.jpg`} alt=""/></Link></Navbar.Brand>*/}
+                    <Navbar.Brand><Link to = "/"><img className="Logo" src={logoImage} alt=""/></Link></Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0"navbarScroll>

@@ -164,7 +164,7 @@ if(!userInfo.userEmail) {
         <Content className='MypageMainContainer'>
           <div className="site-layout-background">
             <div>
-      
+
               <div className='userInfo'>
                 <div className='Contain1'>
                   <GithubFilled style={{fontSize: '10rem', margin: '2rem'}} />

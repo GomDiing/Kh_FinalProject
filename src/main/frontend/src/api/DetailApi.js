@@ -1,7 +1,6 @@
 import axios from "axios";
+import {TCATS_DOMAIN} from "../components/Config";
 const HEADER = {'Content-Type' :  'application/json'}
-const TCAT_DOMAIN = "https://tcats.tk";
-// const TCAT_DOMAIN = "http://localhost:8100";
 
 const DetailApi={
     //  관람 후기 작성(부모댓글=후기)
@@ -14,7 +13,7 @@ const DetailApi={
             rate : rate,
             code : productCode
         }
-        return await axios.post(TCAT_DOMAIN+"/api/review/write", params, HEADER);
+        return await axios.post(TCATS_DOMAIN+"/api/review/write", params, HEADER);
     },
     // 대댓글 작성(자식댓글)
     childComment : async function(memberIndex,group,inputContent,productCode){
@@ -26,7 +25,7 @@ const DetailApi={
             content : inputContent,
             code : productCode // 공연상품 code 값
         }
-        return await axios.post(TCAT_DOMAIN+"/api/review/add", params, HEADER);
+        return await axios.post(TCATS_DOMAIN+"/api/review/add", params, HEADER);
     },
     // 공연 후기 수정 (프론트 수정은 없음)
     updateComment : async function(memberIndex,commentIndex,content){
@@ -35,7 +34,7 @@ const DetailApi={
             index : commentIndex, // 댓글 고유 index 값
             content : content
         }
-        return await axios.post(TCAT_DOMAIN+"/api/review/update",params,HEADER)
+        return await axios.post(TCATS_DOMAIN+"/api/review/update",params,HEADER)
     },
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
@@ -45,11 +44,11 @@ const DetailApi={
             index : commentIndex, // 후기(댓글) 고유 index 값 
             memberIndex : memberIndex
         }
-        return await axios.post(TCAT_DOMAIN+"/api/review/delete", params,HEADER)
+        return await axios.post(TCATS_DOMAIN+"/api/review/delete", params,HEADER)
     },
      // 전체 댓글 불러오기(상세페이지 이동시)
     allReviewComment : async function(productCode,currentPage ,setPageSize){
-        return await axios.get(TCAT_DOMAIN + `/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+        return await axios.get(TCATS_DOMAIN + `/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
         // 
     },
     // 후기 신고하기
@@ -61,19 +60,19 @@ const DetailApi={
             memberIndexVictim : victimIndex, // 신고한사람 (로그인한 회원)
             reason : reason, //신고사유
         }
-        return await axios.post(TCAT_DOMAIN+`/api/accuse/${(reviewIndex)}`,params, HEADER)
+        return await axios.post(TCATS_DOMAIN+`/api/accuse/${(reviewIndex)}`,params, HEADER)
     },
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
-        return await axios.post(TCAT_DOMAIN + `/api/product/${(pCode)}`, HEADER);
+        return await axios.post(TCATS_DOMAIN + `/api/product/${(pCode)}`, HEADER);
     },
     // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {
-        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
+        return await axios.get(TCATS_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
     },
     // 다음 날 예매 가능 일자
     getNextDateReserve : async function(pCode, year, month, day) {
-        return await axios.get(TCAT_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}/${(day)}`, HEADER);
+        return await axios.get(TCATS_DOMAIN + `/api/product/${(pCode)}/${(year)}/${(month)}/${(day)}`, HEADER);
     }
 }
 export default DetailApi;

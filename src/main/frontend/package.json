@@ -1,5 +1,5 @@
 {
-  "proxy": "https://kapi.kakao.com",
+  "proxy": "https://open-api.kakaopay.com",
   "name": "t-cat",
   "version": "0.1.0",
   "private": true,

@@ -21,7 +21,8 @@ function App() {
       <Route path="/categorySearch" element={<CategorySearch/>}/>
       <Route path="/search" element={<Search/>}/>
       <Route path='/admin/*' element={<AdminPage/>}/>
-      <Route path='/MyPage/*' element={<MyPage/>}/>
+      <Route path='/mypage/*' element={<MyPage/>}/>
+      {/*<Route path='/mypage' element={<MyPage/>}/>*/}
       <Route path='/login' element={<Login />} />
       <Route path='/social' element={<Social />} />
       <Route path='/sign' element={<Sign />} />
