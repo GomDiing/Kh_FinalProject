@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/review")
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewCommentController {
     private final ReviewCommentService reviewCommentService;
 

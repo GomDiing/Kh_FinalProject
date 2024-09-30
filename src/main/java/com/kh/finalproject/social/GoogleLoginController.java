@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @RequestMapping(value = "/google")
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GoogleLoginController {
 
     private final ConfigUtils configUtils;
@@ -103,8 +103,8 @@ public class GoogleLoginController {
                 if (isJoin) isJoinParam = 1;
 
 //                return ResponseEntity.ok().body(userInfoDto);
-//                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
-                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+//                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                         .queryParam("name", userInfoDto.getFamilyName() + " " + userInfoDto.getGivenName())
                         .queryParam("email", userInfoDto.getEmail())
                         .queryParam("isJoin", isJoinParam)
@@ -121,8 +121,8 @@ public class GoogleLoginController {
             e.printStackTrace();
         }
 
-//        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
-        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+//        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                 .queryParam("socialSuccess", 0)
                 .queryParam("providerType", MemberProviderType.GOOGLE.name())
                 .build()

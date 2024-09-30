@@ -1,4 +1,4 @@
-package com.kh.finalproject.social.kakao;
+package com.kh.finalproject.social.kakao.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

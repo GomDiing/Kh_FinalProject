@@ -42,4 +42,19 @@ public class PaymentReserveDTO {
 
     //카카오페이 taxFreeAmount
     private Integer kakaoTaxFreeAmount;
+
+    @Override
+    public String toString() {
+        return "PaymentReserveDTO{" +
+                "memberIndex=" + memberIndex +
+                ", reserveTimeSeatPriceId=" + reserveTimeSeatPriceId +
+                ", quantity=" + quantity +
+                ", amount=" + amount +
+                ", point=" + point +
+                ", finalAmount=" + finalAmount +
+                ", method='" + method + '\'' +
+                ", kakaoTID='" + kakaoTID + '\'' +
+                ", kakaoTaxFreeAmount=" + kakaoTaxFreeAmount +
+                '}';
+    }
 }

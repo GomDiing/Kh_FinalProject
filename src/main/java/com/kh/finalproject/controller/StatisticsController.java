@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @Slf4j
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StatisticsController {
     public final StatisticsService statisticsService;
 

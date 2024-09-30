@@ -5,6 +5,7 @@ import com.kh.finalproject.dto.reserve.PaymentReserveDTO;
 import com.kh.finalproject.entity.enumurate.ReserveStatus;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "reserve")
+@ToString
 public class Reserve extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

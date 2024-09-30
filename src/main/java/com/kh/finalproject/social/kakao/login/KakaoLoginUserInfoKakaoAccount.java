@@ -1,4 +1,4 @@
-package com.kh.finalproject.social.kakao;
+package com.kh.finalproject.social.kakao.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,5 +13,5 @@ public class KakaoLoginUserInfoKakaoAccount {
     private Boolean is_email_verified;
     private String email;
     @JsonProperty("profile")
-    private KakaoLoginInfoAccountProfile account_profile;
+    private KakaoLoginUserInfoKakaoAccountProfile account_profile;
 }

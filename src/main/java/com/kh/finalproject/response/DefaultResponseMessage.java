@@ -64,4 +64,6 @@ public class DefaultResponseMessage {
     public static final String NOT_FOUND_BOARDS = "게시판 조회 실패";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
+    public static final String SUCCESS_KAKAOPAY_READY = "카카오 Ready 완료";
+    public static final String SUCCESS_KAKAOPAY_APPROVE = "카카오 Approve 완료";
 }

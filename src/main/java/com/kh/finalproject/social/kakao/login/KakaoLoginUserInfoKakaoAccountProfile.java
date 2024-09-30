@@ -1,9 +1,9 @@
-package com.kh.finalproject.social.kakao;
+package com.kh.finalproject.social.kakao.login;
 
 import lombok.Getter;
 
 @Getter
-public class KakaoLoginInfoAccountProfile {
+public class KakaoLoginUserInfoKakaoAccountProfile {
     private String nickname;
     private String thumbnail_image_url;
     private String profile_image_url;

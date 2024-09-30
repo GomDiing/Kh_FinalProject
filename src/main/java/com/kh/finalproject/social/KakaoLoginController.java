@@ -6,10 +6,10 @@ import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.service.MemberService;
-import com.kh.finalproject.social.kakao.KakaoLoginInfoAccount;
-import com.kh.finalproject.social.kakao.KakaoLoginInfoProfile;
-import com.kh.finalproject.social.kakao.KakaoLoginInfoProperties;
-import com.kh.finalproject.social.kakao.KakaoLoginResponse;
+import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfoKakaoAccount;
+import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfo;
+import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfoProperties;
+import com.kh.finalproject.social.kakao.login.KakaoLoginTokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 @Controller
 @RequestMapping("/login/oauth2/code")
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class KakaoLoginController {
 
 
@@ -45,7 +45,6 @@ public class KakaoLoginController {
 
     @Value("${kakao.redirect-uri}")
     private String kakaoRedirectUri;
-
 
 
     @GetMapping("/kakao")
@@ -73,8 +72,8 @@ public class KakaoLoginController {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-                log.info("accessTokenResponse = {}", accessTokenResponse.getBody());
-            KakaoLoginResponse kakaoResponseObject = objectMapper.readValue(accessTokenResponse.getBody(), new TypeReference<KakaoLoginResponse>() {
+            log.info("accessTokenResponse = {}", accessTokenResponse.getBody());
+            KakaoLoginTokenResponse kakaoResponseObject = objectMapper.readValue(accessTokenResponse.getBody(), new TypeReference<KakaoLoginTokenResponse>() {
             });
 
             session.setAttribute("Authorization", kakaoResponseObject.getAccess_token());
@@ -83,6 +82,7 @@ public class KakaoLoginController {
             log.info("header = {}", header);
             MultiValueMap<String, String> requestHeaders = new LinkedMultiValueMap<>();
             requestHeaders.add("Authorization", header);
+            log.info(requestHeaders.toString());
 
             ResponseEntity<String> responseBody = restTemplate.exchange(
                     "https://kapi.kakao.com/v2/user/me",
@@ -91,13 +91,16 @@ public class KakaoLoginController {
                     String.class
             );
 
-            KakaoLoginInfoProfile profile = objectMapper.readValue(responseBody.getBody(), new TypeReference<KakaoLoginInfoProfile>() {
+            log.info("responseBody = {}", responseBody.getBody());
+
+            KakaoLoginUserInfo profile = objectMapper.readValue(responseBody.getBody(), new TypeReference<>() {
             });
+            log.info("profile = {}", profile);
 
             if (profile != null) {
 
-                KakaoLoginInfoProperties properties = profile.getProperties();
-                KakaoLoginInfoAccount kakao_account = profile.getKakao_account();
+                KakaoLoginUserInfoProperties properties = profile.getProperties();
+                KakaoLoginUserInfoKakaoAccount kakao_account = profile.getKakao_account();
 
                 String nickname = properties.getNickname();
                 String email = kakao_account.getEmail();
@@ -106,11 +109,11 @@ public class KakaoLoginController {
                 int isJoinParam = 0;
                 if (isJoin) isJoinParam = 1;
 
-//                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
-                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+//                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                         .queryParam("name", nickname)
                         .queryParam("email", email)
-                        .queryParam("isJoin",isJoinParam)
+                        .queryParam("isJoin", isJoinParam)
                         .queryParam("socialSuccess", 1)
                         .queryParam("providerType", MemberProviderType.KAKAO.name())
                         .build()
@@ -120,8 +123,8 @@ public class KakaoLoginController {
         } catch (Exception e) {
             throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
-//        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:3000/social")
-        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
+//        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
                 .queryParam("socialSuccess", 0)
                 .queryParam("providerType", MemberProviderType.KAKAO.name())
                 .build()

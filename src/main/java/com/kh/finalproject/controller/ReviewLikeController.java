@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/review-like")
 @Slf4j
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewLikeController {
 
     private final ReviewLikeService reviewLikeService;

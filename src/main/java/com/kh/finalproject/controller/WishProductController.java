@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/wish")
 @Slf4j
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WishProductController {
 
     private final WishProductService wishProductService;

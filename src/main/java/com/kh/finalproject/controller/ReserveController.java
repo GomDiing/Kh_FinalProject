@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/reserve")
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReserveController {
     private final ReserveService reserveService;
 
@@ -31,6 +31,8 @@ public class ReserveController {
      */
     @PostMapping("/payment")
     public ResponseEntity<DefaultResponse<Object>> paymentReserve(@Validated @RequestBody PaymentReserveDTO paymentReserveDTO){
+        log.info("예매 시작 (/api/reserve/payment)");
+        log.info("paymentReserveDTO: {}", paymentReserveDTO.toString());
 
         //예매 생성
         reserveService.createReserve(paymentReserveDTO);
