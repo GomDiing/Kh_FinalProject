@@ -125,7 +125,9 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
         possibleDaysCssPath = Constants.calendarPossibleCssFront + str(possibleDaysMuted) + ')'
 
         # 메인화면 > 캘린더 > 예약 가능 날짜 접근 클릭
-        browser.find_element(By.CSS_SELECTOR, possibleDaysCssPath).click()
+        # browser.find_element(By.CSS_SELECTOR, possibleDaysCssPath).click()
+        element = browser.find_element(By.CSS_SELECTOR, possibleDaysCssPath)
+        browser.execute_script("arguments[0].click();", element)
 
         time.sleep(0.5)
 
@@ -142,8 +144,8 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
                 # 메인화면 > 캘린더 > 예약 가능 날짜(클릭) > 총 공연 회차 클릭
                 findTurn = browser.find_element(By.CSS_SELECTOR,
                                                 Constants.calendarPossibleTurnOfDayCss + str(count) + ')')
-
-                findTurn.click()
+                # findTurn.click()
+                browser.execute_script("arguments[0].click();", findTurn)
 
                 time.sleep(0.2)
 

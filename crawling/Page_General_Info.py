@@ -4,7 +4,7 @@ import time
 
 from crawling import Constants
 from selenium.webdriver.common.by import By
-from selenium.common import TimeoutException, NoSuchElementException
+from selenium.common import TimeoutException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -175,6 +175,8 @@ def extractDetailPlace(inform, browser, productDataList):
             return False
     except NoSuchElementException:
         return False
+    except ElementClickInterceptedException:
+        return False
 
 
 # 일반 정보 추출 > 공연 기간/기간 판단 / 추출 메서드
@@ -253,7 +255,7 @@ def isAgeDetailInfo(ageInfo):
     # 전체 관람가 아니면
     if ageInfo.find('전체') == -1:
         # 만 / 한국식 나이일 경우 dict 타입 {'type': *, 'age': *} 로 출력
-        ageInfoSearch = re.search(r'\d+|미취학아동입장불가|초등학생이상|중학생이상|고등학생이상', ageInfo).group(0)
+        ageInfoSearch = re.search(r'\d+|미취학아동입장불가|초등학생이상|중학생이상|고등학생이상|-', ageInfo).group(0)
         # 한국식 나이면 type = 한국학
         if ageInfoSearch == '미취학아동입장불가':
             return {'type': '미취학아동입장불가', 'age': 6}
@@ -265,6 +267,8 @@ def isAgeDetailInfo(ageInfo):
             return {'type': '한국', 'age': 17}
         # if ageInfoSearch == '전체관람가':
         #     return {'type': '전체', 'age': 0}
+        if ageInfoSearch == '-':
+            return {'type': '전체', 'age': 0}
         if re.search(r'개월', ageInfo):
             return {'type': '한국', 'age': int(ageInfoSearch)/12}
         if re.match(r'만', ageInfo) is None:
@@ -405,7 +409,9 @@ def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
     priceInfoList.clear()
 
     # 상세 좌석/가격 정보 창 열기
-    browser.find_element(By.CSS_SELECTOR, Constants.detailPrciePopupOpenCss).click()
+    # browser.find_element(By.CSS_SELECTOR, Constants.detailPrciePopupOpenCss).click()
+    element = browser.find_element(By.CSS_SELECTOR, Constants.detailPrciePopupOpenCss)
+    browser.execute_script("arguments[0].click();", element)
 
     # 해당 팝업 창 나올 때 까지 대기, 없다면 에러
     waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPriceTableCss)
@@ -521,6 +527,8 @@ def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
     # count = count + 1
 
     # 상세 좌석/가격 정보 창 닫기
-    browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss).click()
+    # browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss).click()
+    element = browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss)
+    browser.execute_script("arguments[0].click();", element)
 
     time.sleep(1)

@@ -1,10 +1,9 @@
 package com.kh.finalproject.social.kakao;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class KakaoLoginResponse {
+public class KakaoLoginTokenResponse {
     private String access_token;
     private String token_type;
     private Integer expires_in;

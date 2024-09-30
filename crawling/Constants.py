@@ -1,5 +1,5 @@
 initBrowserWaitClass = 'popPriceTable'
-removeAlertCss = '#popup-prdGuide > div > div.popupFooter > button'
+removeAlertCss = '#popup-prdGuide > div > div.popupFooter > button > span'
 titleClass = 'prdTitle'
 limitedOrAlwaysCss = '#productSide > div > div.sideMain > div > div'
 posterPathCss = '#container > div.contents > div.productWrapper > div.productMain > div.productMainTop > div > div.summaryBody > div > div.posterBoxTop > img'

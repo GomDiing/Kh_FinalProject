@@ -23,6 +23,7 @@ def extractNaviInfo(browser, productDataList):
 
     # 네비게이션 메뉴 순회
     for naviItem in naviItemList:
+        # print('naviItemList : ' + str(naviItem.get_attribute('innerHTML')))
         # 정보 탭
         naviLinkOfDetailList = ['공연정보', '이용정보']
         # 현 네비 탭 이름이 정보 탭 리스트에 존재할 경우
@@ -107,7 +108,9 @@ def extractNaviTabOfDetailAboutPoster(browser, productDataList):
 # 네비게이션 메뉴 탐색 > 정보 탭 일 경우 탐색 메서드
 def extractNaviTabOfDetail(naviItem, browser, productDataList):
     # 정보 탭 클릭
-    naviItem.find_element(By.CSS_SELECTOR, 'a').click()
+    # naviItem.find_element(By.CSS_SELECTOR, 'a').click()
+    element = browser.find_element(By.CSS_SELECTOR, 'a')
+    browser.execute_script("arguments[0].click();", element)
 
     # 정보 탭 내 캐스팅 정보 추출 메서드
     castingInfoTotalList = extractNaviTabOfDetailAboutCasting(browser)
@@ -211,7 +214,9 @@ def extractNaviTabOfCasting(naviItem, browser, productDataList):
 
     print('==**==**==**==**==**==**==**==**==**==')
 
-    naviItem.find_element(By.CSS_SELECTOR, 'a').click()
+    # naviItem.find_element(By.CSS_SELECTOR, 'a').click()
+    element = browser.find_element(By.CSS_SELECTOR, 'a')
+    browser.execute_script("arguments[0].click();", element)
 
     time.sleep(0.5)
     try:

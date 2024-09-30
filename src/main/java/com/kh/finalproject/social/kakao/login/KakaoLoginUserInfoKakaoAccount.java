@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class KakaoLoginInfoAccount {
+public class KakaoLoginUserInfoKakaoAccount {
     private Boolean profile_nickname_needs_agreement;
     private Boolean profile_image_needs_agreement;
     private Boolean has_email;

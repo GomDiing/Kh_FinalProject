@@ -32,7 +32,7 @@ config.read('config.ini')
 SQLALCHEMY_DB_URL = config['DEFAULT']['SQLALCHEMY_DB_URL']
 
 # DB와 연결
-engine = sqlalchemy.create_engine(SQLALCHEMY_DB_URL, echo=False)
+engine = sqlalchemy.create_engine(SQLALCHEMY_DB_URL, echo=False, pool_recycle=30)
 
 # Session 생성
 metadata_obj = MetaData(bind=engine)
@@ -545,7 +545,12 @@ def commitSeatPriceDataList(seatPriceDataList, product_code):
 
     else:
         for seatPriceDataRecord in seatPriceDataList:
-            insertQuery = insert(t_seat_price).values(price=int(seatPriceDataRecord['price']),
+            if seatPriceDataRecord['price'] == '':
+                print('if')
+                break
+            else:
+                print('else')
+                insertQuery = insert(t_seat_price).values(price=int(seatPriceDataRecord['price']),
                                                       seat=seatPriceDataRecord['seat'],
                                                       product_code=product_code)
             commit_db(insertQuery)

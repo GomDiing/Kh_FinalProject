@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class KakaoLoginRequest {
+public class KakaoLoginTokenRequest {
     @JsonProperty("grant_type")
     private String grant_type;
 

@@ -5,12 +5,11 @@ import time
 import re
 
 from selenium.webdriver.common.by import By
-from selenium.common import TimeoutException, NoSuchElementException
+from selenium.common import TimeoutException, NoSuchElementException, ElementClickInterceptedException
 from sqlalchemy import MetaData, Table, insert, select
 from Common import initChromBrowser, waitUntilElementLocated, metadata_obj, engine, createEngine, commitProductDataList, \
     commitReserveTimeDataList, commitSeatPriceDataList, isExistInTable, commitStatisticsRecord, commitCasting, \
     commitReserveTimeCasting, commitReserveTimeSeatPrice, commitRankingChangeStatus
-from Debug import debugCreateUrlOfInterpark
 from crawling.Page_Calendar_Info import extractCalendarInfo
 from crawling.Page_Compact_Info import extractCompactInfo
 from crawling.Page_General_Info import extractGeneralInfo
@@ -20,7 +19,9 @@ from crawling.Page_Navi_Info import extractNaviInfo
 # 경고 창 제거 메서드, 없다면 무시
 def removeAlert(browser):
     try:
-        browser.find_element(By.CSS_SELECTOR, Constants.removeAlertCss).click()
+        # browser.find_element(By.CSS_SELECTOR, Constants.removeAlertCss).click()
+        element = browser.find_element(By.CSS_SELECTOR, Constants.removeAlertCss)
+        browser.execute_script("arguments[0].click();", element)
     except NoSuchElementException:
         pass
 

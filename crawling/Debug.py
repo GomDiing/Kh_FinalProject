@@ -1,3 +1,6 @@
+from Page import crawlingInterparkPage
+
+
 def debugCreateUrlOfInterpark():
     urlList = []
 
@@ -12,6 +15,19 @@ def debugCreateUrlOfInterpark():
     urlList.append(19018229)
     urlList.append(22012184)
     urlList.append(22009029)
-    urlList.append(22010521)    # 뮤지컬 : 이머시브 다이닝 (가격 Span 정렬)
+    urlList.append(22010521)  # 뮤지컬 : 이머시브 다이닝 (가격 Span 정렬)
 
     return urlList
+
+
+def debugPage():
+    crawlingInterparkPage(24012950, 'MUSICAL')
+    # for x in [1, 2, 3, 4, 5, '', 6, 7, 8, 9, 10]:
+    #     if x == '':
+    #         continue
+    #     else:
+    #         print(x)
+
+
+if __name__ == '__main__':
+    debugPage()

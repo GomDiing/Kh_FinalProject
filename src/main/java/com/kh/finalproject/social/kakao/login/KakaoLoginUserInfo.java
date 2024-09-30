@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class KakaoLoginInfoProfile {
+public class KakaoLoginUserInfo {
     private Long id;
-    private String nickname;
+//    private String nickname;
 //    private LocalDateTime connected_at;
     private String connected_at;
 //    private Boolean name_needs_agreement;
@@ -25,8 +25,8 @@ public class KakaoLoginInfoProfile {
 //    private LocalDateTime ci_authenticated_at;
 //    private String ci_authenticated_at;
     @JsonProperty("properties")
-    private KakaoLoginInfoProperties properties;
+    private KakaoLoginUserInfoProperties properties;
     @JsonProperty("kakao_account")
-    private KakaoLoginInfoAccount kakao_account;
+    private KakaoLoginUserInfoKakaoAccount kakao_account;
 
 }
