@@ -45,6 +45,8 @@ crawling/__pycache__/
 /nbdist/
 /.nb-gradle/
 /src/main/frontend/node_modules
+/src/main/resources/static/**
+/src/main/frontend/build/**
 
 ### VS Code ###
 .vscode/
