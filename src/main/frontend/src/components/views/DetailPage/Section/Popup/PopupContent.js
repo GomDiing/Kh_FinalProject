@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { seatIndexAction } from "../../../../../util/Redux/Slice/seatIndexSlice";
 import { PayReady } from "../../../../KakaoPay/PayReady";
+import logoKakaoPay from "../../../../../images/payment_icon_yellow_medium.png";
 
 const BodyStyle = styled.div`
   table ,tr {
@@ -295,7 +296,7 @@ function PopupContent (props) {
         <div>
           <MyInfo seat={seat} hour={hour} point={userInfo.userPoint} minute={minute} turn={turn} cancelday={cancelday}  title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
           <br/>
-          <a href={payUrl}><button type="button" className='kpay-button'><img src="/images/payment_icon_yellow_medium.png" alt=""/></button></a>
+          <a href={payUrl}><button type="button" className='kpay-button'><img src={logoKakaoPay} alt=""/></button></a>
         </div>
     </div>
     );
