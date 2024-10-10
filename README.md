@@ -295,6 +295,9 @@ $ python main.py
                   └── kakao                     //카카오
                      ├── login                     //카카오 로그인
                      └── pay                       //카카오페이
+                        ├── approve                     //카카오페이-승인
+                        ├── cancel                      //카카오페이-취소
+                        └── ready                       //카카오페이-준비
 
 ```
 
