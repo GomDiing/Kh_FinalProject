@@ -201,7 +201,10 @@ public class ProductServiceImpl implements ProductService {
 
         //첫 예매 날짜 월의 첫 날짜에서 마지막 날짜 사이 예매 정보 조회
         //즉, 월 내 예매 정보 추출
+        log.info("firstPotionOfDay = {}", firstPotionOfDay);
+        log.info("lastPositionOfDay = {}", lastPositionOfDay);
         List<ReserveTime> findReserveTimeWithinDay = reserveTimeRepository.findAllByProductAndTimeBetween(findProduct, firstPotionOfDay, lastPositionOfDay)
+                .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
 
         //예매 정보 리스트 초기화
@@ -210,6 +213,7 @@ public class ProductServiceImpl implements ProductService {
         //월 내 예매 정보 Entity 리스트 -> DTO 리스트
         //첫 예매 가능 월 내 예매 가능 날짜 리스트 추가
         for (ReserveTime reserveTime : findReserveTimeWithinDay) {
+//            log.info("reserveTime = {}", reserveTime);
             DetailProductReserveTimeDTO reserveTimeDTO = new DetailProductReserveTimeDTO().toDTO(reserveTime);
             detailProductReserveTimeDTOList.add(reserveTimeDTO);
         }

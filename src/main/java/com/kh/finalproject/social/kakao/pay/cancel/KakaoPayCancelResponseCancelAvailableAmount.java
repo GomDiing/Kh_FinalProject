@@ -1,9 +1,9 @@
-package com.kh.finalproject.social.kakao.pay;
+package com.kh.finalproject.social.kakao.pay.cancel;
 
 import lombok.Getter;
 
 @Getter
-public class KakaoPayApproveResponseAmount {
+public class KakaoPayCancelResponseCancelAvailableAmount {
     private Integer total;
     private Integer tax_free;
     private Integer vat;

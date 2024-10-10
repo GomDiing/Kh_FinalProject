@@ -53,6 +53,7 @@ public class ProductController {
                                                                      @PathVariable Integer year,
                                                                      @PathVariable Integer month,
                                                                      @PathVariable Integer day) {
+        log.info("code = {}, year = {}, month = {}", code, year, month);
         DetailProductReserveTimeSetDTO detailProductReserveTimeSetDTO = productService.reserveCalendarDay(code, year, month, day);
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductReserveTimeSetDTO), HttpStatus.OK);
     }

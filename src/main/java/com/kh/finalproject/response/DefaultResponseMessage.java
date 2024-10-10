@@ -66,4 +66,5 @@ public class DefaultResponseMessage {
     public static final String DB_ERROR = "데이터베이스 에러";
     public static final String SUCCESS_KAKAOPAY_READY = "카카오 Ready 완료";
     public static final String SUCCESS_KAKAOPAY_APPROVE = "카카오 Approve 완료";
+    public static final String SUCCESS_KAKAOPAY_CANCEL = "카카오 Cancel 완료";
 }

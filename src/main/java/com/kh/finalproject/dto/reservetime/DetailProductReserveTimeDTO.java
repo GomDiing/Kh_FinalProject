@@ -57,4 +57,19 @@ public class DetailProductReserveTimeDTO {
     public void addCastingList(String castingActor) {
         this.castingList.add(castingActor);
     }
+
+    @Override
+    public String toString() {
+        return "DetailProductReserveTimeDTO{" +
+                "index=" + index +
+                ", time=" + time +
+                ", date='" + date + '\'' +
+                ", turn=" + turn +
+                ", hour=" + hour +
+                ", minute=" + minute +
+                ", category=" + category +
+                ", castingList=" + castingList +
+                ", reserveTimeSeatPriceListDTOList=" + reserveTimeSeatPriceListDTOList +
+                '}';
+    }
 }

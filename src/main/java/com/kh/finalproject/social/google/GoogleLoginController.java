@@ -1,4 +1,4 @@
-package com.kh.finalproject.social;
+package com.kh.finalproject.social.google;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -6,17 +6,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.kh.finalproject.entity.enumurate.MemberProviderType;
-import com.kh.finalproject.repository.MemberRepository;
 import com.kh.finalproject.service.MemberService;
-import com.kh.finalproject.social.google.ConfigUtils;
-import com.kh.finalproject.social.google.GoogleLoginDto;
-import com.kh.finalproject.social.google.GoogleLoginRequest;
-import com.kh.finalproject.social.google.GoogleLoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

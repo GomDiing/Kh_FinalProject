@@ -1,4 +1,4 @@
-package com.kh.finalproject.social.kakao.pay;
+package com.kh.finalproject.social.kakao.pay.approve;
 
 import lombok.Getter;
 

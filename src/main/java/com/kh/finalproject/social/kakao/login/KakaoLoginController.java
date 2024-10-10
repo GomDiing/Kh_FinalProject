@@ -1,4 +1,4 @@
-package com.kh.finalproject.social;
+package com.kh.finalproject.social.kakao.login;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,10 +6,6 @@ import com.kh.finalproject.entity.enumurate.MemberProviderType;
 import com.kh.finalproject.exception.CustomErrorCode;
 import com.kh.finalproject.exception.CustomException;
 import com.kh.finalproject.service.MemberService;
-import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfoKakaoAccount;
-import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfo;
-import com.kh.finalproject.social.kakao.login.KakaoLoginUserInfoProperties;
-import com.kh.finalproject.social.kakao.login.KakaoLoginTokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

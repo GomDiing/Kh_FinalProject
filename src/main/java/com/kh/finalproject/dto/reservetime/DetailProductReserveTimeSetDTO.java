@@ -28,7 +28,7 @@ public class DetailProductReserveTimeSetDTO {
     }
 
     public DetailProductReserveTimeSetDTO toDTO(List<DetailProductReserveTimeDTO> detailProductReserveTimeDTOList) {
-        log.info("detailProductReserveTimeDTOList.get(0).getDate() = {}", detailProductReserveTimeDTOList.get(0).getDate());
+//        log.info("detailProductReserveTimeDTOList.get(0).getDate()={}", detailProductReserveTimeDTOList.get(0).getDate());
         this.year = Integer.parseInt(detailProductReserveTimeDTOList.get(0).getDate().split("/")[0]);
         this.month = Integer.parseInt(detailProductReserveTimeDTOList.get(0).getDate().split("/")[1]);
         this.day = Integer.parseInt(detailProductReserveTimeDTOList.get(0).getDate().split("/")[2]);

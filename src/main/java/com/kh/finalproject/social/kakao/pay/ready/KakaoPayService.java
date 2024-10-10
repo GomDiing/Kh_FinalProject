@@ -1,5 +1,11 @@
-package com.kh.finalproject.social.kakao.pay;
+package com.kh.finalproject.social.kakao.pay.ready;
 
+import com.kh.finalproject.social.kakao.pay.approve.KakaoPayApproveRequest;
+import com.kh.finalproject.social.kakao.pay.approve.KakaoPayApproveRequestDTO;
+import com.kh.finalproject.social.kakao.pay.approve.KakaoPayApproveResponse;
+import com.kh.finalproject.social.kakao.pay.cancel.KakaoPayCancelRequest;
+import com.kh.finalproject.social.kakao.pay.cancel.KakaoPayCancelRequestDTO;
+import com.kh.finalproject.social.kakao.pay.cancel.KakaoPayCancelResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -118,5 +124,37 @@ public class KakaoPayService {
         log.info("approveResponse = {}", approveResponse.toString());
 
         return approveResponse;
+    }
+
+    public KakaoPayCancelResponse cancel(KakaoPayCancelRequestDTO cancelRequestDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "DEV_SECRET_KEY " + secretKeyDev);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        KakaoPayCancelRequest cancelRequest = KakaoPayCancelRequest.builder()
+                .cid(cid)
+                .tid(cancelRequestDTO.getTid())
+                .cancel_amount(cancelRequestDTO.getCancelAmount())
+                .cancel_tax_free_amount(cancelRequestDTO.getCancelTaxFreeAmount())
+                .build();
+
+        log.info("cancelRequestDTO = {}", cancelRequestDTO.toString());
+
+        // Send reqeust
+        HttpEntity<KakaoPayCancelRequest> entityMap = new HttpEntity<>(cancelRequest, headers);
+
+        ResponseEntity<KakaoPayCancelResponse> response = new RestTemplate().postForEntity(
+                "https://open-api.kakaopay.com/online/v1/payment/cancel",
+                entityMap,
+                KakaoPayCancelResponse.class
+        );
+
+        KakaoPayCancelResponse cancelResponse = response.getBody();
+
+        assert cancelResponse != null;
+
+        log.info("cancelResponse = {}", cancelResponse.toString());
+
+        return cancelResponse;
     }
 }

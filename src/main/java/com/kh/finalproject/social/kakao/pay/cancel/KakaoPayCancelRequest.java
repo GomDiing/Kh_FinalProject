@@ -1,7 +1,6 @@
-package com.kh.finalproject.social.kakao.pay;
+package com.kh.finalproject.social.kakao.pay.cancel;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,21 +10,19 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayApproveRequest {
+public class KakaoPayCancelRequest {
     private String cid;
     private String tid;
-    private String partner_order_id;
-    private String partner_user_id;
-    private String pg_token;
+    private Integer cancel_amount;
+    private Integer cancel_tax_free_amount;
 
     @Override
     public String toString() {
-        return "KakaoPayApproveRequest{" +
+        return "KakaoPayCancelRequest{" +
                 "cid='" + cid + '\'' +
                 ", tid='" + tid + '\'' +
-                ", partner_order_id='" + partner_order_id + '\'' +
-                ", partner_user_id='" + partner_user_id + '\'' +
-                ", pg_token='" + pg_token + '\'' +
+                ", cancel_amount='" + cancel_amount + '\'' +
+                ", cancel_tax_free_amount='" + cancel_tax_free_amount + '\'' +
                 '}';
     }
 }
