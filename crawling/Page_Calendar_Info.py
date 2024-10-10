@@ -6,10 +6,13 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.common import TimeoutException, NoSuchElementException
 
+from crawling.Common import print_log, log_error
+
 
 # 캘린더 정보 탐색 메서드
 def extractCalendarInfo(browser, productDataList):
     # 탐색결과 담을 dict 객체
+    print_log("캘린더 정보 탐색")
     resultCalendarInfo = {}
 
     # 공연 시간 / 시간별 배우 정보 담을 리스트
@@ -22,34 +25,33 @@ def extractCalendarInfo(browser, productDataList):
     isExistTimeCastingInfo = False
 
     if isExistDetailCasting is True:
+        print_log('네비 탭 > 정보 탭 -> 캐스팅 정보 존재')
         # 시간별 배우 정보 존재 확인
         try:
-            print('배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
-
             isExistTimeCastingInfo = True
-        except NoSuchElementException:
-            print('$$$$$$$$$$ :: 캘린더 > 시간별 배우 정보 없음 $$$$$$$$$$')
+            # print('배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
+            print_log(f"배우 정보 존재 확인")
+        except NoSuchElementException as ne:
             isExistTimeCastingInfo = False
+            log_error(ne, '캘린더 > 시간별 배우 정보 없음')
 
     # $$$ 시간별 캐스팅 데이터 정보 유무 데이터 리스트 추가
     productDataList['product_isInfoTimeCasting'] = isExistTimeCastingInfo
 
     # 다음 달 이동이 불가능 할 때 까지 계속 조회
     while True:
+        print_log(f"캘린더 정보 탐색 -> 월간 정보 탐색")
         # 현재 캘린더의 날짜 정보 추출 (연/월)
         currentYearMonth = browser.find_element(By.CSS_SELECTOR, Constants.calendarYearMonthCss).text
 
         # 예약 가능 날짜 조회
         mutedPossibleDays = extractCalendarOfPossibleDays(browser)
 
-        # mutedCount = mutedAndPossibleDays['mutedCount']
+        # 예약 가능한 날짜 및 현재 연/월 저장
         possibleDaysList = mutedPossibleDays['possibleDaysList']
         mutedPossibleDays['currentYearMonth'] = currentYearMonth
 
-        print('====================')
-        print('현재 연월 : ' + currentYearMonth)
-        print('====================')
-        print("예약 가능한 날짜 리스트 : " + str(possibleDaysList))
+        print_log(f"현재 연월 : {currentYearMonth}\t예약 가능한 날짜 리스트 : {str(possibleDaysList)}")
 
         # 예약 가능한 날짜에서 회차 / 캐스팅 정보 탐색
         extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo, reserveTimeDataList, productDataList)
@@ -63,12 +65,14 @@ def extractCalendarInfo(browser, productDataList):
         # 다음 달 이동이 가능한 요소 선택
         nextPageButton = isNexMonthResult['nextPageButton']
 
-        # class 속성 값이 disabled 이면 종료
+        # class 속성 값이 disabled 이면 종료 -> 즉, 현재 월이 마지막 예매
         if isNextMonthDisabled == 'disabled':
+            print_log(f"현 월이 마지막 예매")
             browser.quit()
             break
         else:
             # 다음 달 이동 버튼이 disabled 이면 이동 클릭
+            print_log(f"캘린더 다음 달 이동")
             browser.execute_script('arguments[0].click();', nextPageButton)
 
         time.sleep(1)
@@ -112,6 +116,7 @@ def extractCalendarOfPossibleDays(browser):
 
 # 캘린더 정보 탐색 > 예약 가능한 날짜에서 캐스팅 정보 탐색
 def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo, reserveTimeDataList, productDataList):
+    print_log(f"캘린더 정보 탐색 > 예약 가능한 날짜서 캐스팅 정보 탐색")
     mutedCount = mutedPossibleDays['mutedCount']
     possibleDaysList = mutedPossibleDays['possibleDaysList']
 
@@ -135,9 +140,7 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
         # 메인화면 > 캘린더 > 예약 가능 날짜(클릭) > 공연 회차 : 총 공연가능 회차 조회
         try:
             turnTotalCount = browser.find_elements(By.CSS_SELECTOR, Constants.calendarPossibleTurnCss)
-
-            print(possibleDays + '일의 총 회차 수: ' + str(len(turnTotalCount)))
-            print('==========**********==========**********==========**********==========')
+            print_log(f"{possibleDays}일의 총 회차 수: {str(len(turnTotalCount))}")
 
             # 각 공연 회차에 접근해 배우 정보 추출 #
             for count in range(1, len(turnTotalCount) + 1):
@@ -157,12 +160,10 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
                 reserveTimeDataRecord['reserve_time_year'] = currentYearMonth.split('. ')[0]
                 reserveTimeDataRecord['reserve_time_month'] = currentYearMonth.split('. ')[1]
 
-                print('현재 연도: ' + reserveTimeDataRecord['reserve_time_year'])
-                print('현재 월: ' + reserveTimeDataRecord['reserve_time_month'])
 
                 # 해당 날짜 조회
-                print('현재 날짜: ' + str(possibleDays))
                 reserveTimeDataRecord['reserve_time_day'] = possibleDays
+                print_log(f"현재 연도/월/일: {reserveTimeDataRecord['reserve_time_year']}/{reserveTimeDataRecord['reserve_time_month']}/{reserveTimeDataRecord['reserve_time_day']}")
 
                 # 연도/월/일 계산
                 reserveTimeDataRecord['reserve_time_date'] = \
@@ -179,7 +180,8 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
                 reserveTimeDataRecord['reserve_time_hour'] = str(openTime[0])
                 reserveTimeDataRecord['reserve_time_min'] = str(openTime[1])
 
-                print('현 회차: ' + str(count) + ', 시간(시): ' + openTime[0] + ', (분): ' + openTime[1])
+                # print('현 회차: ' + str(count) + ', 시간(시): ' + openTime[0] + ', (분): ' + openTime[1])
+                print_log(f"현 회차: {count}\t시간(시):(분): {openTime[0]}:{openTime[1]}")
                 print('------------------------------------------------------------')
 
                 # 예약 날짜 계산 (TimeStamp)
@@ -198,18 +200,20 @@ def extractCalendarOfCasting(mutedPossibleDays, browser, isExistTimeCastingInfo,
                 # 타임존 설정 (대한민국 시간인 UTC +09:00)
                 timezone_kst = datetime.timezone(datetime.timedelta(hours=9))
                 reserveTimeUTC = reserveTimeTimeStamp.replace(tzinfo=timezone_kst)
-
                 reserveTimeDataRecord['reserve_time'] = reserveTimeUTC
+
+                print_log(f"예매시간 : {reserveTimeDataRecord['reserve_time']}")
 
                 reserveTimeDataList.append(reserveTimeDataRecord)
 
                 if isExistTimeCastingInfo:
-                    print(
-                        '배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
+                    # print(
+                    #     '배우 정보 존재 확인' + browser.find_element(By.CSS_SELECTOR, Constants.calendarPossibleActorCss).text)
+                    print_log(f"배우 정보 존재 확인")
 
                 time.sleep(0.2)
-        except NoSuchElementException:
-            print('$$$$$$$$$$ :: 캘린더 > 공연 회차 정보 없음$$$$$$$$$$')
+        except NoSuchElementException as ne:
+            log_error(ne)
 
 
 # 캘린더 정보 탐색 > 다음 달로 이동이 가능한지 판단하는 메서드

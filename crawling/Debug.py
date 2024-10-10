@@ -20,13 +20,12 @@ def debugCreateUrlOfInterpark():
     return urlList
 
 
+# MUSICAL / DRAMA / CLASSIC / EXHIBITION
 def debugPage():
-    crawlingInterparkPage(24012950, 'MUSICAL')
-    # for x in [1, 2, 3, 4, 5, '', 6, 7, 8, 9, 10]:
-    #     if x == '':
-    #         continue
-    #     else:
-    #         print(x)
+    # crawlingInterparkPage(24011867, 'EXHIBITION')
+    # crawlingInterparkPage(24013389, 'CLASSIC')
+    # crawlingInterparkPage(24013928, 'MUSICAL')
+    crawlingInterparkPage(24007345, 'MUSICAL')
 
 
 if __name__ == '__main__':

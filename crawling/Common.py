@@ -1,5 +1,5 @@
 import copy
-import time
+import os
 import traceback
 
 from selenium import webdriver
@@ -7,23 +7,17 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
-from selenium.common import TimeoutException, NoSuchElementException
+from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from sqlalchemy import MetaData, Table, insert, select, delete
+from sqlalchemy import Table, insert, select, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 
-from crawling import Constants
 import configparser
 import sqlalchemy
-
-# from crawling.Page import crawlingInterparkPage
-
-# from crawling.Page import crawlingInterparkPage
 
 # 설정값 읽기
 config = configparser.ConfigParser()
@@ -46,11 +40,10 @@ Base = declarative_base()
 def initChromBrowser():
     # <<< 크롬 옵션 설정 >>> #
     chromeOptions = ChromeOptions()
-    chromeOptions.add_argument('--headless')
+    # chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--window-size=1280,720')
     chromeOptions.add_argument('--no-sandbox')
 
-    # chromeService = ChromeService(executable_path='./chromedriver')
     chromeService = ChromeService(executable_path=ChromeDriverManager().install())
 
     # <<< 크롬 브라우저 실행 >>> #
@@ -63,31 +56,25 @@ def initChromBrowser():
 def waitUntilElementLocated(browser, waitTime, byKey, byPath):
     # byList = ['css selector', 'class name', 'id', 'tag name', 'xpath', 'name', 'link text', 'partial link text']
     if not isinstance(waitTime, int):
-        print('time이 올바른 값이 아닙니다')
+        print_log('time이 올바른 값이 아닙니다')
     if not isinstance(byKey, str):
-        print('byKey가 올바른 값이 아닙니다')
+        print_log('byeKey가 올바른 값이 아닙니다')
         return False
     if not isinstance(byPath, str):
-        print('byPath가 올바른 값이 아닙니다')
+        print_log('byPath가 올바른 값이 아닙니다')
         return False
     else:
         # 해당 태그가 나타날 때 까지 대기
         try:
             WebDriverWait(browser, 10).until(EC.presence_of_element_located((byKey, byPath)))
         except TimeoutException as te:
-            print('Error!!! TimeOutException!!!')
-            print('byKey: ' + byKey)
-            print('byPath: ' + byPath)
+            log_error(te, f"Error!!! TimeOutException! byKey: {byKey} byPath: {byPath}")
             browser.quit()
-            # break
             return False
         except Exception as e:
-            print('Error!!! Exception!!!')
-            print('byKey: ' + byKey)
-            print('byPath: ' + byPath)
-            traceback.print_exc()
+            log_error(e, f'Error!!! Exception! byKey: {byKey} byPath: {byPath}')
+            # traceback.print_exc()
             browser.quit()
-            # break
             return False
     return True
 
@@ -95,26 +82,29 @@ def waitUntilElementLocated(browser, waitTime, byKey, byPath):
 # 엔진 생성 메서드, 테이블 생성 확인
 def createEngine():
     Base.metadata.create_all(engine)
-    print('테이블 생성 성공')
+    print_log('테이블 생성 성공')
 
 
 # Statement를 Commit하는 메서드
 def commit_db(stmt):
     try:
+        print_log('COMMIT_DB')
         db.execute(stmt)
         db.commit()
     # 오류 발생하면 롤백하고 생략
     # 혹시 멈출때를 대비해서 계속 요청하도록 설정
     except IntegrityError as e:
+        log_error(e)
         db.rollback()
         errorDict = extract_error_code(e)
         # 오류 코드가 1062이면 생략
         if errorDict['errorCode'] == 1062:
+            print_log('PASS : errorCode 1062')
             pass
         pass
     # 오류 발생하면 생략
     except Exception as ex:
-        print(ex)
+        log_error(ex)
         pass
     # DB와의 연결 끊기
     finally:
@@ -124,6 +114,7 @@ def commit_db(stmt):
 # 에러 코드 추출하는 메서드
 def extract_error_code(e):
     # 딕셔너리 생성
+    errorMessage = ''
     errorDict = {}
     # Statement Error 정보 추출
     errorInfo = e.orig
@@ -142,19 +133,16 @@ def extract_error_code(e):
 
 def commitRankingChangeStatus(product_code, product_category, rank_status):
     t_rank_name_list = ['ranking_week', 'ranking_month', 'ranking_close_soon']
-    print('123: ' + product_code)
-    print('123: ' + product_category)
-    print('123: ' + rank_status)
+    print_log('상품 상태 갱신 쿼리')
 
     for t_rank_name in t_rank_name_list:
-        print('Change Rank Status Query!!! : rank_table = ' + t_rank_name +
-              'product_code = ' + product_code +
-              ',and rank_status = ' + rank_status)
         t_rank = Table(t_rank_name, metadata_obj, autoload_with=engine, autoload=True)
         updateQuery = t_rank.update().where(t_rank.c.product_code == product_code) \
             .where(t_rank.c.ranking_category == product_category) \
             .values(ranking_status=rank_status)
-        print(updateQuery)
+        print_log(f"UPDATE COMMIT {t_rank_name} Table WHERE "
+                  f"product_code = {product_code} AND product_category = {product_category} "
+                  f"VALUES ranking_status = {rank_status}")
 
         # Commit
         commit_db(updateQuery)
@@ -199,31 +187,33 @@ def commitRankingDataList(rankingDataList):
     # for 문 인덱스 선언
     currentOrder = 0
 
-    print('table_name: ' + table_name)
+    print_log('Table name: ' + table_name)
     # url 리스트 순회
     for urlKey in currentUrlKeyList:
-        print('===============================')
-        print('')
-        print('urlKey ' + urlKey)
+        print_log(f"urlKey {urlKey}")
         # 해당 데이터 DB 테이블의 존재 여부 확인 변수
         # isTrue = False
 
         # 해당 카테고리와 해당 url이 있는 레코드의 순서(order) 컬럼 추출 쿼리문
         # 반환 컬렉션은 List 이지만 1개만 조회된다
-        print('category ' + category)
+        print_log(f"category {category}")
 
 
         # 카운트 수 증가
         currentOrder = currentOrder + 1
-        print('currentOrder: ' + str(currentOrder))
+        print_log(f"currentOder : {currentOrder}")
 
-        selectQuery = select(t_ranking).where(t_ranking.c.ranking_category == category) \
+        selectQuery = select().where(t_ranking.c.ranking_category == category) \
             .where(t_ranking.c.product_code == str(urlKey))
+
+        print_log(f"SELECT COMMIT WHERE Ranking Table : {table_name}"
+                  f"WHERE Ranking Table : {category} Product Code : {urlKey}")
 
         # print(selectQuery)
         # 쿼리문 실행
         resultSelectQuery = db.execute(selectQuery)
 
+        # DB에 저장된 정보 불러오기
         searchOrder = 0
         searchRankingIndex = 0
         searchRankingStatus = 'READY'
@@ -236,12 +226,11 @@ def commitRankingDataList(rankingDataList):
             searchRankingStatus = resultDataRecord['ranking_status']
             searchRankingIndex = resultDataRecord['ranking_index']
             # print(str(resultDataRecord))
-            print('searchOrder = ' + str(searchOrder))
 
+        print_log(f"searchOrder : {searchOrder}\tsearchRankingIndex : {searchRankingIndex}\tsearchRankingStatus: {searchRankingStatus}")
+
+        # DB 저장된 정보와 웹사이트 정보가 다를 경우 갱신
         if searchOrder != currentOrder and searchOrder != 0:
-            # isTrue = True
-
-            print('Update Query!!!' + urlKey)
             updateQuery = t_ranking.update().where(t_ranking.c.ranking_order == searchOrder) \
                 .where(t_ranking.c.ranking_category == category) \
                 .where(t_ranking.c.ranking_index == searchRankingIndex) \
@@ -250,7 +239,14 @@ def commitRankingDataList(rankingDataList):
                         product_code=str(urlKey),
                         ranking_status=searchRankingStatus)
 
-            print('update Query : ' + str(updateQuery))
+            print_log(f"UPDATE COMMIT WHERE "
+                      f"ranking_order = {searchOrder}\t"
+                      f"ranking_category = {category}\t"
+                      f"ranking_index = {searchRankingIndex}\t VALUES"
+                      f"ranking_order = {currentOrder}\t"
+                      f"ranking_category = {category}\t"
+                      f"product_code = {urlKey}\t"
+                      f"ranking_status = {searchRankingStatus}")
 
             # Commit
             commit_db(updateQuery)
@@ -258,36 +254,27 @@ def commitRankingDataList(rankingDataList):
         # 조회되지 않는다면 응답 순위 데이터 추가
         # if isTrue is False:
         elif searchOrder == 0:
-            print('Insert currentOrder: ' + str(currentOrder))
-            print('Insert category: ' + str(category))
-            print('Insert product_code: ' + str(urlKey))
-            # print('Insert ranking_status: ' + str(currentOrder))
-            print("Insert Query!!!" + str(urlKey))
-
             insertQuery = insert(t_ranking).values(ranking_order=currentOrder,
                                                    ranking_category=category,
                                                    product_code=str(urlKey),
                                                    ranking_status='READY')
-            print('Insert Query : ' + str(insertQuery))
+            print_log(f"INSERT COMMIT Ranking Table"
+                      f"ranking_order = {currentOrder}\t"
+                      f"ranking_category = {category}\t"
+                      f"product_code = {urlKey}\t"
+                      f"ranking_status = READY")
 
             commit_db(insertQuery)
 
         else:
-            print("####### NOTHING QUERY!!!")
-            # isTrue = True
+            print_log(f"NOTHING QUERY")
 
-        # 응답 url 제품 정보가 테이블에 있는지 확인
-        # 없다면 제품 정보를 요청해서 테이블에 추가
-        # if isExistProduct(urlKey) == True:
-        #     pass
-        # else:
-        #     crawlingInterparkPage(urlKey)
-
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-
+    # 조회된 순위보다 높은 순서 제거
     deleteQuery = delete(t_ranking).where(t_ranking.c.ranking_category == category) \
         .where(t_ranking.c.ranking_order > totalCount)
-    print('DELETE!!! : ' + str(deleteQuery))
+    print_log(f"DELETE COMMIT Ranking Table WHERE "
+              f"ranking_category = {category}\t"
+              f"ranking_order > {totalCount}\t")
     commit_db(deleteQuery)
 
 
@@ -309,6 +296,8 @@ def browseRankingUrlList():
 
         selectRankingQuery = select(t_ranking)
 
+        print_log(f"SELECT FROM {t_ranking} Table")
+
         resultRankingList = db.execute(selectRankingQuery)
 
         for resultRankingRecord in resultRankingList:
@@ -323,7 +312,8 @@ def commitProductDataList(productDataList):
     isExist = isExistTable(t_product, productDataList['product_code'])
 
     if isExist:
-        print('Already exist !!! \nproduct_code in product table ==>' + productDataList['product_code'])
+        # print('Already exist !!! \nproduct_code in product table ==>' + productDataList['product_code'])
+        print_log(f"이미 Product 테이블에 존재 : Product Code : {productDataList['product_code']}")
     # print('product_isInfoCasting: ' + str(productDataList['product_isInfoCasting']))
     # print('product_age_isKorean: ' + str(productDataList['product_age_isKorean']))
     # print('product_isInfoTimeCasting: ' + str(productDataList['product_isInfoTimeCasting']))
@@ -345,9 +335,27 @@ def commitProductDataList(productDataList):
                                                product_time_min=productDataList['product_time_min'],
                                                product_time_break=productDataList['product_time_break'],
                                                product_is_info_casting=productDataList['product_isInfoCasting'],
-                                               product_is_info_time_casting=productDataList[
-                                                   'product_isInfoTimeCasting'],
+                                               product_is_info_time_casting=productDataList['product_isInfoTimeCasting'],
                                                product_rate_average=0.0)
+        print_log(f"INSERT COMMIT TO Product 테이블 : "
+                  f"product_code : {productDataList['product_code']}\t"
+                  f"product_url : {productDataList['product_url']}\t"
+                  f"product_title : {productDataList['product_title']}\t"
+                  f"product_category : {productDataList['product_category']}\t"
+                  f"product_thumb_poster_url : {productDataList['product_thumb_poster_url']}\t"
+                  f"product_detail_poster_url : {productDataList['product_detail_poster_url']}\t"
+                  f"product_casting_poster_url : {productDataList['product_casting_poster_url']}\t"
+                  f"product_location : {productDataList['product_location']}\t"
+                  f"product_detail_location : {productDataList['product_detail_location']}\t"
+                  f"product_period_start : {productDataList['product_period_start']}\t"
+                  f"product_period_end : {productDataList['product_period_end']}\t"
+                  f"product_age : {productDataList['product_age']}\t"
+                  f"product_age_is_korean : {productDataList['product_age_isKorean']}\t"
+                  f"product_time_min: {productDataList['product_time_min']}\t"
+                  f"product_time_break: {productDataList['product_time_break']}\t"
+                  f"product_is_info_casting : {productDataList['product_isInfoCasting']}\t"
+                  f"product_is_info_time_casting : {productDataList['product_isInfoTimeCasting']}\t"
+                  f"product_rate_average : 0.0\t")
 
         commit_db(insertQuery)
 
@@ -359,6 +367,8 @@ def isExistTable(table_name, urlKey):
     # t_product = Table("product", metadata_obj, autoload_with=engine)
     # 중복된 데이터를 조회하는 구문 실행
     selectQuery = select(table_name).where(table_name.c.product_code == urlKey)
+    print_log(f"SELECT COMMIT {table_name} Table "
+              f"WHERE product_code : {urlKey} ")
     resetSelectQuery = db.execute(selectQuery)
 
     # 중복 데이터가 있다면 True, 없다면 False
@@ -370,6 +380,7 @@ def isExistTable(table_name, urlKey):
 
 def isExistTableForReserveTimeCasting(table_name, reserve_time_index):
     isExistQuery = select(table_name).where(table_name.c.reserve_time_index == reserve_time_index)
+    print_log(f"SELECT COMMIT FROM {table_name} TABLE WHERE reserve_time_index : {reserve_time_index}")
     resultExistQuery = db.execute(isExistQuery)
 
     # 중복 데이터가 있다면 True, 없다면 False
@@ -397,7 +408,7 @@ def commitReserveTimeDataList(reserveTimeDataList, product_code, product_categor
     isExist = isExistTable(t_reserve_time, product_code)
 
     if isExist:
-        print('Already exist !!! \nproduct_code in reserve_time table ==>' + product_code)
+        print_log(f"이미 ReverseTime 테이블에 존재 : Product Code : {product_code}")
     else:
         for reserveTimeDataRecord in reserveTimeDataList:
             # print(str(reserveTimeDataRecord))
@@ -405,7 +416,7 @@ def commitReserveTimeDataList(reserveTimeDataList, product_code, product_categor
             # selectSeatPrice = select(t_seat_price).where(
             #     t_seat_price.c.product_code == product_code)
 
-            # resultSeatPrice = db.execute(selectSeatPrice)
+            # resultSeatPrice = db.execute(selectSeatPrice
             insertQuery = insert(t_reserve_time).values(
                 reserve_time_date=reserveTimeDataRecord['reserve_time_date'],
                 reserve_time=reserveTimeDataRecord['reserve_time'],
@@ -416,6 +427,14 @@ def commitReserveTimeDataList(reserveTimeDataList, product_code, product_categor
                 reserve_time_turn=reserveTimeDataRecord['reserve_time_turn'],
                 product_code=product_code,
                 product_category=product_category)
+            print_log(f"INSERT COMMIT TO ReverseTime Table : "
+                      f"product_code : {product_code}\t"
+                      f"product_category : {product_category}\t"
+                      f"reserve_time_turn : {reserveTimeDataRecord['reserve_time_turn']}\t"
+                      f"reserve_time_date : {reserveTimeDataRecord['reserve_time_date']}\t"
+                      f"reserve_time : {reserveTimeDataRecord['reserve_time']}\t"
+                      f"reserve_time_hour : {reserveTimeDataRecord['reserve_time_hour']}\t"
+                      f"reserve_time_min : {reserveTimeDataRecord['reserve_time_min']}\t")
 
             commit_db(insertQuery)
 
@@ -438,6 +457,10 @@ def commitReserveTimeCasting(reserveTimeDataList, product_code):
         selectReserveTimeQuery = select(t_reserve_time).where(t_reserve_time.c.product_code == product_code) \
             .where(t_reserve_time.c.reserve_time == reserveTimeDataRecord['reserve_time']) \
             .where(t_reserve_time.c.reserve_time_turn == reserveTimeDataRecord['reserve_time_turn'])
+        print_log(
+            f"SELECT COMMIT ReserveTime TABLE WHERE product_code : {product_code} "
+            f"reserve_time : {reserveTimeDataRecord['reserve_time']} "
+            f"reserve_time_turn : {reserveTimeDataRecord['reserve_time_turn']}")
 
         resultReserveTime = db.execute(selectReserveTimeQuery)
         for resultReserveTimeRecord in resultReserveTime:
@@ -447,8 +470,9 @@ def commitReserveTimeCasting(reserveTimeDataList, product_code):
             isExist = isExistTableForReserveTimeCasting(t_reserve_time_casting, reserve_time_index)
 
             if isExist:
-                print('Already exist !!! \nreserve_time_index in reserve_time_casting table ==>' + str(
-                    reserve_time_index))
+                print_log(f"이미 ReverseTimeCasting 테이블에 존재 : ReverseTimeIndex : {reserve_time_index}")
+                # print('Already exist !!! \nreserve_time_index in reserve_time_casting table ==>' + str(
+                #     reserve_time_index))
 
             else:
                 for reserveTimeActorRecord in reserveTimeDataRecord['reserveTimeActorList']:
@@ -458,14 +482,17 @@ def commitReserveTimeCasting(reserveTimeDataList, product_code):
                     selectCastingQuery = select(t_casting).where(t_casting.c.product_code == product_code) \
                         .where(t_casting.c.casting_character == character).where(t_casting.c.casting_actor == actor)
 
+                    print_log(f"SELECT COMMIT Casting TABLE WHERE "
+                              f"product_code : {product_code} casting_character : {character} casting_actor : {actor}")
                     resultCasting = db.execute(selectCastingQuery)
                     for resultCastingRecord in resultCasting:
+                        print_log(f"resultCastingRecord: {resultCastingRecord}")
                         casting_id = resultCastingRecord['casting_id']
-                        print('casting_id: ' + casting_id)
-
                         insertQuery = insert(t_reserve_time_casting).values(casting_id=casting_id,
                                                                             reserve_time_index=reserve_time_index)
-
+                        print_log(f"INSERT COMMIT TO ReverseTimeCasting Table "
+                                  f"Casting_id : {casting_id} "
+                                  f"reserve_time_index : {reserve_time_index}")
                         commit_db(insertQuery)
 
 
@@ -478,6 +505,7 @@ def commitReserveTimeSeatPrice(product_code):
     total_quantity = 100
 
     selectReserveTimeQuery = select(t_reserve_time).where(t_reserve_time.c.product_code == product_code)
+    print_log(f"SELECT COMMIT ReserveTime TABLE WHERE Product Code : {product_code}")
 
     resultReserveTime = db.execute(selectReserveTimeQuery)
 
@@ -487,16 +515,17 @@ def commitReserveTimeSeatPrice(product_code):
         isExist = isExistTableForReserveTimeSeatPrice(t_reserve_time_seat_price, reserve_time_index)
 
         if isExist:
-            print(
-                'Already exist !!! \nreserve_time_index in reserve_time_seat_price table ==>' + str(reserve_time_index))
+            print_log(f"이미 ReserveTimeSeatPrice 테이블에 존재 : ReserveTimeIndex : {reserve_time_index}")
 
         else:
             selectSeatPriceQuery = select(t_seat_price).where(t_seat_price.c.product_code == product_code)
 
+            print_log(f"SELECT COMMIT SeatPrice TABLE WHERE Product Code : {product_code}")
             resultSeatPrice = db.execute(selectSeatPriceQuery)
 
             # 예매 시간 정보가 상시 상품일 경우
             if resultReserveTimeRecord['reserve_time_turn'] == 0:
+                print_log(f"예매 시간 정보가 상시 상품")
                 remain_quantity = 0
                 total_quantity = 0
 
@@ -507,6 +536,11 @@ def commitReserveTimeSeatPrice(product_code):
                                                                        seat_price_index=seat_price_index,
                                                                        remain_quantity=remain_quantity,
                                                                        total_quantity=total_quantity)
+                print_log(f"INSERT COMMIT TO ReverseTimeSeatPrice 테이블 "
+                          f"reserve_time_index : {reserve_time_index} "
+                          f"seat_price_index : {seat_price_index} "
+                          f"remain_quantity : {remain_quantity}"
+                          f"total_quantity : {total_quantity}")
 
                 commit_db(insertQuery)
 
@@ -517,13 +551,14 @@ def commitCasting(castingInfoTotalList, product_code):
     isExist = isExistTable(t_casting, product_code)
 
     if isExist:
-        print('Already exist !!! \nproduct_code in casting table ==>' + product_code)
+        print_log(f"이미 Casting 테이블에 존재 : Product Code : {product_code}")
 
     else:
         countOrder = 0
         for castingInfoList in castingInfoTotalList:
             countOrder = countOrder + 1
             casting_id = product_code + '_' + str(countOrder)
+            print_log(f"INSERT COMMIT TO Casting 테이블: Product Code/Casting_id {product_code} : {casting_id}")
             insertQuery = insert(t_casting).values(casting_id=casting_id,
                                                    casting_character=castingInfoList[0],
                                                    casting_actor=castingInfoList[1],
@@ -541,19 +576,19 @@ def commitSeatPriceDataList(seatPriceDataList, product_code):
     isExist = isExistTable(t_seat_price, product_code)
 
     if isExist:
-        print('Already exist !!! \nproduct_code in seat_price table ==>' + product_code)
+        print_log(f"이미 SeatPrice 테이블에 존재 : Product Code : {product_code}")
 
     else:
         for seatPriceDataRecord in seatPriceDataList:
             if seatPriceDataRecord['price'] == '':
-                print('if')
+                print_log(f"좌석가격 정보 없음 : {seatPriceDataRecord['price']}")
                 break
             else:
-                print('else')
+                print_log(f"INSERT COMMIT TO SeatPrice 테이블: Product Code/SeatPrice(Price):(Seat) {product_code} : {seatPriceDataRecord['price']}:{seatPriceDataRecord['seat']}")
                 insertQuery = insert(t_seat_price).values(price=int(seatPriceDataRecord['price']),
                                                       seat=seatPriceDataRecord['seat'],
                                                       product_code=product_code)
-            commit_db(insertQuery)
+                commit_db(insertQuery)
 
 
 def commitStatisticsRecord(statisticsRecord):
@@ -564,7 +599,7 @@ def commitStatisticsRecord(statisticsRecord):
     isExist = isExistTable(t_statistics, product_code)
 
     if isExist:
-        print('Already exist !!! \nproduct_code in statistics table ==>' + product_code)
+        print_log(f"이미 Statistics 테이블에 존재 : Product Code : {product_code}")
 
     else:
         insertQuery = insert(t_statistics).values(statistics_female=statisticsRecord['statistics_female'],
@@ -575,6 +610,15 @@ def commitStatisticsRecord(statisticsRecord):
                                                   statistics_forties=statisticsRecord['statistics_forties'],
                                                   statistics_fifties=statisticsRecord['statistics_fifties'],
                                                   product_code=product_code)
+        print_log(f"INSERT COMMIT TO Statistics 테이블 : "
+                  f"statistics_female : {statisticsRecord['statistics_female']},"
+                  f"statistics_male : {statisticsRecord['statistics_male']},"
+                  f"statistics_teen : {statisticsRecord['statistics_teen']},"
+                  f"statistics_twenties : {statisticsRecord['statistics_twenties']},"
+                  f"statistics_thirties : {statisticsRecord['statistics_thirties']},"
+                  f"statistics_forties : {statisticsRecord['statistics_forties']},"
+                  f"statistics_fifties : {statisticsRecord['statistics_fifties']}"
+                  f"product_code: {product_code}")
         commit_db(insertQuery)
 
 
@@ -595,26 +639,29 @@ def isExistInTable(product_code):
 
 def crawlingRankingFromDBMain(count, rankingDataList):
     t_table = ''
+    t_table_name = ''
 
     if count == 0:
         # rankingDataList['product_ranking_category'] = 'Week'
         t_table = Table('ranking_week', metadata_obj, autoload_with=engine, autoload=True)
+        t_table_name = 'ranking_week'
 
     # 월간 랭킹
     if count == 1:
         # rankingDataList['product_ranking_category'] = 'Month'
         t_table = Table('ranking_month', metadata_obj, autoload_with=engine, autoload=True)
+        t_table_name = 'ranking_month'
 
     # 곧 종료 예정 랭킹
     if count == 2:
         # rankingDataList['product_ranking_category'] = 'CloseSoon'
         t_table = Table('ranking_close_soon', metadata_obj, autoload_with=engine, autoload=True)
+        t_table_name = 'ranking_close_soon'
     isSearchableColumn = ['READY', 'SCHEDULED']
     # selectQuery = select(t_table).where(t_table.c.ranking_status).exists(isSearchableColumn)
     selectQuery = select(t_table).where((t_table.c.ranking_status == 'READY') | (t_table.c.ranking_status == 'SCHEDULED'))
-    print(selectQuery)
+    print_log(f"SELECT COMMIT {t_table_name} WHERE ranking_status = READY OR SCHEDULED")
     # .where(t_table.c.ranking_status == 'SCHEDULED')
-
     resultSelectQuery = db.execute(selectQuery)
 
     for resultSelectDataRecord in resultSelectQuery:
@@ -622,3 +669,36 @@ def crawlingRankingFromDBMain(count, rankingDataList):
         rankingDataRecord['product_code'] = copy.deepcopy(resultSelectDataRecord['product_code'])
         rankingDataRecord['product_category'] = copy.deepcopy(resultSelectDataRecord['ranking_category'])
         rankingDataList.append(rankingDataRecord)
+        print_log(f"랭킹 데이터 리스트 추가 : rankingDataList.append({rankingDataRecord})")
+
+
+def log_error(e, *args):
+    tb = traceback.extract_tb(e.__traceback__)
+    searchFile = extract_filename(traceback.extract_stack())
+    msg = ''
+    for frame in tb:
+        filename, line, func, text = frame
+
+        if filename == searchFile:
+            if args:
+                msg = args[0] + '\n'
+
+            print(f"ERROR\t{func}\t\t\t{msg} ERROR FROM File '{os.path.basename(filename)}', "
+                        f"Function '{func}', Line {line}: {text}")
+            break
+
+
+def extract_filename(stack):
+    stack = traceback.extract_stack()
+    filename, line, func, text = stack[-3]
+    return filename
+
+
+def print_log(input_msg):
+    stack = traceback.extract_stack()
+    msg = ''
+    filename, line, func, text = stack[-2]
+    if input_msg:
+        msg = input_msg + '\t\t'
+    print(f"LOG\t\t{func}\t\t\t{msg} FROM File '{os.path.basename(filename)}', "
+                f"Function '{func}', Line {line}")
