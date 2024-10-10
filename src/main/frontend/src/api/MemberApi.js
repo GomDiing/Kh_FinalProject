@@ -1,5 +1,4 @@
 import axios from "axios";
-import {TCATS_DOMAIN} from "../components/Config";
 const HEADER = {'Content-Type' : 'application/json'}
 
 const MemberApi = {
@@ -84,7 +83,7 @@ const MemberApi = {
   },
   // 5번 이상 신고당했을 시, 블랙리스트 회원으로 전환
   changeBlack : async function(){
-    return await axios.get( "/api/mebmer/accuse/process", HEADER)
+    return await axios.get( "/api/member/accuse/process", HEADER)
   },
   // 로그인
   login : async function(id, password, providerType) {

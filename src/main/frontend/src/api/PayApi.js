@@ -1,5 +1,4 @@
 import axios from "axios";
-import {TCATS_DOMAIN} from "../components/Config";
 const HEADER = {'Content-Type' :  'application/json'}
 
 const PayApi = {
@@ -50,6 +49,17 @@ const PayApi = {
       tid : tid
     }
     return await axios.post('/pay/kakao/approve', payKakaoApproveData)
+  },
+
+  // 카카오Pay 통신 - 취소(Cancel)
+  payKakaoCancel : async function(tid, cancelAmount, cancelTaxFreeAmount) {
+    const payKakaoCancelData = {
+      tid : tid,
+      cancelAmount : cancelAmount,
+      cancelTaxFreeAmount : cancelTaxFreeAmount,
+    }
+
+    return await axios.post('/pay/kakao/cancel', payKakaoCancelData)
   }
 }
 

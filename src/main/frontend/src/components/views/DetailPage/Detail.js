@@ -151,12 +151,12 @@ function Detail() {
   // console.log(code);
 
   useEffect(() => {
-    setPcode(code);
+    // setPcode(code);
     const getData = async()=> {
       try {
-        const res = await DetailApi.getDetail(pCode);
+        const res = await DetailApi.getDetail(code);
         if(res.data.statusCode === 200){
-          console.log(res.data.results.compact_list);
+          console.log('compact_list : ' + res.data.results.compact_list);
           // checkList 특정 요소의 유무 판단
           setCkList(res.data.results.check_list);
           setCastInfo(res.data.results.check_list.is_info_casting);
@@ -182,13 +182,14 @@ function Detail() {
       }
     };
     getData();
-  }, [pCode]);
+  }, [code]);
 
   // 후기 댓글 불러오는 useEffect
   useEffect(() => {
     const reviewData = async() => {
       try {
-        const res = await DetailApi.allReviewComment(pCode);
+        console.log('Detail.js');
+        const res = await DetailApi.allReviewComment(code, 1, 4);
         if(res.data.statusCode === 200) {
           setReviewList([reviewList, res.data.results]);
         } else {
@@ -199,7 +200,7 @@ function Detail() {
       }
     };
     reviewData();
-  }, [pCode]);
+  }, [code]);
 
   // 최상단 스크롤
   const handleFollow = () => {

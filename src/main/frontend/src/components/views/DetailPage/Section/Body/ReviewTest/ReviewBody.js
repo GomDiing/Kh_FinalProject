@@ -30,6 +30,7 @@ const ReviewBody=(props)=>{
   useEffect(() => {
     const reviewData = async() => {
       try {
+        console.log('ReviewBody.js');
         const res = await DetailApi.allReviewComment(props.code,currentPage, pageSize);
         if(res.data.statusCode === 200) {
           setReviewList2([...reviewList2, ...res.data.results.review_comment_list]);

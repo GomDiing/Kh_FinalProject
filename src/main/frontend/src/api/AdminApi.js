@@ -1,7 +1,8 @@
-import axios from "axios";
-import {TCATS_DOMAIN} from "../components/Config";
+import axios, {AxiosHeaders} from "axios";
 
-const HEADER = {'Content-Type' :  'application/json'}
+const HEADER = {
+    'Content-Type' :  'application/json'
+}
 
 
 const AdminApi={
@@ -14,7 +15,7 @@ const AdminApi={
         return await axios.post( "/api/notice/write", params, HEADER);
     },
     // 공지사항 전체 목록
-    noticeInfo : async function(currentPage ,setPageSize){
+    noticeInfo : async function(currentPage, setPageSize){
         return await axios.get( `/api/notice/list?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
     // 공지사항 상세페이지
@@ -37,7 +38,7 @@ const AdminApi={
         const params = {
             checkDTOList: arrKeys
         };
-        return await axios.post( "/api/notice/delete/checkbox",params, "application/json");
+        return await axios.post( "/api/notice/delete/checkbox", params, HEADER);
     },
     // 공지사항 수정
     noticeEdit : async function(inputTitle, inputDetail, index){
@@ -45,30 +46,28 @@ const AdminApi={
             title : inputTitle,
             content : inputDetail
         }
-        return await axios.put( "/api/notice/edit/" +index, editing, HEADER)
+        return await axios.put( "/api/notice/edit/"+index, editing, HEADER)
     },
 
     // 회원 전체 조회
-    totalMember : async function(currentPage ,setPageSize){
-        return await axios.get(TCATS_DOMAIN+`/api/member/memberlist?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+    totalMember : async function(currentPage, setPageSize){
+        return await axios.get(`/api/member/memberlist?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
     // 블랙리스트 회원 조회
-    totalBlackMember : async function(currentPage ,setPageSize){
-        return await axios.get(TCATS_DOMAIN+`/api/member/blacklist?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+    totalBlackMember : async function(currentPage, setPageSize){
+        return await axios.get(`/api/member/blacklist?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
 
     // 체크박스로 회원 탈퇴(관리자)
     deleteMemberAdmin : async function(arrItems){
     const arrKeys = [];
-    for(var i=0; i<arrItems.length; i++){
+    for (var i=0; i<arrItems.length; i++){
         arrKeys.push({"index":arrItems[i]});
     }
-    console.log("삭제할 체크멤버 : " + arrKeys);
-    // debugger;
     const params = {
         memberDTOCheckList: arrKeys
     };
-    return await axios.post( "/api/member/delete/checkbox",params, "application/json");
+    return await axios.post( "/api/member/delete/checkbox", params, HEADER);
 },
     // 일대일문의(qna) 전체 조회
     qnaList : async function(currentPage ,setPageSize){
