@@ -21,4 +21,15 @@ public class RankingWeekDTO {
 
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "RankingWeekDTO{" +
+                "code='" + code + '\'' +
+                ", ranking_order=" + ranking_order +
+                ", category='" + category + '\'' +
+                ", status='" + status + '\'' +
+                ", product=" + product +
+                '}';
+    }
 }

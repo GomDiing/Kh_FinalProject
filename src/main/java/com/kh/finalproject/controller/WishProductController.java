@@ -16,18 +16,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 상품 찜하기 기능을 관리하는 API 컨트롤러
+ * 찜하기 추가/취소 및 회원별 찜 목록 조회 기능 제공
+ *
+ * @author GomDiing
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/wish")
 @Slf4j
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WishProductController {
 
     private final WishProductService wishProductService;
 
     /**
-     * 찜하기 누르기 컨트롤러
+     * 상품 찜하기 추가
+     *
+     * @param addWishProductDTO 찜하기 추가 정보를 담은 DTO
+     * @return 찜하기 추가 처리 결과와 찜하기 성공 메시지
      */
     @PostMapping("/add")
     public ResponseEntity<DefaultResponse<Object>> addWish(@Validated @RequestBody AddWishProductDTO addWishProductDTO){
@@ -38,7 +45,10 @@ public class WishProductController {
     }
 
     /**
-     * 찜하기 취소 컨트롤러
+     * 상품 찜하기 취소
+     *
+     * @param deleteWishProductDTO 찜하기 취소 정보를 담은 DTO
+     * @return 찜하기 취소 처리 결과와 취소 결과 메시지
      */
     @PostMapping("/cancel")
     public ResponseEntity<DefaultResponse<Object>> cancelWish(@Validated @RequestBody DeleteWishProductDTO deleteWishProductDTO){
@@ -49,8 +59,10 @@ public class WishProductController {
     }
 
     /**
-     * 회원 찜목록 조회 컨트롤러
-     * @param index: 회원 인덱스
+     * 특정 회원의 찜한 상품 목록 조회
+     *
+     * @param index 회원 식별자
+     * @return 해당 회원이 찜한 상품 목록과 조회 결과 메시지
      */
     @GetMapping("{index}")
     public ResponseEntity<DefaultResponse<Object>> searchAllByMember(@PathVariable Long index) {

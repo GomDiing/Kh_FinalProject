@@ -20,6 +20,8 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_SEARCH_STATIC = "예매자 통계 조회 성공";
     public static final String SUCCESS_SEARCH_PRODUCTLIST = "상품 전체 목록 조회 성공";
     public static final String SUCCESS_SEARCH_PRODUCT_DETAIL = "상품 상세 조회 성공";
+    public static final String SUCCESS_SEARCH_YEAR_MONTH_RESERVE = "특정 연월 예약 조회 성공";
+    public static final String SUCCESS_SEARCH_DAY_RESERVE = "특정 일 예약 조회 성공";
 
     public static final String SUCCESS_ADD_REVIEW_LIKE = "좋아요 생성 성공";
 
@@ -67,4 +69,10 @@ public class DefaultResponseMessage {
     public static final String SUCCESS_KAKAOPAY_READY = "카카오 Ready 완료";
     public static final String SUCCESS_KAKAOPAY_APPROVE = "카카오 Approve 완료";
     public static final String SUCCESS_KAKAOPAY_CANCEL = "카카오 Cancel 완료";
+    public static final String SUCCESS_RESERVE = "예매가 성공했습니다";
+    public static final String SUCCESS_RESERVE_REFUND = "예매 환불이 성공했습니다";
+    public static final String SUCCESS_RESERVE_CANCEL = "예매 취소가 성공했습니다";
+    public static final String SUCCESS_RESERVE_SEARCH_ALL_RESERVE = "회원 예매 조회가 성공했습니다";
+    public static final String SUCCESS_RESERVE_SEARCH_ALL_REFUND_CANCEL = "회원 예매 조회가 성공했습니다";
+
 }

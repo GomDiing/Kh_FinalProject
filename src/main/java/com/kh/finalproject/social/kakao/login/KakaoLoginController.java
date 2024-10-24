@@ -42,6 +42,9 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
+    @Value("${social.redirect-uri}")
+    private String socialRedirectUriFront;
+
 
     @GetMapping("/kakao")
     public String redirectKakaoLogin(
@@ -105,8 +108,7 @@ public class KakaoLoginController {
                 int isJoinParam = 0;
                 if (isJoin) isJoinParam = 1;
 
-                return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
-//                return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+                return "redirect:" + UriComponentsBuilder.fromUriString(socialRedirectUriFront)
                         .queryParam("name", nickname)
                         .queryParam("email", email)
                         .queryParam("isJoin", isJoinParam)
@@ -119,8 +121,7 @@ public class KakaoLoginController {
         } catch (Exception e) {
             throw new CustomException(CustomErrorCode.ERROR_KAKAO_LOGIN);
         }
-        return "redirect:" + UriComponentsBuilder.fromUriString("http://localhost:8100/social")
-//        return "redirect:" + UriComponentsBuilder.fromUriString("https://tcats.tk/social")
+        return "redirect:" + UriComponentsBuilder.fromUriString(socialRedirectUriFront)
                 .queryParam("socialSuccess", 0)
                 .queryParam("providerType", MemberProviderType.KAKAO.name())
                 .build()

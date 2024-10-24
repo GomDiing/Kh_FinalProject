@@ -14,20 +14,33 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 상품 랭킹 정보를 제공하는 API 컨트롤러
+ * 주간/월간 랭킹, 마감임박 상품, 지역별 상품 정보를 조회하는 기능 제공
+ *
+ * @author GomDiing
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/ranking")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RankingController {
 
     private final RankingService rankingService;
 
-    // 기본 값 500개로 설정하면 처음에 다 보여줌
+    /**
+     * 카테고리별 주간 랭킹 상품 목록 조회
+     *
+     * @param category 조회할 카테고리
+     * @param size 페이징 정보
+     * @return 주간 랭킹 상품 목록과 상품 응답 메시지
+     */
     @GetMapping("/week")
     public ResponseEntity<DefaultResponse<Object>> weekRankProduct(@RequestParam String category,
                                                                    @PageableDefault(size = 500) Pageable size) {
@@ -37,6 +50,13 @@ public class RankingController {
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_WEEK, rankingWeekDTOList), HttpStatus.OK);
     }
 
+    /**
+     * 카테고리별 월간 랭킹 상품 목록 조회
+     *
+     * @param category 조회할 카테고리
+     * @param size 페이징 정보
+     * @return 월간 랭킹 상품 목록과 상품 응답 메시지
+     */
     @GetMapping("/month")
     public ResponseEntity<DefaultResponse<Object>> monthRankProduct(@RequestParam String category,
                                                                     @PageableDefault(size = 500) Pageable size) {
@@ -45,6 +65,14 @@ public class RankingController {
 
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_PRODUCT_MONTH, rankingMonDTOList), HttpStatus.OK);
     }
+
+    /**
+     * 카테고리별 마감 임박 상품 목록 조회
+     *
+     * @param category 조회할 카테고리
+     * @param size 페이징 정보
+     * @return 마감 임박 상품 목록 및 상품 응답 메시지
+     */
     @GetMapping("/close")
     public ResponseEntity<DefaultResponse<Object>> closeRankProduct(@RequestParam String category,
                                                                     @PageableDefault(size = 500) Pageable size) {
@@ -55,6 +83,13 @@ public class RankingController {
 
     }
 
+    /**
+     * 지역별 상품 목록 조회
+     *
+     * @param regionCode 조회할 지역 코드
+     * @param size 페이징 정보
+     * @return 해당 지역 상품 목록 및 상품 응답 메시지
+     */
     @GetMapping("/region")
     public ResponseEntity<DefaultResponse<Object>> regionProduct(@RequestParam Integer regionCode,
                                                                  @PageableDefault(size = 500) Pageable size) {

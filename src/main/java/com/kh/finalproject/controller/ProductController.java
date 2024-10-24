@@ -1,7 +1,9 @@
 package com.kh.finalproject.controller;
 
-import com.kh.finalproject.dto.product.*;
-import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeDTO;
+import com.kh.finalproject.dto.product.BrowseKeywordPageDTO;
+import com.kh.finalproject.dto.product.DetailProductDTO;
+import com.kh.finalproject.dto.product.DetailRequestDTO;
+import com.kh.finalproject.dto.product.PagingProductDTO;
 import com.kh.finalproject.dto.reservetime.DetailProductReserveTimeSetDTO;
 import com.kh.finalproject.response.DefaultResponse;
 import com.kh.finalproject.response.DefaultResponseMessage;
@@ -14,62 +16,108 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
+/**
+ * 전시/공연 상품 관리를 위한 API 컨트롤러
+ * 상품 상세 조회, 예약 일정 관리, 검색 기능을 제공,
+ * 관리자용 상품 목록 조회를 지원
+ *
+ * @author GomDiing
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/product")
 @Slf4j
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/{code}")
-    public ResponseEntity<DefaultResponse<Object>> searchProductDetail(@PathVariable String code,
-                                                                       @RequestBody(required = false) DetailRequestDTO requestDTO) {
+    /**
+     * 상품의 상세 정보를 조회합니다.
+     * 회원인 경우 회원별 맞춤 정보도 함께 제공합니다.
+     *
+     * @param code       상품 코드
+     * @param requestDTO 회원 정보(선택)
+     * @return 상품 상세 정보와 상세 상품 조회 성공 응답 메시지
+     */
+    @GetMapping("/{code}")
+    public ResponseEntity<DefaultResponse<DetailProductDTO>> searchProductDetail(@PathVariable String code,
+                                                                                 @RequestBody(required = false) DetailRequestDTO requestDTO) {
         //회원 인덱스가 존재하지않으면 -1, 존재하면 해당 값 매핑
         Long isMemberIndex = (long) -1;
         if (!Objects.isNull(requestDTO))
             if (!Objects.isNull(requestDTO.getMemberIndex()))
                 isMemberIndex = requestDTO.getMemberIndex();
+
         DetailProductDTO detailProductDTO = productService.detailProductPage(code, isMemberIndex);
+
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCT_DETAIL, detailProductDTO), HttpStatus.OK);
     }
 
+    /**
+     * 특정 연월의 예약 현황을 조회합니다.
+     *
+     * @param code  상품 코드
+     * @param year  조회 연도
+     * @param month 조회 월
+     * @return 해당 월의 예약 현황과 조회 성공 응답 메시지
+     */
     @GetMapping("/{code}/{year}/{month}")
-    public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
-                                                                     @PathVariable Integer year,
-                                                                     @PathVariable Integer month) {
+    public ResponseEntity<DefaultResponse<DetailProductDTO>> searchReserveList(@PathVariable String code,
+                                                                               @PathVariable Integer year,
+                                                                               @PathVariable Integer month) {
+
         DetailProductDTO detailProductDTO = productService.reserveCalendarMonth(code, year, month);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductDTO), HttpStatus.OK);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_YEAR_MONTH_RESERVE, detailProductDTO), HttpStatus.OK);
     }
 
+    /**
+     * 특정 일의 예약 현황을 조회합니다.
+     *
+     * @param code  상품 코드
+     * @param year  조회 연도
+     * @param month 조회 월
+     * @param day   조회 일
+     * @return 해당 일의 예약 현황과 조회 성공 응답 메시지
+     */
     @GetMapping("/{code}/{year}/{month}/{day}")
-    public ResponseEntity<DefaultResponse<Object>> searchReserveList(@PathVariable String code,
-                                                                     @PathVariable Integer year,
-                                                                     @PathVariable Integer month,
-                                                                     @PathVariable Integer day) {
+    public ResponseEntity<DefaultResponse<DetailProductReserveTimeSetDTO>> searchReserveList(@PathVariable String code,
+                                                                                             @PathVariable Integer year,
+                                                                                             @PathVariable Integer month,
+                                                                                             @PathVariable Integer day) {
+
         log.info("code = {}, year = {}, month = {}", code, year, month);
+
         DetailProductReserveTimeSetDTO detailProductReserveTimeSetDTO = productService.reserveCalendarDay(code, year, month, day);
-        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, "디버깅중", detailProductReserveTimeSetDTO), HttpStatus.OK);
+
+        return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_DAY_RESERVE, detailProductReserveTimeSetDTO), HttpStatus.OK);
     }
 
-    /*관리자 페이지에서 전시글 관리용*/
+    /**
+     * 상품 목록 페이징하여 조회
+     *
+     * @param pageable 페이징 정보
+     * @return 상품 목록 리스트 페이징 정보 및 조회 성공 응답 메시지
+     */
     @GetMapping("/list")
-    public ResponseEntity<DefaultResponse<Object>> productList(Pageable pageable){
+    public ResponseEntity<DefaultResponse<PagingProductDTO>> productList(Pageable pageable) {
+
         PagingProductDTO productList = productService.searchAll(pageable);
+
         return new ResponseEntity<>(DefaultResponse.res(StatusCode.OK, DefaultResponseMessage.SUCCESS_SEARCH_PRODUCTLIST, productList), HttpStatus.OK);
     }
 
     /**
-     * 상품 제목으로 검색 기능 추가로 메인에서 필요한 기능 있으면 구현 예정
+     * 상품 제목 페이징하여 조회
+     *
+     * @param title    검색할 상품 제목
+     * @param pageable 페이징 정보
+     * @return 검색된 상품 목록
      */
     @GetMapping("/search")
-    public ResponseEntity<DefaultResponse<Object>> productSearch(@RequestParam String title, Pageable pageable) {
+    public ResponseEntity<DefaultResponse<BrowseKeywordPageDTO>> productSearch(@RequestParam String title, Pageable pageable) {
 
         BrowseKeywordPageDTO browseKeywordPageDTO = productService.browseByKeyword(title, pageable);
 

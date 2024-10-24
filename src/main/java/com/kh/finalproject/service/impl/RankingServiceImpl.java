@@ -62,6 +62,9 @@ public class RankingServiceImpl implements RankingService {
 
         Set<RankingWeekDTO> set = new HashSet<>(weekDTOList);
         List<RankingWeekDTO> list = new ArrayList<>(set);
+        list.sort(Comparator.comparing(RankingWeekDTO::getRanking_order));
+
+        log.info(list.toString());
         return list;
     }
 
@@ -201,9 +204,6 @@ public class RankingServiceImpl implements RankingService {
                 }
             }
         }
-
-        log.info("regionName() = {}", regionName);
-        log.info("size of List = {}", rankingRegionDTOList.size());
 
         return rankingRegionDTOList;
     }
