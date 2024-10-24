@@ -10,8 +10,8 @@
 
 </div>
 
-
 ## 01. TCat
+
 > 학원 파이널 프로젝트
 >
 > 개발 기간 : 2022.11 ~ 2023.01
@@ -19,11 +19,13 @@
 <br>
 
 ### 배포 주소
+
 > http://www.tcats.site
 
 <br>
 
 ### 개발팀 소개
+
 |                              백엔드                               |                             백엔드                              |                           프론트엔드                            |                             프론트엔드                              |                             프론트엔드                              |
 |:--------------------------------------------------------------:|:------------------------------------------------------------:|:----------------------------------------------------------:|:--------------------------------------------------------------:|:--------------------------------------------------------------:|
 | <img src="./md_attachment/profile_GomDiing.jpeg" width="120"/> | <img src="./md_attachment/profile_hjm8727.png" width="120"/> | <img src="./md_attachment/profile_hrhr7.png" width="120"/> | <img src="./md_attachment/profile_jimin0601.png" width="120"/> | <img src="./md_attachment/profile_Ryel1580.jpeg" width="120"/> |
@@ -51,19 +53,34 @@
 
 ---
 
+#### Python
+
+> - selenium==4.25.0
+>- webdriver-manager==4.0.2
+>- beautifulsoup4==4.12.3
+>- requests==2.32.3
+>- SQLAlchemy==2.0.35
+>- mysql-connector-python==9.0.0
+>- python-dotenv==1.0.1
+>- urllib3==1.26.15
+>- certifi==2024.8.30
+>- charset-normalizer==3.4.0
+
 #### Spring
+
 다음 Library를 요구합니다.
->- Spring Web
+> - Spring Web
 >- Spring Data JPA
 >- Validation
 >- Lombok
 >- MySQL Driver
-                                
+
 <br>
 
 #### React
+
 해당 프로젝트의 React는 다음 Library를 요구합니다.
->- antd
+> - antd
 >- axios
 >- bootstrap
 >- firebase
@@ -97,6 +114,7 @@ $ cd Kh_FinalProject
 ```
 
 #### Backend
+
 ```
 $ ./gradlew build
 $ cd build/libs
@@ -104,6 +122,7 @@ $ java -jar demo-0.0.1-SNAPSHOT.jar
 ```
 
 #### Frontend
+
 ```
 $ cd src/main/frontend
 $ npm install
@@ -111,6 +130,7 @@ $ yarn start
 ```
 
 #### Python
+
 ````
 $ cd crawling
 $ pip3 install requirements.txt 
@@ -120,6 +140,7 @@ $ python main.py
 <br>
 
 ## 03. 기술 스택
+
 <h3 align="left"> Tools </h3>
 <div align="left">
 <img src="https://img.shields.io/badge/DBeaver-382923?style=for-the-badge&logo=DBeaver&logoColor=white" />&nbsp
@@ -158,6 +179,7 @@ $ python main.py
 <br>
 
 ## 04. 화면 구성
+
 |                            로그인 페이지 (일반)                             |                               로그인 페이지 (소셜)                               |
 |:-------------------------------------------------------------------:|:------------------------------------------------------------------------:|
 |   <img src="./md_attachment/page_normal-login.png" width="300px">   |     <img src="./md_attachment/page_social-login.png" width="300px">      |
@@ -185,27 +207,29 @@ $ python main.py
 > [!NOTE]
 > API 문서는 [해당 링크](https://telling-list-c32.notion.site/API-14302fd0ff7c44709f3a5dac9ef18849?pvs=4)에서 자세히 보실 수 있습니다.
 
-|API 목차|API 상세|
-|:---:|:---:|
-|<img src="./md_attachment/page_api-toc.png" width="210"/>|<img src="./md_attachment/page_api-detail.png" width="210"/>|
-|API 요구사항|
-|<img src="./md_attachment/page_api-require.png" width="210"/>|
+|                            API 목차                             |                            API 상세                            |
+|:-------------------------------------------------------------:|:------------------------------------------------------------:|
+|   <img src="./md_attachment/page_api-toc.png" width="210"/>   | <img src="./md_attachment/page_api-detail.png" width="210"/> |
+|                           API 요구사항                            |
+| <img src="./md_attachment/page_api-require.png" width="210"/> |
 
 <br>
 
 ## 06. 주요 기능
+
 1. 인기 공연 정보 제공
-   - 주간 / 일간 두 분류로 구분
+    - 주간 / 일간 두 분류로 구분
 2. 일반 로그인 뿐만 아니라 소셜 로그인 기능도 제공
-   - 사용한 로그인 API는 카카오, 구글
+    - 사용한 로그인 API는 카카오, 구글
 3. 간편 결제 시스템 도입
-   - 개발버전으로 카카오페이 API 사용
+    - 개발버전으로 카카오페이 API 사용
 4. 웹 정보 파싱
-   - Selenium 사용하여 웹 정보 파싱
+    - Selenium 사용하여 웹 정보 파싱
 
 <br>
 
 ## 07. 아키텍쳐
+
 <div align="center">
 <img src="./md_attachment/architecture.png" width="480">
 </div>
@@ -295,10 +319,6 @@ $ python main.py
                   └── kakao                     //카카오
                      ├── login                     //카카오 로그인
                      └── pay                       //카카오페이
-                        ├── approve                     //카카오페이-승인
-                        ├── cancel                      //카카오페이-취소
-                        └── ready                       //카카오페이-준비
-
 ```
 
 <br>
@@ -306,37 +326,156 @@ $ python main.py
 ## 08. 개발 문서
 
 ### ER 다이어그램
+
 <div align="center">
 <img src="./md_attachment/er_diagram.png" width="360"/>
 </div>
 
 ### 클래스 다이어그램
+
 <div align="center">
 <img src="./md_attachment/class_diagram.png" width="360"/>
 </div>
 
+## 09. 트러블슈팅 & 해결
+
+### 이슈1. 공통 응답 및 예외처리 필요성
+
+---
+
+배경 및 원인
+
+- 응답 코드와 API문서를 작성 중 규모가 커지면서 기존 방식으론 모든 응답을 만들어 처리하는데 한계를 느꼈습니다.
+- 특히 상세 페이지 등 응답해야할 데이터가 많아질수록 일관된 처리 필요성을 느꼈습니다.
+
+해결 방법
+
+- Spring의 Exception 처리하는 과정을 알게되고 그 방법에는 크게 `@ExceptionHandler`와 `@ControllerAdvice` 두 방식이 있고 `@ControllerAdvice` 방식을
+  적용해 공통 예외 처리를 다뤘습니다.
+
+- 관련 코드 또는 사진
+    - 예시) 회원 조회 컨트롤러 의사코드
+
+    ```java
+    // 전체 조회 조회 Controller
+    @GetMapping("/api/member/memberlist")
+    public ResponseEntity<DefaultResponse<응답_DTO>> 전체_회원_조회(요청_DTO){
+    		응답_DTO = Service_회원.Method_전체회원조회(요청_DTO);
+        return new ResponseEntity<>(DefaultResponse.res(응답_메시지, 응답_DTO), HttpStatus.OK);
+    }
+    ```
+
+    - DefaultResponse - 공통 응답
+
+    ```java
+    public class DefaultResponse<T> {
+        private String 메시지;
+        private T 응답;
+        
+        // @Builder 작성
+        
+        public static<T> DefaultResponse<T> res(String message, final T t) {
+            return DefaultResponse.<T>builder()
+                    .응답(t)
+                    .메시지(message)
+                    .build();
+        }
+    }
+    ```
+
+    - ExceptionControllerAdvice - 공통 예외처리
+
+    ```java
+    @RestControllerAdvice
+    public class ExceptionControllerAdvice {
+        /**
+         * @Valid로 binding error 발생시
+         */
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<DefaultErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+            DefaultErrorResponse defaultErrorResponse = DefaultErrorResponse.of(에러_메시지, e.getBindingResult());
+    
+            return new ResponseEntity<>(defaultErrorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+    ```
+
+### 이슈2. HTTPS 적용
+
+---
+
+배경 및 원인
+
+- HTTPS 프로토콜 적용을 위해 ACM의 인증서를 받아 적용하려했으나, 기존 구조에선 SSL/TLS 인증서 적용하기 어려웠습니다.
+
+해결 방법
+
+- EC2 직접 설치, Route 53 연결, 로드밸런서 적용 방법 중 로드밸런서에 적용하기로 했고, 실 프로덕션 환경 및 ALB 고가용성을 위해 두 개 AZ에 EC2를 배포하기로 했습니다.
+
+- 관련 코드 또는 사진
+
+<div align="center">
+<img src="./md_attachment/aws_architecture.jpg" width="720"/>
+</div>
+
+
+## 이슈3. 예상치못한 예외 발생
+
+---
+
+배경 및 원인
+
+- 상세페이지 접근시 호출하는 금일 예매 정보 JPA, 만약 해당 정보가 없다면 만든 에러를 발생할거라 생각했지만 못했고 `IndexOutOfBoundsException`이 발생했습니다.
+
+해결 방법
+
+- 해당 JPA 메서드 (`findAllByProductAndTimeBetween`)이 빈 리스트(`Empty list`)를 반환하더라도 `orElseThrow()`는 `Optional.empty()`인 경우에만 예외를 발생시킨다는걸 알았습니다.
+- `filter`를 통해 `list`가 비어있으면 `Optional.empty()`로 처리하여 예상된 예외를 발생시키도록 했습니다.
+
+- 관련 코드 또는 사진
+
+    ```java
+    // 이전 코드
+    List<ReserveTime> findReserveTimeWithinDay = reserveTimeRepository
+    		.findAllByProductAndTimeBetween(findProduct, firstPotionOfDay, lastPositionOfDay)    
+        .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
+            
+    // 수정 코드
+    List<ReserveTime> findReserveTimeWithinDay = reserveTimeRepository
+        .findAllByProductAndTimeBetween(findProduct, firstPotionOfDay, lastPositionOfDay)
+        .filter(list -> !list.isEmpty())
+        .orElseThrow(() -> new CustomException(CustomErrorCode.EMPTY_RESERVE_TIME));
+    ```
+
+
+알게 된 점
+
+- AWS 배포방법, VPC, EC2 등 AWS 웹 배포 구조를 알았습니다.
+- AWS 환경에서 SSL/TLS 인증서 적용방법에대해 알게되었습니다.
 
 ## 기타
+
 ### IntelliJ 설정
-   1. `Preference` 설정
-        - Annotation Processor 활성화 (롬북 활성화)
-   
-           - `annotation processor` 검색 후 체크박스 활성화
-<br>
 
-      -  File Encoding 변경
-            - `file encoding` 검색 후 <br>`Default encoding for properties files` 변경
-<br>
+1. `Preference` 설정
+    - Annotation Processor 활성화 (롬북 활성화)
 
-      - Gradle 환경 변경 (IntelliJ가 더 빠르다)
-          - `Build and run using`, `Run tests using`을<br>`Gradle` -> `IntelliJ IDEA`로 변경<br><br>
-<br>
-   2. `gitignore` 설정
-   
-      - 아래 문구 추가 (설정 파일 제외 (*.properties, *.yml))
-      
-         `**/src/main/resources/*.properties`
-         `**/src/main/resources/*.yml`
+        - `annotation processor` 검색 후 체크박스 활성화
+          <br>
+
+    - File Encoding 변경
+        - `file encoding` 검색 후 <br>`Default encoding for properties files` 변경
+          <br>
+
+    - Gradle 환경 변경 (IntelliJ가 더 빠르다)
+        - `Build and run using`, `Run tests using`을<br>`Gradle` -> `IntelliJ IDEA`로 변경<br><br>
+          <br>
+2. `gitignore` 설정
+
+    - 아래 문구 추가 (설정 파일 제외 (*.properties, *.yml))
+
+      `**/src/main/resources/*.properties`
+      `**/src/main/resources/*.yml`
 
 <br>
 
@@ -346,7 +485,7 @@ $ python main.py
 
 1. [스프링 부트 스타터 홈페이지 이동](https://start.spring.io/)
 2. 아래와 같이 설정
-<img width="1251" alt="khfinal_springbootstarter_option" src="https://user-images.githubusercontent.com/49019419/204407730-9b6126f9-320b-4aa2-a43c-616410b674e4.png">
+   <img width="1251" alt="khfinal_springbootstarter_option" src="https://user-images.githubusercontent.com/49019419/204407730-9b6126f9-320b-4aa2-a43c-616410b674e4.png">
 
 ```html
 Project: Gradle-Groovy
@@ -356,20 +495,20 @@ Language: Java
 Spring Boot: 2.7.6 (없다면 2.x.x 버전 중 선택)
 
 Project Metadata
-    Group: com.kh
-    Artifact: final-project
-    Name: final-project
-    Description: Spring Boot for Kh Final Project
-    Package name: com.kh.final-project
-    Packaging: Jar
-    Java: 11
+Group: com.kh
+Artifact: final-project
+Name: final-project
+Description: Spring Boot for Kh Final Project
+Package name: com.kh.final-project
+Packaging: Jar
+Java: 11
 
 Dependencies:
-    Spring Web
-    Spring Data JPA
-    Thymeleaf
-    Validation
-    Lombok
-    MySQL Driver
-    H2 Database
+Spring Web
+Spring Data JPA
+Thymeleaf
+Validation
+Lombok
+MySQL Driver
+H2 Database
 ```
