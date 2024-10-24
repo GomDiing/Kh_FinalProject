@@ -1,81 +1,201 @@
+// 1. 기본 플러그인 설정
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.6'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    // Java 플러그인
+    id 'java'
+    // Spring Boot 플러그인
+    id 'org.springframework.boot' version '2.7.6'
+    // Spring 의존성 관리 플러그인
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
+// 2. 프로젝트 기본 정보 설정
+// 프로젝트 그룹
 group = 'com.kh'
+// 프로젝트 버전
 version = '0.0.1-SNAPSHOT'
+// Java 버전 설정
 sourceCompatibility = '11'
 
+// 3. 설정 커스터마이징
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        // 어노테이션 설정 (Lombok 등)
+        extendsFrom annotationProcessor
+    }
+    // 기본 로깅 제외
+	all*.exclude module: 'spring-boot-starter-logging'
 }
 
+// 4. 메이븐 저장소 설정
 repositories {
-	mavenCentral()
+    mavenCentral()        // 메이븐 중앙 저장소 사용
+}
+
+
+// 5. JAR 파일 생성 설정
+bootJar {
+    // 실행 가능한 JAR 파일 생성 활성화
+    enabled = true
+    // JAR 파일 이름에 'boot' 접미사 추가
+    archiveClassifier = 'boot'
+    // 서명 파일 제외
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '**/*.map'
 }
 
 jar {
-	enabled = false;
+    // 일반 JAR 파일 생성
+    enabled = true
+    // 접미사 없음
+    archiveClassifier = ''
 }
 
+// 6. 프로젝트 의존성 설정
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Spring Boot 기본 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Lombok 설정
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    // MySQL 커넥터
+    annotationProcessor 'org.projectlombok:lombok'
+    // 테스터 의존성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+// 7. 테스터 설정
 tasks.named('test') {
-	useJUnitPlatform()
+    // JUnit 5 사용
+    useJUnitPlatform()
 }
 
-
+// 8. React 통합 관련 설정
 def frontendDir = "$projectDir/src/main/frontend"
 
+// 9. 리소스 처리 설정
 sourceSets {
-	main {
-		resources { srcDirs = ["$projectDir/src/main/resources"]
-		}
-	}
+    main {
+        resources {
+            srcDirs = ["$projectDir/src/main/resources"]
+        }
+    }
 }
 
-processResources { dependsOn "copyReactBuildFiles" }
 
+processResources {
+    // React 빌드 파일 복사 후 리소스 처리
+    dependsOn "copyReactBuildFiles"
+    // PDF, DOC 파일 제외
+    excludes = ['**/*.pdf', '**/*.doc']
+}
+
+
+// 10. React 의존성 설치 태스크
 task installReact(type: Exec) {
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "audit", "fix"
-		commandLine 'npm.cmd', 'install' }
-	else {
-		commandLine "npm", "audit", "fix" commandLine 'npm', 'install'
-	}
+    workingDir "$frontendDir"
+    inputs.dir "$frontendDir"
+    group = BasePlugin.BUILD_GROUP
+    // OS에 따른 npm 명령어 분기
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "ci"
+    } else {
+        commandLine "npm", "ci"
+    }
+    doFirst {
+        println "Installing React dependencies..."
+    }
+    doLast {
+        println "React dependencies installed successfully."
+    }
 }
 
+
+// 11. React 빌드 태스크
 task buildReact(type: Exec) {
-	dependsOn "installReact"
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "run-script", "build"
-	} else {
-		commandLine "npm", "run-script", "build"
-	}
+    // React 의존성 설치 후 빌드
+    dependsOn "installReact"
+    workingDir "$frontendDir"
+    inputs.dir "$frontendDir"
+    group = BasePlugin.BUILD_GROUP
+    // OS에 따른 npm 빌드 명령어 분기
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "run-script", "build"
+    } else {
+        commandLine "npm", "run-script", "build"
+    }
+    // 프로덕션 환경으로 설정
+    environment('NODE_ENV', 'production')
+    environment('CI', 'false')
+    // 소스맵 비활성화
+    environment('GENERATE_SOURCEMAP', 'false')
+    doFirst {
+        println "Building React application..."
+    }
+    doLast {
+        println "React build completed successfully."
+    }
 }
 
+
+// 12. React 빌드 파일 복사 태스크
 task copyReactBuildFiles(type: Copy) {
-	dependsOn "buildReact"
-	from "$frontendDir/build"
-	into "$projectDir/src/main/resources/static"
+    dependsOn "buildReact"
+    from("$frontendDir/build")
+    // 스프링 정적 리소스 디렉토리로 복사
+    into "$projectDir/src/main/resources/static"
+    doFirst {
+        println "Copying React build files..."
+    }
+    doLast {
+        println "React build files copied successfully."
+    }
 }
+
+// 13. Spring Boot 실행 설정
+bootRun {
+    // 프로필 설정 타입으로 동적으로 변경
+    // 시스템 프로퍼티로 전달된 프로필을 사용하거나, 기본값으로 "development" 사용
+    systemProperty "spring.profiles.active", System.getProperty("spring.profiles.active", "development")
+}
+
+// 14. 빌드 클린 태스크
+task cleanBuild(type: Delete) {
+    // 빌드 결과물 삭제
+    delete "$projectDir/build/classes"
+    delete "$projectDir/build"
+    delete "$projectDir/build/tmp"
+    delete "$frontendDir/build"
+}
+
+// 15. 전체 빌드 태스크
+task fullBuild {
+    dependsOn 'clean', 'cleanBuild', 'copyReactBuildFiles', 'bootJar'
+}
+
+// 16.Boot JAR 태스크 설정
+tasks.bootJar {
+    doFirst {
+        // JAR 생성 시 production 프로필 설정
+        System.setProperty("spring.profiles.active", "production")
+    }
+}
+
+// 17. 빌드 검증 태스크
+task verifyBuild {
+    doLast {
+        println "Verifying build..."
+        def staticDir = file("$projectDir/src/main/resources/static")
+        if (!staticDir.exists()) {
+            println "Static resources directory does not exist!"
+        }
+        if (staticDir.listFiles().length == 0) {
+            println "Static resources directory is empty!"
+        }
+        println "Build verified successfully."
+    }
+}
+
+// finalizedBy: Gradle 순서 보장
+// fulBuild 태스크 완료후 verifyBuild 태스크 실행되도록 보장
+fullBuild.finalizedBy verifyBuild
