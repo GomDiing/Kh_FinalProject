@@ -1,4 +1,4 @@
-import axios from "axios";
+import {api} from "./axios";
 const HEADER = {'Content-Type' : 'application/json'}
 
 const WishLikeApi = {
@@ -7,17 +7,17 @@ const WishLikeApi = {
         member_index : memberIndex,
         product_code : pCode
         }
-        return await axios.post("/api/wish/add", add, HEADER);
+        return await api.post("/api/wish/add", add, HEADER);
     },
     cancelWish : async function(memberIndex, pCode) {
         const cancel = {
         member_index : memberIndex,
         product_code : pCode
         }
-        return await axios.post("/api/wish/cancel", cancel, HEADER);
+        return await api.post("/api/wish/cancel", cancel, HEADER);
     },
     wishList : async function(userIndex) {
-        return await axios.get(`/api/wish/${(userIndex)}`, HEADER);
+        return await api.get(`/api/wish/${(userIndex)}`, HEADER);
     },
     }
 export default WishLikeApi;

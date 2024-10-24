@@ -11,9 +11,20 @@ import Agree from "./components/views/SignPage/Agree";
 import CategorySearch from "./components/views/MainHeader/Search/CategorySearch";
 import Search from "./components/views/MainHeader/Search/Search";
 import Social from "./components/views/LoginPage/Social";
+import {useDispatch} from "react-redux";
+import {loginActions} from "./util/Redux/Slice/userSlice";
+import {useEffect} from "react";
 
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userInfo = localStorage.getItem('userInfo');
+    if (userInfo) {
+      dispatch(loginActions.setUserInfo({ data: JSON.parse(userInfo) }));
+    }
+  }, [dispatch]);
   return (
     <>
     <Routes>

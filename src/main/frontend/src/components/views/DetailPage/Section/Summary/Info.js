@@ -54,11 +54,12 @@ const InfoStyle = styled.div`
 `;
 
 // 상세페이지 상단 공연 정보
-function Info(props) {
+// function Info(props) {
+function Info({ loc, start, end, time, break: breakTime, age, kage, seat, loc2 }) {
     const [modalOpen, setModalOpen] = useState(false);
-    const [kAge, setKage] = useState(props.kage);
-    const [inter, setInter] = useState(props.break);
-    const [openR, setopenR] = useState(props.end);
+    const [kAge, setKage] = useState(kage);
+    const [inter, setInter] = useState(breakTime);
+    const [openR, setopenR] = useState(end);
 
     const openModal = () =>{
         setModalOpen(true)
@@ -67,10 +68,10 @@ function Info(props) {
         setModalOpen(false)
     }
     useEffect(() => {
-        setKage(props.kage);
-        setInter(props.break);
-        setopenR(props.end);
-    },[props.kage, props.break, props.end])
+        setKage(kage);
+        setInter(breakTime);
+        setopenR(end);
+    },[kage, breakTime, end])
 
     return (
         <InfoStyle>
@@ -80,7 +81,7 @@ function Info(props) {
                     <strong className="infoLabel">장소</strong>
                 <span className="infoDesc">
                     <span className="infoBtn" data-popup="info-place" role="button" onClick={openModal}>
-                    {props.loc}<CaretRightOutlined/>
+                    {loc}<CaretRightOutlined/>
                     </span>
                 </span>
                 </li>
@@ -90,8 +91,8 @@ function Info(props) {
                     <strong className="infoLabel">공연기간</strong>
                     <span span='true' className="infoDesc">
                     {openR === "OPENRUN" ? 
-                    <span className="infoText">{props.start} ~ 오픈런</span> :
-                    <span className="infoText">{props.start} ~ {props.end === 'null' ? '당일 공연' : props.end}</span>
+                    <span className="infoText">{start} ~ 오픈런</span> :
+                    <span className="infoText">{start} ~ {end === 'null' ? '당일 공연' : end}</span>
                     }
                 </span>
                 </li>
@@ -99,8 +100,8 @@ function Info(props) {
 
                 <li className="infoItem"><strong className="infoLabel">공연시간</strong>
                     <span className="infoDesc">
-                        {inter === 0 ? <span className="infoText">{props.time}분</span> :
-                        <span className="infoText">{props.time}(인터미션 {inter}분 포함)</span>
+                        {inter === 0 ? <span className="infoText">{time}분</span> :
+                        <span className="infoText">{time}(인터미션 {inter}분 포함)</span>
                         }
                     </span>
                 </li>
@@ -109,8 +110,8 @@ function Info(props) {
                 <li className="infoItem">
                     <strong className="infoLabel">관람연령</strong>
                     <span className="infoDesc">
-                        {kAge === true ? <span className="infoText">{props.age}세이상 관람가능</span> :
-                        <span className="infoText">만 {props.age}세이상 관람가능</span>
+                        {kAge === true ? <span className="infoText">{age}세이상 관람가능</span> :
+                        <span className="infoText">만 {age}세이상 관람가능</span>
                         }
                     </span>
                 </li>
@@ -119,7 +120,7 @@ function Info(props) {
                 <li className="infoItem infoPrice">
                     <strong className="infoLabel">가격</strong>
                     <div className="infoDesc">
-                        {props.seat && props.seat.map((seats, index) => (
+                        {seat && seat.map((seats, index) => (
                                 <table className="infoPriceList" key={index}>
                                 <tbody>
                                     <tr >
@@ -133,7 +134,7 @@ function Info(props) {
                 </li>
             </ul>
         </div>
-        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody loc2={props.loc2}/>}</div></Modal>
+        <Modal open={modalOpen} close={closeModal} header={"찾아오시는 길"}><div>{<MapModalBody loc2={loc2}/>}</div></Modal>
         </InfoStyle>
     )
 }

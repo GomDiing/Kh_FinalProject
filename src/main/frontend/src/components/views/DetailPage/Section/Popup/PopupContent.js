@@ -43,7 +43,8 @@ const BodyStyle = styled.div`
 `;
 
 function PopupContent (props) {
-  const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute, nextClick, backClick } = props;
+  const { title, seat, userInfo, seatIndex, date, turn, cancelday, index, hour, minute, nextClick, backClick, isAlwaysAvailable } = props;
+
     const [price, setPrice] = useState(0);
     const [value, setValue] = useState(0);
     const [type, setType] = useState('');
@@ -143,45 +144,54 @@ function PopupContent (props) {
     }
 
   const BodyReturn = () => (
-    <>
-    {index === 1 &&
-    <div>
-      <h2>좌석 선택 <p style={{fontSize : '14px'}}><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></p></h2>
-      <div className='seat-container'>
-        {seat && seat.map((seats, key) => (
-          <table style={{border: 'none'}} key={key}>
-            <thead>
-              <tr>
-                <th style={{border : 'none'}}
-                >등급</th>
-                <th style={{border : 'none'}}>가격</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{seats.seat}</td>
-                <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={(e) => {
-                  // 선택한 좌석의 이름
-                  setSeatList(seats.seat);
-                  // 필터를 걸쳐 테스트를 통과한 것을 배열로 다시 만들어줌
-                  const res = seatIndex.filter(test => test.seat.includes(seats.seat));
-                  // 만들어진 배열에서 필요한 값을 추출..
-                  setSeatNumber(res[0].index);
-                  setPrice(seats.price);
-                  // 리덕스에 값 저장
-                  dispatch(seatIndexAction.setSeatInfo(res[0].index));
-                  nextClick();
-                  }}/>
-                  </td>
-              </tr>
-            </tbody>
-          </table>
-        ))}
-      </div>
-        <hr />
-        <MyInfo seat={seatList} hour={hour} turn={turn} point={userInfo.userPoint} minute={minute} index={index} price={price} title={title} date={date} cancelday={cancelday} />
-    </div>
-    }
+      <>
+          {index === 1 &&
+              <div>
+                  <h2>좌석 선택 <p style={{fontSize : '14px'}}><strong>한번의 한 종류의 좌석만 선택 가능한 점 양해 부탁드립니다.</strong></p></h2>
+                  <div className='seat-container'>
+                      {seat && seat.map((seats, key) => (
+                          <table style={{border: 'none'}} key={key}>
+                              <thead>
+                              <tr>
+                                  <th style={{border : 'none'}}>등급</th>
+                                  <th style={{border : 'none'}}>가격</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td>{seats.seat}</td>
+                                  <td>{seats.price}<input className={'check' + key} type='checkbox' onClick={(e) => {
+                                      // 선택한 좌석의 이름
+                                      setSeatList(seats.seat);
+                                      setPrice(seats.price);
+
+                                      if (isAlwaysAvailable) {
+                                          // 상시 상품일 경우 처리
+                                          setSeatNumber('always');
+                                          dispatch(seatIndexAction.setSeatInfo('always'));
+                                      } else {
+                                          // 일반 상품일 경우 기존 로직 유지
+                                          const res = seatIndex.filter(test => test.seat.includes(seats.seat));
+                                          if (res.length > 0) {
+                                              setSeatNumber(res[0].index);
+                                              dispatch(seatIndexAction.setSeatInfo(res[0].index));
+                                          } else {
+                                              console.error('No matching seat found');
+                                              return; // 매칭되는 좌석이 없으면 함수 종료
+                                          }
+                                      }
+                                      nextClick();
+                                  }}/>
+                                  </td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      ))}
+                  </div>
+                  <hr />
+                  <MyInfo seat={seatList} hour={hour} turn={turn} point={userInfo.userPoint} minute={minute} index={index} price={price} title={title} date={date} cancelday={cancelday} />
+              </div>
+          }
     {index === 2 &&
     <>
     <div>
@@ -285,24 +295,29 @@ function PopupContent (props) {
 
   const FinalModal = props => {
     const { seatNumber, seat, cancelday, hour, minute, title, date, turn, value, ticket, tax, total, userInfo, price } = props;
-    // 가격과 수량을 선택 했을 때만 불려짐 
-    if(value > 0 && price > 0 && total > 0) {
-    PayReady(title, total, tax, value, seatNumber, userInfo, price);
-    }
-    const payUrl = window.localStorage.getItem('url');
+    // 가격과 수량을 선택 했을 때만 불려짐
+      if(value > 0 && price > 0 && total > 0) {
+          PayReady(title, total, tax, value, seatNumber, userInfo, price);
+      }
+      const payUrl = window.localStorage.getItem('url');
 
-    return(
-      <div>
-        <div>
-          <MyInfo seat={seat} hour={hour} point={userInfo.userPoint} minute={minute} turn={turn} cancelday={cancelday}  title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
-          <br/>
-          <a href={payUrl}><button type="button" className='kpay-button'><img src={logoKakaoPay} alt=""/></button></a>
-        </div>
-    </div>
-    );
+      return(
+          <div>
+              <div>
+                  <MyInfo seat={seat} hour={hour} point={userInfo.userPoint} minute={minute} turn={turn} cancelday={cancelday}  title={title} date={date} value={value} ticket={ticket} tax={tax} total={total}/>
+                  <br/>
+                  <a href={payUrl}><button type="button" className='kpay-button'><img src={logoKakaoPay} alt="" onClick={(e) => {
+                      if (!payUrl) {
+                          e.preventDefault();
+                          alert('결제 URL이 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
+                      }
+                  }}/></button></a>
+              </div>
+          </div>
+      );
   }
 
-  const MyInfo = props => {
+const MyInfo = props => {
     const { date, hour, point, minute, ticket, tax, total, price, index, seat, cancelday, turn } = props;
     const [open, setOpen] = useState(false);
     const onTogle = () => setOpen(!open);

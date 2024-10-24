@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import logoTCat from "../../../images/TCat.jpg"
 
 const AgreeStyle = styled.div`
   width: 100%;
@@ -107,7 +108,7 @@ function Agree () {
     <AgreeStyle>
     <div className="agree-container">
       <div>
-        <Link to = '/'><img src="images/TCat.jpg" alt=""/></Link>
+        <Link to = '/'><img src={logoTCat} alt=""/></Link>
       </div>
 
       <div>

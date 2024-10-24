@@ -15,6 +15,7 @@ import Inquiry from './Inquiry/Inquiry';
 import UpdateNotice from './Notice/UpdateNotice';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import logoTCat from "../../../images/TCat.jpg"
 
 const HeaderBlock=styled.div`
   background-color: #92A9BD;
@@ -58,7 +59,7 @@ function Header() {
     <HeaderBlock>
       <div className='logoContainer'>
         <a href='/'>
-        <img className="logo" src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt = ""/>
+        <img className="logo" src={logoTCat} alt = ""/>
         </a>
       </div>
     </HeaderBlock>

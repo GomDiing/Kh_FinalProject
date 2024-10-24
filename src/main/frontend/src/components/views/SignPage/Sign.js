@@ -4,6 +4,7 @@ import PopupDom from './PopupDom';
 import DaumPostcode from "react-daum-postcode";
 import MemberApi from '../../../api/MemberApi';
 import { Link, useNavigate } from 'react-router-dom';
+import logoTCats from '../../../images/TCat.jpg'
 
 const SignWrap = styled.div`
   width: 100%;
@@ -19,7 +20,7 @@ const SignWrap = styled.div`
     justify-content: center;
     align-items: center;
   }
-  
+
   .logincontent{
     margin-top: 40px;
   }
@@ -41,7 +42,7 @@ const SignWrap = styled.div`
       height: 150px;
     }
   }
-  
+
   label{
     margin:10px 0;
     font-size: 20px;
@@ -92,7 +93,7 @@ const SignWrap = styled.div`
   }
   p:hover{
     color: #86868b;
-  } 
+  }
   button:hover{
     background-color : #86868b;
   }
@@ -144,7 +145,7 @@ function Sign() {
 
   // 카카오주소 api
   const [isOpen, setIsOpen] = useState(false);
-  // 주소 
+  // 주소
   let [fullAddress, setFullAddress] = useState("");
   // 도로명 주소
   const [road, setRoad] = useState("");
@@ -171,8 +172,8 @@ function Sign() {
   const closePostCode = () => setIsOpen(false);
 
   /**
-   * 
-   * @param {Address..} data 
+   *
+   * @param {Address..} data
    */
   const handlePostCode = (data) => {
     setFullAddress(data.address);
@@ -208,9 +209,9 @@ function Sign() {
     const value = e.target.value;
     setPwdCheck(value);
     if(inputPwd === value) setIsCheck(true);
-    else setIsCheck(false); 
+    else setIsCheck(false);
   }
-  
+
   const onChangeName = e => {
     const value = e.target.value;
     setInputName(value);
@@ -230,7 +231,7 @@ function Sign() {
     if(regEx.test(value)) setIsEmail(true);
     else setIsEmail(false);
   }
-  
+
   const Navigate = useNavigate();
 
   useEffect(() => {
@@ -262,103 +263,102 @@ function Sign() {
 // 엔터키
   const onKeyPress = e => {
     if(e.key === "Enter") {
-        onClickSign();
+      onClickSign();
     }
   }
 
 
   return (
-    <SignWrap>
-    <div className='signwrap'>
-      <form className="form">
-      <div className="form-inner">
-        <div>
-          <div className='signupHead'>
-            <a href='/'><img src='images/TCat.jpg' alt=''></img></a>
-          </div>
-          <div className='signupHead'>
-            <h2>Sign Up</h2><Link style={{textDecoration: 'none'}} to='/login'><h2 className='login-link'>User Login</h2></Link>
-          </div>
-        </div>
-          <div className="input-wrapper">
-            <label for="sign-username">User Id</label>
-              <div className="input-group">
-                <input type="text" value={inputId} className={inputId.length > 0 && !isId && 'reg-input'} id="sign-username" onChange={onChangeId} data-lpignore="true" />
-              </div>
-              <div className='fail-message'>
-              {inputId.length > 0 && !isId && <span className='fail-message'>아이디는 6 ~ 20자리 영,숫자로 입력해주세요!</span>}
-              </div>
-          </div>
-          <div className="input-wrapper">
-            <label for="sign-password">Password</label>
-              <div className="input-group">
-                <input type="password" value={inputPwd} className={inputPwd.length > 0 && !isPwd && 'reg-input'} id="sign-password" onChange={onChangePwd} data-lpignore="true" />
-          </div>
-          <div className='fail-message'>
-          {inputPwd.length > 0 && !isPwd && <span>비밀번호는 8 ~ 16자리 영,숫자,특수문자로 입력해주세요!</span>}
-          </div>
-          </div>
-          <div className="input-wrapper">
-            <label for="sign-password-check">Password check</label>
-              <div className="input-group">
-                <input type="password" value={pwdCheck} className={pwdCheck.length > 0 && !isCheck && 'reg-input'} id="sign-password-check" onChange={onChangePwdCheck} data-lpignore="true" />
-          </div>
-          <div className='fail-message'>
-          {pwdCheck.length > 0 && !isCheck && <span>위 비밀번호랑 일치하지 않습니다!</span>}
-          </div>
-          </div>
-
-          <div className="input-wrapper">
-            <label for="sign-name">Name</label>
-              <div className="input-group">
-                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={onChangeName} data-lpignore="true" />
-          </div>
-          <div className='fail-message'>
-          {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
-          </div>
-          </div>
-
-          <div className="input-wrapper">
-            <label for="sign-email">Email</label>
-              <div className="input-group">
-                <input type="email" className={inputEmail.length > 0 && !isEmail && 'reg-input'} id="sign-email" value={inputEmail} onChange={onChangeEmail} data-lpignore="true" />
-          </div>
-          <div className='fail-message'>
-          {inputEmail.length > 0 && !isEmail && <span>이메일 형식에 맞게 입력해주세요!</span>}
-          </div>
-          </div>
-          <div className='addrContainer' id='popupDom'>
+      <SignWrap>
+        <div className='signwrap'>
+          <form className="form">
+            <div className="form-inner">
               <div>
-              <div className='AddrBtn'>
-                {isOpen ? 
-                  <button className='btn btn--primary' onClick={closePostCode} type='button'>Close</button>
-                  : 
-                  <button className="btn btn--primary" type='button' onClick={openPostCode}>Address</button> 
-                }  
-                
-              {isOpen && (
-                <>
-                  <PopupDom>
-                    <DaumPostcode style={postCodeStyle} onComplete={handlePostCode} />
-                  </PopupDom>
-                </>
-              )}
-              </div>  
-              <div className='inputContainer'>
-                <input type='text' readOnly placeholder='선택된 주소' value={fullAddress}  />
-                <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
+                <div className='signupHead'>
+                  <a href='/'><img src={logoTCats} alt=''></img></a>
+                </div>
+                <div className='signupHead'>
+                  <h2>Sign Up</h2><Link style={{textDecoration: 'none'}} to='/login'><h2 className='login-link'>User Login</h2></Link>
+                </div>
               </div>
+              <div className="input-wrapper">
+                <label for="sign-username">User Id</label>
+                <div className="input-group">
+                  <input type="text" value={inputId} className={inputId.length > 0 && !isId && 'reg-input'} id="sign-username" onChange={onChangeId} data-lpignore="true" />
+                </div>
+                <div className='fail-message'>
+                  {inputId.length > 0 && !isId && <span className='fail-message'>아이디는 6 ~ 20자리 영,숫자로 입력해주세요!</span>}
+                </div>
               </div>
-          </div>
-          <div>
-          </div>
-            <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
-          </div>
-      </form>
-    </div>
-    </SignWrap>
+              <div className="input-wrapper">
+                <label for="sign-password">Password</label>
+                <div className="input-group">
+                  <input type="password" value={inputPwd} className={inputPwd.length > 0 && !isPwd && 'reg-input'} id="sign-password" onChange={onChangePwd} data-lpignore="true" />
+                </div>
+                <div className='fail-message'>
+                  {inputPwd.length > 0 && !isPwd && <span>비밀번호는 8 ~ 16자리 영,숫자,특수문자로 입력해주세요!</span>}
+                </div>
+              </div>
+              <div className="input-wrapper">
+                <label for="sign-password-check">Password check</label>
+                <div className="input-group">
+                  <input type="password" value={pwdCheck} className={pwdCheck.length > 0 && !isCheck && 'reg-input'} id="sign-password-check" onChange={onChangePwdCheck} data-lpignore="true" />
+                </div>
+                <div className='fail-message'>
+                  {pwdCheck.length > 0 && !isCheck && <span>위 비밀번호랑 일치하지 않습니다!</span>}
+                </div>
+              </div>
+
+              <div className="input-wrapper">
+                <label for="sign-name">Name</label>
+                <div className="input-group">
+                  <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={onChangeName} data-lpignore="true" />
+                </div>
+                <div className='fail-message'>
+                  {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
+                </div>
+              </div>
+
+              <div className="input-wrapper">
+                <label for="sign-email">Email</label>
+                <div className="input-group">
+                  <input type="email" className={inputEmail.length > 0 && !isEmail && 'reg-input'} id="sign-email" value={inputEmail} onChange={onChangeEmail} data-lpignore="true" />
+                </div>
+                <div className='fail-message'>
+                  {inputEmail.length > 0 && !isEmail && <span>이메일 형식에 맞게 입력해주세요!</span>}
+                </div>
+              </div>
+              <div className='addrContainer' id='popupDom'>
+                <div>
+                  <div className='AddrBtn'>
+                    {isOpen ?
+                        <button className='btn btn--primary' onClick={closePostCode} type='button'>Close</button>
+                        :
+                        <button className="btn btn--primary" type='button' onClick={openPostCode}>Address</button>
+                    }
+
+                    {isOpen && (
+                        <>
+                          <PopupDom>
+                            <DaumPostcode style={postCodeStyle} onComplete={handlePostCode} />
+                          </PopupDom>
+                        </>
+                    )}
+                  </div>
+                  <div className='inputContainer'>
+                    <input type='text' readOnly placeholder='선택된 주소' value={fullAddress}  />
+                    <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
+                  </div>
+                </div>
+              </div>
+              <div>
+              </div>
+              <div className="btn-group" ><button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' disabled={submit} onClick={onClickSign}>Sign in</button></div>
+            </div>
+          </form>
+        </div>
+      </SignWrap>
   )
 }
 
 export default Sign;
-

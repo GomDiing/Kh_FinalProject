@@ -7,6 +7,8 @@ import {ADMIN_KEY, SECRET_KEY} from "../Config";
 import {TCATS_DOMAIN} from "../Config";
 import PayModal from "./PayModal";
 import payApi from "../../api/PayApi";
+import logoTCat from "../../images/TCAT_01.png"
+import {KAKAO_PAY_APPROVAL, KAKAO_PAY_CANCEL, KAKAO_PAY_FAIL} from "../Config";
 
 // 총 가격, 비과세, 그냥 가격, 수량, 인덱스, 회원 인덱스, 회원 포인트
 
@@ -32,13 +34,13 @@ const PayReady = (title, total, tax, value) => {
             tax_free_amount: tax,
             // 결제 성공 URL
             // approval_url: TCATS_DOMAIN + "/payresult",
-            approval_url: "http://localhost:8100/payresult",
+            approval_url: KAKAO_PAY_APPROVAL,
             // 결제 실패 URL
             // fail_url: TCATS_DOMAIN + "/resultfalse",
-            fail_url: "http://localhost:8100/resultfalse",
+            fail_url: KAKAO_PAY_FAIL,
             // 결제 취소 URL
             // cancel_url: TCATS_DOMAIN + "/resultfalse",
-            cancel_url: "http://localhost:8100/resultfalse",
+            cancel_url: KAKAO_PAY_CANCEL,
         }
     });
 
@@ -231,7 +233,7 @@ const PayResult = () => {
         return (
             <div>
                 <h1>결제가 정상 진행 되었습니다.</h1>
-                <img src={process.env.PUBLIC_URL + "/images/TCAT_01.png"} style={{width: '500px', margin: '20px 0'}}
+                <img src={logoTCat} style={{width: '500px', margin: '20px 0'}}
                      alt='TCAT'></img>
                 <h3>창을 닫으시면 자동으로 메인페이지로 돌아갑니다.</h3>
                 <Link replace={true} to='/MyPage/RList'>결제 내역 보러가기</Link>

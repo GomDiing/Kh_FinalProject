@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import logoTCat from "../../../images/TCat.jpg"
 
 const FooterContainer = styled.div`
   width: 100%;
@@ -61,16 +62,16 @@ const Footer =()=> {
   return (
     <FooterContainer>
         <div className = "ContentsContainer"> 
-          <li><a>개인정보처리방침</a></li>
-          <li><a>청소년보호정책</a></li> 
-          <li><a>이용약관</a></li>
-          <li><a>티켓판매안내</a></li>
-          <li><a>회사소개</a></li>
-          <li><a>제휴/광고안내</a></li>
+          {/*<li><a>개인정보처리방침</a></li>*/}
+          {/*<li><a>청소년보호정책</a></li> */}
+          {/*<li><a>이용약관</a></li>*/}
+          {/*<li><a>티켓판매안내</a></li>*/}
+          {/*<li><a>회사소개</a></li>*/}
+          {/*<li><a>제휴/광고안내</a></li>*/}
         </div>
         <div className="box">
         <div>
-          <li><img src="/images/TCat.jpg" alt=''></img></li>
+          <li><img src={logoTCat} alt=''></img></li>
         </div>
         <div className="TextBox">
           <div>

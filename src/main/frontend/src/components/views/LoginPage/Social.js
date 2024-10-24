@@ -8,6 +8,7 @@ import PopupDom from "../../views/SignPage/PopupDom";
 import MemberApi from "../../../api/MemberApi";
 import { useDispatch } from 'react-redux';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
+import logoTCats from '../../../images/TCat.jpg'
 
 const SignWrap = styled.div`
     width: 100%;
@@ -23,7 +24,7 @@ const SignWrap = styled.div`
         justify-content: center;
         align-items: center;
     }
-    
+
     .logincontent{
         margin-top: 40px;
     }
@@ -41,8 +42,8 @@ const SignWrap = styled.div`
         display: flex;
         justify-content: center;
         img{
-        width: 250px;
-        height: 150px;
+            width: 250px;
+            height: 150px;
         }
     }
     label{
@@ -95,7 +96,7 @@ const SignWrap = styled.div`
     }
     p:hover{
         color: #86868b;
-    } 
+    }
     button:hover{
         background-color : #86868b;
     }
@@ -113,7 +114,7 @@ const SignWrap = styled.div`
         .signwrap{
             width: 100%;
         }
-} 
+    }
 `
 const postCodeStyle = {
     // display: "block",
@@ -129,7 +130,7 @@ function Social() {
     const location = useLocation();
     const Navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     const [inputName, setInputName] = useState('');
     const [address, setAddress] = useState('');
     const [inputEmail, setInputEmail] = useState('');
@@ -170,17 +171,17 @@ function Social() {
                         }
                         dispatch(loginActions.setUserInfo({data}));
                     }
-                    } catch (e) {
+                } catch (e) {
                     console.log(e);
-                    }
                 }
+            }
             alert('로그인 성공')
             Navigate('/')
             getInfo();
-        } 
+        }
     },[])
 
-    // 주소 
+    // 주소
     let [fullAddress, setFullAddress] = useState('');
     // 도로명 주소
     const [road, setRoad] = useState("");
@@ -202,17 +203,17 @@ function Social() {
             if(value.length > 1) {
                 setIsName(true);
             }
-            }
-            else setIsName(false);
         }
+        else setIsName(false);
+    }
 
     const handlePostCode = (data) => {
-    setFullAddress(data.address);
-    setRoad(data.roadAddress);
-    setJibun(data.jibunAddress);
-    setPostCode(data.zonecode);
-    setIsOpen(false);
-    data.preventDefault();
+        setFullAddress(data.address);
+        setRoad(data.roadAddress);
+        setJibun(data.jibunAddress);
+        setPostCode(data.zonecode);
+        setIsOpen(false);
+        data.preventDefault();
     }
 
     console.log(inputName);
@@ -224,14 +225,14 @@ function Social() {
     console.log(type);
 
     const onClickSign = async () => {
-    try {
-        const response = await MemberApi.socialSign(inputName, inputEmail, road, jibun, address, postCode, type);
-        if(response.data.statusCode === 200) {
-        alert("회원가입 완료");
-    } Navigate('/login');
-    } catch (e) {
-        alert("이러지마.....ㅠㅠ");
-    }
+        try {
+            const response = await MemberApi.socialSign(inputName, inputEmail, road, jibun, address, postCode, type);
+            if(response.data.statusCode === 200) {
+                alert("회원가입 완료");
+            } Navigate('/login');
+        } catch (e) {
+            alert("이러지마.....ㅠㅠ");
+        }
     }
 
     const onKeyPress = e => {
@@ -239,63 +240,63 @@ function Social() {
             onClickSign();
         }
     }
-    
+
     return (
         <SignWrap>
-    <div className='signwrap'>
-        <form className="form">
-        <div className="form-inner">
-            <div>
-            <div className='signupHead'>
-                <a href='/'><img src='images/TCat.jpg' alt=''></img></a>
+            <div className='signwrap'>
+                <form className="form">
+                    <div className="form-inner">
+                        <div>
+                            <div className='signupHead'>
+                                <a href='/'><img src={logoTCats} alt=''></img></a>
+                            </div>
+                        </div>
+                        <div className="input-wrapper">
+                            <label for="sign-name">Name</label>
+                            <div className="input-group">
+                                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={checkName} data-lpignore="true" />
+                            </div>
+                            <div className='fail-message'>
+                                {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
+                            </div>
+                        </div>
+                        <div className="input-wrapper">
+                            <label for="sign-email">Email</label>
+                            <div className="input-group">
+                                <input type="email" id="sign-email" value={inputEmail} readOnly data-lpignore="true" />
+                            </div>
+                        </div>
+                        <div className='addrContainer' id='popupDom'>
+                            <div>
+                                <div className='AddrBtn'>
+                                    {isOpen ?
+                                        <button className='btn btn--primary' onClick={onClose} type='button'>Close</button>
+                                        :
+                                        <button className="btn btn--primary" type='button' onClick={onOpen}>Address</button>
+                                    }
+                                    {isOpen && (
+                                        <>
+                                            <PopupDom>
+                                                <DaumPostcodeEmbed style={postCodeStyle} onComplete={handlePostCode} />
+                                            </PopupDom>
+                                        </>
+                                    )}
+                                </div>
+                                <div className='inputContainer'>
+                                    <input type='text' placeholder='선택된 주소' value={fullAddress}  />
+                                    <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                        </div>
+                        <div className="btn-group">
+                            <button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            </div>
-            <div className="input-wrapper">
-                <label for="sign-name">Name</label>
-                <div className="input-group">
-                <input type="text" value={inputName} className={inputName.length > 0 && !isName && 'reg-input'} id="sign-name" onChange={checkName} data-lpignore="true" />
-            </div>
-            <div className='fail-message'>
-            {inputName.length > 0 && !isName && <span>이름은 한글 2자 이상 입력해주세요.!</span>}
-            </div>
-            </div>
-            <div className="input-wrapper">
-                <label for="sign-email">Email</label>
-                <div className="input-group">
-                <input type="email" id="sign-email" value={inputEmail} readOnly data-lpignore="true" />
-            </div>
-            </div>
-            <div className='addrContainer' id='popupDom'>
-                <div>
-                <div className='AddrBtn'>
-                    {isOpen ? 
-                    <button className='btn btn--primary' onClick={onClose} type='button'>Close</button>
-                    :    
-                    <button className="btn btn--primary" type='button' onClick={onOpen}>Address</button>
-                }
-                {isOpen && (
-                    <>
-                    <PopupDom>
-                        <DaumPostcodeEmbed style={postCodeStyle} onComplete={handlePostCode} />
-                    </PopupDom>
-                    </>
-                )}
-                </div>  
-                <div className='inputContainer'>
-                    <input type='text' placeholder='선택된 주소' value={fullAddress}  />
-                    <input type='text' value={address} onChange={onChangeAddress} onSubmit={onKeyPress} placeholder='상세 주소 입력'/>
-                </div>
-                </div>
-            </div>
-            <div>
-            </div>
-                <div className="btn-group">
-                <button style={{width : '402px', height : '52px', padding : '12px', fontSize : '20px' }} className="btn btn--primary" type='button' onClick={onClickSign}>Sign in</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    </SignWrap>
+        </SignWrap>
     )
 }
 

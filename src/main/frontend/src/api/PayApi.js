@@ -1,4 +1,4 @@
-import axios from "axios";
+import {api} from "./axios";
 const HEADER = {'Content-Type' :  'application/json'}
 
 const PayApi = {
@@ -15,18 +15,18 @@ const PayApi = {
       finalAmount : total,
       kakaoTaxFreeAmount : kakaoTaxFreeAmount
     }
-    return await axios.post( "/api/reserve/payment", payReadyObj, HEADER);
+    return await api.post( "/api/reserve/payment", payReadyObj, HEADER);
   },
   // 결제 환불
   payCancel : async function(ticket, refundAmount) {
-    return await axios.get(`/api/reserve/refund/${ticket}/${refundAmount}`, HEADER);
+    return await api.get(`/api/reserve/refund/${ticket}/${refundAmount}`, HEADER);
   },
   // 결제 내역 조회
   paySelect : async function(index) {
-    return await axios.get(`/api/reserve/list/payment/${index}`, HEADER);
+    return await api.get(`/api/reserve/list/payment/${index}`, HEADER);
   },
   payCancelSelect : async function(index) {
-    return await axios.get(`/api/reserve/list/refund-cancel/${index}`, HEADER);
+    return await api.get(`/api/reserve/list/refund-cancel/${index}`, HEADER);
   },
   // 결제 취소 내역
 
@@ -39,7 +39,7 @@ const PayApi = {
       totalAmount : totalAmount,
       taxFreeAmount : taxFreeAmount
     }
-    return await axios.post('/pay/kakao/ready', payKakaoReadyData);
+    return await api.post('/pay/kakao/ready', payKakaoReadyData);
   },
 
   // 카카오Pay 통신 - 승인(Approve)
@@ -48,7 +48,7 @@ const PayApi = {
       pg_token : pg_token,
       tid : tid
     }
-    return await axios.post('/pay/kakao/approve', payKakaoApproveData)
+    return await api.post('/pay/kakao/approve', payKakaoApproveData)
   },
 
   // 카카오Pay 통신 - 취소(Cancel)
@@ -59,7 +59,7 @@ const PayApi = {
       cancelTaxFreeAmount : cancelTaxFreeAmount,
     }
 
-    return await axios.post('/pay/kakao/cancel', payKakaoCancelData)
+    return await api.post('/pay/kakao/cancel', payKakaoCancelData)
   }
 }
 

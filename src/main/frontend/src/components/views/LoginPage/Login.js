@@ -6,6 +6,9 @@ import MemberApi from '../../../api/MemberApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginActions } from '../../../util/Redux/Slice/userSlice';
+import logoTCat from "../../../images/TCat.jpg"
+import logoKakao from "../../../images/kakao.png"
+import logoGoogle from "../../../images/google.png"
 
 const LoginWrap = styled.div`
   width: 100%;
@@ -413,7 +416,7 @@ const IdStyle = styled.div`
         <div className='a'>
           <div>
             <div className='loginHead'>
-              <a href='/'><img src='images/TCat.jpg' alt=''></img></a>
+              <a href='/'><img src={logoTCat} alt=''></img></a>
             </div>
             <div className='loginHead'>
               <h2>User Login</h2>
@@ -435,10 +438,10 @@ const IdStyle = styled.div`
               </div>
               {login === true && <span>아이디 또는 비밀번호가 일치하지 않습니다. 다시 확인해주세요</span>}
                 <div className='btn-group'>
-                  <img src='/images/kakao.png' alt='카카오 로그인' onClick={KakaoLogin}/>
+                  <img src={logoKakao} alt='카카오 로그인' onClick={KakaoLogin}/>
                 </div>
                 <div className='btn-group'>
-                  <img src={process.env.PUBLIC_URL + '/images/google.png'} alt='구글 로그인' onClick={GoogleLogin}/>
+                  <img src={logoGoogle} alt='구글 로그인' onClick={GoogleLogin}/>
                 </div>
                 <div className='btn-group2' style={{marginTop : '40px'}}>
                   <Link to = '/agree' style={{textDecoration:'none',color:'inherit' }}>

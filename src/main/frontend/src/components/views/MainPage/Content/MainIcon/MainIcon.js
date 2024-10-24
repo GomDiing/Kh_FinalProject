@@ -1,46 +1,58 @@
+import React, { useState } from "react";
 import styled from "styled-components";
-import {QuestionCircleOutlined, ClockCircleOutlined, DollarCircleOutlined, UserOutlined, SendOutlined, NotificationOutlined,} from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+    QuestionCircleOutlined,
+    ClockCircleOutlined,
+    DollarCircleOutlined,
+    UserOutlined,
+    SendOutlined,
+    NotificationOutlined,
+} from "@ant-design/icons";
 import Modal from "../../../../../util/Modal/Modal";
-import { useState } from "react";
-import AnswerModalBody from "./IconModal/ModalBody/AnswerModalBody";
 import IconModalHeader from "./IconModal/IconModalHeader";
+import AnswerModalBody from "./IconModal/ModalBody/AnswerModalBody";
 import NoticeModalBody from "./IconModal/ModalBody/NoticeModalBody";
 import CancelModalBody from "./IconModal/ModalBody/CancelModalBody";
-import { useSelector } from "react-redux";
 
 const MainIconContainer = styled.div`
-    /* border: 1px solid black; */
     width: 100%;
     margin: 40px 0;
-    .IconAllContainer{
+
+    .IconAllContainer {
         margin: 0 20px;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        display: flex;
-        justify-content:space-between;
     }
-    .MainIcon{
+
+    .IconContainer {
         display: flex;
-        justify-content: center;
-        font-size: 2em;
-        color: #33333b;        
-        opacity: 60%
-    }  
-    p{
-        text-align: center;
-        margin: 0px;
-        margin-top: 5px;
-        color:#33333b;
+        flex-direction: column;
+        align-items: center;
         cursor: pointer;
-        /* min-width: 64px; */
     }
+
+    .MainIcon {
+        font-size: 2em;
+        color: #33333b;
+        opacity: 60%;
+    }
+
+    p {
+        margin: 5px 0 0;
+        color: #33333b;
+        text-align: center;
+    }
+    
     h2{
-        margin:0px;
-        padding:0px;
+        margin:0;
+        padding:0;
     }
     span , h5{
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
         display: inline;
     }
 
@@ -60,69 +72,71 @@ const MainIconContainer = styled.div`
 
 const MainIcon = () => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectModal , setSelectModal] = useState(0);
-    const Navigate = useNavigate();
-
-    const userInfo = useSelector((state) => state.user.info)
-
-    const openModal = (e) =>{
-        setSelectModal(e)
-        setModalOpen(true)
-    }
-    const closeModal = () =>{
-        setModalOpen(false)
-    }
+    const [selectModal, setSelectModal] = useState(0);
+    const navigate = useNavigate();
+    const userInfo = useSelector((state) => state.user.info);
 
     // 로그인 / 비로그인 체크
-    const ClickItem = (e) =>{
-        if(userInfo.userEmail) {
-            Navigate(e)
-        }else {
-            alert("로그인 후 이용해 주시길 바랍니다.")
+    const ClickItem = (e, requiresLogin = true, modalType = null) => {
+        if (requiresLogin && !userInfo.userEmail) {
+            alert("로그인 후 이용해 주시길 바랍니다.");
+            return;
         }
-    }
 
-    return(
-    <MainIconContainer>
-        <div className="IconAllContainer">
+        if (modalType !== null) {
+            setSelectModal(modalType);
+            setModalOpen(true);
+        } else if (e) {
+            navigate(e);
+        }
+    };
 
-            <div className="IconContainer">
-                <ClockCircleOutlined className="MainIcon" onClick={()=>{ClickItem("/MyPage/RList")}} />
-                <p>예매내역</p>
-            </div>
-            <div className="IconContainer">
-                <DollarCircleOutlined className="MainIcon" onClick={()=>{openModal(1)}}/>
-                <p>취소/환불</p>
-            </div>
-            <div className="IconContainer">
-                <UserOutlined className="MainIcon" onClick={()=>{ClickItem("/MyPage/*")}}/>
-                <p>My Page</p>
-            </div>
-            <div className="IconContainer">
-                <SendOutlined className="MainIcon" onClick={()=>{ClickItem('/MyPage/Contact')}}/>
-                <p>1:1문의</p>
-            </div>
-            <div className="IconContainer">
-                <NotificationOutlined className="MainIcon" onClick={()=>{openModal(2)}}/>
-                <p>공지사항</p>
-            </div>
-            <div className="IconContainer"> 
-                <QuestionCircleOutlined  className="MainIcon" onClick={()=>{openModal(3)}}/>
-                <p>자주묻는질문</p>
-            </div>
+    const closeModal = () => {
+        setModalOpen(false);
+    };
 
-            <div className="IconContainer2">
-                <h2>02-1541-1633</h2>
-                <h5>평일</h5><span> AM 09:00 ~ PM 06:00</span>
-                <br></br>
-                <h5>휴일</h5><span> AM 09:00 ~ PM 12:00</span>
+    const iconData = [
+        { icon: ClockCircleOutlined, text: "예매내역", action: () => ClickItem("/MyPage/RList") },
+        { icon: DollarCircleOutlined, text: "취소/환불", action: () => ClickItem(null, true, 1) },
+        { icon: UserOutlined, text: "My Page", action: () => ClickItem("/MyPage/*") },
+        { icon: SendOutlined, text: "1:1문의", action: () => ClickItem("/MyPage/Contact") },
+        { icon: NotificationOutlined, text: "공지사항", action: () => ClickItem(null, false, 2) },
+        { icon: QuestionCircleOutlined, text: "자주묻는질문", action: () => ClickItem(null, false, 3) },
+    ];
+
+    return (
+        <MainIconContainer>
+            <div className="IconAllContainer">
+                {iconData.map((item, index) => (
+                    <div key={index} className="IconContainer" onClick={item.action}>
+                        <item.icon className="MainIcon" />
+                        <p>{item.text}</p>
+                    </div>
+                ))}
+                <div className="IconContainer2">
+                    <h2>02-1541-1633</h2>
+                    <h5>평일</h5><span> AM 09:00 ~ PM 06:00</span>
+                    <br />
+                    <h5>휴일</h5><span> AM 09:00 ~ PM 12:00</span>
+                </div>
             </div>
-        </div>
-        {selectModal === 1 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "취소/환불"/>}><div>{<CancelModalBody/>}</div></Modal>}
-        {selectModal === 2 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "공지사항"/>}><div>{<NoticeModalBody/>}</div></Modal>}
-        {selectModal === 3 && <Modal open={modalOpen} close={closeModal} header={<IconModalHeader title = "자주묻는 질문"/>}><div>{<AnswerModalBody/>}</div></Modal>}
-    </MainIconContainer>
-    )
-}
+            {modalOpen && (
+                <Modal
+                    open={modalOpen}
+                    close={closeModal}
+                    header={<IconModalHeader title={
+                        selectModal === 1 ? "취소/환불" :
+                            selectModal === 2 ? "공지사항" :
+                                "자주묻는 질문"
+                    } />}
+                >
+                    {selectModal === 1 && <CancelModalBody />}
+                    {selectModal === 2 && <NoticeModalBody />}
+                    {selectModal === 3 && <AnswerModalBody />}
+                </Modal>
+            )}
+        </MainIconContainer>
+    );
+};
 
 export default MainIcon;

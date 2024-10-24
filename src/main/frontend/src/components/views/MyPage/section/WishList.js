@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import WishLikeApi from '../../../../api/WishLikeApi';
 import GridCards2 from '../../Cards/GridCards2';
+import logoTCat2 from "../../../../images/TCAT_02.png"
 
 const NoresultContainer = styled.div`
     width: 100%;
@@ -48,7 +49,7 @@ function WishList() {
         {wishLish.length === 0 ? 
                 <NoresultContainer>
                 <div className="Content">    
-                    <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCAT_02.png'} alt=''></img></div>
+                    <div className="item"><img src={logoTCat2} alt=''></img></div>
                     <div className="item"><p>찜 목록이 없습니다.</p></div>
                 </div>
                 </NoresultContainer>

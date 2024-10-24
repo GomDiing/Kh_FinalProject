@@ -5,6 +5,7 @@ import MainApi from "../../../../api/MainApi";
 import Footer from "../../Footer/Footer"
 import MainHeader from "../MainHeader"
 import { LoadingOutlined } from "@ant-design/icons";
+import logoTCat from "../../../../images/TCat.jpg"
 
 const NoresultContainer = styled.div`
     width: 100%;
@@ -143,7 +144,7 @@ const Search = () =>{
                     {/* 검색결과 없는경우 */}
                     <NoresultContainer>
                         <div className="Content">    
-                            <div className="item"><img src={process.env.PUBLIC_URL + '/images/TCat.jpg'} alt=''></img></div>
+                            <div className="item"><img src={logoTCat} alt=''></img></div>
                             <div className="item"><p>검색 결과가 없습니다.</p></div>
                         </div>
                     </NoresultContainer>

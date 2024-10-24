@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import {api} from "./axios";
 const HEADER = {
     'Content-Type' : 'application/json'
 }
@@ -14,7 +14,7 @@ const DetailApi={
             rate : rate,
             code : productCode
         }
-        return await axios.post(`/api/review/write`, params, HEADER);
+        return await api.post(`/api/review/write`, params, HEADER);
     },
     // 대댓글 작성(자식댓글)
     childComment : async function(memberIndex, group, inputContent, productCode){
@@ -25,7 +25,7 @@ const DetailApi={
             content : inputContent,
             code : productCode // 공연상품 code 값
         }
-        return await axios.post(`/api/review/add`, params, HEADER);
+        return await api.post(`/api/review/add`, params, HEADER);
     },
     // 공연 후기 수정 (프론트 수정은 없음)
     updateComment : async function(memberIndex, commentIndex, content){
@@ -34,7 +34,7 @@ const DetailApi={
             index : commentIndex, // 댓글 고유 index 값
             content : content
         }
-        return await axios.post(`/api/review/update`, params, HEADER)
+        return await api.post(`/api/review/update`, params, HEADER)
     },
     // 후기 삭제 
     deleteComment : async function(commentIndex, memberIndex){
@@ -43,7 +43,7 @@ const DetailApi={
             index : commentIndex,   // 후기(댓글) 고유 index 값
             memberIndex : memberIndex
         }
-        return await axios.post(`/api/review/delete`, params, HEADER)
+        return await api.post(`/api/review/delete`, params, HEADER)
     },
 
      // 전체 댓글 불러오기(상세페이지 이동시)
@@ -51,7 +51,7 @@ const DetailApi={
         console.log('currentPage = ' + currentPage);
         console.log('setPageSize = ' + setPageSize);
         console.log(`/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`)
-        return await axios.get(`/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
+        return await api.get(`/api/review/all/${(productCode)}?page=${(currentPage - 1)}&size=${setPageSize}&sort=index,desc`, HEADER)
     },
     // 후기 신고하기
     accuseComment : async function(suspectIndex, victimIndex, reason, reviewIndex,){
@@ -61,20 +61,20 @@ const DetailApi={
             memberIndexVictim : victimIndex,    // 신고한사람 (로그인한 회원)
             reason : reason,                    // 신고사유
         }
-        return await axios.post(`/api/accuse/${(reviewIndex)}`, params, HEADER)
+        return await api.post(`/api/accuse/${(reviewIndex)}`, params, HEADER)
     },
     // 상품 상세 가져오기
     getDetail : async function(pCode) {
         console.log('DetailApi.js->getDetail' + 'pCode = ' + pCode)
-        return await axios.post(`/api/product/${pCode}`, HEADER);
+        return await api.get(`/api/product/${pCode}`, HEADER);
     },
     // 다음달 예매가능 일자
     getNextReserve : async function(pCode, year, month) {
-        return await axios.get(`/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
+        return await api.get(`/api/product/${(pCode)}/${(year)}/${(month)}`, HEADER);
     },
     // 다음 날 예매 가능 일자
     getNextDateReserve : async function(pCode, year, month, day) {
-        return await axios.get(`/api/product/${(pCode)}/${(year)}/${(month)}/${(day)}`, HEADER);
+        return await api.get(`/api/product/${(pCode)}/${(year)}/${(month)}/${(day)}`, HEADER);
     }
 }
 export default DetailApi;
