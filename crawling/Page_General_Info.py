@@ -1,18 +1,23 @@
-import copy
+import re
 import re
 import time
+from typing import List
 
-from crawling import Constants
+from selenium.common import NoSuchElementException, ElementClickInterceptedException
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.common import TimeoutException, NoSuchElementException, ElementClickInterceptedException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
-from crawling.Common import waitUntilElementLocated, initChromBrowser, print_log, log_error
+import Constants_Rank
+import Constants_Selector
+from Common import waitUntilElementLocated, print_log, log_error
+from DataClass import SeatPriceInfo, ProductInfo, GeneralCategory, DetailLocationInfo, PeriodInfo, AgeInfo
 
 
 # 일반 정보 추출
-def extractGeneralInfo(browser, productDataList, seatPriceDataList):
+def extractGeneralInfo(browser: WebDriver, product_info: ProductInfo) -> None:
     # 아래 요소 추출
     # ******************** #
     # 장소
@@ -22,523 +27,373 @@ def extractGeneralInfo(browser, productDataList, seatPriceDataList):
 
     # 일반 정보들이 위치한 요소 추출
     print_log('일반 정보 추출')
-    informList = browser.find_element(By.CSS_SELECTOR, Constants.generalInfoCss).find_elements(By.CLASS_NAME, 'infoItem')
+    general_class_list = browser.find_element(By.CSS_SELECTOR, Constants_Selector.generalInfoCss).find_elements(By.CLASS_NAME, 'infoItem')
 
-    for inform in informList:
-        attribute = inform.get_attribute('class')
-        print_log(attribute)
+    for general_element in general_class_list:
+        general_class = general_element.get_attribute('class')
+        print_log(general_class)
 
         # 장소, 공연기간/기간, 공연시간, 관람연령 출력
-        if attribute == 'infoItem':
+        if general_class == 'infoItem':
             # print_log('장소, 공연기간/기간, 공연시간, 관람연령 출력')
-            elementName = inform.find_element(By.CLASS_NAME, 'infoLabel').text
+            general_category = general_element.find_element(By.CLASS_NAME, 'infoLabel').text
 
-            if elementName == '장소':
-                print_log(f'elementName == {elementName}')
+            if general_category == GeneralCategory.PLACE.value:
+                print_log(f'general_category == {general_category}')
                 # 장소와 상제 장소 판단/추출 및 데이터 리스트 추가
-                productDataList['product_location'] = extractPlaceInfo(inform)
-                print_log(f"장소: {productDataList['product_location']}")
+                product_info.location = extract_place_info(general_element)
+                print_log(f"장소: {product_info.location}")
                 # 상세 장소 추출 메서드
-                detailPlaceInfo = extractDetailPlace(inform, browser, productDataList)
-                if detailPlaceInfo == 'NOT PAGE':
-                    productDataList['product_detail_location'] = 'NOT PAGE'
-                    print_log(f'상세 장소: {productDataList["product_detail_location"]}')
-                    return
-                if detailPlaceInfo is not False:
-                    # $$$ 상세 장소 데이터 추가
-                    productDataList['product_detail_location'] = detailPlaceInfo
-                    print_log(f'상세 장소: {productDataList["product_detail_location"]}')
-                else:
-                    # $$$ 상세 장소 데이터 추가
-                    productDataList['product_detail_location'] = None
-                    print_log(f'상세 장소: {productDataList["product_detail_location"]}')
+                parsing_detail_place(general_element, browser, product_info)
 
             # 공연기간/기간 판단/추출
-            perfPeriodList = ['공연기간', '기간']
-            if elementName in perfPeriodList:
-                print_log(f'elementName == {elementName}')
+            period_list = [GeneralCategory.PERIOD.value, GeneralCategory.PERIOD_V2.value]
+            if general_category in period_list:
+                print_log(f'general_category == {general_category}')
                 # 공연기간/기간 판단/추출 메서드
-                perfPeriodInfo = extractPeriodInfo(inform)
-                if isinstance(perfPeriodInfo, str):
-                    # print('공연기간: ' + perfPeriodInfo)
-                    # $$$ 기간 데이터 리스트 추가
-                    productDataList['product_period_start'] = perfPeriodInfo
-                    productDataList['product_period_end'] = None
-                    print_log(f'공연기간 -> {elementName} : {perfPeriodInfo}')
-                else:
-                    # $$$ 시작 기간 데이터 리스트 추가
-                    productDataList['product_period_start'] = perfPeriodInfo['start']
-                    print_log(f"공연기간 -> (시작) {elementName} : {perfPeriodInfo['start']}")
-                    # $$$ 종료 기간 데이터 리스트 추가
-                    productDataList['product_period_end'] = perfPeriodInfo['end']
-                    print_log(f"공연기간 -> (종료) {elementName} : {perfPeriodInfo['end']}")
+                extractPeriodInfo(general_element, product_info)
 
             # 공연시간 판단/추출
-            if elementName == '공연시간':
-                print_log(f'elementName == {elementName}')
-                perfTimeInfo = extractPerfTimeInfo(inform)
-                if isinstance(perfTimeInfo, str):
-                    # $$$ 공연시간 데이터 리스트 추가
-                    productDataList['product_time_min'] = int(perfTimeInfo)
-                    print_log(f'공연시간 -> {perfTimeInfo}')
-                else:
-                    # $$$ 공연시간 데이터 리스트 추가
-                    productDataList['product_time_min'] = int(perfTimeInfo['perform'])
-                    print_log(f"공연시간: {perfTimeInfo['perform']}")
-                    # $$$ 인터미션 데이터 리스트 추가
-                    productDataList['product_time_break'] = int(perfTimeInfo['break'])
-                    print_log(f"인터미션: {perfTimeInfo['break']}")
+            if general_category == GeneralCategory.TIME.value:
+                print_log(f'general_category == {general_category}')
+                extractPerfTimeInfo(general_element, product_info)
 
             # 관람연령 출력
-            if elementName == '관람연령':
-                print_log(f'elementName == {elementName}')
-                ageInfo = extractAgeInfo(inform)
-                # 나이 분류
-                # str 타입이면 전체 관람가
-                # 그 외엔 dict 타입
-                if isinstance(ageInfo, str):
-                    # $$$ 연령 데이터 리스트 추가
-                    productDataList['product_age'] = 0
-                    productDataList['product_age_isKorean'] = False
-                    print_log(f"전체: {str(productDataList['product_age'])}")
-                else:
-                    if ageInfo['type'] == '한국':
-                        # $$$ 연령 데이터 리스트 추가
-                        productDataList['product_age'] = ageInfo['age']
-                        productDataList['product_age_isKorean'] = True
-                        print_log(f"한국식 나이: {str(ageInfo['age'])}")
-                    elif ageInfo['type'] == '만':
-                        productDataList['product_age'] = ageInfo['age']
-                        productDataList['product_age_isKorean'] = False
-                        print_log(f"만 나이: {str(ageInfo['age'])}")
-                    elif ageInfo['type'] == '미취학아동입장불가':
-                        productDataList['product_age'] = ageInfo['age']
-                        productDataList['product_age_isKorean'] = True
-                        print_log(f"미취학아동입장불가: {str(ageInfo['age'])}")
-                    elif ageInfo['type'] == '전체':
-                        productDataList['product_age'] = ageInfo['age']
-                        productDataList['product_age_isKorean'] = False
-                        print_log(f"전체: {str(ageInfo['age'])}")
+            if general_category == '관람연령':
+                print_log(f'general_category == {general_category}')
+                extractAgeInfo(general_element, product_info)
+                print_log(f"나이: {product_info.age_num}, 한국식 나이: {product_info.age_kor}, 나이 타입 : {product_info.age_type}")
 
         # 가격 요소 출력
-        if attribute == 'infoItem infoPrice':
+        if general_class == 'infoItem infoPrice':
             print_log(f'가격 요소 출력')
-            extractPriceInfo(inform, browser, seatPriceDataList)
+            # extractPriceInfo(general_element, browser, seatPriceDataList)
+            extractPriceInfo(general_element, browser, product_info)
+            print_log(f"좌석/가격 : {product_info.seat_price_info_list}")
+
+
 
 
 # 일반 정보 추출 > 장소 판단 / 추출 메서드
 # 장소가 아니면 False, 맞다면 장소 정보를 반환 (단, (자세히)는 제외
-def extractPlaceInfo(inform):
+def extract_place_info(inform):
     print_log('일반 정보 추출 > 장소 판단/추출 메서드')
     return re.sub('\(자세히\)', '', inform.find_element(By.CLASS_NAME, 'infoDesc').text)
 
 
 # 일반 정보 추출 > 상세 장소 탐색 메서드
-def extractDetailPlace(inform, browser, productDataList):
+def parsing_detail_place(inform: WebElement, browser: WebDriver, product_info: ProductInfo) -> None:
     try:
         print_log('일반 정보 추출 > 상세 장소 탐색')
         # 상세 장소 팝업 창 열기
-        # inform.find_element(By.CSS_SELECTOR, 'div > a')
         browser.execute_script("arguments[0].click();", inform.find_element(By.CSS_SELECTOR, 'div > a'))
 
-        if browser.current_url != productDataList['product_url']:
-            print_log('url 불일치')
-            return 'NOT PAGE'
+        if browser.current_url != product_info.url:
+            print_log(Constants_Rank.error_msg_no_url)
+            product_info.detail_location = DetailLocationInfo.NOT_PAGE.value
         # 해당 팝업창 나올 때 까지 대기, 없다면 에러
-        waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPlacePopupOpenCss)
+        waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants_Selector.detailPlacePopupOpenCss)
 
         # 팝업 창에서 p 태그 리스트 추출
-        detailPlaceList = browser.find_elements(By.CSS_SELECTOR, Constants.detailPlaceListCss)
+        find_detail_place_list = browser.find_elements(By.CSS_SELECTOR, Constants_Selector.detailPlaceListCss)
 
-        findDetailPlace = ''
+        detail_place = ''
 
         # p 태그 리스트에서 주소 값을 찾아 반환
-        for detailPlace in detailPlaceList:
-            if detailPlace.text[0:2] == '주소':
-                findDetailPlace = detailPlace.find_element(By.TAG_NAME, 'span').text
+        for find_detail_place in find_detail_place_list:
+            if find_detail_place.text[0:2] == '주소':
+                detail_place = find_detail_place.find_element(By.TAG_NAME, 'span').text
 
         time.sleep(1.0)
 
         # 상세 정보 위치 팝업창 닫기
-        # browser.find_element(By.CSS_SELECTOR, Constants.detailPlacePopupCloseCss)
-        browser.execute_script("arguments[0].click();", browser.find_element(By.CSS_SELECTOR, Constants.detailPlacePopupCloseCss))
+        browser.execute_script("arguments[0].click();", browser.find_element(By.CSS_SELECTOR, Constants_Selector.detailPlacePopupCloseCss))
 
         time.sleep(0.5)
 
         # 상세 장소 값이 비어 있으면 False, 그렇지 않으면 추출한 상세 장소 추출
-        if findDetailPlace != '':
-            print_log(f'상세 장소 정보 = {findDetailPlace}')
-            return findDetailPlace
+        if detail_place != '':
+            print_log(f'상세 장소 정보 = {detail_place}')
+            product_info.detail_location = detail_place
         else:
             print_log('상세 장소 정보 없음')
-            return False
     except NoSuchElementException as ne:
         log_error(ne)
-        return False
     except ElementClickInterceptedException as ecie:
         log_error(ecie)
-        return False
 
 
 # 일반 정보 추출 > 공연 기간/기간 판단 / 추출 메서드
 # 공연 기간이 아니면 False, 맞다면 공연 기간 정보를 반환
-def extractPeriodInfo(inform):
+def extractPeriodInfo(inform: WebElement, product_info: ProductInfo) -> None:
     print_log('일반 정보 추출 > 공연 기간/기간 판단 / 추출')
-    periodInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
+    period_info = inform.find_element(By.CLASS_NAME, 'infoDesc').text
     # 공연 기간이 나뉘어 있는지 판단 / 추출
-    isPeriodSplit = isPeriodInfoSplit(periodInfo)
-    # 나뉘어 있지 않다면 str 타입 출력
-    if isPeriodSplit is False:
-        print_log(f'공연 기간 분리 여부 -> 냐뉘지 않음 : {periodInfo}')
-        return periodInfo
-    # 공연 정보가 나뉘어 있다면
-    # str 혹은 dict 타입 {'start': *, 'end': *} 로 출력
-    else:
-        print_log(f'공연 기간 분리 여부 -> 나뉨 : {isPeriodSplit}')
-        return isPeriodSplit
+    isPeriodInfoSplit(period_info, product_info)
 
 
 # 일반 정보 추출 > 공연 기간 판단/추출 > 공연 기간 시작/끝 판단 메서드
 # 공연 기간이 나뉘어 있지 않다면 False
 # 나뉘어 있다면 나눠서 시작(start)와 끝(end)를 딕셔너리로 반환
-def isPeriodInfoSplit(periodInfo):
+def isPeriodInfoSplit(periodInfo: str, product_info: ProductInfo) -> None:
     print_log(f'일반 정보 추출 > 공연 기간/기간 판단 / 추출 > 공연 기간 시작/끝 판단')
     isTerm = periodInfo.find(' ~')
     if isTerm == -1:
         print_log('공연 기간 나눠 있지 않음')
-        return False
+        product_info.period_start = periodInfo
+        product_info.period_end = None
     # 오픈런 유무 판단, 오픈런이면 이전 부분만 포함
     else:
-        # return {'start': periodInfo.split(' ~')[0], 'end': periodInfo.split(' ~')[1]}
         startPeriod = periodInfo.split(' ~')[0]
         endPeriod = periodInfo.split(' ~')[1]
-        if endPeriod == '오픈런':
-            print_log(f'startPeriod == {startPeriod} endPeriod == 오픈런')
-            return {'start': startPeriod, 'end': 'OPENRUN'}
+        if endPeriod == PeriodInfo.OPENRUN.value:
+            product_info.period_start = startPeriod
+            product_info.period_end = PeriodInfo.OPENRUN.name
         else:
-            print_log(f'startPeriod == {startPeriod} endPeriod == {endPeriod}')
-            return {'start': startPeriod, 'end': endPeriod}
+            product_info.period_start = startPeriod
+            product_info.period_end = endPeriod
+    print_log(f'공연기간 -> 시작: {product_info.period_start} / 종료 : {product_info.period_end}')
 
 
 # 일반 정보 추출 > 공연 시간 판단/추출 메서드
 # 공연 시간이 아니면 False, 맞다면 공연 시간 정보를 반환
-def extractPerfTimeInfo(inform):
+def extractPerfTimeInfo(inform: WebElement, product_info: ProductInfo) -> None:
     timeInfo = inform.find_element(By.CLASS_NAME, 'infoDesc').text
     # 휴식 시간 포함되어 있는지 판단 / 추출
-    isIncludeBreak = isPerfTimeInfoIncludeBreak(timeInfo)
-    # 포함되어 있지 않다면 str 타입 출력
-    if isIncludeBreak is False:
-        return re.findall(r'[0-9]+', timeInfo)[0]
-    # 휴식 시간이 포함되어 있다면 dict 타입 {'perform': *, 'break': *} 로 출력
-    else:
-        return isIncludeBreak
+    isPerfTimeInfoIncludeBreak(timeInfo, product_info)
 
 
 # 일반 정보 추출 > 공연 시간 판단/추출 > 휴식 정보 판단/추출 메서드
 # 인터미션이 포함되어 있지 않다면 False
 # 포함되어 있다면 공연시간(perform)와 휴식시간(break)를 딕셔너리로 반환
-def isPerfTimeInfoIncludeBreak(timeInfo):
+def isPerfTimeInfoIncludeBreak(timeInfo: str, product_info: ProductInfo) -> None:
     isBreak = timeInfo.find('인터미션')
     if isBreak == -1:
-        return False
+        product_info.perf_time = int(re.findall(r'[0-9]+', timeInfo)[0])
+        print_log(f'공연시간 -> {product_info.perf_time}')
     else:
         timeInfoSplit = re.findall(r'[0-9]+', timeInfo)
-        return {'perform': timeInfoSplit[0], 'break': timeInfoSplit[1]}
+        product_info.perf_time = int(timeInfoSplit[0])
+        product_info.intermission = int(timeInfoSplit[1])
+        print_log(f"공연시간/인터미션: {product_info.perf_time} / {product_info.intermission}")
+
 
 
 # 일반 정보 추출 > 관람 연령 판단/추출 메서드
 # 관람 연령이 아니면 False, 맞다면 관람 연령 정보를 반환
-def extractAgeInfo(inform):
+def extractAgeInfo(inform: WebElement, product_info: ProductInfo) -> None:
     print_log('일반 정보 추출 > 관람 연령 판단/추출')
     # 관람연령 출력
-    isAgeDetail = isAgeDetailInfo(inform.find_element(By.CLASS_NAME, 'infoDesc').text)
-    # 상세 관람 연령 판단/추출 메서드
-    # 전체 관람가 이면 str 타입 전체 / 만 or 한국 나이면 dict 타입 {'type': *, 'age': '*'} 반환
-    return isAgeDetail
+    isAgeDetailInfo(inform.find_element(By.CLASS_NAME, 'infoDesc').text, product_info)
 
 
 # 일반 정보 추출 > 관람 연령 판단/추출 > 상세 관람 연령 판단/추출 메서드
 # 전체 관람가 / 만 or 한국 나이 판단/추출 메서드
-def isAgeDetailInfo(ageInfo):
+def isAgeDetailInfo(ageInfo, product_info: ProductInfo) -> None:
     print_log(f'일반 정보 추출 > 관람 연령 판단/추출 > 상세 관람 연령 판단/추출 : ageInfo = {ageInfo}')
     # 전체 관람가 아니면
-    if ageInfo.find('전체') == -1:
-        # 만 / 한국식 나이일 경우 dict 타입 {'type': *, 'age': *} 로 출력
-        ageInfoSearch = re.search(r'\d+|미취학아동입장불가|초등학생이상|중학생이상|고등학생이상|-', ageInfo).group(0)
-        # 한국식 나이면 type = 한국학
-        if ageInfoSearch == '미취학아동입장불가':
-            return {'type': '미취학아동입장불가', 'age': 6}
-        if ageInfoSearch == '초등학생이상':
-            return {'type': '한국', 'age': 8}
-        if ageInfoSearch == '중학생이상':
-            return {'type': '한국', 'age': 14}
-        if ageInfoSearch == '고등학생이상':
-            return {'type': '한국', 'age': 17}
-        # if ageInfoSearch == '전체관람가':
-        #     return {'type': '전체', 'age': 0}
-        if ageInfoSearch == '-':
-            return {'type': '전체', 'age': 0}
-        if re.search(r'개월', ageInfo):
-            return {'type': '한국', 'age': int(ageInfoSearch)/12}
-        if re.match(r'만', ageInfo) is None:
-            return {'type': '한국', 'age': int(ageInfoSearch)}
-        # 만 나이면 type = 만
+    if '전체' in ageInfo:
+        product_info.age_type = '한국'
+        product_info.age_kor = False
+        product_info.age_num = 0
+
+    pattern = r'\d+|미취학아동입장불가|초등학생이상|중학생이상|고등학생이상|-'
+    match = re.search(pattern, ageInfo)
+
+    if match:
+        ageInfoSearch = match.group(0)
+        enum_value = AgeInfo.from_string(ageInfoSearch)
+
+        if enum_value:
+            product_info.age_type = enum_value.value[1]
+            product_info.age_num = enum_value.value[2]
+
+            if product_info.age_type in [AgeInfo.PRE_SCHOOL.age_desc, AgeInfo.TOTAL.age_desc]:
+                product_info.age_kor = False
+            else:
+                product_info.age_kor = True
+            return
+
+        elif ageInfoSearch == AgeInfo.TOTAL.age_desc:
+            product_info.age_type = '전체'
+            product_info.age_num = AgeInfo.TOTAL.age_num
+            product_info.age_kor = False
+
+        elif re.search(r'개월', ageInfo):
+            product_info.age_type = '한국'
+            product_info.age_num = int(ageInfoSearch)/12
+            product_info.age_kor = True
+
+        elif not re.match(r'만', ageInfo):
+            product_info.age_type = '한국'
+            product_info.age_num = int(ageInfoSearch)
+            product_info.age_kor = True
         else:
-            return {'type': '만', 'age': int(ageInfoSearch)}
-    # 전체 관람가 이면 '전체' 반환
-    else:
-        return '전체'
+            product_info.age_type = '만'
+            product_info.age_num = int(ageInfoSearch)
+            product_info.age_kor = True
+    return None
+
+
 
 
 # 가격 정보 출력 메서드
-def extractPriceInfo(inform, browser, seatPriceDataList):
+def extractPriceInfo(inform, browser, product_info: ProductInfo):
     print_log('일반 정보 추출 > 좌석/가격 정보 출력')
-    infoPriceItemList = inform.find_elements(By.CSS_SELECTOR, Constants.priceItemListCss)
-    # 가격 요소 인덱스 확인용
-    # index = 0
-    # 좌석이 모두 동일할 경우
-    seatInfoList = []
-    priceInfoList = []
+    infoPriceItemList = inform.find_elements(By.CSS_SELECTOR, Constants_Selector.priceItemListCss)
 
     # 가격 요소 리스트에 담기, 전체 가격 보기 요소 제외
-    # for infoPriceItem in infoPriceItemList[1:]:
-    isPriceInfoValidFirst = addListOfPriceInfoV1(seatInfoList, priceInfoList, infoPriceItemList)
-    print_log(f'isPriceInfoValidFirst: {str(isPriceInfoValidFirst)}')
-    if isPriceInfoValidFirst is False:
-        addListOfPriceInfoV2(seatInfoList, priceInfoList, infoPriceItemList)
-        # index = index + 1
+    addListOfPriceInfoV1(product_info, infoPriceItemList)
+    if not product_info.is_seat_price_info:
+        addListOfPriceInfoV2(product_info, infoPriceItemList)
 
     # 좌석 정보에 중복이 있는지 확인
     # 없다면 생략, 있다면 상세 정보 표기
-    if len(seatInfoList) == len(set(seatInfoList)) and len(seatInfoList) != 0:
-        # pass
-        for count in range(0, len(seatInfoList)):
-            seatPriceDataRecord = {}
-            seatPriceDataRecord['seat'] = seatInfoList[count]
-            seatPriceDataRecord['price'] = priceInfoList[count].replace(',', '')
-            print_log(f"{str(count + 1)} 번 좌석 정보 {seatPriceDataRecord['seat']} {seatPriceDataRecord['price']}")
+    duplicate_seat_list = check_duplicate_seat(product_info)
 
-            seatPriceDataList.append(seatPriceDataRecord)
+    if duplicate_seat_list and not product_info.seat_price_info_list:
+        print_log(f"DUPLICATE!!!!!! {duplicate_seat_list}")
+    #     상세 좌석/가격 정보 출력 메서드
+        addListOfDetailPriceInfo(browser, product_info)
+        print_log(f"{product_info.seat_price_info_list}")
 
-    else:
-        # 상세 좌석/가격 정보 출력 메서드
-        addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser)
-        for count in range(0, len(seatInfoList)):
-            seatPriceDataRecord = {}
-            print_log(f"상세: {str(count + 1)} 번 좌석 정보 {seatInfoList[count]}")
-            print_log(f"상세: {str(count + 1)} 번 가격 정보 {priceInfoList[count].replace(',', '')}")
-            seatPriceDataRecord['seat'] = seatInfoList[count]
-            seatPriceDataRecord['price'] = priceInfoList[count]
+    if not product_info.seat_price_info_list or product_info.is_seat_price_info is False:
+        raise Exception(Constants_Rank.error_msg_no_seat_price)
 
-            seatPriceDataList.append(seatPriceDataRecord)
 
-    print_log(f'seatPriceDataList : {seatPriceDataList}')
-    return seatPriceDataList
+def check_duplicate_seat(product_info: ProductInfo) -> List[str]:
+    """
+    중복 여부를 확인
+    :param product_info: 중복 데이터 검증할 데이터
+    :return: 없다면 빈 List, 있다면 빈 중복 seat가 있는 str List
+    """
+    seat_set = set()
+    duplicates = []
+    for seat_price_info in product_info.seat_price_info_list:
+        print_log(f"DEBUG!!! {product_info.seat_price_info_list}")
+        if seat_price_info.seat in seat_set:
+            duplicates.append(seat_price_info.seat)
+        else:
+            seat_set.add(seat_price_info.seat)
+    return duplicates
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V1
 # 좌석, 가격 정보를 순서에 맞게 리스트에 저장하는 메서드 호출, 다른 구조로 정렬 되었다면 False 반환
-def addListOfPriceInfoV1(seatInfoList, priceInfoList, infoPriceItemList):
+def addListOfPriceInfoV1(product_info: ProductInfo, info_price_item_list: WebDriver):
     print_log('일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가')
-    priceInfoList.clear()
-    seatInfoList.clear()
     try:
         index = 0
-        for infoPriceItem in infoPriceItemList[1:]:
+        for infoPriceItem in info_price_item_list[1:]:
             # span 태그로 정렬 되었을 때 좌석, 가격 요소 추출
-            savePriceInfoToListV1(index, seatInfoList, priceInfoList, infoPriceItem)
+            savePriceInfoToListV1(index, infoPriceItem, product_info)
             index = index + 1
         # 다른 구조로 요소가 정렬 되었을 때
     except NoSuchElementException as ne:
         log_error(ne)
-        return False
-    return True
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V1 > 좌석/가격 정보 리스트 저장 메서드 V1
 # span 태그로 정렬 되었을 때 좌석, 가격 요소 추출 후 리스트에 저장
-def savePriceInfoToListV1(index, seatInfoList, priceInfoList, infoPriceItem):
-    seatInfo = infoPriceItem.find_element(By.CSS_SELECTOR, 'span.name').text
-    priceInfo = infoPriceItem.find_element(By.CSS_SELECTOR, 'span.price').text
-    # print_log(f"일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V1 > 좌석/가격 정보 리스트 저장 메서드 V1: seatInfo={seatInfo} priceInfo={priceInfo}")
+def savePriceInfoToListV1(index: int, info_price_item: WebElement, product_info:ProductInfo):
+    seatInfo = info_price_item.find_element(By.CSS_SELECTOR, 'span.name').text
+    priceInfo = info_price_item.find_element(By.CSS_SELECTOR, 'span.price').text
+
+    seat_price = SeatPriceInfo()
+
     # 예) VIP석, OP석 등 일때 마지막 '석' 제외하고 좌석 정보 리스트에 저장
-    # seatInfoList.insert(index, re.sub(r'석$', '', seatInfo))
-    seatInfoList.insert(index, seatInfo)
+    seat_price.seat = seatInfo
     # 예) 10,000원, 8,000원 일때 원, 쉼표(,) 제외하고 가격 정보 리스트에 저장
-    priceInfoList.insert(index, re.sub('[원,]', '', priceInfo))
+    seat_price.price = re.sub('[원,]', '', priceInfo)
+    product_info.seat_price_info_list.insert(index, seat_price)
+    product_info.is_seat_price_info = True
+
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V2
 # 좌석, 가격 정보를 순서에 맞게 리스트에 저장하는 메서드 호출, 다른 구조로 정렬 되었다면 False 반환
-def addListOfPriceInfoV2(seatInfoList, priceInfoList, infoPriceItemList):
+def addListOfPriceInfoV2(product_info: ProductInfo, info_price_item_list: WebElement) -> None:
     print_log('일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V2')
-    seatInfoList.clear()
-    priceInfoList.clear()
     try:
         index = 0
         # 첫번째 전체 가격 보기 클릭 요소 뒤에 있는 요소에 접근해서 검색
-        prdPriceDetailList = infoPriceItemList[1].find_element(By.CLASS_NAME, 'prdPriceDetail').find_elements \
+        prdPriceDetailList = info_price_item_list[1].find_element(By.CLASS_NAME, 'prdPriceDetail').find_elements \
             (By.TAG_NAME, 'li')
         for prdPriceDetail in prdPriceDetailList:
             # li 태그로 정렬 되었을 때 좌석, 가격 요소 추출
-            savePriceInfoToListV2(index, seatInfoList, priceInfoList, prdPriceDetail)
+            savePriceInfoToListV2(index, prdPriceDetail, product_info)
             index = index + 1
     except NoSuchElementException as ne:
         log_error(ne)
-        return False
-    return True
+    except IndexError as ie:
+        log_error(ie)
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V2 > 좌석/가격 정보 리스트 저장 메서드 V2
 # li 태그로 정렬 되었을 때 좌석, 가격 요소 추출 후 리스트에 저장
-def savePriceInfoToListV2(index, seatInfoList, priceInfoList, prdPriceDetail):
+def savePriceInfoToListV2(index: int, info: WebElement, product_info:ProductInfo) -> None:
     print_log('일반 정보 추출 > 좌석/가격 정보 출력 > 좌석/가격 정보 리스트 추가 메서드 V2 > 좌석/가격 정보 리스트 저장 메서드 V2')
     # 예) VIP석, OP석 등 일때 마지막 '석' 제외하고 좌석 정보 리스트에 저장
     # 예) 10,000원, 8,000원 일때 원, 쉼표(,) 제외하고 가격 정보 리스트에 저장
-    priceInfoSplit = prdPriceDetail.text.split(' ')[-1]
-    priceInfo = re.sub(r'석|\s+|원|,', '', priceInfoSplit)
-    priceInfoList.insert(index, priceInfo)
+    priceInfoSplit = info.text.split(' ')[-1]
+    seat_price_info = SeatPriceInfo()
+    seat_price_info.seat = info.text.replace(priceInfoSplit, '')
+    seat_price_info.price = re.sub(r'석|\s+|원|,', '', priceInfoSplit)
+    print_log(f"좌석정보(seat_price_info.seat): {seat_price_info.seat}")
+    print_log(f"가격정보(seat_price_info.price): {seat_price_info.price}")
+    product_info.seat_price_info_list.insert(index, seat_price_info)
+    product_info.is_seat_price_info = True
 
-    seatInfo = prdPriceDetail.text.replace(priceInfoSplit, '')
-    seatInfoList.insert(index, seatInfo)
-    print('prdPriceDetail: ' + prdPriceDetail.text)
-    print('seatInfo: ' + seatInfo)
-    print('priceInfoSpace: ' + priceInfoSplit)
-    print('priceInfo: ' + priceInfo)
+
 
 
 # 일반 정보 추출 > 좌석/가격 정보 출력 > 상세 좌석/가격 정보 출력
-def addListOfDetailPriceInfo(seatInfoList, priceInfoList, browser):
-    print_log('일반 정보 추출 > 좌석/가격 정보 출력 > 상세 좌석/가격 정보 출력')
-    seatInfoList.clear()
-    priceInfoList.clear()
-
-    # 상세 좌석/가격 정보 창 열기
-    # browser.find_element(By.CSS_SELECTOR, Constants.detailPrciePopupOpenCss).click()
-    element = browser.find_element(By.CSS_SELECTOR, Constants.detailPrciePopupOpenCss)
-    browser.execute_script("arguments[0].click();", element)
+def addListOfDetailPriceInfo(browser, product_info:ProductInfo):
+    # print_log('일반 정보 추출 > 좌석/가격 정보 출력 > 상세 좌석/가격 정보 출력')
+    element = browser.find_element(By.CSS_SELECTOR, Constants_Selector.detailPrciePopupOpenCss)
     browser.execute_script("arguments[0].click();", element)
 
-    # 해당 팝업 창 나올 때 까지 대기, 없다면 에러
-    waitUntilElementLocated(browser, 10, By.CSS_SELECTOR, Constants.detailPriceTableCss)
+    seat_prices = {}
 
-    time.sleep(0.5)
+    table = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "table.popPriceTable"))
+    )
 
-    # 상세 좌석/가격 정보 선택
-    detailInfoList = browser.find_element(By.CSS_SELECTOR, Constants.detailPriceTableCss).find_elements(By.CSS_SELECTOR, 'tr')
+    # 모든 행(tr) 요소 찾기
+    rows = table.find_elements(By.TAG_NAME, "tr")
 
-    totalTdCount = 0
-    for detailInfo in detailInfoList:
-        tdCount = 0
-        try:
-            # detailInfo.find_element(By.CLASS_NAME, 'category').text
-            tdList = detailInfo.find_elements(By.CSS_SELECTOR, 'td')
-            for tdRecord in tdList:
-                tdCount = tdCount + 1
-                # print(str(tdCount))
-            totalTdCount = copy.deepcopy(tdCount)
-        except NoSuchElementException as ne:
-            log_error(ne)
-            pass
-    if totalTdCount > 1:
-        print_log(f'V1 tdCount is {str(totalTdCount)}')
-        # detailInfoText = detailInfo.text
-        v1Count = 0
-        try:
-            for detailInfo in detailInfoList:
-                detailInfoText = detailInfo.text
-                # print_log(f'detailInfoText: ${detailInfoText}')
-                categoryInfoText = detailInfo.find_element(By.CLASS_NAME, 'category').text
+    index = 0
 
-                infoText = re.sub(categoryInfoText + ' ', '', detailInfoText)
-                categoryInfoPrice = infoText.split(' ')[-1]
+    current_seat = None
+    for row in rows:
+        # 새로운 좌석 유형 확인
+        category = row.find_elements(By.CLASS_NAME, "category")
+        if category:
+            current_seat = category[0].find_element(By.CLASS_NAME, "categoryContents").text.strip()
+            continue
 
-                categoryInfoPriceText = re.sub(r'[원,]', '', categoryInfoPrice)
+        # 가격 정보 찾기
+        name_cell = row.find_elements(By.CLASS_NAME, "name")
+        price_cell = row.find_elements(By.TAG_NAME, "td")
 
-                seatInfoList.insert(v1Count, categoryInfoText)
-                priceInfoList.insert(v1Count, categoryInfoPriceText)
+        if name_cell and price_cell:
+            name = name_cell[0].text.strip('\n')[0].strip()
+            price = price_cell[-1].text.strip()
 
-                # print_log(f'categoryInfoText: {categoryInfoText}')
-                # print_log(f'categoryInfoPriceText: {categoryInfoPriceText}')
+            # '일반' 가격, '무료', 또는 첫 번째 가격 옵션 처리
+            if name == "일반" or name == "무료" or not seat_prices.get(current_seat):
+                price = int(price.replace(',', '').replace('원', '0'))
+                seat_prices[current_seat] = price
+                # if current_seat != "전석":  # '전석'이 아닌 경우에만 current_seat 초기화
+                #     current_seat = None
+                seat_price_info = SeatPriceInfo(seat=current_seat, price=price)
+                product_info.seat_price_info_list.insert(index, seat_price_info)
+                index = index + 1
+                product_info.is_seat_price_info = True
 
-                v1Count = v1Count + 1
-        except NoSuchElementException as ne:
-            log_error(ne)
-            pass
-
-    elif totalTdCount == 1:
-        print_log(f'V2 tdCount is {str(totalTdCount)}')
-        v2Count = 0
-        categoryDataList = []
-        categoryIndex = []
-        for detailInfo in detailInfoList:
-            try:
-                detailInfoText = detailInfo.text
-                categoryInfoText = detailInfo.find_element(By.CLASS_NAME, 'category').text
-                # categoryRecord = {'category': categoryInfoText, 'count': v2Count}
-                categoryDataList.append(categoryInfoText)
-                categoryIndex.append(v2Count + 1)
-            except NoSuchElementException as ne:
-                log_error(ne)
-                pass
-            v2Count = v2Count + 1
-        # categoryIndex.sort(reverse=True)
-        v2CountRetry = 0
-        categoryIndexCount = 0
-        # print_log(f'categoryIndex: + {str(categoryIndex)}')
-        for detailInfo in detailInfoList:
-            detailInfoText = detailInfo.text
-            try:
-                if v2CountRetry == categoryIndex[0]:
-                    categoryInfoPrice = detailInfoText.split(' ')[-1]
-                    categoryInfoPriceText = re.sub(r'[원,]', '', categoryInfoPrice)
-                    seatInfoList.append(categoryDataList[0])
-                    priceInfoList.append(categoryInfoPriceText)
-                    del(categoryIndex[0])
-                    del(categoryDataList[0])
-
-                v2CountRetry = v2CountRetry + 1
-                print_log(f'{str(v2CountRetry)}')
-            except IndexError as ie:
-                log_error(ie)
-                continue
-
-
-
-
-    # for categoryInfoRecord in categoryInfoList:
-    #     categoryInfoTr = detailInfoList[categoryInfoRecord['index']]
-    #     categoryInfoTr.get
-
-
-    # try:
-    #     # 카테고리 영역이 있다면 제외
-    #     categoryInfo = detailInfo.find_element(By.CLASS_NAME, 'category').text
-    #     detailInfoText = re.sub(categoryInfo + ' ', '', detailInfoText)
-    # except NoSuchElementException:
-    #     pass
-    #
-    # try:
-    #     # 좌석/가격 정보 추출, 이때 좌석은 석, 가격은 원, ',' 제거
-    #     print('detailInfoText: ' + detailInfoText)
-    #     detailPriceInfo = detailInfoText.split(' ')[-1]
-    #     detailSeatInfo = detailInfoText.replace(detailPriceInfo, '')
-    #     if detailSeatInfo == '':
-    #         continue
-    #     print('detailSeatInfo: ' + str(detailSeatInfo))
-    #     print('detailPriceInfo: ' + str(detailPriceInfo))
-    #     # 추출한 정보는 리스트에 저장
-    #     # seatInfoList.insert(count, re.sub(r'석$', '', detailSeatInfo))
-    #     seatInfoList.insert(count, detailSeatInfo)
-    #     priceInfoList.insert(count, re.sub(r'[원,]', '', detailPriceInfo))
-    # except IndexError:
-    #     pass
-    #
-    # count = count + 1
 
     # 상세 좌석/가격 정보 창 닫기
-    # browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss).click()
-    element = browser.find_element(By.CSS_SELECTOR, Constants.detailPricePopupCloseCss)
+    element = browser.find_element(By.CSS_SELECTOR, Constants_Selector.detailPricePopupCloseCss)
     browser.execute_script("arguments[0].click();", element)
 
     time.sleep(1)

@@ -37,6 +37,9 @@ out/
 crawling/config.ini
 crawling/.idea/
 crawling/__pycache__/
+crawling/venv
+crawling/Constants*
+crawling/requirements*
 
 ### NetBeans ###
 /nbproject/private/
